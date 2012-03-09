@@ -1,6 +1,5 @@
 package de.uni_leipzig.simba.saim.gui.widget;
 
-import org.vaadin.dialogs.ConfirmDialog;
 import static com.vaadin.terminal.gwt.client.ui.AlignmentInfo.Bits.*;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickListener;
