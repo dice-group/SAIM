@@ -22,7 +22,6 @@ public class KBInfoForm extends Form
 	//	protected final static String URL_DEFAULT = "http://lgd.aksw.org:5678/sparql";
 	//	protected final static String GRAPH_DEFAULT = "http://www.instancematching.org/oaei/di/drugbank/";
 
-	protected final Window parentWindow;
 	protected final VerticalLayout layout = new VerticalLayout();
 	protected final TextField url = new TextField("Endpoint URL");
 	protected final TextField  graph = new TextField("Graph");
@@ -37,7 +36,7 @@ public class KBInfoForm extends Form
 	//		discard();
 	//	}
 	//	
-	public KBInfoForm(Window parentWindow, String title)
+	public KBInfoForm(String title)
 	{
 		this.setCaption(title);
 		this.setLayout(layout);
@@ -62,7 +61,6 @@ public class KBInfoForm extends Form
 		//buttonBar.setComponentAlignment(okbutton, Alignment.TOP_LEFT);
 		buttonBar.addComponent(new Button("Reset", this,"reset"));
 		//buttonBar.addComponent(new Button("Cancel",this,"cancel"));
-		this.parentWindow = parentWindow;
 	}
 	
 	public void reset()
@@ -87,38 +85,38 @@ public class KBInfoForm extends Form
 //		});				
 //	}
 
-	/**
-	 * Method to check values and trigger user notifications.
-	 */
-	private boolean checkValues() {
-		String url_value = (String)url.getValue();
-		String graphUri = (String)graph.getValue();
-		String pageSizeString = pageSize.getValue().toString();
-
-		if(url_value.length()>0)  { //add check if URL is valid
-			if(pageSizeString.length()>0) {
-				int pageSize;
-				try {
-					pageSize = Integer.parseInt(pageSizeString);
-					if(graphUri.length()>0) {
-						return true;
-					}
-					else {
-						// no graph entered
-						this.parentWindow.showNotification("No graph entered.");
-						return true;
-					}
-				}catch(NumberFormatException e) {
-					this.pageSize.setCaption("Please Enter a valid page size.");
-					return false;
-				}
-			}
-			else {//pageSize is empty
-				return false;
-			}
-		} else {
-			url.setCaption("Please enter a valid URL.");
-			return false;
-		}
-	}
+//	/**
+//	 * Method to check values and trigger user notifications.
+//	 */
+//	private boolean checkValues() {
+//		String url_value = (String)url.getValue();
+//		String graphUri = (String)graph.getValue();
+//		String pageSizeString = pageSize.getValue().toString();
+//
+//		if(url_value.length()>0)  { //add check if URL is valid
+//			if(pageSizeString.length()>0) {
+//				int pageSize;
+//				try {
+//					pageSize = Integer.parseInt(pageSizeString);
+//					if(graphUri.length()>0) {
+//						return true;
+//					}
+//					else {
+//						// no graph entered
+//						//this.parentWindow.showNotification("No graph entered.");
+//						return true;
+//					}
+//				}catch(NumberFormatException e) {
+//					this.pageSize.setCaption("Please Enter a valid page size.");
+//					return false;
+//				}
+//			}
+//			else {//pageSize is empty
+//				return false;
+//			}
+//		} else {
+//			url.setCaption("Please enter a valid URL.");
+//			return false;
+//		}
+//	}
 } 
