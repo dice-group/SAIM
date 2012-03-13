@@ -1,7 +1,6 @@
 package de.uni_leipzig.simba.saim.gui.widget;
 
 import com.vaadin.data.validator.IntegerValidator;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -15,80 +14,79 @@ import com.vaadin.ui.Window;
 import de.uni_leipzig.simba.saim.gui.validator.EndpointURLValidator;
 
 /** Allows the user to manually set the properties of a knowledge base, which are endpoint URL, graph URI, page size, restrictions */
-public class KBInfoDialog extends Window {
-	
-	protected final static String TEXTFIELD_WIDTH = "50em";
-	protected final static String WIDTH = "60em";
-	protected final static String URL_DEFAULT = "http://lgd.aksw.org:5678/sparql";
-	protected final static String GRAPH_DEFAULT = "http://www.instancematching.org/oaei/di/drugbank/";
-	
+@SuppressWarnings("serial")
+public class KBInfoForm extends Form
+{	
+	//	protected final static String TEXTFIELD_WIDTH = "50em";
+	//	protected final static String WIDTH = "60em";
+	//	protected final static String URL_DEFAULT = "http://lgd.aksw.org:5678/sparql";
+	//	protected final static String GRAPH_DEFAULT = "http://www.instancematching.org/oaei/di/drugbank/";
+
 	protected final Window parentWindow;
 	protected final VerticalLayout layout = new VerticalLayout();
 	protected final TextField url = new TextField("Endpoint URL");
 	protected final TextField  graph = new TextField("Graph");
 	protected final TextField  pageSize = new TextField("Page size");
+	protected final TextField textFields[] = {url, graph, pageSize};
+	
 	protected final Button next = new Button("OK" );
 	protected final Component components[] = {url, graph, pageSize, next};
-	Form form;
-	
-	protected Form createForm()
+
+	//	public void discard()
+	//	{
+	//		discard();
+	//	}
+	//	
+	public KBInfoForm(Window parentWindow, String title)
 	{
-		Form form = new Form();
-//		form.setWidth("500px");
-		//form.setCaption("Source");
-		form.addField("endpoint URL",url);
+		this.setCaption(title);
+		this.setLayout(layout);
+		layout.setSpacing(true);
+		//layout.addComponent(this);
+
+		addField("Endpoint URL",url);
 		url.addValidator(new EndpointURLValidator());
 		url.setRequired(true);
 		url.setRequiredError("The endpoint URL may not be empty.");
-		form.addField("graph",graph);
-		form.addField("page size",pageSize);
-		pageSize.addValidator(new IntegerValidator("page size needs to be an integer"));		
+		addField("Graph",graph);
+		addField("Page size",pageSize);
+		pageSize.addValidator(new IntegerValidator("Page size needs to be an integer."));		
 		// Have a button bar in the footer.
-		 HorizontalLayout buttonBar = new HorizontalLayout();
+		HorizontalLayout buttonBar = new HorizontalLayout();
 		//buttonBar.setHeight("25px");
-		form.getFooter().addComponent(buttonBar);		 
-		 // Add an Ok (commit), Reset (discard), and Cancel buttons
-		// for the form.
-		
-		Button okbutton = new Button("OK", form, "commit");
-		buttonBar.addComponent(okbutton);
+		getFooter().addComponent(buttonBar);		 
+		// Add an Ok (commit), Reset (discard), and Cancel buttons
+
+//		Button okbutton = new Button("OK", this, "commit");
+//		buttonBar.addComponent(okbutton);
 		//buttonBar.setComponentAlignment(okbutton, Alignment.TOP_LEFT);
-		buttonBar.addComponent(new Button("Reset", form,"discard"));
-		//buttonBar.addComponent(new Button("Cancel",form,"cancel"));
-		return form;
-	}
-	
-//	public void discard()
-//	{
-//		form.discard();
-//	}
-//	
-	public KBInfoDialog(Window parentWindow, String title) {
-		super(title);		
-		this.setModal(true);
+		buttonBar.addComponent(new Button("Reset", this,"reset"));
+		//buttonBar.addComponent(new Button("Cancel",this,"cancel"));
 		this.parentWindow = parentWindow;
-		this.setContent(layout);
-		addButtons();
-		layout.setSpacing(true);
-		this.setWidth(WIDTH);
-		form=createForm();
-		layout.addComponent(form);
-	}
-			
-	@SuppressWarnings("serial")
-	private void addButtons() {
-		next.setSizeFull();
-		next.addListener(new ClickListener() {			
-			@Override
-			public void buttonClick(ClickEvent event) {
-				if(checkValues()) {
-					parentWindow.removeWindow(KBInfoDialog.this);
-					parentWindow.showNotification("Succesfully defined the endpoint...");
-				}				
-			}
-			});				
 	}
 	
+	public void reset()
+	{
+		for(TextField field: textFields)
+		{
+			field.setValue("");
+		}
+	}
+
+//	@SuppressWarnings("serial")
+//	private void addButtons() {
+//		next.setSizeFull();
+//		next.addListener(new ClickListener() {			
+//			@Override
+//			public void buttonClick(ClickEvent event) {
+//				if(checkValues()) {
+//					
+//					parentWindow.showNotification("Succesfully defined the endpoint...");
+//				}				
+//			}
+//		});				
+//	}
+
 	/**
 	 * Method to check values and trigger user notifications.
 	 */
@@ -96,7 +94,7 @@ public class KBInfoDialog extends Window {
 		String url_value = (String)url.getValue();
 		String graphUri = (String)graph.getValue();
 		String pageSizeString = pageSize.getValue().toString();
-		
+
 		if(url_value.length()>0)  { //add check if URL is valid
 			if(pageSizeString.length()>0) {
 				int pageSize;
