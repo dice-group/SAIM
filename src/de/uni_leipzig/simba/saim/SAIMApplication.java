@@ -31,8 +31,8 @@ public class SAIMApplication extends Application {
 		// gridLayout
 		gridLayout = new GridLayout();
 		gridLayout.setImmediate(false);
-		gridLayout.setWidth("320px");
-		gridLayout.setHeight("240px");
+		gridLayout.setWidth("100%");
+		gridLayout.setHeight("100%");
 		gridLayout.setMargin(false);		
 		gridLayout.setRows(3);
 		
@@ -53,28 +53,23 @@ public class SAIMApplication extends Application {
 	}
 	
 	public void addButtons() {
-		Button openKBSourceDialoge = new Button("Configure source");
-		openKBSourceDialoge.addListener(new ClickListener() {			
+		Button openEndpointDialoge = new Button("Configure endpoints");
+		openEndpointDialoge.addListener(new ClickListener() {			
 			@Override
 			public void buttonClick(ClickEvent event) {
-				KBInfoForm kbI = new KBInfoForm(mainWindow, "Configure Source endpoint");
+				KBInfoForm kbISource = new KBInfoForm(mainWindow, "Configure Source endpoint");
+				KBInfoForm kbITarget = new KBInfoForm(mainWindow, "Configure Target endpoint");
+				VerticalLayout vert = new VerticalLayout();
+				vert.addComponent(kbISource);
+				vert.addComponent(kbITarget);
 				gridLayout.removeComponent(0,  2);
-				gridLayout.addComponent(kbI, 0, 2);				
+				gridLayout.addComponent(vert, 0, 2);				
 				}
 		});
 		
-		Button openKBTargetDialoge = new Button("Configure target");
-		openKBTargetDialoge.addListener(new ClickListener() {			
-			@Override
-			public void buttonClick(ClickEvent event) {
-				KBInfoForm kbI = new KBInfoForm(mainWindow, "Configure Target endpoint");
-				gridLayout.removeComponent(0,  2);
-				gridLayout.addComponent(kbI, 0, 2);	
-			}
-		});
+		
 		HorizontalLayout hor = new HorizontalLayout();
-		hor.addComponent(openKBSourceDialoge);
-		hor.addComponent(openKBTargetDialoge);
+		hor.addComponent(openEndpointDialoge);
 		gridLayout.addComponent(hor, 0, 1);
 	}
 
