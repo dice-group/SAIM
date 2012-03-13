@@ -1,0 +1,5 @@
+@import "../reindeer/styles.css";
+
+.v-form fieldset {
+    border: thin solid;
+}
