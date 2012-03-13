@@ -54,7 +54,7 @@ public class KBInfoDialog extends Window {
 		buttonBar.addComponent(okbutton);
 		//buttonBar.setComponentAlignment(okbutton, Alignment.TOP_LEFT);
 		buttonBar.addComponent(new Button("Reset", form,"discard"));
-		buttonBar.addComponent(new Button("Cancel",form,"cancel"));
+		//buttonBar.addComponent(new Button("Cancel",form,"cancel"));
 		return form;
 	}
 	
