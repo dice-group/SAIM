@@ -16,6 +16,8 @@ public class SAIMApplication extends Application {
 		mainWindow = new Window("saim");		
 		mainLayout = new HorizontalLayout();		
 		mainWindow.setContent(mainLayout);
+		
+		//mainWindow.addComponent(form);
 	}
 	
 	@Override
