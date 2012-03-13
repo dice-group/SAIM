@@ -11,6 +11,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
+import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.gui.validator.EndpointURLValidator;
 
 /** Allows the user to manually set the properties of a knowledge base, which are endpoint URL, graph URI, page size, restrictions */
@@ -69,6 +70,13 @@ public class KBInfoForm extends Form
 		{
 			field.setValue("");
 		}
+	}
+
+	public KBInfo getKBInfo() {
+		KBInfo kbInfo = new KBInfo();
+		kbInfo.endpoint = url.getValue().toString();
+		kbInfo.graph = graph.getValue().toString();
+		return kbInfo;
 	}
 
 //	@SuppressWarnings("serial")

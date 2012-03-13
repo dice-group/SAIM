@@ -9,22 +9,16 @@ import com.vaadin.ui.Button.ClickEvent;
 public abstract class TaskPanel extends Panel
 {
 	protected Panel content = new Panel();
+	protected Button nextButton;
 	
 	public TaskPanel()
 	{
 		this.setContent(new VerticalLayout());
 		this.addComponent(content);
 		
-		Button nextButton = new Button("Next >>");
+		nextButton = new Button("Next >>");
 		
 		this.addComponent(nextButton);
-		nextButton.addListener(new ClickListener()
-		{
-			@Override
-			public void buttonClick(ClickEvent event)
-			{
-			}
-		});
 	}
 
 }
