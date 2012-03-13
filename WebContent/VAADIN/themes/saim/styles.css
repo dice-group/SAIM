@@ -2,4 +2,5 @@
 
 .v-form fieldset {
     border: thin solid;
+    border-color: lavender;
 }

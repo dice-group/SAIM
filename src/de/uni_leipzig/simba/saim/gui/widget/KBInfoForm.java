@@ -18,11 +18,11 @@ import de.uni_leipzig.simba.saim.gui.validator.EndpointURLValidator;
 public class KBInfoForm extends Form
 {	
 	//	protected final static String TEXTFIELD_WIDTH = "50em";
-	//	protected final static String WIDTH = "60em";
+		protected final static String WIDTH = "35em";
 	//	protected final static String URL_DEFAULT = "http://lgd.aksw.org:5678/sparql";
 	//	protected final static String GRAPH_DEFAULT = "http://www.instancematching.org/oaei/di/drugbank/";
 
-	protected final VerticalLayout layout = new VerticalLayout();
+	//protected final VerticalLayout layout = new VerticalLayout();
 	protected final TextField url = new TextField("Endpoint URL");
 	protected final TextField  graph = new TextField("Graph");
 	protected final TextField  pageSize = new TextField("Page size");
@@ -39,10 +39,10 @@ public class KBInfoForm extends Form
 	public KBInfoForm(String title)
 	{
 		this.setCaption(title);
-		this.setLayout(layout);
-		layout.setSpacing(true);
+//		this.setLayout(layout);
+//		layout.setSpacing(true);
 		//layout.addComponent(this);
-
+		this.setWidth(WIDTH);
 		addField("Endpoint URL",url);
 		url.addValidator(new EndpointURLValidator());
 		url.setRequired(true);
@@ -61,6 +61,11 @@ public class KBInfoForm extends Form
 		//buttonBar.setComponentAlignment(okbutton, Alignment.TOP_LEFT);
 		buttonBar.addComponent(new Button("Reset", this,"reset"));
 		//buttonBar.addComponent(new Button("Cancel",this,"cancel"));
+		
+		for(TextField field: textFields)
+		{
+			field.setWidth("100%");
+		}
 	}
 	
 	public void reset()
