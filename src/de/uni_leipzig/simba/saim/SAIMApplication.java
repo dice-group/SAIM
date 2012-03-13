@@ -20,6 +20,7 @@ public class SAIMApplication extends Application {
 		mainWindow = new Window("saim");		
 		mainLayout = buildMainLayout();
 		mainWindow.setContent(mainLayout);
+		setTheme("saim");
 	}
 
 	private AbsoluteLayout buildMainLayout() {
