@@ -5,7 +5,7 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
-import de.uni_leipzig.simba.saim.gui.widget.KBInfoDialog;
+import de.uni_leipzig.simba.saim.gui.widget.KBInfoForm;
 
 public class SAIMApplication extends Application {
 	
@@ -57,8 +57,9 @@ public class SAIMApplication extends Application {
 		openKBSourceDialoge.addListener(new ClickListener() {			
 			@Override
 			public void buttonClick(ClickEvent event) {
-				KBInfoDialog kbI = new KBInfoDialog(mainWindow, "Configure Source endpoint");
-				mainWindow.addWindow(kbI);
+				KBInfoForm kbI = new KBInfoForm(mainWindow, "Configure Source endpoint");
+				gridLayout.removeComponent(0,  2);
+				gridLayout.addComponent(kbI, 0, 2);				
 				}
 		});
 		
@@ -66,8 +67,9 @@ public class SAIMApplication extends Application {
 		openKBTargetDialoge.addListener(new ClickListener() {			
 			@Override
 			public void buttonClick(ClickEvent event) {
-				KBInfoDialog kbI = new KBInfoDialog(mainWindow, "Configure Target endpoint");
-				mainWindow.addWindow(kbI);
+				KBInfoForm kbI = new KBInfoForm(mainWindow, "Configure Target endpoint");
+				gridLayout.removeComponent(0,  2);
+				gridLayout.addComponent(kbI, 0, 2);	
 			}
 		});
 		HorizontalLayout hor = new HorizontalLayout();
