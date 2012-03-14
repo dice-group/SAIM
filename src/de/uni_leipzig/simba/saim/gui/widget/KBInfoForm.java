@@ -13,6 +13,7 @@ import com.vaadin.ui.Window;
 
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.gui.validator.EndpointURLValidator;
+import de.uni_leipzig.simba.saim.gui.validator.PageSizeValidator;
 
 /** Allows the user to manually set the properties of a knowledge base, which are endpoint URL, graph URI, page size, restrictions */
 @SuppressWarnings("serial")
@@ -24,9 +25,9 @@ public class KBInfoForm extends Form
 	//	protected final static String GRAPH_DEFAULT = "http://www.instancematching.org/oaei/di/drugbank/";
 
 	//protected final VerticalLayout layout = new VerticalLayout();
-	protected final TextField url = new TextField("Endpoint URL");
+	protected final TextField url = new TextField("Endpoint URL", "http://example.com/sparql");
 	protected final TextField  graph = new TextField("Graph");
-	protected final TextField  pageSize = new TextField("Page size");
+	protected final TextField  pageSize = new TextField("Page size", "-1");
 	protected final TextField textFields[] = {url, graph, pageSize};
 	
 	protected final Button next = new Button("OK" );
@@ -50,7 +51,7 @@ public class KBInfoForm extends Form
 		url.setRequiredError("The endpoint URL may not be empty.");
 		addField("Graph",graph);
 		addField("Page size",pageSize);
-		pageSize.addValidator(new IntegerValidator("Page size needs to be an integer."));		
+		pageSize.addValidator(new PageSizeValidator("Page size needs to be an integer."));		
 		// Have a button bar in the footer.
 		HorizontalLayout buttonBar = new HorizontalLayout();
 		//buttonBar.setHeight("25px");
