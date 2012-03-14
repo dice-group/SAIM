@@ -81,6 +81,8 @@ public class KBInfoForm extends Form
 		KBInfo kbInfo = new KBInfo();
 		kbInfo.endpoint = url.getValue().toString();
 		kbInfo.graph = graph.getValue().toString();
+		int pageSizeInt = Integer.parseInt((String)pageSize.getValue());
+		kbInfo.pageSize = pageSizeInt;
 		return kbInfo;
 	}
 

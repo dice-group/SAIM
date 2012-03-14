@@ -29,8 +29,15 @@ public class EndpointTaskPanel extends TaskPanel
 			if(kbISource.isValid() && kbITarget.isValid()) {
 				// Proceed
 				Configuration config = Configuration.getInstance();
-				config.setSourceEndpoint(kbISource.getKBInfo());
-				config.setTargetEndpoint(kbITarget.getKBInfo());
+				KBInfo source = kbISource.getKBInfo();
+				source.id = "source";
+				source.var = "?src";
+				KBInfo target = kbITarget.getKBInfo();
+				target.id = "target";
+				target.var = "?dest";
+				config.setSourceEndpoint(source);
+				config.setTargetEndpoint(target);
+				getWindow().showNotification(source + "\n\n" + target);
 			}
 		}
 	});
