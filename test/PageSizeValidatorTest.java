@@ -23,7 +23,7 @@ public class PageSizeValidatorTest {
 			}
 		}
 		for(String val : goodValues) {
-			assertTrue(valid.isValid(val));
+			valid.validate(val);
 		}
 	}
 

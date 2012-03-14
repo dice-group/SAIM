@@ -57,7 +57,7 @@ public class KBInfoForm extends Form
 		//buttonBar.setHeight("25px");
 		getFooter().addComponent(buttonBar);		 
 		// Add an Ok (commit), Reset (discard), and Cancel buttons
-
+		setValidationVisible(true);
 //		Button okbutton = new Button("OK", this, "commit");
 //		buttonBar.addComponent(okbutton);
 		//buttonBar.setComponentAlignment(okbutton, Alignment.TOP_LEFT);
