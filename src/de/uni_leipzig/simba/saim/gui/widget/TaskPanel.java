@@ -17,7 +17,7 @@ public abstract class TaskPanel extends Panel
 		this.addComponent(content);
 		
 		content.setStyleName("");
-		nextButton = new Button("Next >>")
+		nextButton = new Button("Next >>");
 		
 		this.addComponent(nextButton);
 	}
