@@ -14,7 +14,7 @@ public class EndpointURLValidator implements Validator
 		if(!(s.startsWith("http://"))) {throw new InvalidValueException("The Endpoint URL does not start with \"http://\".");}
 		// TODO try if endpoint is reachable (ping or something)
 		// TODO is /sparql really alwaysat the end 
-		if(!(s.endsWith("/sparql"))) {throw new InvalidValueException("The Endpoint URL does not end with \"/sparql\".");}			
+		//if(!(s.endsWith("/sparql"))) {throw new InvalidValueException("The Endpoint URL does not end with \"/sparql\".");}			
 	}
 
 	@Override
