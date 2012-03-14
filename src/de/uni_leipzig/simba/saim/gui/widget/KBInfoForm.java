@@ -62,7 +62,7 @@ public class KBInfoForm extends Form
 		//buttonBar.setComponentAlignment(okbutton, Alignment.TOP_LEFT);
 		buttonBar.addComponent(new Button("Reset", this,"reset"));
 		//buttonBar.addComponent(new Button("Cancel",this,"cancel"));
-		
+		getLayout().setMargin(true);
 		for(TextField field: textFields)
 		{
 			field.setWidth("100%");
