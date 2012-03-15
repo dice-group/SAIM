@@ -1,10 +1,11 @@
+package de.uni_leipzig.simba.saim.gui.validator;
+
 import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
 import com.vaadin.data.Validator.InvalidValueException;
-
-import de.uni_leipzig.simba.saim.gui.validator.PageSizeValidator;
 
 
 public class PageSizeValidatorTest {
@@ -14,16 +15,19 @@ public class PageSizeValidatorTest {
 	@Test
 	public void testIsValid() {
 		PageSizeValidator valid = new PageSizeValidator("test");
-		for(String value : badValues) {
+		for(String s : badValues) {
 			try{
-				 valid.validate(value);
-				 fail("Parsed "+value+" without exception.");
+				assertFalse(valid.isValid(s));
+				valid.validate(s);
+				fail("Parsed "+s+" without exception.");
 			} catch(InvalidValueException e) {
-				
+
 			}
 		}
-		for(String val : goodValues) {
-			valid.validate(val);
+		for(String s : goodValues)
+		{
+			assertTrue(valid.isValid(s));			
+			valid.validate(s);
 		}
 	}
 

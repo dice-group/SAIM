@@ -20,7 +20,7 @@ public class KBInfoForm extends Form
 	//	protected final static String GRAPH_DEFAULT = "http://www.instancematching.org/oaei/di/drugbank/";
 
 	//protected final VerticalLayout layout = new VerticalLayout();
-	protected final TextField url = new TextField("Endpoint URL", "http://example.com/sparql");
+	protected final TextField url = new TextField("Endpoint URL", "");
 	protected final TextField  graph = new TextField("Graph");
 	protected final TextField  pageSize = new TextField("Page size", "-1");
 	protected final TextField textFields[] = {url, graph, pageSize};
@@ -35,6 +35,7 @@ public class KBInfoForm extends Form
 	//	
 	public KBInfoForm(String title)
 	{
+		this.setImmediate(true);
 		this.setCaption(title);
 //		this.setLayout(layout);
 //		layout.setSpacing(true);

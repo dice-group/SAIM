@@ -16,6 +16,7 @@ import com.vaadin.ui.Window;
 import de.uni_leipzig.simba.saim.gui.widget.EndpointPanel;
 import de.uni_leipzig.simba.saim.gui.widget.step.ClassMatchingStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.EndpointStep;
+import de.uni_leipzig.simba.saim.gui.widget.step.PropertyMatchingStep;
 
 public class SAIMApplication extends Application {
 
@@ -30,6 +31,8 @@ public class SAIMApplication extends Application {
 		Wizard wizard = new Wizard();
 		wizard.addStep(new EndpointStep());
 		wizard.addStep(new ClassMatchingStep());
+		wizard.addStep(new PropertyMatchingStep());
+		
 		
 		mainLayout.addComponent(wizard);
 		setTheme("saim");
