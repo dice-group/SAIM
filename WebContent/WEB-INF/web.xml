@@ -16,6 +16,12 @@
 			<param-name>application</param-name>
 			<param-value>de.uni_leipzig.simba.saim.SAIMApplication</param-value>
 		</init-param>
+		<init-param>
+			<description>
+			Application widgetset</description>
+			<param-name>widgetset</param-name>
+			<param-value>de.uni_leipzig.simba.saim.widgetset.SaimWidgetset</param-value>
+		</init-param>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>SAIM</servlet-name>

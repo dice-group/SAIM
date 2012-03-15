@@ -1,0 +1,2 @@
+# Module de.uni_leipzig.simba.saim.widgetset.SaimWidgetset
+# RPC service class, partial path of RPC policy file
