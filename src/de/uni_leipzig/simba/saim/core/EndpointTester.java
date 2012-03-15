@@ -24,8 +24,8 @@ public class EndpointTester {
 	private String url;
 	
 	public enum EndpointStatus {
-			OK, EMPTY, TIMED_OUT, HTTP_ERROR, EXECUTION_ERROR, OTHER_ERROR
-	}
+			OK, EMPTY, TIMED_OUT, SERVER_NOT_FOUND, HTTP_ERROR, EXECUTION_ERROR, OTHER_ERROR
+	} 
 	
 	public EndpointTester(String url){
 		this.url = url;
@@ -36,7 +36,7 @@ public class EndpointTester {
 	 * @param url
 	 * @return
 	 */
-	public static boolean pingEndpoint(String url) {
+	private static boolean pingEndpoint(String url) {
 		boolean available = false;
 		try{
 		    final URLConnection connection = new URL(url).openConnection();
@@ -45,11 +45,14 @@ public class EndpointTester {
 		} catch(final MalformedURLException e){
 		    throw new IllegalStateException("Bad URL: " + url, e);
 		} catch(final IOException e){
-		    available = false;
 		}
 		return available;
 	}
 	
+	/**
+	 * Send SPARQL query to end point.
+	 * @return true if given URL is a SPARQL end point with at least a triple.
+	 */
 	private boolean querySPARQLEndpoint() {
 		boolean answer = false;
 		String query = "SELECT ?s WHERE { ?s ?p ?o . } LIMIT 1";		
@@ -61,14 +64,16 @@ public class EndpointTester {
         return answer;				
 	}
 	
-	public static boolean testSPARQLEndpoint(String url) {
-		EndpointTester tester = new EndpointTester(url);
-		return tester.querySPARQLEndpoint();
-	}
-	
+	/**
+	 * Tests whether the given url is a valid SPARQL end point. 
+	 * @param url URL of the server to test.
+	 * @return EndpointStatus indicating the status of the server.
+	 */
 	public static EndpointStatus testSPARQLEndpointTimeOut(String url)
 	{
-		Object[] answer = new Object[2];
+		if(!pingEndpoint(url)) {
+			return EndpointStatus.SERVER_NOT_FOUND;
+		}	
 		final EndpointTester tester = new EndpointTester(url);
 		boolean result = false;
         ExecutorService executor = Executors.newCachedThreadPool();
@@ -81,24 +86,16 @@ public class EndpointTester {
         try {
            result = future.get(5000, TimeUnit.MILLISECONDS);
            if(!result) {
-//        	   answer[1] = "SPARQL endpoint exists but seems to be empty.";
         	   return EndpointStatus.EMPTY;
            }
            return EndpointStatus.OK;
         } catch (TimeoutException ex) {
-//        	answer[1] = "Request to endpoint timed out";
         	return EndpointStatus.TIMED_OUT;
-       // 	throw ex;
         } catch (InterruptedException e) {
-//        	answer[1] = "Request to endpoint was Interrupted.";
         	return EndpointStatus.OTHER_ERROR;
-       //    throw e;
         } catch (ExecutionException e) {
-//        	answer[1] = "Error while executing request";
-        	return EndpointStatus.EXECUTION_ERROR;
-       //   throw e;
+       	return EndpointStatus.EXECUTION_ERROR;
         } catch (Exception e) {
-//        	answer[1] = e.getMessage();
         	return EndpointStatus.OTHER_ERROR;
         }
 	}
