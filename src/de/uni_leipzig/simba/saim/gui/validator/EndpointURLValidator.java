@@ -19,6 +19,7 @@ public class EndpointURLValidator implements Validator
 		if(!(value instanceof String)) {throw new InvalidValueException("The Endpoint URL is not a string.");}
 		String s = (String)value;
 		if(!(s.startsWith("http://"))) {throw new InvalidValueException("The Endpoint URL does not start with \"http://\".");}
+
 		else
 		{
 			EndpointStatus status = validateCache.get(s);
