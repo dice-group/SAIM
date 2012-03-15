@@ -87,7 +87,7 @@ public class EndpointTester {
            return EndpointStatus.OK;
         } catch (TimeoutException ex) {
 //        	answer[1] = "Request to endpoint timed out";
-        	return EndpointStatus.EMPTY;
+        	return EndpointStatus.TIMED_OUT;
        // 	throw ex;
         } catch (InterruptedException e) {
 //        	answer[1] = "Request to endpoint was Interrupted.";
@@ -95,7 +95,7 @@ public class EndpointTester {
        //    throw e;
         } catch (ExecutionException e) {
 //        	answer[1] = "Error while executing request";
-        	return EndpointStatus.OTHER_ERROR;
+        	return EndpointStatus.EXECUTION_ERROR;
        //   throw e;
         } catch (Exception e) {
 //        	answer[1] = e.getMessage();

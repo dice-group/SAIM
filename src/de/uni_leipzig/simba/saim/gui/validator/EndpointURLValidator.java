@@ -26,23 +26,24 @@ public class EndpointURLValidator implements Validator
 			EndpointStatus status = validateCache.get(s);
 			if(status!=null)
 			{
+				if(status==EndpointStatus.OK) {return;}
 				throw new InvalidValueException("Error: Endpoint Status: "+status.toString());
 			} else
 			{
 				status = EndpointTester.testSPARQLEndpointTimeOut(s);
 				validateCache.put(s,status); 
-				if(status!=EndpointStatus.OK) {throw new InvalidValueException("Error: Endpoint Status: "+status.toString());}}
+				if(status!=EndpointStatus.OK) {throw new InvalidValueException("Endpoint Status: "+status.toString());}}
 			//"The URL is no (working) SPARQL endpoint."
 		}
 	}			
 	//if(!(s.endsWith("/sparql"))) {throw new InvalidValueException("The Endpoint URL does not end with \"/sparql\".");}			
 
 
-@Override
-public boolean isValid(Object value)
-{
-	try{validate(value);} catch (InvalidValueException e) {return false;}
-	return true;
-}
+	@Override
+	public boolean isValid(Object value)
+	{
+		try{validate(value);} catch (InvalidValueException e) {return false;}
+		return true;
+	}
 
 }
