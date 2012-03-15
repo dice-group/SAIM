@@ -6,6 +6,7 @@ import java.util.Map;
 import com.vaadin.data.Validator;
 
 import de.uni_leipzig.simba.saim.core.EndpointTester;
+import de.uni_leipzig.simba.saim.core.EndpointTester.EndpointStatus;
 
 /** Validates the string format (starts with "http") and sends a sample sparql query to the endpoint.*/
 public class EndpointURLValidator implements Validator
@@ -28,7 +29,7 @@ public class EndpointURLValidator implements Validator
 				throw new InvalidValueException("Error: Endpoint Status: "+status.toString());
 			} else
 			{
-				status = EndpointTester.testSPARQLEndpoint(s);
+				status = EndpointTester.testSPARQLEndpointTimeOut(s);
 				validateCache.put(s,status); 
 				if(status!=EndpointStatus.OK) {throw new InvalidValueException("Error: Endpoint Status: "+status.toString());}}
 			//"The URL is no (working) SPARQL endpoint."

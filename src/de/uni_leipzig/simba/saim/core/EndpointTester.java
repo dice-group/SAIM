@@ -66,8 +66,8 @@ public class EndpointTester {
 		return tester.querySPARQLEndpoint();
 	}
 	
-	public static EndpointStatus testSPARQLEndpointTimeOut(String url) throws TimeoutException, InterruptedException, ExecutionException {
-		
+	public static EndpointStatus testSPARQLEndpointTimeOut(String url)
+	{
 		Object[] answer = new Object[2];
 		final EndpointTester tester = new EndpointTester(url);
 		boolean result = false;
