@@ -17,7 +17,8 @@ public class EndpointURLValidator implements Validator
 		else {
 			
 				try {
-					if(!EndpointTester.testSPARQLEndpoint(s)) {throw new InvalidValueException("The URL is no SPARQL endpoint.");}
+					Object ans[] = EndpointTester.testSPARQLEndpointTimeOut(s);
+					if(!(Boolean)ans[0]) {throw new InvalidValueException((String) ans[1]);}
 				} catch (Exception Exc)  {
 					throw new InvalidValueException(Exc.getMessage());
 				}
