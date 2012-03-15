@@ -1,5 +1,7 @@
 package de.uni_leipzig.simba.saim.gui.widget;
 
+import org.vaadin.jonatan.contexthelp.ContextHelp;
+
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Form;
@@ -64,6 +66,19 @@ public class KBInfoForm extends Form
 		{
 			field.setWidth("100%");
 		}
+		setupContextHelp();
+	}
+	
+	protected void setupContextHelp()
+	{
+		ContextHelp contextHelp = new ContextHelp();
+		getLayout().addComponent(contextHelp);
+		contextHelp.addHelpForComponent(url, "Fill in the URL of the SPARQL endpoint, e.g. <b>http://dbpedia.org/sparql</b>.");
+		contextHelp.addHelpForComponent(graph, "<em>(optional)</em> The Default Data Set Name (Graph IRI), e.g. <b>http://dbpedia.org</b>. " +
+				"Providing a graph is optional and only needed if you want to exclude some data or speed up the process.");
+		contextHelp.addHelpForComponent(pageSize, "<em>(optional)</em> Use a small page size if you get time outs while matching " +
+				"and a big page size if you want more speed.");
+		contextHelp.setFollowFocus(true);
 	}
 	
 	public void reset()

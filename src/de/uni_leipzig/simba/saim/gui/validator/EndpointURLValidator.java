@@ -27,7 +27,7 @@ public class EndpointURLValidator implements Validator
 			if(status!=null)
 			{
 				if(status==EndpointStatus.OK) {return;}
-				throw new InvalidValueException("Error: Endpoint Status: "+status.toString());
+				throw new InvalidValueException("Endpoint Status: "+status.toString());
 			} else
 			{
 				status = EndpointTester.testSPARQLEndpointTimeOut(s);

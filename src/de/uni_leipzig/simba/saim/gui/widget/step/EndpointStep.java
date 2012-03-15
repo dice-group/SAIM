@@ -37,7 +37,7 @@ public class EndpointStep implements WizardStep
 			target.var = "?dest";
 			config.setSourceEndpoint(source);
 			config.setTargetEndpoint(target);
-			panel.getWindow().showNotification(source + "\n\n" + target);
+			//panel.getWindow().showNotification(source + "\n\n" + target);
 			return true;
 		}
 		return false;

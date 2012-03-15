@@ -7,9 +7,8 @@ import de.uni_leipzig.simba.saim.core.EndpointTester.EndpointStatus;
 public class EndpointTesterTest
 {
 	public static final String[] endpoints = {"http://doesntexist.org/sparqlsparql","http://dbpedia.org/sparql"};
-	public static final EndpointStatus[] endpointStatusse = {EndpointStatus.HTTP_ERROR,EndpointStatus.OK};
-	
-	
+	public static final EndpointStatus[] endpointStatusse = {EndpointStatus.TIMED_OUT,EndpointStatus.OK};
+		
 	@Test
 	public void test()
 	{
