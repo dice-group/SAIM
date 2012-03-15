@@ -34,7 +34,7 @@ public class KBInfoForm extends Form
 		this.setWidth(WIDTH);
 		addField("Endpoint URL",url);
 		setDefaultEndpoints();
-		url.addValidator(new EndpointURLValidator());
+		url.addValidator(new EndpointURLValidator(url));
 		url.setRequired(true);
 		url.setRequiredError("The endpoint URL may not be empty.");
 		url.setWidth("100%");
