@@ -38,6 +38,7 @@ public class KBInfoForm extends Form
 		url.setRequired(true);
 		url.setRequiredError("The endpoint URL may not be empty.");
 		url.setWidth("100%");
+		url.setNewItemsAllowed(true);
 		addField("Graph",graph);
 		addField("Page size",pageSize);
 		pageSize.addValidator(new PageSizeValidator("Page size needs to be an integer."));		
