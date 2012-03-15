@@ -23,6 +23,10 @@ public class EndpointTester {
 	
 	private String url;
 	
+	public enum EndpointStatus {
+			OK, EMPTY, TIMED_OUT, HTTP_ERROR, EXECUTION_ERROR, OTHER_ERROR
+	}
+	
 	public EndpointTester(String url){
 		this.url = url;
 	}
@@ -62,27 +66,40 @@ public class EndpointTester {
 		return tester.querySPARQLEndpoint();
 	}
 	
-//	public static boolean testSPARQLEndpointTimeOut(String url) {
-//		EndpointTester tester = new EndpointTester(url);
-//		   
-//        ExecutorService executor = Executors.newCachedThreadPool();
-//        Callable<Object> task = new Callable<Object>() {
-//           public Object call() {
-//              return querySPARQLEndpoint(url);
-//           }
-//        };
-//        Future<Object> future = executor.submit(task);
-//        try {
-//           boolean result = future.get(5, TimeUnit.SECONDS); 
-//        } catch (TimeoutException ex) {
-//           // handle the timeout
-//        } catch (InterruptedException e) {
-//           // handle the interrupts
-//        } catch (ExecutionException e) {
-//           // handle other exceptions
-//        } finally {
-//           future.cancel(); // may or may not desire this
-//        }
-//	}
-	
+	public static EndpointStatus testSPARQLEndpointTimeOut(String url) throws TimeoutException, InterruptedException, ExecutionException {
+		
+		Object[] answer = new Object[2];
+		final EndpointTester tester = new EndpointTester(url);
+		boolean result = false;
+        ExecutorService executor = Executors.newCachedThreadPool();
+        Callable<Boolean> task = new Callable<Boolean>() {
+           public Boolean call() {
+              return tester.querySPARQLEndpoint();
+           }
+        };
+        Future<Boolean> future = executor.submit(task);
+        try {
+           result = future.get(5000, TimeUnit.MILLISECONDS);
+           if(!result) {
+//        	   answer[1] = "SPARQL endpoint exists but seems to be empty.";
+        	   return EndpointStatus.EMPTY;
+           }
+           return EndpointStatus.OK;
+        } catch (TimeoutException ex) {
+//        	answer[1] = "Request to endpoint timed out";
+        	return EndpointStatus.EMPTY;
+       // 	throw ex;
+        } catch (InterruptedException e) {
+//        	answer[1] = "Request to endpoint was Interrupted.";
+        	return EndpointStatus.OTHER_ERROR;
+       //    throw e;
+        } catch (ExecutionException e) {
+//        	answer[1] = "Error while executing request";
+        	return EndpointStatus.OTHER_ERROR;
+       //   throw e;
+        } catch (Exception e) {
+//        	answer[1] = e.getMessage();
+        	return EndpointStatus.OTHER_ERROR;
+        }
+	}
 }
