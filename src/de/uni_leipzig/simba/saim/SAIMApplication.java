@@ -1,12 +1,21 @@
 package de.uni_leipzig.simba.saim;
 
+import org.vaadin.teemu.wizards.Wizard;
+
 import com.vaadin.Application;
-import com.vaadin.ui.*;
+import com.vaadin.ui.AbsoluteLayout;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 
-import de.uni_leipzig.simba.saim.gui.widget.EndpointTaskPanel;
-import de.uni_leipzig.simba.saim.gui.widget.KBInfoForm;
+import de.uni_leipzig.simba.saim.gui.widget.EndpointPanel;
+import de.uni_leipzig.simba.saim.gui.widget.step.ClassMatchingStep;
+import de.uni_leipzig.simba.saim.gui.widget.step.EndpointStep;
 
 public class SAIMApplication extends Application {
 
@@ -14,12 +23,15 @@ public class SAIMApplication extends Application {
 	private AbsoluteLayout mainLayout;
 	private GridLayout gridLayout;
 
-
-
 	public SAIMApplication() {
-		mainWindow = new Window("saim");		
+		mainWindow = new Window("SAIM \u2013 Semi Automatic Instance Matcher");	
 		mainLayout = buildMainLayout();
 		mainWindow.setContent(mainLayout);
+		Wizard wizard = new Wizard();
+		wizard.addStep(new EndpointStep());
+		wizard.addStep(new ClassMatchingStep());
+		
+		mainLayout.addComponent(wizard);
 		setTheme("saim");
 	}
 
@@ -40,14 +52,14 @@ public class SAIMApplication extends Application {
 
 		mainLayout.addComponent(gridLayout);
 		// filling Layouts
-		Label label = new Label("SAIM user interface");
-		Label label2 = new Label("GridPos(0, 2)");
-		gridLayout.addComponent(label, 0, 0);
-		gridLayout.addComponent(label2, 0, 2);
+//		Label label = new Label("SAIM user interface");
+//		Label label2 = new Label("GridPos(0, 2)");
+//		gridLayout.addComponent(label, 0, 0);
+//		gridLayout.addComponent(label2, 0, 2);
 
 		return mainLayout;
 	}
-
+	
 	@Override
 	public void init() {		
 		addButtons();				
@@ -64,7 +76,7 @@ public class SAIMApplication extends Application {
 			
 				gridLayout.removeComponent(0,  2);
 				gridLayout.addComponent(vert, 0, 2);
-				vert.addComponent(new EndpointTaskPanel());
+				vert.addComponent(new EndpointPanel());
 			}
 		});
 
