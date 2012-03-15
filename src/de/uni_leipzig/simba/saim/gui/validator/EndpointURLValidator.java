@@ -2,6 +2,8 @@ package de.uni_leipzig.simba.saim.gui.validator;
 
 import com.vaadin.data.Validator;
 
+import de.uni_leipzig.simba.saim.core.EndpointTester;
+
 public class EndpointURLValidator implements Validator
 {
 	private static final long	serialVersionUID	= -5470766225738299746L;
@@ -12,8 +14,14 @@ public class EndpointURLValidator implements Validator
 		if(!(value instanceof String)) {throw new InvalidValueException("The Endpoint URL is not a string.");}
 		String s = (String)value;
 		if(!(s.startsWith("http://"))) {throw new InvalidValueException("The Endpoint URL does not start with \"http://\".");}
-		// TODO try if endpoint is reachable (ping or something)
-		// TODO is /sparql really alwaysat the end 
+		else {
+			
+				try {
+					if(!EndpointTester.testSPARQLEndpoint(s)) {throw new InvalidValueException("The URL is no SPARQL endpoint.");}
+				} catch (Exception Exc)  {
+					throw new InvalidValueException(Exc.getMessage());
+				}
+			}			
 		//if(!(s.endsWith("/sparql"))) {throw new InvalidValueException("The Endpoint URL does not end with \"/sparql\".");}			
 	}
 
