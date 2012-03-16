@@ -6,10 +6,12 @@ import com.vaadin.ui.VerticalLayout;
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
 public class ClassMatchingPanel extends Panel
 {	
-	public ClassMatchingPanel() {
+	public ClassMatchingPanel()
+	{
 		setContent(new VerticalLayout());
 		for(int i = 0; i<5;i++)
 			addForm(i==0);
+		this.getContent().addComponent(new ClassChooser("http://dbpedia.org/sparql","http://dbpedia.org"));
 	}
 	
 	public void addForm(boolean addCaption) {
