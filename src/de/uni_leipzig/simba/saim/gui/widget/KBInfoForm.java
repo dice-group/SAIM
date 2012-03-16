@@ -66,7 +66,7 @@ public class KBInfoForm extends Form
 				"Providing a graph is optional and only needed if you want to exclude some data or speed up the process.");
 		contextHelp.addHelpForComponent(pageSize, "<em>(optional)</em> Use a small page size if you get time outs while matching " +
 				"and a big page size if you want more speed.");
-		contextHelp.setFollowFocus(true);
+		//contextHelp.setFollowFocus(true);
 	}
 	
 	public void reset()

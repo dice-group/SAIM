@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.ui.Form;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Panel;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.TextField;
 
 import de.uni_leipzig.simba.saim.core.Pair;
@@ -20,6 +19,7 @@ public class ClassMatchingForm extends Form
 	
 	
 	public ClassMatchingForm() {
+		this.setLayout(new GridLayout(0,4));
 		addFieldPair();
 	}
 	
