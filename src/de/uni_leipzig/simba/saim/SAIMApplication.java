@@ -24,7 +24,8 @@ public class SAIMApplication extends Application {
 	private AbsoluteLayout mainLayout;
 	private GridLayout gridLayout;
 
-	public SAIMApplication() {
+	public SAIMApplication()
+	{
 		mainWindow = new Window("SAIM \u2013 Semi Automatic Instance Matcher");	
 		mainLayout = buildMainLayout();
 		mainWindow.setContent(mainLayout);
@@ -32,8 +33,7 @@ public class SAIMApplication extends Application {
 		wizard.addStep(new EndpointStep());
 		wizard.addStep(new ClassMatchingStep());
 		wizard.addStep(new PropertyMatchingStep());
-		
-		
+				
 		mainLayout.addComponent(wizard);
 		setTheme("saim");
 	}

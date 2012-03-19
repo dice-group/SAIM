@@ -19,6 +19,11 @@ public class EndpointURLValidator implements Validator
 	public EndpointURLValidator() {	component = null;}
 	public EndpointURLValidator(Component component) {this.component = component;}
 
+//	protected validationColor()
+//	{
+//		
+//	}
+	
 	@Override
 	public void validate(Object value) throws InvalidValueException
 	{
