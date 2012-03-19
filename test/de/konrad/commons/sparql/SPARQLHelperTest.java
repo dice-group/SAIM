@@ -19,12 +19,16 @@
  */
 package de.konrad.commons.sparql;
 
-import static org.junit.Assert.*;
-import static de.konrad.commons.sparql.SPARQLHelper.*;
+import static de.konrad.commons.sparql.SPARQLHelper.querySelect;
+import static de.konrad.commons.sparql.SPARQLHelper.resultSetToList;
+import static de.konrad.commons.sparql.SPARQLHelper.rootClasses;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
 
 import org.junit.Test;
+import org.junit.experimental.ParallelComputer;
+import org.junit.runner.JUnitCore;
 
 import com.hp.hpl.jena.vocabulary.OWL;
 
@@ -32,18 +36,25 @@ import com.hp.hpl.jena.vocabulary.OWL;
 public class SPARQLHelperTest {
 
 	//static String[] testObjects = {"Comune di Marcedusa@en","556^^http://www.w3.org/2001/XMLSchema#integer","http://www4.wiwiss.fu-berlin.de/flickrwrappr/photos/Marcedusa"}; 
+
+	@Test
+	public void testSubClassesOf()
+	{
+		System.out.println(SPARQLHelper.subclassesOf("http://dbpedia.org/ontology/Building", "http://dbpedia.org/sparql", null));
+	}
 	
 	@Test
 	public void testRootClasses()
 	{
 		assertTrue(rootClasses("http://linkedgeodata.org/sparql", "http://linkedgeodata.org").contains("http://linkedgeodata.org/ontology/Way"));
 		assertTrue(rootClasses("http://dbpedia.org/sparql", null).equals(Collections.singletonList(OWL.Thing.toString())));
+		assertTrue(rootClasses("http://www4.wiwiss.fu-berlin.de/diseasome/sparql",null).contains("http://www4.wiwiss.fu-berlin.de/diseasome/resource/diseasome/genes"));
 	}
 	
 	@Test
 	public void testResultSetToList()
 	{
-		System.out.println(resultSetToList(querySelect(
+		assertTrue(resultSetToList(querySelect(
 				"select ?s where {?s <http://dbpedia.org/ontology/birthPlace> <http://dbpedia.org/resource/Leipzig> }",
 				"http://live.dbpedia.org/sparql", null)).contains("http://dbpedia.org/resource/Friedrich_Nietzsche"));
 	}
