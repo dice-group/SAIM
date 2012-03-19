@@ -30,10 +30,8 @@ public class EndpointStep implements WizardStep
 			// Proceed
 			Configuration config = Configuration.getInstance();
 			KBInfo source = panel.kbISource.getKBInfo();
-			source.id = "source";
 			source.var = "?src";
 			KBInfo target = panel.kbITarget.getKBInfo();
-			target.id = "target";
 			target.var = "?dest";
 			config.setSourceEndpoint(source);
 			config.setTargetEndpoint(target);
