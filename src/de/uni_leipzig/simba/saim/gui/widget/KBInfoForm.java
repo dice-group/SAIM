@@ -2,6 +2,8 @@ package de.uni_leipzig.simba.saim.gui.widget;
 
 import org.vaadin.jonatan.contexthelp.ContextHelp;
 
+import com.vaadin.event.FieldEvents.BlurEvent;
+import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
@@ -20,9 +22,10 @@ public class KBInfoForm extends Form
 {	
 	protected final static String WIDTH = "35em";
 	protected final ComboBox url = new ComboBox("Endpoint URL");
-	protected final TextField  graph = new TextField("Graph");
-	protected final TextField  pageSize = new TextField("Page size", "-1");
-	protected final TextField textFields[] = {graph, pageSize};	
+	protected final TextField id = new TextField("Id / Namespace");
+	protected final TextField graph = new TextField("Graph");
+	protected final TextField pageSize = new TextField("Page size", "-1");
+	protected final TextField textFields[] = {graph, id, pageSize};	
 	protected final Button next = new Button("OK" );
 	protected final Component components[] = {url, graph, pageSize, next};
 
@@ -32,16 +35,7 @@ public class KBInfoForm extends Form
 		this.setImmediate(true);
 		this.setCaption(title);
 		this.setWidth(WIDTH);
-		addField("Endpoint URL",url);
-		setDefaultEndpoints();
-		url.addValidator(new EndpointURLValidator(url));
-		url.setRequired(true);
-		url.setRequiredError("The endpoint URL may not be empty.");
-		url.setWidth("100%");
-		url.setNewItemsAllowed(true);
-		addField("Graph",graph);
-		addField("Page size",pageSize);
-		pageSize.addValidator(new PageSizeValidator("Page size needs to be an integer."));		
+		addFormFields();
 		// Have a button bar in the footer.
 		HorizontalLayout buttonBar = new HorizontalLayout();
 		//buttonBar.setHeight("25px");
@@ -57,11 +51,44 @@ public class KBInfoForm extends Form
 		setupContextHelp();
 	}
 	
+	private void addFormFields() {
+		addField("Endpoint URL",url);
+		setDefaultEndpoints();
+		url.addValidator(new EndpointURLValidator(url));
+		url.setRequired(true);
+		url.setRequiredError("The endpoint URL may not be empty.");
+		url.setWidth("100%");
+		url.setNewItemsAllowed(true);
+		url.addListener(new BlurListener() {
+			@Override
+			public void blur(BlurEvent event) {
+				if(url.isValid()) {
+					try {
+						String val = (String) url.getValue();
+						String idSuggestion = val.substring(val.indexOf("http://")+7);
+						idSuggestion = idSuggestion.substring(0, idSuggestion.indexOf("/"));
+						if(idSuggestion.indexOf(".") > 0)
+							idSuggestion = idSuggestion.substring(0, idSuggestion.indexOf("."));
+						id.setValue(idSuggestion);
+					} catch(Exception e) {
+						// avoid errors
+						id.setValue(url.getValue());
+					}
+				}
+			}
+		});
+		addField("ID / Namespace", id);
+		addField("Graph",graph);
+		addField("Page size",pageSize);
+		pageSize.addValidator(new PageSizeValidator("Page size needs to be an integer."));
+	}
+	
 	protected void setupContextHelp()
 	{
 		ContextHelp contextHelp = new ContextHelp();
 		getLayout().addComponent(contextHelp);
 		contextHelp.addHelpForComponent(url, "Fill in the URL of the SPARQL endpoint, e.g. <b>http://dbpedia.org/sparql</b>.");
+		contextHelp.addHelpForComponent(id, "Provide the name or id for the SPARQL endpoint. This is normally a part of the URL.");
 		contextHelp.addHelpForComponent(graph, "<em>(optional)</em> The Default Data Set Name (Graph IRI), e.g. <b>http://dbpedia.org</b>. " +
 				"Providing a graph is optional and only needed if you want to exclude some data or speed up the process.");
 		contextHelp.addHelpForComponent(pageSize, "<em>(optional)</em> Use a small page size if you get time outs while matching " +
@@ -79,6 +106,7 @@ public class KBInfoForm extends Form
 
 	public KBInfo getKBInfo() {
 		KBInfo kbInfo = new KBInfo();
+		kbInfo.id = id.getValue().toString();
 		kbInfo.endpoint = url.getValue().toString();
 		kbInfo.graph = graph.getValue().toString();
 		int pageSizeInt = Integer.parseInt((String)pageSize.getValue());

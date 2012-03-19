@@ -15,12 +15,12 @@ public class ClassChooser extends Panel
 {
 	protected final String endpoint,graph;
 	protected final Tree tree;
-
-	public ClassChooser(String endpoint, String graph)
+	
+	public ClassChooser(String endpoint, String id, String graph)
 	{
+		tree = new Tree(id+" classes");
 		this.endpoint = endpoint;
 		this.graph = graph;
-		tree = new Tree("DBpedia classes");
 		addComponent(tree);
 		tree.setImmediate(true);
 		for(String clazz: rootClasses(endpoint, graph))

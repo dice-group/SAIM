@@ -84,7 +84,7 @@ public class EndpointTester {
         };
         Future<Boolean> future = executor.submit(task);
         try {
-           result = future.get(5000, TimeUnit.MILLISECONDS);
+           result = future.get(8000, TimeUnit.MILLISECONDS);
            if(!result) {
         	   return EndpointStatus.EMPTY;
            }

@@ -10,8 +10,9 @@ public class Configuration {
 	protected String name;
 	
 	protected KBInfo source = null;	
+
 	protected KBInfo target = null;
-	
+
 	private Configuration() {
 		
 	}
@@ -36,5 +37,11 @@ public class Configuration {
 	}
 	public void setTargetEndpoint(KBInfo target) {
 		this.target = target;
+	}
+	public KBInfo getSource() {
+		return source;
+	}
+	public KBInfo getTarget() {
+		return target;
 	}
 }
