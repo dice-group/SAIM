@@ -104,7 +104,7 @@ public class SPARQLHelper
 	public static List<String> subclassesOf(String clazz,String endpoint, String graph)
 	{
 		final int MAX_CHILDREN = 100;
-		String query = "SELECT ?class WHERE { ?class rdfs:subClassOf "+wrapIfNecessary(clazz)+". } LIMIT "+MAX_CHILDREN;
+		String query = "SELECT distinct(?class) WHERE { ?class rdfs:subClassOf "+wrapIfNecessary(clazz)+". } LIMIT "+MAX_CHILDREN;
 		query = PrefixHelper.addPrefixes(query); // in case rdfs and owl prefixes are not known
 		return resultSetToList(querySelect(query,endpoint,graph));
 	}
@@ -112,13 +112,28 @@ public class SPARQLHelper
 	/** returns the root classes of a SPARQL endpoint's ontology ({owl:Thing} normally).  */
 	public static List<String> rootClasses(String endpoint, String graph)
 	{
-		String queryForOWLThing = "SELECT ?class WHERE {?class rdfs:subClassOf owl:Thing} limit 1";
-		if(!resultSetToList(querySelect(PrefixHelper.addPrefixes(queryForOWLThing),endpoint,graph)).isEmpty())
-		{return Collections.singletonList(OWL.Thing.toString());}
+		{
+			// if owl:Thing exists, use that
+			String queryForOWLThing = "SELECT ?class WHERE {?class rdfs:subClassOf owl:Thing} limit 1";
+			if(!resultSetToList(querySelect(PrefixHelper.addPrefixes(queryForOWLThing),endpoint,graph)).isEmpty())
+			{return Collections.singletonList(OWL.Thing.toString());}
+		}
+		// bad endpoint, use fallback: classes (instances of owl:Class) which don't have superclasses
+		{
+			String queryForParentlessClasses =
+					"SELECT distinct(?class) WHERE {?class a owl:Class. OPTIONAL {?class rdfs:subClassOf ?superClass.} FILTER (!BOUND(?superClass))}";
 
-		String queryForParentlessClasses =
-				"SELECT ?class WHERE {?class a owl:Class. OPTIONAL {?class rdfs:subClassOf ?superClass.} FILTER (!BOUND(?superClass))}";
-		return resultSetToList(querySelect(PrefixHelper.addPrefixes(queryForParentlessClasses), endpoint, graph));
+			List<String> classes = resultSetToList(querySelect(PrefixHelper.addPrefixes(queryForParentlessClasses), endpoint, graph));
+
+			if(!classes.isEmpty()) {return classes;}
+		}
+		// very bad endpoint, use fallback fallback: objects of type property which don't have superclasses
+		{
+		String query =
+				"SELECT distinct(?class) WHERE {?x a ?class. OPTIONAL {?class rdfs:subClassOf ?superClass.} FILTER (!BOUND(?superClass))}";
+		List<String> classes = resultSetToList(querySelect(PrefixHelper.addPrefixes(query), endpoint, graph));
+		return classes;
+		}
 	}
 
 	public static String wrapIfNecessary(String uriString)

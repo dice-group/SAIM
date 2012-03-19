@@ -1,8 +1,12 @@
 package de.uni_leipzig.simba.saim.gui.widget;
 
-import static de.konrad.commons.sparql.SPARQLHelper.*;
+import static de.konrad.commons.sparql.SPARQLHelper.lastPartOfURL;
+import static de.konrad.commons.sparql.SPARQLHelper.rootClasses;
+import static de.konrad.commons.sparql.SPARQLHelper.subclassesOf;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.vaadin.ui.Panel;
@@ -14,9 +18,10 @@ import com.vaadin.ui.Tree.TreeDragMode;
 /** Lets the user choose a class from a given SPARQL endpoint. Queries the endpoint for classes and presents them as a tree. */
 public class ClassChooser extends Panel
 {
+	static final boolean PRELOAD = false;
 	protected final String endpoint,graph;
 	protected final Tree tree;
-	
+
 	public ClassChooser(String endpoint, String id, String graph)
 	{
 		tree = new Tree(id+" classes");
@@ -33,34 +38,61 @@ public class ClassChooser extends Panel
 			@Override
 			public void nodeExpand(ExpandEvent event)
 			{
-				expandNode((ClassNode) event.getItemId());
 				System.out.println("expanding node "+event.getItemId());
+				expandNode((ClassNode) event.getItemId(),PRELOAD?1:0);				
 			}
 		});
 		tree.setDragMode(TreeDragMode.NODE);
-
 	}
 
-	protected void expandNode(ClassNode node)
+	protected void expandNode(ClassNode node, final int depth)
 	{
-		if(tree.hasChildren(node)) return; // subclasses already loaded
-		List<String> subClasses = null;
-		try{subClasses  = subclassesOf(node.url, endpoint, graph);}
-		catch(Exception e) {System.err.println("Error expanding node "+node.url);}
-		if(subClasses==null||subClasses.isEmpty())
+		if(tree.hasChildren(node)&&depth<1) return;
+		final List<ClassNode> subNodes = new LinkedList<ClassNode>();
+		if(tree.hasChildren(node))
+		{
+			for(Object o: tree.getChildren(node))
+			{
+				subNodes.add((ClassNode)node);
+			}
+		}
+		else
+		{
+			List<String> subClasses;
+			try
+			{
+				subClasses  = subclassesOf(node.url, endpoint, graph);
+				System.out.println(subClasses);
+				Collections.sort(subClasses); // sorting in java and not in the SPARQL query because the sort order may be different for the short short
+				for(String subClass: subClasses)
+				{
+					
+					ClassNode subNode = new ClassNode(subClass);
+					tree.addItem(subNode);
+					tree.setParent(subNode,node);
+					subNodes.add(subNode);
+				}						
+			}
+			catch(Exception e){System.err.println("Error expanding node "+node.url);e.printStackTrace();}
+		}
+
+		if(subNodes.isEmpty())
 		{
 			tree.setChildrenAllowed(node, false);
 			return;
 		}
-		Collections.sort(subClasses); // sorting in java and not in the SPARQL query because the sort order may be different for the short short
-		for(String subClass: subClasses)
+		if(depth>0)
 		{
-			ClassNode subNode = new ClassNode(subClass);
-			tree.addItem(subNode);
-			tree.setParent(subNode,node);
-		}		
+			new Thread()
+			{			
+				@Override
+				public void run()
+				{
+					{for(ClassNode subNode: subNodes) {expandNode(subNode, depth-1);}}			
+				}
+			}.start();
+		}
 	}
-
 
 	/** Wraps a class URL and it's displayed short form, e.g. http://dbpedia.org/ontology/City -> City. */
 	protected static class ClassNode
@@ -76,6 +108,7 @@ public class ClassChooser extends Panel
 			this(longClass,lastPartOfURL(longClass));
 		}
 		@Override public String toString() {return shortURL;}
+		@Override public boolean equals(Object o) {return (o instanceof ClassNode) && ((ClassNode)o).url.equals(url);}
 	}
 
 	//	public ClassChooser()
