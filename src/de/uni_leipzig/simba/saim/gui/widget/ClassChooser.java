@@ -9,6 +9,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.ExpandEvent;
 import com.vaadin.ui.Tree.ExpandListener;
+import com.vaadin.ui.Tree.TreeDragMode;
 
 /** Lets the user choose a class from a given SPARQL endpoint. Queries the endpoint for classes and presents them as a tree. */
 public class ClassChooser extends Panel
@@ -36,6 +37,8 @@ public class ClassChooser extends Panel
 				System.out.println("expanding node "+event.getItemId());
 			}
 		});
+		tree.setDragMode(TreeDragMode.NODE);
+
 	}
 
 	protected void expandNode(ClassNode node)
