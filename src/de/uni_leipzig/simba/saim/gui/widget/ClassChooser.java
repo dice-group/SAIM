@@ -29,9 +29,9 @@ public class ClassChooser extends Panel
 
 	
 	
-	public ClassChooser(String endpoint, String graph)
+	public ClassChooser(String endpoint, String id, String graph)
 	{
-		Tree tree = new Tree("DBpedia classes");
+		Tree tree = new Tree(id+" classes");
 		tree.setImmediate(true);
 		tree.addListener(new ExpandListener()
 		{			

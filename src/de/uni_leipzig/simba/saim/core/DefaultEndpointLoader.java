@@ -8,6 +8,7 @@ public class DefaultEndpointLoader {
 	public static List<String> getDefaultEndpoints() {
 		LinkedList<String> defaults = new LinkedList<String>();
 		defaults.add("http://dbpedia.org/sparql");	
+		defaults.add("http://www4.wiwiss.fu-berlin.de/diseasome/sparql");
 		return defaults;
 	}
 }
