@@ -44,8 +44,10 @@ public class ClassChooser extends Panel
 	protected void expandNode(ClassNode node)
 	{
 		if(tree.hasChildren(node)) return; // subclasses already loaded
-		List<String> subClasses  = subclassesOf(node.url, endpoint, graph);
-		if(subClasses.isEmpty())
+		List<String> subClasses = null;
+		try{subClasses  = subclassesOf(node.url, endpoint, graph);}
+		catch(Exception e) {System.err.println("Error expanding node "+node.url);}
+		if(subClasses==null||subClasses.isEmpty())
 		{
 			tree.setChildrenAllowed(node, false);
 			return;
