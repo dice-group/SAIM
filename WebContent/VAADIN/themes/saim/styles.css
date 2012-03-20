@@ -5,6 +5,20 @@
     border-color: lavender;
 }
 
+.v-margin0
+{
+	margin: 0em;
+}
+
+.noborder {
+    border: none !important;
+}
+
+.margin1em
+{
+	margin: 1em;
+}
+
 /* ContextHelp*/
 .v-helprouter
 {	
