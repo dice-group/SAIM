@@ -22,10 +22,13 @@ font-size:-1;
 
 .valid
 {
-	background-color:#99EE72;
+/*	background-color:#99EE72; */
+background-color:#00ff00;
 }
 
 .invalid
 {
-	background-color:#EE7272;
+/*	background-color:#EE7272;*/
+	background-color:#ff0000;
+
 }
