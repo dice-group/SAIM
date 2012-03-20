@@ -1,5 +1,8 @@
 package de.uni_leipzig.simba.saim.gui.widget;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.vaadin.jonatan.contexthelp.ContextHelp;
 
 import com.vaadin.event.FieldEvents.BlurEvent;
@@ -29,6 +32,7 @@ public class KBInfoForm extends Form
 	protected final Button next = new Button("OK" );
 	protected final Component components[] = {url, graph, pageSize, next};
 
+	protected final Map<String,KBInfo> kbs = new HashMap<>();
 
 	public KBInfoForm(String title)
 	{
@@ -50,7 +54,7 @@ public class KBInfoForm extends Form
 		}
 		setupContextHelp();
 	}
-	
+
 	private void addFormFields() {
 		addField("Endpoint URL",url);
 		setDefaultEndpoints();
@@ -59,20 +63,36 @@ public class KBInfoForm extends Form
 		url.setRequiredError("The endpoint URL may not be empty.");
 		url.setWidth("100%");
 		url.setNewItemsAllowed(true);
-		url.addListener(new BlurListener() {
+		url.addListener(new ValueChangeListener()
+		{
+			@Override
+			public void valueChange(com.vaadin.data.Property.ValueChangeEvent event)
+			{
+				if(kbs.containsKey(url.getValue()))
+				{
+					KBInfo kb = kbs.get(url.getValue());
+					if(kb.id!=null)			{id.setValue(kb.id);}
+					if(kb.graph!=null)		{graph.setValue(kb.graph);}
+					pageSize.setValue(Integer.toString(kb.pageSize));
+				}
+			}
+		});
+		url.addListener(new BlurListener(){
 			@Override
 			public void blur(BlurEvent event) {
-				if(url.isValid()) {
-					try {
-						String val = (String) url.getValue();
-						String idSuggestion = val.substring(val.indexOf("http://")+7);
-						idSuggestion = idSuggestion.substring(0, idSuggestion.indexOf("/"));
-						if(idSuggestion.indexOf(".") > 0)
-							idSuggestion = idSuggestion.substring(0, idSuggestion.indexOf("."));
-						id.setValue(idSuggestion);
-					} catch(Exception e) {
-						// avoid errors
-						id.setValue(url.getValue());
+				if(url.isValid())
+				{
+					if(!kbs.containsKey(url.getValue()))
+					{
+						try {
+							String val = (String) url.getValue();
+							String idSuggestion = val.substring(val.indexOf("http://")+7);
+							idSuggestion = idSuggestion.substring(0, idSuggestion.indexOf("/"));
+							if(idSuggestion.indexOf(".") > 0)
+								idSuggestion = idSuggestion.substring(0, idSuggestion.indexOf("."));
+							id.setValue(idSuggestion);
+							// if string is not long enough and thus substring fails
+						} catch(IndexOutOfBoundsException e) {id.setValue(url.getValue());}
 					}
 				}
 			}
@@ -82,7 +102,7 @@ public class KBInfoForm extends Form
 		addField("Page size",pageSize);
 		pageSize.addValidator(new PageSizeValidator("Page size needs to be an integer."));
 	}
-	
+
 	protected void setupContextHelp()
 	{
 		ContextHelp contextHelp = new ContextHelp();
@@ -95,7 +115,7 @@ public class KBInfoForm extends Form
 				"and a big page size if you want more speed.");
 		//contextHelp.setFollowFocus(true);
 	}
-	
+
 	public void reset()
 	{
 		for(TextField field: textFields)
@@ -113,12 +133,16 @@ public class KBInfoForm extends Form
 		kbInfo.pageSize = pageSizeInt;
 		return kbInfo;
 	}
-	
-	private void setDefaultEndpoints() {
-		for(String epUrl : DefaultEndpointLoader.getDefaultEndpoints()) {
-			url.addItem(epUrl);
+
+	private void setDefaultEndpoints()
+	{
+		kbs.clear();
+		url.removeAllItems();
+		for(KBInfo kb : DefaultEndpointLoader.getDefaultEndpoints())
+		{
+			kbs.put(kb.endpoint,kb);
+			url.addItem(kb.endpoint);
 		}
 	}
-
 
 } 

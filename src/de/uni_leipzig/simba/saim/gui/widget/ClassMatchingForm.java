@@ -1,17 +1,9 @@
 package de.uni_leipzig.simba.saim.gui.widget;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
-
-import de.uni_leipzig.simba.saim.core.Pair;
 
 /** The class matching consists of two sets of classes from both knowledge bases and a match between them.
  * In RAVEN, the mapping is injective and uniquely defined (there is at most one match for a class).
@@ -20,9 +12,9 @@ public class ClassMatchingForm extends Form
 {	
 	protected final TextField source; 
 	protected final TextField target; 
-	
-	
-	public ClassMatchingForm(boolean displayCaption) {
+		
+	public ClassMatchingForm(boolean displayCaption)
+	{
 		Layout layout = new HorizontalLayout();
 		layout.setWidth("100%");
 		setLayout(layout);
