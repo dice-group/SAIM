@@ -22,6 +22,12 @@ public class ClassChooser extends Panel
 	protected final String endpoint,graph;
 	protected final Tree tree;
 
+	/**
+	 * 
+	 * @param endpoint
+	 * @param id
+	 * @param graph
+	 */
 	public ClassChooser(String endpoint, String id, String graph)
 	{
 		tree = new Tree(id+" classes");
