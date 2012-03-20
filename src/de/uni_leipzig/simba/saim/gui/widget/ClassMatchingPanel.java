@@ -2,9 +2,10 @@ package de.uni_leipzig.simba.saim.gui.widget;
 
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
-import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.ui.DragAndDropWrapper;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -19,29 +20,10 @@ public class ClassMatchingPanel extends Panel
 	public ClassMatchingPanel()
 	{
 		setContent(new VerticalLayout());
-		addForm(true);
-		this.getContent().addComponent(new ClassChooser(config.getSource().endpoint, config.getSource().id, config.getSource().graph));
-	}
-	
-	public void addForm(boolean addCaption) {
-		ClassMatchingForm form = new ClassMatchingForm(addCaption);
-		form.setWidth("100%");
-		this.addComponent(form);
-		final TextField tf = new TextField("TESTER");
-		DragAndDropWrapper tfWrap = new DragAndDropWrapper(tf);
-		tfWrap.setDropHandler(new DropHandler() {
-			
-			@Override
-			public AcceptCriterion getAcceptCriterion() {
-				return AcceptAll.get();
-			}
-			
-			@Override
-			public void drop(DragAndDropEvent event) {
-				event.getTransferable().getSourceComponent();
-				tf.setValue("HALLO");
-			}
-		});
-		addComponent(tfWrap);
-	}
+		HorizontalLayout hori = new HorizontalLayout();
+		hori.setWidth("100%");
+		hori.addComponent(new ClassMatchingForm("Source Class", config.getSource()));
+		hori.addComponent(new ClassMatchingForm("Target Class", config.getTarget()));
+		this.getContent().addComponent(hori);
+	}	
 }
