@@ -1,5 +1,6 @@
 package de.uni_leipzig.simba.saim.core;
 
+import de.uni_leipzig.simba.io.ConfigReader;
 import de.uni_leipzig.simba.io.KBInfo;
 
 /**Class holds all configuration settings for a linking process. */
@@ -12,6 +13,8 @@ public class Configuration {
 	protected KBInfo source = null;	
 
 	protected KBInfo target = null;
+
+	private ConfigReader cR;
 
 	private Configuration() {
 		
@@ -43,5 +46,13 @@ public class Configuration {
 	}
 	public KBInfo getTarget() {
 		return target;
+	}
+	
+	public void setConfigReader(ConfigReader cR) {
+		this.cR = cR;
+	}
+	
+	public ConfigReader getConfigReader() {
+		return cR;
 	}
 }

@@ -11,6 +11,8 @@ import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
+import de.uni_leipzig.simba.saim.gui.widget.ConfigUploader;
+import de.uni_leipzig.simba.saim.gui.widget.ExecutionPanel;
 import de.uni_leipzig.simba.saim.gui.widget.step.ClassMatchingStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.EndpointStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.PropertyMatchingStep;
@@ -19,7 +21,8 @@ public class SAIMApplication extends Application {
 
 	private final Window mainWindow;
 	private Layout mainLayout;
-	private GridLayout gridLayout;
+//	private GridLayout gridLayout;
+	private Wizard wizard;
 
 	public SAIMApplication()
 	{
@@ -28,7 +31,7 @@ public class SAIMApplication extends Application {
 		mainWindow.setContent(mainLayout);
 		mainWindow.addComponent(buildMainMenu());
 
-		Wizard wizard = new Wizard();
+		wizard = new Wizard();
 		
 		wizard.addStep(new EndpointStep());
 		wizard.addStep(new ClassMatchingStep());
@@ -49,7 +52,7 @@ public class SAIMApplication extends Application {
 		MenuItem fileMenu = menuBar.addItem("File", null, null);
 		fileMenu.addItem("Open", null, null).setEnabled(false);
 		fileMenu.addItem("Save", null, null).setEnabled(false);
-		fileMenu.addItem("Import LIMES linkspec", null, null).setEnabled(false);
+		fileMenu.addItem("Import LIMES linkspec", null, uploadConfigCommand).setEnabled(true);
 		
 		return menuBar;
 	}
@@ -107,5 +110,20 @@ public class SAIMApplication extends Application {
 //		hor.addComponent(openEndpointDialoge);
 //		gridLayout.addComponent(hor, 0, 1);
 //	}
-
+	MenuBar.Command uploadConfigCommand = new MenuBar.Command() {
+	    public void menuSelected(MenuItem selectedItem) {
+	    	Window sub = new Window("Limes Configuration Upload");
+	    	sub.setWidth("700px");
+	    	sub.setModal(true);
+	    	final ConfigUploader upload = new ConfigUploader(getMainWindow());
+	    	sub.addComponent(upload);
+	    	getMainWindow().addWindow(sub);
+	    }  
+	};
+	
+	public void executeLimes() {
+		wizard.finish();
+		mainLayout.removeComponent(wizard);
+		mainLayout.addComponent(new ExecutionPanel());
+	}
 }
