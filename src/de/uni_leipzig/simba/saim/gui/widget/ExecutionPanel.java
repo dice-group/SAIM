@@ -26,16 +26,21 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 		lR = new LimesRunner();
 		lR.addPropertyChangeListener(this);
 		
-		progressLabel = new Label("Intializing...");
+		progressLabel = new Label("Intialized");
 		progress = new ProgressIndicator();
 		progress.setCaption("Progress");
-		progress.setValue(0/maxSteps);
+		progress.setValue(0);
 		start = new Button("Start Mapping");
 		start.addListener(new ClickListener() {			
 			@Override
 			public void buttonClick(ClickEvent event) {
-				lR.runConfig(Configuration.getInstance());	
-				start.setEnabled(false);
+				new Thread() {
+					@Override
+					public void run() {
+						lR.runConfig(Configuration.getInstance());	
+						start.setEnabled(false);
+					}
+				}.start();				
 			}
 		});
 		setWidth("100%");
@@ -48,9 +53,11 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 	public void propertyChange(PropertyChangeEvent evt) {
 		if(evt.getPropertyName().equals(LimesRunner.MESSAGE)) {
 			progressLabel.setValue(evt.getNewValue());
+			progressLabel.requestRepaint();
 		}
 		if(evt.getPropertyName().equals(LimesRunner.STEP)) {
 			progress.setValue((int)evt.getNewValue()/maxSteps);
+			progress.requestRepaint();
 		}
 	}
 }
