@@ -30,19 +30,19 @@ public class PrefixHelper
 		return restrictedPrefixes;
 	}
 	
-	public static Map<String,String> getPrefixes()
+	public static synchronized Map<String,String> getPrefixes()
 	{
 		if(prefixToURI==null) {init();}
 		return new HashMap<String,String>(prefixToURI);
 	}
 
-	public static String getPrefix(String uri)
+	public static synchronized String getPrefix(String uri)
 	{
 		if(uriToPrefix == null) {init();}
 		return uriToPrefix.get(uri);		
 	}
 
-	public static String getURI(String prefix)
+	public static synchronized String getURI(String prefix)
 	{
 		if(prefixToURI == null) {init();}
 		return prefixToURI.get(prefix);		
@@ -177,6 +177,7 @@ public class PrefixHelper
 	/** Transforms a prefix map into sparql "PREFIX x: <...>" statements.*/
 	public static String formatPrefixes(Map<String,String> prefixes)
 	{
+		if(prefixes.isEmpty()) return "";
 		StringBuffer prefixSPARQLString = new StringBuffer();
 		for(String key:	prefixes.keySet())
 		{

@@ -46,9 +46,10 @@ public class SPARQLHelperTest {
 	@Test
 	public void testRootClasses()
 	{
-		assertTrue(rootClasses("http://linkedgeodata.org/sparql", "http://linkedgeodata.org").contains("http://linkedgeodata.org/ontology/Way"));
 		assertTrue(rootClasses("http://dbpedia.org/sparql", null).equals(Collections.singletonList(OWL.Thing.toString())));
-		assertTrue(rootClasses("http://www4.wiwiss.fu-berlin.de/diseasome/sparql",null).contains("http://www4.wiwiss.fu-berlin.de/diseasome/resource/diseasome/genes"));
+		assertTrue(rootClasses("http://live.dbpedia.org/sparql", null).equals(Collections.singletonList(OWL.Thing.toString())));
+		assertTrue(rootClasses("http://linkedgeodata.org/sparql", "http://linkedgeodata.org").contains("http://linkedgeodata.org/ontology/Way"));
+//		assertTrue(rootClasses("http://www4.wiwiss.fu-berlin.de/diseasome/sparql",null).contains("http://www4.wiwiss.fu-berlin.de/diseasome/resource/diseasome/genes"));
 	}
 	
 	@Test

@@ -18,7 +18,7 @@ import com.vaadin.ui.Tree.TreeDragMode;
 /** Lets the user choose a class from a given SPARQL endpoint. Queries the endpoint for classes and presents them as a tree. */
 public class ClassChooser extends Panel
 {
-	static final boolean PRELOAD = false;
+	protected static final boolean PRELOAD = false;
 	protected final String endpoint,graph;
 	protected final Tree tree;
 
@@ -28,27 +28,39 @@ public class ClassChooser extends Panel
 	 * @param id
 	 * @param graph
 	 */
-	public ClassChooser(String endpoint, String id, String graph)
+	public ClassChooser(final String endpoint, String id, final String graph)
 	{
 		tree = new Tree(id+" classes");
 		this.endpoint = endpoint;
 		this.graph = graph;
 		addComponent(tree);
 		tree.setImmediate(true);
-		for(String clazz: rootClasses(endpoint, graph))
+		new Thread()
 		{
-			tree.addItem(new ClassNode(clazz));
-		}
-		tree.addListener(new ExpandListener()
-		{			
 			@Override
-			public void nodeExpand(ExpandEvent event)
+			public void run()
 			{
-				System.out.println("expanding node "+event.getItemId());
-				expandNode((ClassNode) event.getItemId(),PRELOAD?1:0);				
+				System.out.println("x");
+				for(String clazz: rootClasses(endpoint, graph))
+				{
+					System.out.println(clazz);
+					tree.addItem(new ClassNode(clazz));
+				}
+				tree.setImmediate(true);
+				System.out.println("y");
+				tree.addListener(new ExpandListener()
+				{			
+					@Override
+					public void nodeExpand(ExpandEvent event)
+					{
+						System.out.println("expanding node "+event.getItemId());
+						expandNode((ClassNode) event.getItemId(),PRELOAD?1:0);				
+					}
+				});			
 			}
-		});
-		tree.setDragMode(TreeDragMode.NODE);
+		}.start();
+//		
+		//tree.setDragMode(TreeDragMode.NODE);
 	}
 
 	protected void expandNode(ClassNode node, final int depth)
