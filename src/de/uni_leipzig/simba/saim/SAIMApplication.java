@@ -15,6 +15,7 @@ import de.uni_leipzig.simba.saim.gui.widget.ConfigUploader;
 import de.uni_leipzig.simba.saim.gui.widget.ExecutionPanel;
 import de.uni_leipzig.simba.saim.gui.widget.step.ClassMatchingStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.EndpointStep;
+import de.uni_leipzig.simba.saim.gui.widget.step.MetricStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.PropertyMatchingStep;
 
 public class SAIMApplication extends Application {
@@ -35,7 +36,7 @@ public class SAIMApplication extends Application {
 		
 		wizard.addStep(new EndpointStep());
 		wizard.addStep(new ClassMatchingStep());
-		wizard.addStep(new PropertyMatchingStep());
+		wizard.addStep(new MetricStep());
 		mainLayout.addComponent(wizard);
 		
 
