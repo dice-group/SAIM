@@ -1,8 +1,9 @@
 package de.konrad.commons.sparql;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
+import static de.konrad.commons.sparql.PrefixHelper.LazyLoaded.*;
 /** @author Konrad Höffner */
 public class PrefixHelper
 {
@@ -11,8 +12,27 @@ public class PrefixHelper
 
 	// no bidirectional map as the there may be multiple prefixes for the same URI
 	// in this case uriToPrefix contains the most common prefix 
-	private static Map<String,String> prefixToURI = null;
-	private static Map<String,String> uriToPrefix = null;
+	
+	protected static class LazyLoaded
+	{
+		static final Map<String,String> prefixToURI;
+		static final Map<String,String> uriToPrefix;
+		static
+		{
+			Map<String,String> prefixToURIInit = new HashMap<String,String>();
+			Map<String,String> uriToPrefixInit = new HashMap<String,String>();
+
+			for(String[] prefix : prefixArray)
+			{
+				prefixToURIInit.put(prefix[0], prefix[1]);
+				// file is sorted by popularity of the prefix in descending order
+				// in case of conflicts we want the most popular prefix
+				if(!uriToPrefixInit.containsKey(prefix[1])) {uriToPrefixInit.put(prefix[1],prefix[0]);}
+			}
+			prefixToURI = Collections.unmodifiableMap(prefixToURIInit);
+			uriToPrefix = Collections.unmodifiableMap(uriToPrefixInit);
+		}
+	}
 
 	public static String addPrefixes(String query)
 	{
@@ -30,21 +50,18 @@ public class PrefixHelper
 		return restrictedPrefixes;
 	}
 	
-	public static synchronized Map<String,String> getPrefixes()
+	public static Map<String,String> getPrefixes()
 	{
-		if(prefixToURI==null) {init();}
-		return new HashMap<String,String>(prefixToURI);
+		return prefixToURI;
 	}
 
-	public static synchronized String getPrefix(String uri)
+	public static String getPrefix(String uri)
 	{
-		if(uriToPrefix == null) {init();}
 		return uriToPrefix.get(uri);		
 	}
 
 	public static synchronized String getURI(String prefix)
 	{
-		if(prefixToURI == null) {init();}
 		return prefixToURI.get(prefix);		
 	}
 
@@ -112,19 +129,9 @@ public class PrefixHelper
 	//	}
 
 	// init from string, better for gwt which does not allow file reading on client
-	private static void init()
-	{
-		prefixToURI = new HashMap<String,String>();
-		uriToPrefix = new HashMap<String,String>();
-
-		for(String[] prefix : prefixArray)
-		{
-			prefixToURI.put(prefix[0], prefix[1]);
-			// file is sorted by popularity of the prefix in descending order
-			// in case of conflicts we want the most popular prefix
-			if(!uriToPrefix.containsKey(prefix[1])) {uriToPrefix.put(prefix[1],prefix[0]);}
-		}
-	}
+	
+	
+	
 
 	//	public PrefixHelper(File file)
 	//	{
