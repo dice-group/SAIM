@@ -7,12 +7,17 @@ import de.uni_leipzig.simba.io.KBInfo;
 public class Configuration {	
 	private static Configuration instance = null;
 	
+	
+	
 	protected String id = null;
 	protected String name;
 	
-	protected KBInfo source = null;	
-
+	protected KBInfo source = null;
 	protected KBInfo target = null;
+	protected String metricExpression;
+	protected double acceptanceThreshold;
+	protected double verificationThreshold;
+	protected int granularity;
 
 	private ConfigReader cR;
 
@@ -48,11 +53,14 @@ public class Configuration {
 		return target;
 	}
 	
-	public void setConfigReader(ConfigReader cR) {
+	public void setFromConfigReader(ConfigReader cR) {
 		this.cR = cR;
-	}
-	
-	public ConfigReader getConfigReader() {
-		return cR;
+		source = cR.sourceInfo;
+		target = cR.targetInfo;
+		metricExpression = cR.metricExpression;
+		acceptanceThreshold = cR.acceptanceThreshold;
+		verificationThreshold = cR.verificationThreshold;
+		granularity = cR.granularity;
+		
 	}
 }

@@ -41,7 +41,7 @@ public class ConfigUploader extends CustomComponent
 			@Override
 			public void buttonClick(ClickEvent event) {
 				Configuration config = Configuration.getInstance();
-				config.setConfigReader(cR);
+				config.setFromConfigReader(cR);
 				file.delete();
 				mainWindow.removeWindow(getWindow());
 				SAIMApplication appl = (SAIMApplication) mainWindow.getApplication();
