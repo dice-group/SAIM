@@ -52,8 +52,7 @@ public class SAIMApplication extends Application {
 		MenuItem fileMenu = menuBar.addItem("File", null, null);
 		fileMenu.addItem("Open", null, null).setEnabled(false);
 		fileMenu.addItem("Save", null, null).setEnabled(false);
-		fileMenu.addItem("Import LIMES linkspec", null, uploadConfigCommand).setEnabled(true);
-		
+		fileMenu.addItem("Import LIMES linkspec", null, uploadConfigCommand).setEnabled(true);		
 		return menuBar;
 	}
 

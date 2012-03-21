@@ -11,6 +11,7 @@ import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
+import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.LimesRunner;
 
@@ -18,7 +19,8 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 	LimesRunner lR;
 	Label progressLabel;
 	ProgressIndicator progress;
-	int maxSteps = 5;
+	private Mapping m = new Mapping();
+	float maxSteps = 5;
 	Button start;
 	
 	public ExecutionPanel() {
@@ -28,7 +30,7 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 		
 		progressLabel = new Label("Intialized");
 		progress = new ProgressIndicator();
-		progress.setCaption("Progress");
+	//	progress.setCaption("Progress");
 		progress.setValue(0);
 		start = new Button("Start Mapping");
 		start.addListener(new ClickListener() {			
@@ -37,8 +39,10 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 				new Thread() {
 					@Override
 					public void run() {
-						lR.runConfig(Configuration.getInstance());	
+						m = lR.runConfig(Configuration.getInstance());	
 						start.setEnabled(false);
+						progress.setValue(1f);
+						progressLabel.setValue("Mapping was performed");
 					}
 				}.start();				
 			}
@@ -56,7 +60,8 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 			progressLabel.requestRepaint();
 		}
 		if(evt.getPropertyName().equals(LimesRunner.STEP)) {
-			progress.setValue((int)evt.getNewValue()/maxSteps);
+			float newV = Float.valueOf(evt.getNewValue().toString());
+			progress.setValue(newV/maxSteps);
 			progress.requestRepaint();
 		}
 	}

@@ -1,4 +1,4 @@
-package de.uni_leipzig.simba.saim.gui.widget;
+	package de.uni_leipzig.simba.saim.gui.widget;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,7 +20,8 @@ public class ConfigUploader extends CustomComponent
 	private Panel root;
 	private File file;
 	private ConfigReader cR = new ConfigReader();
-	private Button proceed = new Button("Execute fuile");
+	private Button proceed = new Button("Execute file");
+	private Button run_def = new Button("Run default Spec");
 	private Window mainWindow;
 	
 	public ConfigUploader(final Window mainWindow) {
@@ -47,11 +48,21 @@ public class ConfigUploader extends CustomComponent
 				SAIMApplication appl = (SAIMApplication) mainWindow.getApplication();
 				appl.executeLimes();
 			}
-		});
-        
-        
+		});       
         root.getContent().addComponent(proceed);
-        
+        run_def.addListener(new Button.ClickListener() {			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				Configuration config = Configuration.getInstance();
+				ConfigReader cR = new ConfigReader();
+				cR.validateAndRead("C:/tmp/dbpedia-linkedmdb.xml");			
+				config.setFromConfigReader(cR);
+				mainWindow.removeWindow(getWindow());
+				SAIMApplication appl = (SAIMApplication) mainWindow.getApplication();
+				appl.executeLimes();
+			}
+		});
+        root.getContent().addComponent(run_def);
 	}
 	
 	

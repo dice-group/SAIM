@@ -5,9 +5,7 @@ import de.uni_leipzig.simba.io.KBInfo;
 
 /**Class holds all configuration settings for a linking process. */
 public class Configuration {	
-	private static Configuration instance = null;
-	
-	
+	private static Configuration instance = null;	
 	
 	protected String id = null;
 	protected String name;
@@ -60,7 +58,6 @@ public class Configuration {
 		metricExpression = cR.metricExpression;
 		acceptanceThreshold = cR.acceptanceThreshold;
 		verificationThreshold = cR.verificationThreshold;
-		granularity = cR.granularity;
-		
+		granularity = cR.granularity;		
 	}
 }

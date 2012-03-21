@@ -24,7 +24,6 @@ public class EndpointStep implements WizardStep
 	@Override
 	public boolean onAdvance()
 	{
-
 		if(panel.kbISource.isValid() && panel.kbITarget.isValid())
 		{
 			// Proceed

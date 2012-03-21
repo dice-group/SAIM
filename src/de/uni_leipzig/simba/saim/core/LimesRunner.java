@@ -2,6 +2,7 @@ package de.uni_leipzig.simba.saim.core;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.Serializable;
 
 import de.uni_leipzig.simba.cache.HybridCache;
 import de.uni_leipzig.simba.data.Mapping;
@@ -10,7 +11,7 @@ import de.uni_leipzig.simba.filter.LinearFilter;
 import de.uni_leipzig.simba.mapper.SetConstraintsMapper;
 import de.uni_leipzig.simba.mapper.SetConstraintsMapperFactory;
 
-public class LimesRunner {
+public class LimesRunner implements Serializable {
 	
 	private PropertyChangeSupport changes = new PropertyChangeSupport( this ); 
 	 
@@ -19,13 +20,13 @@ public class LimesRunner {
 	private String message;
 	public static final String MESSAGE = "message";
 	public static final String STEP = "step";
-	
+	public static final String FINISHED = "ready";
+		
 	public LimesRunner() {
 		message = "Initializing Limes...";
 		changes.firePropertyChange(MESSAGE, "", message);
 //		changes.fireIndexedPropertyChange(STEP, 0, 0);
-	}
-	
+	}	
 	
 	public Mapping runConfig(Configuration config) {
 		fire("Getting source cache...");
@@ -41,8 +42,7 @@ public class LimesRunner {
 		
 		Mapping actualMapping = sCM.getLinks(config.metricExpression, config.acceptanceThreshold);
 		fire("Mapping performed.");
-		return actualMapping;
-		
+		return actualMapping;		
 	}
 	
 	public void addPropertyChangeListener( PropertyChangeListener l ) 
