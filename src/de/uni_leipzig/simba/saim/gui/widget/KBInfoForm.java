@@ -2,6 +2,7 @@ package de.uni_leipzig.simba.saim.gui.widget;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.vaadin.jonatan.contexthelp.ContextHelp;
 
@@ -173,10 +174,10 @@ public class KBInfoForm extends Form
 	{
 		presetToKB.clear();
 		presetComboBox.removeAllItems();
-		for(KBInfo kb : DefaultEndpointLoader.getDefaultEndpoints())
+		for(Entry<String, KBInfo> kb : DefaultEndpointLoader.getDefaultEndpoints().entrySet())
 		{
-			presetToKB.put(kb.endpoint,kb);
-			presetComboBox.addItem(kb.endpoint);
+			presetToKB.put(kb.getKey(), kb.getValue());
+			presetComboBox.addItem(kb.getKey());
 		}		
 	}
 	
