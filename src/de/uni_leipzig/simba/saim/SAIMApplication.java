@@ -26,8 +26,7 @@ public class SAIMApplication extends Application {
 	private Layout mainLayout;
 //	private GridLayout gridLayout;
 	private Wizard wizard;
-	public static final ResourceBundle messages = ResourceBundle.getBundle("messagebundle");
-
+	
 	public SAIMApplication()
 	{
 		mainWindow = new Window(Messages.getString("title"));	
