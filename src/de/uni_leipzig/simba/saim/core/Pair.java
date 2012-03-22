@@ -8,4 +8,8 @@ public class Pair<T>{
 		this.a = a;
 		this.b = b;
 	}
+	
+	public String toString() {
+		return a.toString()+" - "+b.toString();
+	}
 }
