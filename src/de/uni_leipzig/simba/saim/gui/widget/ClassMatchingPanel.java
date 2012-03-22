@@ -1,5 +1,7 @@
 package de.uni_leipzig.simba.saim.gui.widget;
 
+import java.util.Map.Entry;
+
 import org.vaadin.jonatan.contexthelp.ContextHelp;
 
 import com.github.wolfie.refresher.Refresher;
@@ -10,6 +12,8 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
+import de.uni_leipzig.simba.data.Mapping;
+import de.uni_leipzig.simba.learning.query.ClassMapper;
 import de.uni_leipzig.simba.saim.core.Configuration;
 
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
@@ -46,13 +50,20 @@ public class ClassMatchingPanel extends Panel
 				@Override
 				public void run()
 				{
+					Configuration config = Configuration.getInstance();
 					Refresher refresher = new Refresher();
 					SuggestionsRefreshListener listener = new SuggestionsRefreshListener();
 					refresher.addListener(listener);
 					addComponent(refresher);
-					try{Thread.sleep(5000);} catch (InterruptedException e) {	e.printStackTrace();}
+//					try{Thread.sleep(5000);} catch (InterruptedException e) {	e.printStackTrace();}
+					ClassMapper classMapper = new ClassMapper();
+					Mapping sugg = classMapper.getMappingClasses(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id);
 					suggestions.setEnabled(true);
 					suggestions.removeAllItems();
+					for(String class1 : sugg.map.keySet())
+						for(Entry<String, Double> class2 : sugg.map.get(class1).entrySet()) {
+							suggestions.addItem(class1+" - "+class2.getKey()+" : "+class2.getValue());
+						}
 					System.out.println("suggested enabled");					
 					listener.running=false;					
 				}
