@@ -145,10 +145,8 @@ public class KBInfoForm extends Form
 		getLayout().addComponent(contextHelp);
 		contextHelp.addHelpForComponent(url, Messages.getString("contexthelp.endpointurl")); //$NON-NLS-1$
 		contextHelp.addHelpForComponent(id, Messages.getString("contexthelp.idnamespace")); //$NON-NLS-1$
-		contextHelp.addHelpForComponent(graph, Messages.getString("contexthelp.graph") + //$NON-NLS-1$
-				"Providing a graph is optional and only needed if you want to exclude some data or speed up the process."); //$NON-NLS-1$
-		contextHelp.addHelpForComponent(pageSize, Messages.getString("contexthelp.pagesize") + //$NON-NLS-1$
-				"and a big page size if you want more speed."); //$NON-NLS-1$
+		contextHelp.addHelpForComponent(graph, Messages.getString("contexthelp.graph")); //$NON-NLS-1$				
+		contextHelp.addHelpForComponent(pageSize, Messages.getString("contexthelp.pagesize")); //$NON-NLS-1$
 		//contextHelp.setFollowFocus(true);
 	}
 
