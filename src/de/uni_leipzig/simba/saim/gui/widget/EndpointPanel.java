@@ -7,7 +7,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
 
 import de.uni_leipzig.simba.saim.core.Configuration;
-
+import de.uni_leipzig.simba.saim.Messages;
 public class EndpointPanel extends Panel implements PropertyChangeListener
 {
 	public KBInfoForm kbISource;
@@ -20,8 +20,8 @@ public class EndpointPanel extends Panel implements PropertyChangeListener
 		this.setContent(layout);
 		Configuration config = Configuration.getInstance();
 		config.addPropertyChangeListener(this);
-		kbISource = new KBInfoForm("Configure Source endpoint", config.getSource());
-		kbITarget = new KBInfoForm("Configure Target endpoint", config.getSource());
+		kbISource = new KBInfoForm(Messages.getString("EndpointPanel.configuresourceendpoint"), config.getSource()); //$NON-NLS-1$
+		kbITarget = new KBInfoForm(Messages.getString("EndpointPanel.configuretargetendpoint"), config.getSource()); //$NON-NLS-1$
 		this.addComponent(kbISource);
 		this.addComponent(kbITarget);
 	}

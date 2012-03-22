@@ -1,6 +1,7 @@
 package de.uni_leipzig.simba.saim.gui.validator;
 
 import com.vaadin.data.validator.IntegerValidator;
+import de.uni_leipzig.simba.saim.Messages;
 
 public class PageSizeValidator extends IntegerValidator
 {
@@ -12,7 +13,7 @@ public class PageSizeValidator extends IntegerValidator
 	public void validate(Object value) throws InvalidValueException
 	{
 		super.validate(value);
-		if(Integer.valueOf(value.toString())<=0 && Integer.valueOf(value.toString()) != -1) throw new InvalidValueException("Page size < 0.");
+		if(Integer.valueOf(value.toString())<=0 && Integer.valueOf(value.toString()) != -1) throw new InvalidValueException(Messages.getString("pagesize")+" < 0.");
 		
 	}
 

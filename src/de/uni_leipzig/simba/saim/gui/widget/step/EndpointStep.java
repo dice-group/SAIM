@@ -7,13 +7,13 @@ import com.vaadin.ui.Component;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.EndpointPanel;
-
+import de.uni_leipzig.simba.saim.Messages;
 public class EndpointStep implements WizardStep
 {
 	EndpointPanel panel = new EndpointPanel();
 
 	@Override
-	public String getCaption() {return "Select SPARQL Endpoints";}
+	public String getCaption() {return Messages.getString("selectsparqlendpoints");}
 
 	@Override
 	public Component getContent()

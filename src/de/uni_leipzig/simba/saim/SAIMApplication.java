@@ -1,5 +1,7 @@
 package de.uni_leipzig.simba.saim;
 
+import java.util.ResourceBundle;
+
 import org.vaadin.teemu.wizards.Wizard;
 
 import com.vaadin.Application;
@@ -24,10 +26,11 @@ public class SAIMApplication extends Application {
 	private Layout mainLayout;
 //	private GridLayout gridLayout;
 	private Wizard wizard;
+	public static final ResourceBundle messages = ResourceBundle.getBundle("messagebundle");
 
 	public SAIMApplication()
 	{
-		mainWindow = new Window("SAIM \u2013 Semi Automatic Instance Matcher");	
+		mainWindow = new Window(Messages.getString("title"));	
 		mainLayout = buildMainLayout();
 		mainWindow.setContent(mainLayout);
 		mainWindow.addComponent(buildMainMenu());
@@ -39,9 +42,7 @@ public class SAIMApplication extends Application {
 		wizard.addStep(new MetricStep());
 		mainLayout.addComponent(wizard);
 		
-
 		setTheme("saim");
-
 	}
 
 	protected MenuBar buildMainMenu()
@@ -50,10 +51,10 @@ public class SAIMApplication extends Application {
 		menuBar.setWidth("100%");
 		//menuBar.setStyleName("margin1em");
 		
-		MenuItem fileMenu = menuBar.addItem("File", null, null);
-		fileMenu.addItem("Open", null, null).setEnabled(false);
-		fileMenu.addItem("Save", null, null).setEnabled(false);
-		fileMenu.addItem("Import LIMES linkspec", null, uploadConfigCommand).setEnabled(true);		
+		MenuItem fileMenu = menuBar.addItem(Messages.getString("file"), null, null);
+		fileMenu.addItem(Messages.getString("open"), null, null).setEnabled(false);
+		fileMenu.addItem(Messages.getString("save"), null, null).setEnabled(false);
+		fileMenu.addItem(Messages.getString("importlimes"), null, uploadConfigCommand).setEnabled(true);		
 		return menuBar;
 	}
 
@@ -112,7 +113,7 @@ public class SAIMApplication extends Application {
 //	}
 	MenuBar.Command uploadConfigCommand = new MenuBar.Command() {
 	    public void menuSelected(MenuItem selectedItem) {
-	    	Window sub = new Window("Limes Configuration Upload");
+	    	Window sub = new Window(Messages.getString("limesupload"));
 	    	sub.setWidth("700px");
 	    	sub.setModal(true);
 	    	final ConfigUploader upload = new ConfigUploader(getMainWindow());

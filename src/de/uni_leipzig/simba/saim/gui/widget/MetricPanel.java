@@ -7,6 +7,8 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.VerticalLayout;
 
+import de.uni_leipzig.simba.saim.Messages;
+import de.uni_leipzig.simba.saim.Messages;
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
 public class MetricPanel extends Panel
 {	
@@ -24,7 +26,7 @@ public class MetricPanel extends Panel
 		layout.setMargin(false);
 		setContent(layout);
 		Panel accordionPanel = new Panel();
-		accordionPanel.setWidth("40em");
+		accordionPanel.setWidth("40em"); //$NON-NLS-1$
 		Panel graphPanel = new Panel();
 		this.getContent().addComponent(accordionPanel);
 		
@@ -34,27 +36,27 @@ public class MetricPanel extends Panel
 			accordionPanel.addComponent(accordion);
 			{
 				VerticalLayout sourceLayout = new VerticalLayout();
-				Tab sourceTab = accordion.addTab(sourceLayout,"Source Properties");
-				sourceLayout.addComponent(new Label("rdfs:label"));
-				sourceLayout.addComponent(new Label("example:bla"));
+				Tab sourceTab = accordion.addTab(sourceLayout,Messages.getString("MetricPanel.sourceproperties")); //$NON-NLS-1$
+				sourceLayout.addComponent(new Label("rdfs:label")); //$NON-NLS-1$
+				sourceLayout.addComponent(new Label("example:bla")); //$NON-NLS-1$
 			}
 			{
 				VerticalLayout targetLayout = new VerticalLayout();
-				Tab targetTab = accordion.addTab(targetLayout,"Target Properties");
-				targetLayout.addComponent(new Label("rdfs:label"));
-				targetLayout.addComponent(new Label("example:blu"));
+				Tab targetTab = accordion.addTab(targetLayout,Messages.getString("MetricPanel.targetproperties")); //$NON-NLS-1$
+				targetLayout.addComponent(new Label("rdfs:label")); //$NON-NLS-1$
+				targetLayout.addComponent(new Label("example:blu")); //$NON-NLS-1$
 			}
 			{
 				VerticalLayout functionLayout = new VerticalLayout();
-				Tab functionTab = accordion.addTab(functionLayout,"Functions");
+				Tab functionTab = accordion.addTab(functionLayout,Messages.getString("MetricPanel.functions")); //$NON-NLS-1$
 			}
 			{
 				VerticalLayout metricLayout = new VerticalLayout();
-				Tab metricTab = accordion.addTab(metricLayout,"Metrics");
+				Tab metricTab = accordion.addTab(metricLayout,Messages.getString("MetricPanel.metrics")); //$NON-NLS-1$
 			}
 			{
 				VerticalLayout operatorLayout = new VerticalLayout();
-				Tab operatorTab = accordion.addTab(operatorLayout,"Operators");			
+				Tab operatorTab = accordion.addTab(operatorLayout,Messages.getString("MetricPanel.operators"));			 //$NON-NLS-1$
 			}
 		}
 		{

@@ -2,13 +2,15 @@ package de.uni_leipzig.simba.saim.gui.widget.step;
 
 import org.vaadin.teemu.wizards.WizardStep;
 import com.vaadin.ui.Component;
+
+import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.gui.widget.ClassMatchingPanel;
 
 public class ClassMatchingStep implements WizardStep
 {
 
 	@Override
-	public String getCaption() {return "Class Matching";}
+	public String getCaption() {return Messages.getString("classmatching");}
 
 	@Override
 	public Component getContent()
