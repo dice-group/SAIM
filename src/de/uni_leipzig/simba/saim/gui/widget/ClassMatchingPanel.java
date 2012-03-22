@@ -1,5 +1,7 @@
 package de.uni_leipzig.simba.saim.gui.widget;
 
+import java.util.Map.Entry;
+
 import org.vaadin.jonatan.contexthelp.ContextHelp;
 
 import com.github.wolfie.refresher.Refresher;
@@ -11,6 +13,8 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
 
+import de.uni_leipzig.simba.data.Mapping;
+import de.uni_leipzig.simba.learning.query.ClassMapper;
 import de.uni_leipzig.simba.saim.core.Configuration;
 
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
@@ -56,17 +60,25 @@ public class ClassMatchingPanel extends Panel
 				@Override
 				public void run()
 				{
+					Configuration config = Configuration.getInstance();
 					Refresher refresher = new Refresher();
 					SuggestionsRefreshListener listener = new SuggestionsRefreshListener();
 					refresher.addListener(listener);
 					addComponent(refresher);
-					try{Thread.sleep(5000);} catch (InterruptedException e) {	e.printStackTrace();}
+
+					suggestionComboBox.removeAllItems();
+					ClassMapper classMapper = new ClassMapper();
+					Mapping sugg = classMapper.getMappingClasses(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id);
+					for(String class1 : sugg.map.keySet())
+						for(Entry<String, Double> class2 : sugg.map.get(class1).entrySet()) {
+							suggestionComboBox.addItem(class1+" - "+class2.getKey()+" : "+class2.getValue());
+						}
 					progress.setEnabled(false);
 					removeComponent(progress);
 					suggestionComboBox.setVisible(true);
-					suggestionComboBox.setEnabled(true);
-					suggestionComboBox.removeAllItems();
-					System.out.println("suggested enabled");					
+					suggestionComboBox.setEnabled(true);					
+
+					System.out.println("suggested enabled: "+suggestionComboBox.size()+" items");					
 					listener.running=false;					
 				}
 			}.start();
