@@ -16,6 +16,8 @@ import com.vaadin.ui.VerticalLayout;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.learning.query.ClassMapper;
 import de.uni_leipzig.simba.saim.core.Configuration;
+import de.uni_leipzig.simba.saim.core.Pair;
+import de.uni_leipzig.simba.saim.util.SortedMapping;
 
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
 public class ClassMatchingPanel extends Panel
@@ -69,10 +71,14 @@ public class ClassMatchingPanel extends Panel
 					suggestionComboBox.removeAllItems();
 					ClassMapper classMapper = new ClassMapper();
 					Mapping sugg = classMapper.getMappingClasses(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id);
-					for(String class1 : sugg.map.keySet())
-						for(Entry<String, Double> class2 : sugg.map.get(class1).entrySet()) {
-							suggestionComboBox.addItem(class1+" - "+class2.getKey()+" : "+class2.getValue());
-						}
+					SortedMapping sorter = new SortedMapping(sugg);
+					for(Entry<Double, Pair<String>> e: sorter.sort().descendingMap().entrySet()) {
+						suggestionComboBox.addItem(e.getValue().toString()+" : "+e.getKey());
+					}
+//					for(String class1 : sugg.map.keySet())
+//						for(Entry<String, Double> class2 : sugg.map.get(class1).entrySet()) {
+//							suggestionComboBox.addItem(class1+" - "+class2.getKey()+" : "+class2.getValue());
+//						}
 					progress.setEnabled(false);
 					removeComponent(progress);
 					suggestionComboBox.setVisible(true);
