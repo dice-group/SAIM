@@ -1,12 +1,16 @@
 package de.uni_leipzig.simba.saim.core;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
 import de.uni_leipzig.simba.io.ConfigReader;
 import de.uni_leipzig.simba.io.KBInfo;
 
 /**Class holds all configuration settings for a linking process. */
 public class Configuration {	
 	private static Configuration instance = null;	
-	
+	private PropertyChangeSupport changes = new PropertyChangeSupport( this ); 
+	public static final String SETTING_CONFIG = "setting from xml";
 	protected String id = null;
 	protected String name;
 	
@@ -59,5 +63,16 @@ public class Configuration {
 		acceptanceThreshold = cR.acceptanceThreshold;
 		verificationThreshold = cR.verificationThreshold;
 		granularity = cR.granularity;		
+		changes.firePropertyChange(SETTING_CONFIG, null, this);
 	}
+	
+	public void addPropertyChangeListener( PropertyChangeListener l ) 
+	  { 
+	    changes.addPropertyChangeListener( l ); 
+	  } 
+	 
+	  public void removePropertyChangeListener( PropertyChangeListener l ) 
+	  { 
+	    changes.removePropertyChangeListener( l ); 
+	  }
 }

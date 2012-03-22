@@ -45,8 +45,7 @@ public class ConfigUploader extends CustomComponent
 				config.setFromConfigReader(cR);
 				file.delete();
 				mainWindow.removeWindow(getWindow());
-				SAIMApplication appl = (SAIMApplication) mainWindow.getApplication();
-				appl.executeLimes();
+				mainWindow.addComponent(new ExecutionPanel());
 			}
 		});       
         root.getContent().addComponent(proceed);
@@ -58,8 +57,7 @@ public class ConfigUploader extends CustomComponent
 				cR.validateAndRead("C:/tmp/dbpedia-linkedmdb.xml");			
 				config.setFromConfigReader(cR);
 				mainWindow.removeWindow(getWindow());
-				SAIMApplication appl = (SAIMApplication) mainWindow.getApplication();
-				appl.executeLimes();
+				mainWindow.addComponent(new ExecutionPanel());
 			}
 		});
         root.getContent().addComponent(run_def);

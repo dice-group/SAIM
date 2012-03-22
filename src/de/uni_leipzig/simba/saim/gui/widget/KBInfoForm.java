@@ -15,6 +15,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 
 import de.uni_leipzig.simba.io.KBInfo;
+import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.DefaultEndpointLoader;
 import de.uni_leipzig.simba.saim.gui.validator.EndpointURLValidator;
 import de.uni_leipzig.simba.saim.gui.validator.PageSizeValidator;
@@ -31,7 +32,7 @@ public class KBInfoForm extends Form
 	protected final TextField textFields[] = {graph, id, pageSize};	
 	protected final Button next = new Button("OK" );
 	protected final Component components[] = {url, graph, pageSize, next};
-
+	KBInfo kbInfo;
 	protected final Map<String,KBInfo> kbs = new HashMap<>();
 
 	public KBInfoForm(String title)
@@ -53,6 +54,20 @@ public class KBInfoForm extends Form
 			field.setWidth("100%");
 		}
 		setupContextHelp();
+	}
+	/**
+	 * Constructor to set default values of the fields.
+	 * @param title
+	 * @param defaultValues
+	 */
+	public KBInfoForm(String title, KBInfo defaultValues) {
+		this(title);
+		if(defaultValues != null) {
+			kbInfo = defaultValues;
+		} else {
+			kbInfo = new KBInfo();
+			kbInfo.endpoint = "";
+		}
 	}
 
 	private void addFormFields() {
@@ -143,6 +158,15 @@ public class KBInfoForm extends Form
 			kbs.put(kb.endpoint,kb);
 			url.addItem(kb.endpoint);
 		}
+	}
+	
+	public void setValuesFromKBInfo(KBInfo info) {
+		this.kbInfo = info;
+		url.addItem(kbInfo.endpoint);	
+		url.setValue(kbInfo.endpoint);
+		graph.setValue(kbInfo.graph);
+		id.setValue(kbInfo.id);
+		pageSize.setValue(kbInfo.pageSize);
 	}
 
 } 
