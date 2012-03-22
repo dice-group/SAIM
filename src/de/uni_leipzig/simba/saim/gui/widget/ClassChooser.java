@@ -4,16 +4,16 @@ import static de.konrad.commons.sparql.SPARQLHelper.lastPartOfURL;
 import static de.konrad.commons.sparql.SPARQLHelper.rootClasses;
 import static de.konrad.commons.sparql.SPARQLHelper.subclassesOf;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.github.wolfie.refresher.Refresher;
+import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.ExpandEvent;
 import com.vaadin.ui.Tree.ExpandListener;
-import com.vaadin.ui.Tree.TreeDragMode;
 
 /** Lets the user choose a class from a given SPARQL endpoint. Queries the endpoint for classes and presents them as a tree. */
 public class ClassChooser extends Panel
@@ -35,18 +35,27 @@ public class ClassChooser extends Panel
 		this.graph = graph;
 		addComponent(tree);
 		tree.setImmediate(true);
+
 		new Thread()
 		{
 			@Override
 			public void run()
 			{
+				final Refresher refresher = new Refresher();
+				TreeRefreshListener listener = new TreeRefreshListener();
+				refresher.addListener(listener);
+				addComponent(refresher);
 				System.out.println("x");
-				for(String clazz: rootClasses(endpoint, graph))
+				List<String> rootClasses = rootClasses(endpoint, graph);
+
+				for(String clazz: rootClasses)
 				{
 					System.out.println(clazz);
 					tree.addItem(new ClassNode(clazz));
 				}
+				listener.running=false;
 				tree.setImmediate(true);
+
 				System.out.println("y");
 				tree.addListener(new ExpandListener()
 				{			
@@ -56,10 +65,10 @@ public class ClassChooser extends Panel
 						System.out.println("expanding node "+event.getItemId());
 						expandNode((ClassNode) event.getItemId(),PRELOAD?1:0);				
 					}
-				});			
+				});
 			}
 		}.start();
-//		
+		//		
 		//tree.setDragMode(TreeDragMode.NODE);
 	}
 
@@ -84,7 +93,7 @@ public class ClassChooser extends Panel
 				Collections.sort(subClasses); // sorting in java and not in the SPARQL query because the sort order may be different for the short short
 				for(String subClass: subClasses)
 				{
-					
+
 					ClassNode subNode = new ClassNode(subClass);
 					tree.addItem(subNode);
 					tree.setParent(subNode,node);
@@ -128,6 +137,14 @@ public class ClassChooser extends Panel
 		@Override public String toString() {return shortURL;}
 		@Override public boolean equals(Object o) {return (o instanceof ClassNode) && ((ClassNode)o).url.equals(url);}
 	}
+
+	public class TreeRefreshListener implements RefreshListener
+	{
+		boolean running = true; 
+		private static final long serialVersionUID = -8765221895426102605L;		    
+		@Override public void refresh(final Refresher source)	{if(!running) {removeComponent(source);source.setEnabled(false);}}
+	}
+
 
 	//	public ClassChooser()
 	//	{
