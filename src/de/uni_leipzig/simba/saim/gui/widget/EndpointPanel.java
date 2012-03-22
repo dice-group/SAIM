@@ -3,8 +3,6 @@ package de.uni_leipzig.simba.saim.gui.widget;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import com.github.wolfie.refresher.Refresher;
-import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
 

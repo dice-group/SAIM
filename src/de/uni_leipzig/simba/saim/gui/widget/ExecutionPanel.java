@@ -3,7 +3,6 @@ package de.uni_leipzig.simba.saim.gui.widget;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import com.github.wolfie.refresher.Refresher;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
