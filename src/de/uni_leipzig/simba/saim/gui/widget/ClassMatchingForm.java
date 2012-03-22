@@ -44,4 +44,16 @@ public class ClassMatchingForm extends Form
 		addField("textfield", field);
 		this.getLayout().addComponent(chooser);
 	}
+	
+	/**
+	 * Method to add and select a value in the field.
+	 * @param uri
+	 */
+	public void addItem(Object uri) {
+		if(!field.containsId(uri)) {
+			field.addItem(uri);
+		}
+		field.select(uri);
+	}
+	
 }

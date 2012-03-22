@@ -6,6 +6,8 @@ import org.vaadin.jonatan.contexthelp.ContextHelp;
 
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -24,6 +26,8 @@ public class ClassMatchingPanel extends Panel
 {	
 	Configuration config = Configuration.getInstance();
 	final ComboBox suggestionComboBox = new ComboBox();
+	private ClassMatchingForm sourceClassForm;
+	private ClassMatchingForm targetClassForm;
 
 	protected void setupContextHelp()
 	{
@@ -73,7 +77,7 @@ public class ClassMatchingPanel extends Panel
 					Mapping sugg = classMapper.getMappingClasses(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id);
 					SortedMapping sorter = new SortedMapping(sugg);
 					for(Entry<Double, Pair<String>> e: sorter.sort().descendingMap().entrySet()) {
-						suggestionComboBox.addItem(e.getValue().toString()+" : "+e.getKey());
+						suggestionComboBox.addItem(e);
 					}
 //					for(String class1 : sugg.map.keySet())
 //						for(Entry<String, Double> class2 : sugg.map.get(class1).entrySet()) {
@@ -88,8 +92,20 @@ public class ClassMatchingPanel extends Panel
 					listener.running=false;					
 				}
 			}.start();
-			hori.addComponent(new ClassMatchingForm("Source Class", config.getSource()));
-			hori.addComponent(new ClassMatchingForm("Target Class", config.getTarget()));
+			sourceClassForm = new ClassMatchingForm("Source Class", config.getSource());
+			targetClassForm = new ClassMatchingForm("Target Class", config.getTarget());
+			hori.addComponent(sourceClassForm);
+			hori.addComponent(targetClassForm);
+			// add Listener to set Items in the ClassMatchingForm
+			suggestionComboBox.addListener(new ValueChangeListener() {				
+				@Override
+				public void valueChange(ValueChangeEvent event) {
+					//get Value
+					Entry<Double, Pair<String>> entry = (Entry<Double, Pair<String>>) suggestionComboBox.getValue();
+					sourceClassForm.addItem(entry.getValue().a);
+					targetClassForm.addItem(entry.getValue().b);
+				}
+			});
 			this.getContent().addComponent(hori);
 		}
 		setupContextHelp();
