@@ -20,19 +20,19 @@ import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.DefaultEndpointLoader;
 import de.uni_leipzig.simba.saim.gui.validator.EndpointURLValidator;
 import de.uni_leipzig.simba.saim.gui.validator.PageSizeValidator;
-
+import de.uni_leipzig.simba.saim.Messages;
 /** Allows the user to manually set the properties of a knowledge base, which are endpoint URL, graph URI, page size, restrictions */
 @SuppressWarnings("serial")
 public class KBInfoForm extends Form
 {	
-	protected final static String WIDTH = "35em";
-	protected final ComboBox presetComboBox = new ComboBox("Preset");
-	protected final TextField url = new TextField("Endpoint URL");
-	protected final TextField id = new TextField("Id / Namespace");
-	protected final TextField graph = new TextField("Graph");
-	protected final TextField pageSize = new TextField("Page size", "-1");
+	protected final static String WIDTH = "35em"; //$NON-NLS-1$
+	protected final ComboBox presetComboBox = new ComboBox(Messages.getString("preset")); //$NON-NLS-1$
+	protected final TextField url = new TextField(Messages.getString("endpointurl")); //$NON-NLS-1$
+	protected final TextField id = new TextField(Messages.getString("idnamespace")); //$NON-NLS-1$
+	protected final TextField graph = new TextField(Messages.getString("graph")); //$NON-NLS-1$
+	protected final TextField pageSize = new TextField("Page size", "-1"); //$NON-NLS-1$ //$NON-NLS-2$
 	protected final TextField textFields[] = {graph, id, pageSize};	
-	protected final Button next = new Button("OK" );
+	protected final Button next = new Button(Messages.getString("ok") ); //$NON-NLS-1$
 	protected final Component components[] = {url, graph, pageSize, next};
 	KBInfo kbInfo;
 	/** the knowledge base presets*/
@@ -51,11 +51,11 @@ public class KBInfoForm extends Form
 		getFooter().addComponent(buttonBar);		 
 		// Add an Ok (commit), Reset (discard), and Cancel buttons
 		setValidationVisible(true);
-		buttonBar.addComponent(new Button("Reset", this,"reset"));
+		buttonBar.addComponent(new Button(Messages.getString("reset"), this,"reset")); //$NON-NLS-1$ //$NON-NLS-2$
 		getLayout().setMargin(true);
 		for(TextField field: textFields)
 		{
-			field.setWidth("100%");
+			field.setWidth("100%"); //$NON-NLS-1$
 		}
 		
 		setupContextHelp();
@@ -71,14 +71,14 @@ public class KBInfoForm extends Form
 			kbInfo = defaultValues;
 		} else {
 			kbInfo = new KBInfo();
-			kbInfo.endpoint = "";
+			kbInfo.endpoint = ""; //$NON-NLS-1$
 		}
 	}
 
 	protected void presets()
 	{						
 		presetComboBox.setRequired(false);
-		presetComboBox.setWidth("100%");
+		presetComboBox.setWidth("100%"); //$NON-NLS-1$
 		presetComboBox.setNewItemsAllowed(false);
 		for(String preset : presetToKB.keySet())
 		{
@@ -105,14 +105,14 @@ public class KBInfoForm extends Form
 	{
 		setDefaultEndpoints();
 		presets();
-		addField("Presets",presetComboBox);			
+		addField(Messages.getString("presets"),presetComboBox);			 //$NON-NLS-1$
 		
-		addField("Endpoint URL",url);
+		addField(Messages.getString("endpointurl"),url); //$NON-NLS-1$
 		
 		url.addValidator(new EndpointURLValidator(url));
 		url.setRequired(true);
-		url.setRequiredError("The endpoint URL may not be empty.");
-		url.setWidth("100%");
+		url.setRequiredError(Messages.getString("endpointurlmaynotbeempty")); //$NON-NLS-1$
+		url.setWidth("100%"); //$NON-NLS-1$
 		url.addListener(new BlurListener(){
 			@Override
 			public void blur(BlurEvent event) {
@@ -122,10 +122,10 @@ public class KBInfoForm extends Form
 					{
 						try {
 							String val = (String) url.getValue();
-							String idSuggestion = val.substring(val.indexOf("http://")+7);
-							idSuggestion = idSuggestion.substring(0, idSuggestion.indexOf("/"));
-							if(idSuggestion.indexOf(".") > 0)
-								idSuggestion = idSuggestion.substring(0, idSuggestion.indexOf("."));
+							String idSuggestion = val.substring(val.indexOf("http://")+7); //$NON-NLS-1$
+							idSuggestion = idSuggestion.substring(0, idSuggestion.indexOf("/")); //$NON-NLS-1$
+							if(idSuggestion.indexOf(".") > 0) //$NON-NLS-1$
+								idSuggestion = idSuggestion.substring(0, idSuggestion.indexOf(".")); //$NON-NLS-1$
 							id.setValue(idSuggestion);
 							// if string is not long enough and thus substring fails
 						} catch(IndexOutOfBoundsException e) {id.setValue(url.getValue());}
@@ -133,22 +133,22 @@ public class KBInfoForm extends Form
 				}
 			}
 		});
-		addField("ID / Namespace", id);
-		addField("Graph",graph);
-		addField("Page size",pageSize);
-		pageSize.addValidator(new PageSizeValidator("Page size needs to be an integer."));
+		addField(Messages.getString("idnamespace"), id); //$NON-NLS-1$
+		addField(Messages.getString("graph"),graph); //$NON-NLS-1$
+		addField(Messages.getString("pagesize"),pageSize); //$NON-NLS-1$
+		pageSize.addValidator(new PageSizeValidator(Messages.getString("pagesizeneedstobeaninteger"))); //$NON-NLS-1$
 	}
 
 	protected void setupContextHelp()
 	{
 		ContextHelp contextHelp = new ContextHelp();
 		getLayout().addComponent(contextHelp);
-		contextHelp.addHelpForComponent(url, "Fill in the URL of the SPARQL endpoint, e.g. <b>http://dbpedia.org/sparql</b>.");
-		contextHelp.addHelpForComponent(id, "Is used by the class matcher to find sameAs links. Only instances whose url contains the id are chosen to count as original instances of this endpoint.");
-		contextHelp.addHelpForComponent(graph, "<em>(optional)</em> The Default Data Set Name (Graph IRI), e.g. <b>http://dbpedia.org</b>. " +
-				"Providing a graph is optional and only needed if you want to exclude some data or speed up the process.");
-		contextHelp.addHelpForComponent(pageSize, "<em>(optional)</em> Use a small page size if you get time outs while matching " +
-				"and a big page size if you want more speed.");
+		contextHelp.addHelpForComponent(url, Messages.getString("contexthelp.endpointurl")); //$NON-NLS-1$
+		contextHelp.addHelpForComponent(id, Messages.getString("contexthelp.idnamespace")); //$NON-NLS-1$
+		contextHelp.addHelpForComponent(graph, Messages.getString("contexthelp.graph") + //$NON-NLS-1$
+				"Providing a graph is optional and only needed if you want to exclude some data or speed up the process."); //$NON-NLS-1$
+		contextHelp.addHelpForComponent(pageSize, Messages.getString("contexthelp.pagesize") + //$NON-NLS-1$
+				"and a big page size if you want more speed."); //$NON-NLS-1$
 		//contextHelp.setFollowFocus(true);
 	}
 
@@ -156,7 +156,7 @@ public class KBInfoForm extends Form
 	{
 		for(TextField field: textFields)
 		{
-			field.setValue("");
+			field.setValue(""); //$NON-NLS-1$
 		}
 	}
 

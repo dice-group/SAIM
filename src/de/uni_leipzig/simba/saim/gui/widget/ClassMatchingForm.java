@@ -23,10 +23,10 @@ public class ClassMatchingForm extends Form
 	public ClassMatchingForm(String caption, final KBInfo info) {
 		this.info = info;
 		Layout layout = new VerticalLayout();
-		layout.setWidth("100%");
+		layout.setWidth("100%"); //$NON-NLS-1$
 		setLayout(layout);
 		field = new ComboBox(caption);
-		field.setWidth("100%");
+		field.setWidth("100%"); //$NON-NLS-1$
 		chooser = new ClassChooser(info.endpoint, info.id, info.graph);
 		
 		chooser.tree.addListener(new ItemClickListener() {	
@@ -36,12 +36,12 @@ public class ClassMatchingForm extends Form
 				ClassNode node = (ClassNode) event.getItemId();
 				field.addItem(node.url);
 				field.setValue(node.url);
-				String rest = info.var +" rdf:type "+node.url;
+				String rest = info.var +" rdf:type "+node.url; //$NON-NLS-1$
 				info.restrictions.clear();
 				info.restrictions.add(rest);				
 			}
 		});
-		addField("textfield", field);
+		addField("textfield", field); //$NON-NLS-1$
 		this.getLayout().addComponent(chooser);
 	}
 	

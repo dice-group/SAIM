@@ -1,16 +1,18 @@
 	package de.uni_leipzig.simba.saim.gui.widget;
-
+	import de.uni_leipzig.simba.saim.Messages;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import com.vaadin.terminal.FileResource;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
+import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FailedEvent;
 import com.vaadin.ui.Upload.SucceededEvent;
-
+import com.vaadin.ui.Window;
 import de.uni_leipzig.simba.io.ConfigReader;
-import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 
 public class ConfigUploader extends CustomComponent 
@@ -20,13 +22,13 @@ public class ConfigUploader extends CustomComponent
 	private Panel root;
 	private File file;
 	private ConfigReader cR = new ConfigReader();
-	private Button proceed = new Button("Execute file");
-	private Button run_def = new Button("Run default Spec");
+	private Button proceed = new Button(Messages.getString("executefile"));
+	private Button run_def = new Button("rundefaultspec");
 	private Window mainWindow;
 	
 	public ConfigUploader(final Window mainWindow) {
 		this.mainWindow = mainWindow;
-		root = new Panel("Limes Configuration Upload");
+		root = new Panel("limesupload");
 		root.setWidth("100%");
 	    setCompositionRoot(root);
         // Create the Upload component.

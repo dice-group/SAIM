@@ -1,6 +1,7 @@
 package de.uni_leipzig.simba.saim.gui.validator;
 
 import java.util.HashMap;
+import de.uni_leipzig.simba.saim.Messages;
 import java.util.Map;
 
 import com.vaadin.data.Validator;
@@ -27,9 +28,9 @@ public class EndpointURLValidator implements Validator
 	@Override
 	public void validate(Object value) throws InvalidValueException
 	{
-		if(!(value instanceof String)) {throw new InvalidValueException("The Endpoint URL is not a string.");}
+		if(!(value instanceof String)) {throw new InvalidValueException(Messages.getString("endpointurlnotastring"));}
 		String s = (String)value;
-		if(!(s.startsWith("http://"))) {throw new InvalidValueException("The Endpoint URL does not start with \"http://\".");}
+		if(!(s.startsWith("http://"))) {throw new InvalidValueException(Messages.getString("endpointurldoesnotstartwithhttp"));}
 
 		else
 		{
@@ -48,7 +49,7 @@ public class EndpointURLValidator implements Validator
 			}
 			component.removeStyleName("valid");
 			component.setStyleName("invalid");
-			throw new InvalidValueException("Endpoint Status: "+status.toString());
+			throw new InvalidValueException(Messages.getString("endpointstatus")+status.toString());
 
 		}
 	}			

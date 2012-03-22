@@ -18,6 +18,7 @@ import com.vaadin.ui.VerticalLayout;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.learning.query.ClassMapper;
 import de.uni_leipzig.simba.saim.core.Configuration;
+import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.core.Pair;
 import de.uni_leipzig.simba.saim.util.SortedMapping;
 
@@ -33,7 +34,7 @@ public class ClassMatchingPanel extends Panel
 	{
 		ContextHelp contextHelp = new ContextHelp();
 		getContent().addComponent(contextHelp);
-		contextHelp.addHelpForComponent(suggestionComboBox, "Class pairs from LIMES.");
+		contextHelp.addHelpForComponent(suggestionComboBox, Messages.getString("classpairsfromlimes")); //$NON-NLS-1$
 	}
 
 	public ClassMatchingPanel()
@@ -43,22 +44,22 @@ public class ClassMatchingPanel extends Panel
 		//FormLayout layout = new FormLayout(); // have the label to the right of the combobox and not on top
 		HorizontalLayout layout = new HorizontalLayout();
 		layout.setSpacing(false);
-		layout.setWidth("100%");		
+		layout.setWidth("100%");		 //$NON-NLS-1$
 		final ProgressIndicator progress = new ProgressIndicator();
 		progress.setSizeUndefined();
-		Label suggestionLabel = new Label("Suggestions");		
+		Label suggestionLabel = new Label(Messages.getString("suggestions"));		 //$NON-NLS-1$
 		suggestionLabel.setSizeUndefined();		
 		layout.addComponent(suggestionLabel);
 		layout.addComponent(progress);
 		progress.setIndeterminate(true);				
-		suggestionComboBox.setWidth("100%");		
+		suggestionComboBox.setWidth("100%");		 //$NON-NLS-1$
 		layout.addComponent(suggestionComboBox);
 		layout.setExpandRatio(suggestionComboBox, 1f);
 		suggestionComboBox.setVisible(false);
 		this.addComponent(layout);
 		{
 			HorizontalLayout hori = new HorizontalLayout();
-			hori.setWidth("100%");
+			hori.setWidth("100%"); //$NON-NLS-1$
 			suggestionComboBox.setEnabled(false);
 			new Thread()
 			{
@@ -75,6 +76,7 @@ public class ClassMatchingPanel extends Panel
 					suggestionComboBox.removeAllItems();
 					ClassMapper classMapper = new ClassMapper();
 					Mapping sugg = classMapper.getMappingClasses(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id);
+
 					SortedMapping sorter = new SortedMapping(sugg);
 					for(Entry<Double, Pair<String>> e: sorter.sort().descendingMap().entrySet()) {
 						suggestionComboBox.addItem(e);
@@ -83,17 +85,18 @@ public class ClassMatchingPanel extends Panel
 //						for(Entry<String, Double> class2 : sugg.map.get(class1).entrySet()) {
 //							suggestionComboBox.addItem(class1+" - "+class2.getKey()+" : "+class2.getValue());
 //						}
+
 					progress.setEnabled(false);
 					removeComponent(progress);
 					suggestionComboBox.setVisible(true);
 					suggestionComboBox.setEnabled(true);					
 
-					System.out.println("suggested enabled: "+suggestionComboBox.size()+" items");					
+					System.out.println("suggested enabled: "+suggestionComboBox.size()+" items");					 //$NON-NLS-1$ //$NON-NLS-2$
 					listener.running=false;					
 				}
 			}.start();
-			sourceClassForm = new ClassMatchingForm("Source Class", config.getSource());
-			targetClassForm = new ClassMatchingForm("Target Class", config.getTarget());
+			sourceClassForm = new ClassMatchingForm(Messages.getString("ClassMatchingPanel.sourceclass"), config.getSource());
+			targetClassForm = new ClassMatchingForm(Messages.getString("ClassMatchingPanel.targetclass"), config.getTarget());
 			hori.addComponent(sourceClassForm);
 			hori.addComponent(targetClassForm);
 			// add Listener to set Items in the ClassMatchingForm
