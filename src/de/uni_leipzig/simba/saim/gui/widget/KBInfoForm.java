@@ -25,7 +25,8 @@ import de.uni_leipzig.simba.saim.gui.validator.PageSizeValidator;
 public class KBInfoForm extends Form
 {	
 	protected final static String WIDTH = "35em";
-	protected final ComboBox url = new ComboBox("Endpoint URL");
+	protected final ComboBox presetComboBox = new ComboBox("Preset");
+	protected final TextField url = new TextField("Endpoint URL");
 	protected final TextField id = new TextField("Id / Namespace");
 	protected final TextField graph = new TextField("Graph");
 	protected final TextField pageSize = new TextField("Page size", "-1");
@@ -33,7 +34,8 @@ public class KBInfoForm extends Form
 	protected final Button next = new Button("OK" );
 	protected final Component components[] = {url, graph, pageSize, next};
 	KBInfo kbInfo;
-	protected final Map<String,KBInfo> kbs = new HashMap<>();
+	/** the knowledge base presets*/
+	protected final Map<String,KBInfo> presetToKB = new HashMap<>();
 
 	public KBInfoForm(String title)
 	{
@@ -41,6 +43,7 @@ public class KBInfoForm extends Form
 		this.setCaption(title);
 		this.setWidth(WIDTH);
 		addFormFields();
+		
 		// Have a button bar in the footer.
 		HorizontalLayout buttonBar = new HorizontalLayout();
 		//buttonBar.setHeight("25px");
@@ -53,6 +56,7 @@ public class KBInfoForm extends Form
 		{
 			field.setWidth("100%");
 		}
+		
 		setupContextHelp();
 	}
 	/**
@@ -70,34 +74,50 @@ public class KBInfoForm extends Form
 		}
 	}
 
-	private void addFormFields() {
-		addField("Endpoint URL",url);
-		setDefaultEndpoints();
-		url.addValidator(new EndpointURLValidator(url));
-		url.setRequired(true);
-		url.setRequiredError("The endpoint URL may not be empty.");
-		url.setWidth("100%");
-		url.setNewItemsAllowed(true);
-		url.addListener(new ValueChangeListener()
+	protected void presets()
+	{						
+		presetComboBox.setRequired(false);
+		presetComboBox.setWidth("100%");
+		presetComboBox.setNewItemsAllowed(false);
+		for(String preset : presetToKB.keySet())
+		{
+			presetComboBox.addItem(preset);
+		}
+		presetComboBox.addListener(new ValueChangeListener()
 		{
 			@Override
 			public void valueChange(com.vaadin.data.Property.ValueChangeEvent event)
 			{
-				if(kbs.containsKey(url.getValue()))
+				if(presetToKB.containsKey(presetComboBox.getValue()))
 				{
-					KBInfo kb = kbs.get(url.getValue());
+					KBInfo kb = presetToKB.get(presetComboBox.getValue());
+					if(kb.endpoint!=null)	{url.setValue(kb.endpoint);}
 					if(kb.id!=null)			{id.setValue(kb.id);}
 					if(kb.graph!=null)		{graph.setValue(kb.graph);}
 					pageSize.setValue(Integer.toString(kb.pageSize));
 				}
 			}
 		});
+	}
+	
+	private void addFormFields()
+	{
+		setDefaultEndpoints();
+		presets();
+		addField("Presets",presetComboBox);			
+		
+		addField("Endpoint URL",url);
+		
+		url.addValidator(new EndpointURLValidator(url));
+		url.setRequired(true);
+		url.setRequiredError("The endpoint URL may not be empty.");
+		url.setWidth("100%");
 		url.addListener(new BlurListener(){
 			@Override
 			public void blur(BlurEvent event) {
 				if(url.isValid())
 				{
-					if(!kbs.containsKey(url.getValue()))
+					if(!presetToKB.containsKey(url.getValue()))
 					{
 						try {
 							String val = (String) url.getValue();
@@ -151,18 +171,17 @@ public class KBInfoForm extends Form
 
 	private void setDefaultEndpoints()
 	{
-		kbs.clear();
-		url.removeAllItems();
+		presetToKB.clear();
+		presetComboBox.removeAllItems();
 		for(KBInfo kb : DefaultEndpointLoader.getDefaultEndpoints())
 		{
-			kbs.put(kb.endpoint,kb);
-			url.addItem(kb.endpoint);
-		}
+			presetToKB.put(kb.endpoint,kb);
+			presetComboBox.addItem(kb.endpoint);
+		}		
 	}
 	
 	public void setValuesFromKBInfo(KBInfo info) {
 		this.kbInfo = info;
-		url.addItem(kbInfo.endpoint);	
 		url.setValue(kbInfo.endpoint);
 		graph.setValue(kbInfo.graph);
 		id.setValue(kbInfo.id);
