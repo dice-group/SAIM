@@ -105,8 +105,10 @@ public class ClassMatchingPanel extends Panel
 				public void valueChange(ValueChangeEvent event) {
 					//get Value
 					Entry<Double, Pair<String>> entry = (Entry<Double, Pair<String>>) suggestionComboBox.getValue();
-					sourceClassForm.addItem(entry.getValue().a);
-					targetClassForm.addItem(entry.getValue().b);
+					sourceClassForm.addItem(entry.getValue().getA());
+					targetClassForm.addItem(entry.getValue().getB());
+					sourceClassForm.requestRepaint();
+					targetClassForm.requestRepaint();
 				}
 			});
 			this.getContent().addComponent(hori);
