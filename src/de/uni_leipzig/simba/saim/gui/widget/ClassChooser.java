@@ -11,6 +11,7 @@ import java.util.List;
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.ExpandEvent;
 import com.vaadin.ui.Tree.ExpandListener;
@@ -23,7 +24,6 @@ public class ClassChooser extends Panel
 	protected final Tree tree;
 
 	/**
-	 * 
 	 * @param endpoint
 	 * @param id
 	 * @param graph
@@ -35,6 +35,11 @@ public class ClassChooser extends Panel
 		this.graph = graph;
 		addComponent(tree);
 		tree.setImmediate(true);
+		
+		final ProgressIndicator progress = new ProgressIndicator();
+		progress.setImmediate(true);
+		progress.setIndeterminate(true);
+		addComponent(progress);
 
 		new Thread()
 		{
@@ -57,6 +62,9 @@ public class ClassChooser extends Panel
 				tree.setImmediate(true);
 
 				System.out.println("y");
+				progress.setEnabled(false);
+				ClassChooser.this.removeComponent(progress);
+				
 				tree.addListener(new ExpandListener()
 				{			
 					@Override

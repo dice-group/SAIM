@@ -1,6 +1,13 @@
 package de.uni_leipzig.simba.saim.gui.widget;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
+
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
 
 import org.vaadin.jonatan.contexthelp.ContextHelp;
 
@@ -17,8 +24,8 @@ import com.vaadin.ui.VerticalLayout;
 
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.learning.query.ClassMapper;
-import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.Messages;
+import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.Pair;
 import de.uni_leipzig.simba.saim.util.SortedMapping;
 
@@ -26,6 +33,7 @@ import de.uni_leipzig.simba.saim.util.SortedMapping;
 @SuppressWarnings("serial")
 public class ClassMatchingPanel extends Panel
 {	
+	protected static final boolean	CACHING	= true;
 	Configuration config = Configuration.getInstance();
 	final ComboBox suggestionComboBox = new ComboBox();
 	public ClassMatchingForm sourceClassForm;
@@ -72,19 +80,45 @@ public class ClassMatchingPanel extends Panel
 					refresher.addListener(listener);
 					addComponent(refresher);
 
-					ClassMapper classMapper = new ClassMapper();
-					Mapping sugg = classMapper.getMappingClasses(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id);
+					Mapping classMatching = null;
 
-					if(sugg.size()==0)
+					ClassMapper classMapper = new ClassMapper();
+					if(CACHING)
+					{						
+						Cache cache = CacheManager.getInstance().getCache("classmatching");
+						List<Object> parameters = Arrays.asList(new Object[] {config.getSource().endpoint,config.getTarget().endpoint,config.getSource().id,config.getTarget().id});
+						if(cache.isKeyInCache(parameters))
+						{		
+							classMatching = new Mapping();
+							classMatching.map= ((HashMap<String,HashMap<String,Double>>) cache.get(parameters).getValue());
+							System.out.println("loading map of size "+classMatching.map.size());
+							System.out.println("cache hit");
+						}
+					}									
+					if(classMatching==null)
+					{
+						System.out.println("cache miss");
+						classMatching = classMapper.getMappingClasses(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id);
+						if(CACHING)
+						{
+							Cache cache = CacheManager.getInstance().getCache("classmatching");
+							List<Object> parameters = Arrays.asList(new Object[] {config.getSource().endpoint,config.getTarget().endpoint,config.getSource().id,config.getTarget().id});
+							System.out.println("cache saving map of size "+classMatching.map.size());
+							cache.put(new Element(parameters,classMatching.map));
+							cache.flush();							
+						}
+					}
+					if(classMatching.map.size()==0)
 					{
 						Label errorLabel = new Label(Messages.getString("ClassMatchingPanel.nosuggestionsfound"));
+						System.out.println("no suggestions found.");
 						layout.addComponent(errorLabel);
-						
+
 					}
 					else
 					{
 						suggestionComboBox.removeAllItems();
-						SortedMapping sorter = new SortedMapping(sugg);
+						SortedMapping sorter = new SortedMapping(classMatching);
 						for(Entry<Double, Pair<String>> e: sorter.sort().descendingMap().entrySet()) {
 							suggestionComboBox.addItem(e);
 						}
@@ -93,13 +127,35 @@ public class ClassMatchingPanel extends Panel
 						//							suggestionComboBox.addItem(class1+" - "+class2.getKey()+" : "+class2.getValue());
 						//						}
 
-						progress.setEnabled(false);
-						removeComponent(progress);
 						suggestionComboBox.setVisible(true);
 						suggestionComboBox.setEnabled(true);
 						suggestionComboBox.setNullSelectionAllowed(false);					
 						suggestionComboBox.setTextInputAllowed(false);
-						suggestionComboBox.select(0);
+						{
+							Entry<Double, Pair<String>> entry = (Entry<Double, Pair<String>>) suggestionComboBox.getItemIds().iterator().next(); 
+							suggestionComboBox.select(entry);
+							sourceClassForm.addItem(entry.getValue().getA(),false);
+							targetClassForm.addItem(entry.getValue().getB(),false);
+						}
+
+						// set listener in the thread because the programmatical select must not trigger a select in the class forms because
+						// the user may have already entered something there
+						suggestionComboBox.addListener(new ValueChangeListener() {								
+							@Override
+							public void valueChange(ValueChangeEvent event) {
+								//get Value
+								@SuppressWarnings("unchecked")
+								Entry<Double, Pair<String>> entry = (Entry<Double, Pair<String>>) suggestionComboBox.getValue();
+								sourceClassForm.addItem(entry.getValue().getA(),true);
+								targetClassForm.addItem(entry.getValue().getB(),true);
+
+								sourceClassForm.requestRepaint();
+								targetClassForm.requestRepaint();
+							}
+						});
+						progress.setEnabled(false);
+						removeComponent(progress);
+
 						System.out.println("suggested enabled: "+suggestionComboBox.size()+" items");					 //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					listener.running=false;					
@@ -113,23 +169,12 @@ public class ClassMatchingPanel extends Panel
 
 			sourceClassForm.setRequired(true);
 			targetClassForm.setRequired(true);
-			
+
 			hori.addComponent(sourceClassForm);
 			hori.addComponent(targetClassForm);
 			this.getContent().addComponent(hori);
 			// add Listener to set Items in the ClassMatchingForm
-			suggestionComboBox.addListener(new ValueChangeListener() {								
-				@Override
-				public void valueChange(ValueChangeEvent event) {
-					//get Value
-					Entry<Double, Pair<String>> entry = (Entry<Double, Pair<String>>) suggestionComboBox.getValue();
-					sourceClassForm.addItem(entry.getValue().getA());
-					targetClassForm.addItem(entry.getValue().getB());
-					sourceClassForm.requestRepaint();
-					targetClassForm.requestRepaint();
-				}
-			});
-			
+
 		}
 		setupContextHelp();
 	}

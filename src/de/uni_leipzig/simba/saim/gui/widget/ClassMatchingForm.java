@@ -49,11 +49,12 @@ public class ClassMatchingForm extends Form
 	 * Method to add and select a value in the field.
 	 * @param uri
 	 */
-	public void addItem(Object uri) {
+	public void addItem(Object uri, boolean select)
+	{
 		if(!field.containsId(uri)) {
 			field.addItem(uri);
 		}
-		field.select(uri);
+		if(select) {field.select(uri);}
 	}
 	
 }
