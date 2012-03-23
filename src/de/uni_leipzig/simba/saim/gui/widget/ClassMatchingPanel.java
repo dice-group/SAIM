@@ -51,7 +51,7 @@ public class ClassMatchingPanel extends Panel
 		suggestionLabel.setSizeUndefined();		
 		layout.addComponent(suggestionLabel);
 		layout.addComponent(progress);
-		progress.setIndeterminate(true);				
+		progress.setIndeterminate(true);		
 		suggestionComboBox.setWidth("100%");		 //$NON-NLS-1$
 		layout.addComponent(suggestionComboBox);
 		layout.setExpandRatio(suggestionComboBox, 1f);
@@ -89,8 +89,9 @@ public class ClassMatchingPanel extends Panel
 					progress.setEnabled(false);
 					removeComponent(progress);
 					suggestionComboBox.setVisible(true);
-					suggestionComboBox.setEnabled(true);					
-
+					suggestionComboBox.setEnabled(true);
+					
+					//suggestionComboBox.setReadOnly(true);
 					System.out.println("suggested enabled: "+suggestionComboBox.size()+" items");					 //$NON-NLS-1$ //$NON-NLS-2$
 					listener.running=false;					
 				}
