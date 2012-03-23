@@ -1,24 +1,24 @@
 package de.uni_leipzig.simba.saim;
 
-import java.util.ResourceBundle;
+import java.util.HashMap;
 
 import org.vaadin.teemu.wizards.Wizard;
 
 import com.vaadin.Application;
-import com.vaadin.ui.AbsoluteLayout;
-import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
+import de.uni_leipzig.simba.io.KBInfo;
+import de.uni_leipzig.simba.saim.core.Configuration;
+import de.uni_leipzig.simba.saim.core.DefaultEndpointLoader;
 import de.uni_leipzig.simba.saim.gui.widget.ConfigUploader;
 import de.uni_leipzig.simba.saim.gui.widget.ExecutionPanel;
 import de.uni_leipzig.simba.saim.gui.widget.step.ClassMatchingStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.EndpointStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.MetricStep;
-import de.uni_leipzig.simba.saim.gui.widget.step.PropertyMatchingStep;
 
 public class SAIMApplication extends Application {
 
@@ -35,13 +35,27 @@ public class SAIMApplication extends Application {
 		mainWindow.addComponent(buildMainMenu());
 
 		wizard = new Wizard();
-		
-		wizard.addStep(new EndpointStep());
-		wizard.addStep(new ClassMatchingStep());
-		wizard.addStep(new MetricStep());
+		wizardDevelopment();
 		mainLayout.addComponent(wizard);
 		
 		setTheme("saim");
+	}
+	
+	protected void wizardDevelopment()
+	{
+		//wizard.addStep(new EndpointStep());
+		HashMap<String,KBInfo> endpoints = DefaultEndpointLoader.getDefaultEndpoints();
+		Configuration.getInstance().setSourceEndpoint(endpoints.get("lgd.aksw - Drugbank"));
+		Configuration.getInstance().setTargetEndpoint(endpoints.get("lgd.aksw - Sider"));
+		wizard.addStep(new ClassMatchingStep());
+		wizard.addStep(new MetricStep());		
+	}
+	
+	protected void wizardFull()
+	{
+		wizard.addStep(new EndpointStep());		
+		wizard.addStep(new ClassMatchingStep());
+		wizard.addStep(new MetricStep());
 	}
 
 	protected MenuBar buildMainMenu()

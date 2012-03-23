@@ -8,7 +8,7 @@ import de.uni_leipzig.simba.io.KBInfo;
 
 /**Class holds all configuration settings for a linking process. */
 public class Configuration {	
-	private static Configuration instance = null;	
+	private static Configuration instance = new Configuration();	
 	private PropertyChangeSupport changes = new PropertyChangeSupport( this ); 
 	public static final String SETTING_CONFIG = "setting from xml";
 	protected String id = null;
@@ -35,10 +35,7 @@ public class Configuration {
 	 * Implements Singleton pattern.
 	 * @return
 	 */
-	public static Configuration getInstance() {
-		if(instance == null) {
-			instance = new Configuration();
-		}
+	public static Configuration getInstance() {	
 		return instance;
 	}
 	
