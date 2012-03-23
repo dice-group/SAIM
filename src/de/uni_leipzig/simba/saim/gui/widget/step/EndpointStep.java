@@ -10,7 +10,7 @@ import de.uni_leipzig.simba.saim.gui.widget.EndpointPanel;
 import de.uni_leipzig.simba.saim.Messages;
 public class EndpointStep implements WizardStep
 {
-	EndpointPanel panel = new EndpointPanel();
+	EndpointPanel panel;
 
 	@Override
 	public String getCaption() {return Messages.getString("selectsparqlendpoints");}
@@ -18,7 +18,7 @@ public class EndpointStep implements WizardStep
 	@Override
 	public Component getContent()
 	{
-		return panel;
+		return panel = new EndpointPanel();
 	}
 
 	@Override

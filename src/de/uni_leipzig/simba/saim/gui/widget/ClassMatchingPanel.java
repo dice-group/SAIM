@@ -28,8 +28,8 @@ public class ClassMatchingPanel extends Panel
 {	
 	Configuration config = Configuration.getInstance();
 	final ComboBox suggestionComboBox = new ComboBox();
-	private ClassMatchingForm sourceClassForm;
-	private ClassMatchingForm targetClassForm;
+	public ClassMatchingForm sourceClassForm;
+	public ClassMatchingForm targetClassForm;
 
 	protected void setupContextHelp()
 	{
@@ -107,8 +107,13 @@ public class ClassMatchingPanel extends Panel
 			}.start();
 			sourceClassForm = new ClassMatchingForm(Messages.getString("ClassMatchingPanel.sourceclass"), config.getSource());
 			targetClassForm = new ClassMatchingForm(Messages.getString("ClassMatchingPanel.targetclass"), config.getTarget());
+
 			HorizontalLayout hori = new HorizontalLayout();
 			hori.setWidth("100%"); //$NON-NLS-1$
+
+			sourceClassForm.setRequired(true);
+			targetClassForm.setRequired(true);
+			
 			hori.addComponent(sourceClassForm);
 			hori.addComponent(targetClassForm);
 			this.getContent().addComponent(hori);

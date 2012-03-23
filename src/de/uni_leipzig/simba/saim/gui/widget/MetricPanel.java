@@ -4,11 +4,13 @@ import com.vaadin.ui.Accordion;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.VerticalLayout;
 
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.Messages;
+import de.uni_leipzig.simba.saim.core.Configuration;
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
 public class MetricPanel extends Panel
 {	
@@ -29,7 +31,13 @@ public class MetricPanel extends Panel
 		accordionPanel.setWidth("40em"); //$NON-NLS-1$
 		Panel graphPanel = new Panel();
 		this.getContent().addComponent(accordionPanel);
-		
+		TextArea textArea = new TextArea();
+		Configuration config = Configuration.getInstance();
+		String out = "";
+		for(String s : config.getSource().restrictions)
+			out+=s;
+		textArea.setValue(out);
+		layout.addComponent(textArea);
 		this.getContent().addComponent(graphPanel);
 		{
 			Accordion accordion = new Accordion();
