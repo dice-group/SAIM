@@ -25,12 +25,16 @@ import static de.konrad.commons.sparql.SPARQLHelper.rootClasses;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
+import java.util.Map;
 
 import org.junit.Test;
 import org.junit.experimental.ParallelComputer;
 import org.junit.runner.JUnitCore;
 
 import com.hp.hpl.jena.vocabulary.OWL;
+
+import de.uni_leipzig.simba.io.KBInfo;
+import de.uni_leipzig.simba.saim.core.DefaultEndpointLoader;
 
 /** @author Konrad Höffner */
 public class SPARQLHelperTest {
@@ -46,10 +50,15 @@ public class SPARQLHelperTest {
 	@Test
 	public void testRootClasses()
 	{
-		assertTrue(rootClasses("http://dbpedia.org/sparql", null).equals(Collections.singletonList(OWL.Thing.toString())));
-		assertTrue(rootClasses("http://live.dbpedia.org/sparql", null).equals(Collections.singletonList(OWL.Thing.toString())));
-		assertTrue(rootClasses("http://linkedgeodata.org/sparql", "http://linkedgeodata.org").contains("http://linkedgeodata.org/ontology/Way"));
-//		assertTrue(rootClasses("http://www4.wiwiss.fu-berlin.de/diseasome/sparql",null).contains("http://www4.wiwiss.fu-berlin.de/diseasome/resource/diseasome/genes"));
+//		assertTrue(rootClasses("http://dbpedia.org/sparql", null).equals(Collections.singletonList(OWL.Thing.toString())));
+//		assertTrue(rootClasses("http://live.dbpedia.org/sparql", null).equals(Collections.singletonList(OWL.Thing.toString())));
+//		assertTrue(rootClasses("http://linkedgeodata.org/sparql", "http://linkedgeodata.org").contains("http://linkedgeodata.org/ontology/Way"));
+		Map<String,KBInfo> endpoints = DefaultEndpointLoader.getDefaultEndpoints();
+		KBInfo drugbank = endpoints.get("lgd.aksw - Drugbank");
+		KBInfo sider = endpoints.get("lgd.aksw - Sider");
+		System.out.println(rootClasses(drugbank.endpoint, drugbank.graph));
+		System.out.println(rootClasses(sider.endpoint, sider.graph));
+		//		assertTrue(rootClasses("http://www4.wiwiss.fu-berlin.de/diseasome/sparql",null).contains("http://www4.wiwiss.fu-berlin.de/diseasome/resource/diseasome/genes"));
 	}
 	
 	@Test
