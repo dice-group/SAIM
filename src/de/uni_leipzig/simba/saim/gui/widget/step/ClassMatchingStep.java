@@ -3,6 +3,8 @@ package de.uni_leipzig.simba.saim.gui.widget.step;
 import org.vaadin.teemu.wizards.WizardStep;
 import com.vaadin.ui.Component;
 
+import de.konrad.commons.sparql.PrefixHelper;
+import de.konrad.commons.sparql.SPARQLHelper;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.core.Configuration;
@@ -28,10 +30,12 @@ public class ClassMatchingStep implements WizardStep
 			Configuration config = Configuration.getInstance();
 			KBInfo source = config.getSource();
 			KBInfo target = config.getTarget();
-			String restr = source.var+" rdf:type ";
-			source.restrictions.add(restr+(String) panel.sourceClassForm.getValue());
+			String restr = source.var+" rdf:type ";		
+			String value = SPARQLHelper.wrapIfNecessary(PrefixHelper.expand(panel.sourceClassForm.getField("textfield").getValue().toString()));
+			source.restrictions.add(restr + value);
 			restr = target.var+" rdf:type ";
-			target.restrictions.add(restr+(String) panel.targetClassForm.getValue());
+			value = SPARQLHelper.wrapIfNecessary(PrefixHelper.expand(panel.targetClassForm.getField("textfield").getValue().toString()));
+			target.restrictions.add(restr + value);
 			return true;
 		}		
 		return false;
