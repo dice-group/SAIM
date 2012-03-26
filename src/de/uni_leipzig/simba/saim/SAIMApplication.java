@@ -16,24 +16,31 @@ import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.DefaultEndpointLoader;
 import de.uni_leipzig.simba.saim.gui.widget.ConfigUploader;
 import de.uni_leipzig.simba.saim.gui.widget.ExecutionPanel;
+import de.uni_leipzig.simba.saim.gui.widget.StartPanel;
+import de.uni_leipzig.simba.saim.gui.widget.step.ActiveLearningStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.ClassMatchingStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.EndpointStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.MetricStep;
 
-public class SAIMApplication extends Application {
-
+public class SAIMApplication extends Application
+{
+	private static SAIMApplication application = null; 
 	private final Window mainWindow;
 	private Layout mainLayout;
 //	private GridLayout gridLayout;
 	private Wizard wizard;
 	
+	public static Application getInstance() {return application;}
+	
 	public SAIMApplication()
 	{
+		application=this;
 		mainWindow = new Window(Messages.getString("title"));	
 		mainLayout = buildMainLayout();
 		mainWindow.setContent(mainLayout);
 		mainWindow.addComponent(buildMainMenu());
 
+//		mainLayout.addComponent(new StartPanel());
 		wizard = new Wizard();
 		wizardDevelopment();
 		mainLayout.addComponent(wizard);
@@ -48,7 +55,8 @@ public class SAIMApplication extends Application {
 		Configuration.getInstance().setSourceEndpoint(endpoints.get("lgd.aksw - Drugbank"));
 		Configuration.getInstance().setTargetEndpoint(endpoints.get("lgd.aksw - Sider"));
 		wizard.addStep(new ClassMatchingStep());
-		wizard.addStep(new MetricStep());		
+		wizard.addStep(new MetricStep());
+		wizard.addStep(new ActiveLearningStep());
 	}
 	
 	protected void wizardFull()
@@ -56,6 +64,7 @@ public class SAIMApplication extends Application {
 		wizard.addStep(new EndpointStep());		
 		wizard.addStep(new ClassMatchingStep());
 		wizard.addStep(new MetricStep());
+		wizard.addStep(new ActiveLearningStep());
 	}
 
 	protected MenuBar buildMainMenu()
