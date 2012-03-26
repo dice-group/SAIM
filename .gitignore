@@ -5,3 +5,5 @@ WebContent/VAADIN/widgetsets
 /.classpath
 /.project
 *~
+
+/cache
