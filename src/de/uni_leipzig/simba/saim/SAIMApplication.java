@@ -36,6 +36,7 @@ public class SAIMApplication extends Application {
 
 		wizard = new Wizard();
 		wizardDevelopment();
+//		wizardFull();
 		mainLayout.addComponent(wizard);
 		
 		setTheme("saim");
@@ -45,8 +46,14 @@ public class SAIMApplication extends Application {
 	{
 		//wizard.addStep(new EndpointStep());
 		HashMap<String,KBInfo> endpoints = DefaultEndpointLoader.getDefaultEndpoints();
-		Configuration.getInstance().setSourceEndpoint(endpoints.get("lgd.aksw - Drugbank"));
-		Configuration.getInstance().setTargetEndpoint(endpoints.get("lgd.aksw - Sider"));
+		KBInfo info_s = endpoints.get("lgd.aksw - Drugbank");
+		KBInfo info_t = endpoints.get("lgd.aksw - Sider");
+		info_s.var = "?src";
+		info_t.var = "?dest";
+		info_s.type = "SPARQL";
+		info_t.type = "SPARQL";
+		Configuration.getInstance().setSourceEndpoint(info_s);
+		Configuration.getInstance().setTargetEndpoint(info_t);
 		wizard.addStep(new ClassMatchingStep());
 		wizard.addStep(new MetricStep());		
 	}

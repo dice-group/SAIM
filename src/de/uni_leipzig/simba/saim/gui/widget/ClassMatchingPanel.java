@@ -90,7 +90,7 @@ public class ClassMatchingPanel extends Panel
 						if(cache.isKeyInCache(parameters))
 						{		
 							classMatching = new Mapping();
-							classMatching.map= ((HashMap<String,HashMap<String,Double>>) cache.get(parameters).getValue());
+							classMatching.map = ((HashMap<String,HashMap<String,Double>>) cache.get(parameters).getValue());
 							System.out.println("loading map of size "+classMatching.map.size());
 							System.out.println("cache hit");
 						}
