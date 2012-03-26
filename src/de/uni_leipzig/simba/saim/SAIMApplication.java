@@ -13,25 +13,32 @@ import com.vaadin.ui.Window;
 
 import de.uni_leipzig.simba.saim.gui.widget.ConfigUploader;
 import de.uni_leipzig.simba.saim.gui.widget.InstanceWindow;
+import de.uni_leipzig.simba.saim.gui.widget.StartPanel;
+import de.uni_leipzig.simba.saim.gui.widget.step.ActiveLearningStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.ClassMatchingStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.EndpointStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.MetricStep;
 
-public class SAIMApplication extends Application {
-
+public class SAIMApplication extends Application
+{
+	private static SAIMApplication application = null; 
 	private final Window mainWindow;
 	private Layout mainLayout;
 //	private GridLayout gridLayout;
 	private Wizard wizard;
 	Window sub;
 	
+	public static Application getInstance() {return application;}
+	
 	public SAIMApplication()
 	{
+		application=this;
 		mainWindow = new Window(Messages.getString("title"));	
 		mainLayout = buildMainLayout();
 		mainWindow.setContent(mainLayout);
 		mainWindow.addComponent(buildMainMenu());
 
+//		mainLayout.addComponent(new StartPanel());
 		wizard = new Wizard();
 		wizardDevelopment();
 //		wizardFull();
@@ -43,20 +50,18 @@ public class SAIMApplication extends Application {
 	protected void wizardDevelopment()
 	{
 		//wizard.addStep(new EndpointStep());
-//		HashMap<String,KBInfo> endpoints = DefaultEndpointLoader.getDefaultEndpoints();
-//		KBInfo info_s = endpoints.get("lgd.aksw - Drugbank");
-//		KBInfo info_t = endpoints.get("lgd.aksw - Sider");
-//		info_s.var = "?src";
-//		info_t.var = "?dest";
-//		info_s.type = "SPARQL";
-//		info_t.type = "SPARQL";
-//		Configuration.getInstance().setSourceEndpoint(info_s);
-//		Configuration.getInstance().setTargetEndpoint(info_t);
-//		wizard.addStep(new ClassMatchingStep());
-//		wizard.addStep(new MetricStep());
-		mainWindow.removeAllComponents();
-		mainWindow.addComponent(buildMainMenu());
-		mainWindow.addComponent(new InstanceWindow());
+		HashMap<String,KBInfo> endpoints = DefaultEndpointLoader.getDefaultEndpoints();
+		KBInfo info_s = endpoints.get("lgd.aksw - Drugbank");
+		KBInfo info_t = endpoints.get("lgd.aksw - Sider");
+		info_s.var = "?src";
+		info_t.var = "?dest";
+		info_s.type = "SPARQL";
+		info_t.type = "SPARQL";
+		Configuration.getInstance().setSourceEndpoint(info_s);
+		Configuration.getInstance().setTargetEndpoint(info_t);
+		wizard.addStep(new ClassMatchingStep());
+		wizard.addStep(new MetricStep());
+		wizard.addStep(new ActiveLearningStep());
 	}
 	
 	protected void wizardFull()
@@ -64,6 +69,7 @@ public class SAIMApplication extends Application {
 		wizard.addStep(new EndpointStep());		
 		wizard.addStep(new ClassMatchingStep());
 		wizard.addStep(new MetricStep());
+		wizard.addStep(new ActiveLearningStep());
 	}
 
 	protected MenuBar buildMainMenu()

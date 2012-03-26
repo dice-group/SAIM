@@ -22,7 +22,7 @@ public class MetricStep implements WizardStep, Serializable
 	@Override
 	public boolean onAdvance()
 	{
-		return false;
+		return true;
 	}
 
 	@Override

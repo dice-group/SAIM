@@ -114,7 +114,7 @@ public class SPARQLHelper
 	public static List<String> rootClasses(String endpoint, String graph)
 	{
 		{
-			// if owl:Thing exists, use that
+			// if owl:Thing exists and has at least one subclass, so use owl:Thing
 			String queryForOWLThing = "SELECT ?class WHERE {?class rdfs:subClassOf owl:Thing} limit 1";
 			if(!resultSetToList(querySelect(PrefixHelper.addPrefixes(queryForOWLThing),endpoint,graph)).isEmpty())
 			{return Collections.singletonList(OWL.Thing.toString());}
@@ -135,6 +135,13 @@ public class SPARQLHelper
 		String query =
 				"SELECT distinct(?class) WHERE {?x a ?class. OPTIONAL {?class rdfs:subClassOf ?superClass.} FILTER (!BOUND(?superClass))}";
 		List<String> classes = resultSetToList(querySelect(PrefixHelper.addPrefixes(query), endpoint, graph));
+		
+		// we only want classes of instances
+		classes.remove("http://www.w3.org/1999/02/22-rdf-syntax-ns#Property");
+		classes.remove("http://www.w3.org/2000/01/rdf-schema#Class");
+		classes.remove("http://www.w3.org/2002/07/owl#DatatypeProperty");
+		classes.remove("http://www.w3.org/2002/07/owl#DatatypeProperty");
+		
 		return classes;
 		}
 	}
