@@ -1,6 +1,8 @@
 package de.uni_leipzig.simba.saim;
 
 
+import java.util.HashMap;
+
 import org.vaadin.teemu.wizards.Wizard;
 
 import com.vaadin.Application;
@@ -11,9 +13,10 @@ import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
+import de.uni_leipzig.simba.io.KBInfo;
+import de.uni_leipzig.simba.saim.core.Configuration;
+import de.uni_leipzig.simba.saim.core.DefaultEndpointLoader;
 import de.uni_leipzig.simba.saim.gui.widget.ConfigUploader;
-import de.uni_leipzig.simba.saim.gui.widget.InstanceWindow;
-import de.uni_leipzig.simba.saim.gui.widget.StartPanel;
 import de.uni_leipzig.simba.saim.gui.widget.step.ActiveLearningStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.ClassMatchingStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.EndpointStep;
