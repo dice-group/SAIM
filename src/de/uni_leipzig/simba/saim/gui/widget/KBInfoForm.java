@@ -18,6 +18,7 @@ import com.vaadin.ui.TextField;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.DefaultEndpointLoader;
+import de.uni_leipzig.simba.saim.core.Endpoints;
 import de.uni_leipzig.simba.saim.gui.validator.EndpointURLValidator;
 import de.uni_leipzig.simba.saim.gui.validator.PageSizeValidator;
 import de.uni_leipzig.simba.saim.Messages;
@@ -27,7 +28,7 @@ public class KBInfoForm extends Form
 {	
 	protected final static String WIDTH = "35em"; //$NON-NLS-1$
 	protected final ComboBox presetComboBox = new ComboBox(Messages.getString("preset")); //$NON-NLS-1$
-	protected final TextField url = new TextField(Messages.getString("endpointurl")); //$NON-NLS-1$
+	protected final ComboBox url = new ComboBox(Messages.getString("endpointurl")); //$NON-NLS-1$
 	protected final TextField id = new TextField(Messages.getString("idnamespace")); //$NON-NLS-1$
 	protected final TextField graph = new TextField(Messages.getString("graph")); //$NON-NLS-1$
 	protected final TextField pageSize = new TextField("Page size", "-1"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -76,10 +77,11 @@ public class KBInfoForm extends Form
 	}
 
 	protected void presets()
-	{						
+	{
+		presetComboBox.setMultiSelect(false);
 		presetComboBox.setRequired(false);
 		presetComboBox.setWidth("100%"); //$NON-NLS-1$
-		presetComboBox.setNewItemsAllowed(false);
+		presetComboBox.setNewItemsAllowed(false);		
 		for(String preset : presetToKB.keySet())
 		{
 			presetComboBox.addItem(preset);
@@ -92,12 +94,13 @@ public class KBInfoForm extends Form
 				if(presetToKB.containsKey(presetComboBox.getValue()))
 				{
 					KBInfo kb = presetToKB.get(presetComboBox.getValue());
-					if(kb.endpoint!=null)	{url.setValue(kb.endpoint);}
+					if(kb.endpoint!=null)	{url.addItem(kb.endpoint);url.select(kb.endpoint);}
 					if(kb.id!=null)			{id.setValue(kb.id);}
 					if(kb.graph!=null)		{graph.setValue(kb.graph);}
 					pageSize.setValue(Integer.toString(kb.pageSize));
 				}
 			}
+			
 		});
 	}
 	
@@ -113,6 +116,11 @@ public class KBInfoForm extends Form
 		url.setRequired(true);
 		url.setRequiredError(Messages.getString("endpointurlmaynotbeempty")); //$NON-NLS-1$
 		url.setWidth("100%"); //$NON-NLS-1$
+		url.setReadOnly(false);
+		url.setImmediate(true);
+		url.setTextInputAllowed(true);
+		
+		for(String endpoint: Endpoints.endpointArray) {url.addItem(endpoint);}
 		url.addListener(new BlurListener(){
 			@Override
 			public void blur(BlurEvent event) {
