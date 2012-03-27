@@ -1,5 +1,7 @@
 	package de.uni_leipzig.simba.saim.gui.widget;
 	import de.uni_leipzig.simba.saim.Messages;
+import de.uni_leipzig.simba.saim.SAIMApplication;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -24,10 +26,9 @@ public class ConfigUploader extends CustomComponent
 	private ConfigReader cR = new ConfigReader();
 	private Button proceed = new Button(Messages.getString("executefile"));
 	private Button run_def = new Button("rundefaultspec");
-	private Window mainWindow;
-	
-	public ConfigUploader(final Window mainWindow) {
-		this.mainWindow = mainWindow;
+
+
+	public ConfigUploader() {
 		root = new Panel("limesupload");
 		root.setWidth("100%");
 	    setCompositionRoot(root);
@@ -46,8 +47,8 @@ public class ConfigUploader extends CustomComponent
 				Configuration config = Configuration.getInstance();
 				config.setFromConfigReader(cR);
 				file.delete();
-				mainWindow.removeWindow(getWindow());
-				mainWindow.addComponent(new ExecutionPanel());
+				SAIMApplication appl = (SAIMApplication) getApplication();
+				appl.showComponent(new ExecutionPanel());
 			}
 		});       
         root.getContent().addComponent(proceed);
@@ -58,8 +59,8 @@ public class ConfigUploader extends CustomComponent
 				ConfigReader cR = new ConfigReader();
 				cR.validateAndRead("C:/tmp/dbpedia-linkedmdb.xml");			
 				config.setFromConfigReader(cR);
-				mainWindow.removeWindow(getWindow());
-				mainWindow.addComponent(new ExecutionPanel());
+				SAIMApplication appl = (SAIMApplication) getApplication();
+				appl.showComponent(new ExecutionPanel());
 			}
 		});
         root.getContent().addComponent(run_def);

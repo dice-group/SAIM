@@ -6,6 +6,7 @@ import java.beans.PropertyChangeListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
@@ -15,6 +16,7 @@ import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.LimesRunner;
 import de.uni_leipzig.simba.saim.Messages;
+import de.uni_leipzig.simba.saim.SAIMApplication;
 public class ExecutionPanel extends Panel implements PropertyChangeListener {
 	LimesRunner lR;
 	Label progressLabel;
@@ -22,6 +24,8 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 	private Mapping m = new Mapping();
 	float maxSteps = 5;
 	Button start;
+	Button showResults;
+	Layout mainLayout = new VerticalLayout();
 	
 	public ExecutionPanel() {
 		super(Messages.getString("ExecutionPanel.executelinkspecification")); //$NON-NLS-1$
@@ -31,6 +35,18 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 		progress = new ProgressIndicator();
 	//	progress.setCaption("Progress");
 		progress.setValue(0);
+		showResults = new Button(Messages.getString("ExecutionPanel.showResults"));
+		showResults.setEnabled(false);
+		showResults.addListener(new ClickListener() {			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				SAIMApplication appl = (SAIMApplication) getApplication();
+				InstanceMappingTable iT = new InstanceMappingTable(m);
+				appl.showComponent(iT.getFlatTable());
+			}
+		});
+		
+		
 		start = new Button(Messages.getString("ExecutionPanel.startmapping")); //$NON-NLS-1$
 		start.addListener(new ClickListener() {			
 			@Override
@@ -42,15 +58,17 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 						start.setEnabled(false);
 						progress.setValue(1f);
 						progressLabel.setValue(Messages.getString("ExecutionPanel.mappingperformed")); //$NON-NLS-1$
+						showResults.setEnabled(true);
+						mainLayout.addComponent(showResults);
 					}
 				}.start();				
 			}
 		});
 		setWidth("100%"); //$NON-NLS-1$
-		this.setContent(new VerticalLayout());
-		this.getContent().addComponent(progressLabel);
-		this.getContent().addComponent(progress);
-		this.getContent().addComponent(start);
+		this.setContent(mainLayout);
+		mainLayout.addComponent(progressLabel);
+		mainLayout.addComponent(progress);
+		mainLayout.addComponent(start);
 	}	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {

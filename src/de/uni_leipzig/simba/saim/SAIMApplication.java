@@ -1,10 +1,12 @@
 package de.uni_leipzig.simba.saim;
 
+
 import java.util.HashMap;
 
 import org.vaadin.teemu.wizards.Wizard;
 
 import com.vaadin.Application;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
@@ -15,8 +17,6 @@ import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.DefaultEndpointLoader;
 import de.uni_leipzig.simba.saim.gui.widget.ConfigUploader;
-import de.uni_leipzig.simba.saim.gui.widget.ExecutionPanel;
-import de.uni_leipzig.simba.saim.gui.widget.StartPanel;
 import de.uni_leipzig.simba.saim.gui.widget.step.ActiveLearningStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.ClassMatchingStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.EndpointStep;
@@ -29,6 +29,7 @@ public class SAIMApplication extends Application
 	private Layout mainLayout;
 //	private GridLayout gridLayout;
 	private Wizard wizard;
+	Window sub;
 	
 	public static Application getInstance() {return application;}
 	
@@ -42,9 +43,9 @@ public class SAIMApplication extends Application
 
 //		mainLayout.addComponent(new StartPanel());
 		wizard = new Wizard();
-//		wizardDevelopment();
-		wizardFull();
-		mainLayout.addComponent(wizard);
+		wizardDevelopment();
+//		wizardFull();
+//		mainLayout.addComponent(wizard);
 		
 		setTheme("saim");
 	}
@@ -142,18 +143,21 @@ public class SAIMApplication extends Application
 //	}
 	MenuBar.Command uploadConfigCommand = new MenuBar.Command() {
 	    public void menuSelected(MenuItem selectedItem) {
-	    	Window sub = new Window(Messages.getString("limesupload"));
+	    	sub = new Window(Messages.getString("limesupload"));
 	    	sub.setWidth("700px");
 	    	sub.setModal(true);
-	    	final ConfigUploader upload = new ConfigUploader(getMainWindow());
+	    	final ConfigUploader upload = new ConfigUploader();
 	    	sub.addComponent(upload);
 	    	getMainWindow().addWindow(sub);
 	    }  
 	};
 	
-	public void executeLimes() {
+	public void showComponent(Component c) {
+		mainWindow.removeWindow(sub);
 		wizard.finish();
-		mainLayout.removeComponent(wizard);
-		mainLayout.addComponent(new ExecutionPanel());
+		mainWindow.removeAllComponents();
+		mainWindow.addComponent(buildMainMenu());
+		mainWindow.addComponent(c);
+//		mainWindow.addComponent(new ExecutionPanel());
 	}
 }
