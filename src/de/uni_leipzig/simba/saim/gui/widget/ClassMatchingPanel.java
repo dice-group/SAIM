@@ -34,12 +34,21 @@ import de.uni_leipzig.simba.saim.util.SortedMapping;
 @SuppressWarnings("serial")
 public class ClassMatchingPanel extends Panel
 {	
-	protected static final boolean	CACHING	= true;
+	protected static final boolean CACHING	= true;
 	Configuration config = Configuration.getInstance();
 	final ComboBox suggestionComboBox = new ComboBox();
 	public ClassMatchingForm sourceClassForm;
 	public ClassMatchingForm targetClassForm;
 
+	public void close()
+	{
+		if(CACHING)
+		{							
+			Cache cache = CacheManager.getInstance().getCache("classmatching");
+			cache.dispose();
+		}
+	}
+	
 	protected void setupContextHelp()
 	{
 		ContextHelp contextHelp = new ContextHelp();

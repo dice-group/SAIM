@@ -194,4 +194,6 @@ public class KBInfoForm extends Form
 		pageSize.setValue(kbInfo.pageSize);
 	}
 
+	
+	
 } 
