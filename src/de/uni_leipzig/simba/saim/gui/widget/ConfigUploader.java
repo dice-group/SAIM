@@ -3,8 +3,16 @@
 import de.uni_leipzig.simba.saim.SAIMApplication;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+
+import javax.annotation.Resource;
+
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
@@ -26,7 +34,7 @@ public class ConfigUploader extends CustomComponent
 	private ConfigReader cR = new ConfigReader();
 	private Button proceed = new Button(Messages.getString("executefile"));
 	private Button run_def = new Button("rundefaultspec");
-	private static final String DEFAULT_LIMES_XML = "C:/tmp/dbpedia-linkedmdb.xml";
+	private static final String DEFAULT_LIMES_XML = "examples/dbpedia-linkedmdb.xml";
 
 	public ConfigUploader() {
 		root = new Panel("limesupload");
@@ -55,12 +63,26 @@ public class ConfigUploader extends CustomComponent
         run_def.addListener(new Button.ClickListener() {			
 			@Override
 			public void buttonClick(ClickEvent event) {
-				Configuration config = Configuration.getInstance();
+			Configuration config = Configuration.getInstance();
 				ConfigReader cR = new ConfigReader();
-				cR.validateAndRead(DEFAULT_LIMES_XML);			
+				InputStream inStream;
+				inStream = getClass().getClassLoader().getResourceAsStream(DEFAULT_LIMES_XML);
+				cR.validateAndRead(inStream);
+				
+				// set paths to source and target
+				try {
+					URL url = getClass().getClassLoader().getResource("examples/"+cR.sourceInfo.endpoint);//dbpedia-linkedmdb.xml");
+					String path = new File(url.toURI()).getAbsolutePath();
+					cR.sourceInfo.endpoint = path;
+					url = getClass().getClassLoader().getResource("examples/"+cR.targetInfo.endpoint);//dbpedia-linkedmdb.xml");
+					path = new File(url.toURI()).getAbsolutePath();
+					cR.targetInfo.endpoint = path;
+				}catch(URISyntaxException e) {
+					e.printStackTrace();
+				}
 				config.setFromConfigReader(cR);
 				SAIMApplication appl = (SAIMApplication) getApplication();
-				appl.showComponent(new ExecutionPanel());
+				appl.showComponent(new ExecutionPanel());				
 			}
 		});
         root.getContent().addComponent(run_def);
