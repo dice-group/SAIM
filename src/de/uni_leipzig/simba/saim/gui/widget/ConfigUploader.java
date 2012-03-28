@@ -26,7 +26,7 @@ public class ConfigUploader extends CustomComponent
 	private ConfigReader cR = new ConfigReader();
 	private Button proceed = new Button(Messages.getString("executefile"));
 	private Button run_def = new Button("rundefaultspec");
-
+	private static final String DEFAULT_LIMES_XML = "C:/tmp/dbpedia-linkedmdb.xml";
 
 	public ConfigUploader() {
 		root = new Panel("limesupload");
@@ -57,7 +57,7 @@ public class ConfigUploader extends CustomComponent
 			public void buttonClick(ClickEvent event) {
 				Configuration config = Configuration.getInstance();
 				ConfigReader cR = new ConfigReader();
-				cR.validateAndRead("C:/tmp/dbpedia-linkedmdb.xml");			
+				cR.validateAndRead(DEFAULT_LIMES_XML);			
 				config.setFromConfigReader(cR);
 				SAIMApplication appl = (SAIMApplication) getApplication();
 				appl.showComponent(new ExecutionPanel());

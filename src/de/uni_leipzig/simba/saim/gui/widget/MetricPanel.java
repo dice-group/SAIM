@@ -83,13 +83,7 @@ public class MetricPanel extends Panel
 	}
 	
 	private void performPropertyMapping() {
-		TextArea textArea = new TextArea();
 		Configuration config = Configuration.getInstance();
-		String out = "";
-		for(String s : config.getSource().restrictions)
-			out+=s;
-		textArea.setValue(out);
-		layout.addComponent(textArea);
 		PropertyMapper propMapper = new PropertyMapper();
 		String classSource = getClassOfEndpoint(config.getSource());
 		String classTarget = getClassOfEndpoint(config.getTarget());
@@ -102,7 +96,6 @@ public class MetricPanel extends Panel
 					sourceProps.add(s);
 					targetProps.add(e.getKey());
 				}
-			textArea.setValue(propMapping.toString());
 		} else {
 			showErrorMessage("Cannot perform automatic property mapping due to missing class specifications.");
 		}		

@@ -17,6 +17,7 @@ import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.DefaultEndpointLoader;
 import de.uni_leipzig.simba.saim.gui.widget.ConfigUploader;
+import de.uni_leipzig.simba.saim.gui.widget.StartPanel;
 import de.uni_leipzig.simba.saim.gui.widget.step.ActiveLearningStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.ClassMatchingStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.EndpointStep;
@@ -41,11 +42,11 @@ public class SAIMApplication extends Application
 		mainWindow.setContent(mainLayout);
 		mainWindow.addComponent(buildMainMenu());
 
-//		mainLayout.addComponent(new StartPanel());
+		mainLayout.addComponent(new StartPanel());
 		wizard = new Wizard();
-		wizardDevelopment();
-//		wizardFull();
-//		mainLayout.addComponent(wizard);
+//		wizardDevelopment();
+		wizardFull();
+		mainLayout.addComponent(wizard);
 		
 		setTheme("saim");
 	}
