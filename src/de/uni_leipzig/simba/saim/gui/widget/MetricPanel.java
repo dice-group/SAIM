@@ -9,7 +9,6 @@ import com.vaadin.ui.Accordion;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -22,6 +21,7 @@ import de.uni_leipzig.simba.saim.core.Configuration;
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
 public class MetricPanel extends Panel
 {	
+	private static final long	serialVersionUID	= 6766679517868840795L;
 	TextField metricTextField = new TextField("Insert metric here");
 	Mapping propMapping;
 	HorizontalLayout layout = new HorizontalLayout();
@@ -93,13 +93,7 @@ public class MetricPanel extends Panel
 	}
 
 	private void performPropertyMapping() {
-		TextArea textArea = new TextArea();
 		Configuration config = Configuration.getInstance();
-		String out = "";
-		for(String s : config.getSource().restrictions)
-			out+=s;
-		textArea.setValue(out);
-		layout.addComponent(textArea);
 		PropertyMapper propMapper = new PropertyMapper();
 		String classSource = getClassOfEndpoint(config.getSource());
 		String classTarget = getClassOfEndpoint(config.getTarget());
@@ -112,7 +106,6 @@ public class MetricPanel extends Panel
 					sourceProps.add(s);
 					targetProps.add(e.getKey());
 				}
-			textArea.setValue(propMapping.toString());
 		} else {
 			showErrorMessage("Cannot perform automatic property mapping due to missing class specifications.");
 		}		

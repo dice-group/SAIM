@@ -13,6 +13,7 @@ import org.vaadin.jonatan.contexthelp.ContextHelp;
 
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
+import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.ComboBox;
@@ -69,6 +70,21 @@ public class ClassMatchingPanel extends Panel
 		this.addComponent(layout);
 		{
 			suggestionComboBox.setEnabled(false);
+			// set listener in the thread because the programmatical select must not trigger a select in the class forms because
+			// the user may have already entered something there
+			suggestionComboBox.addListener(new ValueChangeListener() {								
+				@Override
+				public void valueChange(ValueChangeEvent event) {
+					//get Value
+					@SuppressWarnings("unchecked")
+					Entry<Double, Pair<String>> entry = (Entry<Double, Pair<String>>) suggestionComboBox.getValue();
+					sourceClassForm.addItem(entry.getValue().getA(),true);
+					targetClassForm.addItem(entry.getValue().getB(),true);
+
+					sourceClassForm.requestRepaint();
+					targetClassForm.requestRepaint();
+				}
+			});
 			new Thread()
 			{
 				
@@ -124,6 +140,7 @@ public class ClassMatchingPanel extends Panel
 						SortedMapping sorter = new SortedMapping(classMatching);
 						for(Entry<Double, Pair<String>> e: sorter.sort().descendingMap().entrySet()) {
 							suggestionComboBox.addItem(e);
+							suggestionComboBox.select(e);
 						}
 						//					for(String class1 : sugg.map.keySet())
 						//						for(Entry<String, Double> class2 : sugg.map.get(class1).entrySet()) {
@@ -141,6 +158,7 @@ public class ClassMatchingPanel extends Panel
 							targetClassForm.addItem(entry.getValue().getB(),false);
 						}
 
+
 						// set listener in the thread because the programmatical select must not trigger a select in the class forms because
 						// the user may have already entered something there
 						suggestionComboBox.addListener(new ValueChangeListener() {								
@@ -155,6 +173,7 @@ public class ClassMatchingPanel extends Panel
 								targetClassForm.requestRepaint();
 							}
 						});
+
 						progress.setEnabled(false);
 						removeComponent(progress);
 

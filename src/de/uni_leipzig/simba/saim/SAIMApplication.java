@@ -17,6 +17,7 @@ import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.DefaultEndpointLoader;
 import de.uni_leipzig.simba.saim.gui.widget.ConfigUploader;
+import de.uni_leipzig.simba.saim.gui.widget.StartPanel;
 import de.uni_leipzig.simba.saim.gui.widget.step.ActiveLearningStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.ClassMatchingStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.EndpointStep;
@@ -24,6 +25,7 @@ import de.uni_leipzig.simba.saim.gui.widget.step.MetricStep;
 
 public class SAIMApplication extends Application
 {
+	private static final long	serialVersionUID	= -7665596682464881860L;
 	private static SAIMApplication application = null; 
 	private final Window mainWindow;
 	private Layout mainLayout;
@@ -41,10 +43,12 @@ public class SAIMApplication extends Application
 		mainWindow.setContent(mainLayout);
 		mainWindow.addComponent(buildMainMenu());
 
-//		mainLayout.addComponent(new StartPanel());
+		mainLayout.addComponent(new StartPanel());
 		wizard = new Wizard();
-		wizardDevelopment();
-//		wizardFull();
+
+//		wizardDevelopment();
+		wizardFull();
+
 		mainLayout.addComponent(wizard);
 		
 		setTheme("saim");

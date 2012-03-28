@@ -1,9 +1,6 @@
 package de.konrad.commons.sparql;
 
-import static com.hp.hpl.jena.query.QueryExecutionFactory.sparqlService;
-
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 

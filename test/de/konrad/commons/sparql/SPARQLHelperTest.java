@@ -24,21 +24,16 @@ import static de.konrad.commons.sparql.SPARQLHelper.resultSetToList;
 import static de.konrad.commons.sparql.SPARQLHelper.rootClasses;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collections;
 import java.util.Map;
 
 import org.junit.Test;
-import org.junit.experimental.ParallelComputer;
-import org.junit.runner.JUnitCore;
-
-import com.hp.hpl.jena.vocabulary.OWL;
 
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.core.DefaultEndpointLoader;
 
 /** @author Konrad Höffner */
-public class SPARQLHelperTest {
-
+public class SPARQLHelperTest
+{
 	//static String[] testObjects = {"Comune di Marcedusa@en","556^^http://www.w3.org/2001/XMLSchema#integer","http://www4.wiwiss.fu-berlin.de/flickrwrappr/photos/Marcedusa"}; 
 
 	@Test

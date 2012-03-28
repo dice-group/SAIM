@@ -2,10 +2,12 @@ package de.uni_leipzig.simba.saim.core;
 
 import java.io.Serializable;
 
+import com.vaadin.ui.Label;
+
 public class InstanceMatch  implements Serializable{
 	public static final int SEED = 23;
 	String uri1, uri2;
-	double value = new Double(0);
+	double Matchvalue = new Double(0);
 	boolean selected = false;
 	
 	public boolean isSelected() {
@@ -15,31 +17,30 @@ public class InstanceMatch  implements Serializable{
 		this.selected = selected;
 	}
 	public InstanceMatch(String uri1, String uri2) {
-		this.uri1 = uri1;
-		this.uri2 = uri2;
+		setUri1(uri1);
+		setUri2(uri2);
 	}
 	public InstanceMatch(String uri1, String uri2, double value) {
 		this(uri1, uri2);
-		this.value = value;
+		this.Matchvalue = Matchvalue;
 	}
 	public String getUri1() {
 		return uri1;
 	}
 	public void setUri1(String uri1) {
-		this.uri1 = uri1;
+		// avoid <, >, "
+		this.uri1 = (uri1.replaceAll("[<>\"]", ""));
 	}
 	public String getUri2() {
 		return uri2;
 	}
 	public void setUri2(String uri2) {
-		this.uri2 = uri2;
+		this.uri2 = (uri2.replaceAll("[<>\"]", ""));
 	}
 	public double getValue() {
-		return value;
+		return Matchvalue;
 	}
-	public void setValue(double value) {
-		this.value = value;
-	}
+
 	@Override
 	public int hashCode() {
 		  int result = SEED;
@@ -66,7 +67,10 @@ public class InstanceMatch  implements Serializable{
 	
 	@Override
 	public String toString() {
-		return uri1 + " - " + uri2 +": "+value+"? "+selected;
+		return uri1 + " - " + uri2 +": "+Matchvalue+"? "+selected;
 	}
 	
+	public static Label getLinkLabelToUri(String uri) {
+		return new Label("<a href='"+uri.replaceAll("[<>\"]", "")+"' target='_blank'>"+uri.replaceAll("[<>\"]", "")+"</a>", Label.CONTENT_XHTML);
+	}
 }

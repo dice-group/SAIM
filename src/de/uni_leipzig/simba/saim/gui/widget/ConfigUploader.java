@@ -1,10 +1,8 @@
 	package de.uni_leipzig.simba.saim.gui.widget;
-	import de.uni_leipzig.simba.saim.Messages;
-import de.uni_leipzig.simba.saim.SAIMApplication;
-
-import java.io.File;
+	import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
@@ -13,8 +11,10 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FailedEvent;
 import com.vaadin.ui.Upload.SucceededEvent;
-import com.vaadin.ui.Window;
+
 import de.uni_leipzig.simba.io.ConfigReader;
+import de.uni_leipzig.simba.saim.Messages;
+import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 
 public class ConfigUploader extends CustomComponent 
@@ -26,7 +26,7 @@ public class ConfigUploader extends CustomComponent
 	private ConfigReader cR = new ConfigReader();
 	private Button proceed = new Button(Messages.getString("executefile"));
 	private Button run_def = new Button("rundefaultspec");
-
+	private static final String DEFAULT_LIMES_XML = "C:/tmp/dbpedia-linkedmdb.xml";
 
 	@SuppressWarnings("serial")
 	public ConfigUploader() {
@@ -58,7 +58,7 @@ public class ConfigUploader extends CustomComponent
 			public void buttonClick(ClickEvent event) {
 				Configuration config = Configuration.getInstance();
 				ConfigReader cR = new ConfigReader();
-				cR.validateAndRead("C:/tmp/dbpedia-linkedmdb.xml");			
+				cR.validateAndRead(DEFAULT_LIMES_XML);			
 				config.setFromConfigReader(cR);
 				SAIMApplication appl = (SAIMApplication) getApplication();
 				appl.showComponent(new ExecutionPanel());

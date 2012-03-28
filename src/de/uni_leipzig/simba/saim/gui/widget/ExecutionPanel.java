@@ -43,7 +43,7 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 			public void buttonClick(ClickEvent event) {
 				SAIMApplication appl = (SAIMApplication) getApplication();
 				InstanceMappingTable iT = new InstanceMappingTable(m);
-				appl.showComponent(iT.getFlatTable());
+				appl.showComponent(iT.getTable());
 			}
 		});
 		
