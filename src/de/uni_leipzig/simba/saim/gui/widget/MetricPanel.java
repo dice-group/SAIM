@@ -14,6 +14,7 @@ import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
+import de.konrad.commons.sparql.PrefixHelper;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.learning.query.PropertyMapper;
@@ -23,7 +24,7 @@ import de.uni_leipzig.simba.saim.core.Configuration;
 public class MetricPanel extends Panel
 {	
 	private static final long	serialVersionUID	= 6766679517868840795L;
-	TextField metricTextField = new TextField("Insert metric here");
+//	TextField metricTextField = new TextField("Insert metric here");
 	Mapping propMapping;
 	HorizontalLayout layout = new HorizontalLayout();
 	Set<String> sourceProps = new HashSet<String>();
@@ -40,6 +41,7 @@ public class MetricPanel extends Panel
 		layout.setSpacing(false);
 		layout.setMargin(false);
 		setContent(layout);
+		layout.addComponent(new ManualMetricForm());
 		final VerticalLayout accordionLayout = new VerticalLayout();
 		addComponent(accordionLayout);		
 		final ProgressIndicator progress = new ProgressIndicator();
@@ -82,10 +84,13 @@ public class MetricPanel extends Panel
 				performPropertyMapping();
 				{
 
-					for(String s : sourceProps)
+					for(String s : sourceProps) {
 						sourceLayout.addComponent(new Label(s)); //$NON-NLS-1$
+					}
 
-					for(String t : targetProps) {targetLayout.addComponent(new Label(t));} //$NON-NLS-1$
+					for(String t : targetProps) {
+						targetLayout.addComponent(new Label(t));//$NON-NLS-1$
+					} 
 				}
 				accordionLayout.removeComponent(progress);
 				progress.setEnabled(false);
@@ -99,6 +104,8 @@ public class MetricPanel extends Panel
 
 		private void performPropertyMapping() {
 			Configuration config = Configuration.getInstance();
+			config.getSource().properties.clear();
+			config.getTarget().properties.clear();
 			PropertyMapper propMapper = new PropertyMapper();
 			String classSource = getClassOfEndpoint(config.getSource());
 			String classTarget = getClassOfEndpoint(config.getTarget());
@@ -108,8 +115,14 @@ public class MetricPanel extends Panel
 						config.getTarget().endpoint, classSource, classTarget);
 				for(String s : propMapping.map.keySet())
 					for(Entry<String, Double> e : propMapping.map.get(s).entrySet()) {
+						s=PrefixHelper.abbreviate(s);
 						sourceProps.add(s);
-						targetProps.add(e.getKey());
+						config.getSource().properties.add(s);
+						System.out.println("Adding source property: "+s);
+						String t = PrefixHelper.abbreviate(e.getKey());
+						targetProps.add(t);
+						config.getTarget().properties.add(t);
+						System.out.println("Adding target property: "+t);
 					}
 			} else {
 				showErrorMessage("Cannot perform automatic property mapping due to missing class specifications.");

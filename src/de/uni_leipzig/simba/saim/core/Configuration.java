@@ -2,7 +2,11 @@ package de.uni_leipzig.simba.saim.core;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import de.konrad.commons.sparql.PrefixHelper;
 import de.uni_leipzig.simba.io.ConfigReader;
 import de.uni_leipzig.simba.io.KBInfo;
 
@@ -17,6 +21,22 @@ public class Configuration {
 	protected KBInfo source = null;
 	protected KBInfo target = null;
 	protected String metricExpression;
+	public String getMetricExpression() {
+		return metricExpression;
+	}
+
+	public void setMetricExpression(String metricExpression) {
+		this.metricExpression = metricExpression;
+	}
+
+	public double getAcceptanceThreshold() {
+		return acceptanceThreshold;
+	}
+
+	public void setAcceptanceThreshold(double acceptanceThreshold) {
+		this.acceptanceThreshold = acceptanceThreshold;
+	}
+
 	protected double acceptanceThreshold;
 	protected double verificationThreshold;
 	protected int granularity;
@@ -71,5 +91,34 @@ public class Configuration {
 	  public void removePropertyChangeListener( PropertyChangeListener l ) 
 	  { 
 	    changes.removePropertyChangeListener( l ); 
+	  }
+	  
+	  /**Set default namespaces in both source and target KBInfo  */
+	  public void setDefaultNameSpaces() {
+		  source.prefixes = getDefaultNameSpaces();
+		  target.prefixes = getDefaultNameSpaces();
+	  }
+	  
+	  /**
+	   * Function returns HashMap of label and uri of often used namespaces.
+	   * @return HashMap<label,uri>
+	   */
+	  public HashMap<String, String> getDefaultNameSpaces() {
+		  HashMap<String, String> defs = new HashMap<String, String>();
+//		  defs.put("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+//		  defs.put("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
+//		  defs.put("foaf", "http://xmlns.com/foaf/0.1/");
+//		  defs.put("owl", "http://www.w3.org/2002/07/owl#");
+//		  defs.put("diseasome", "http://www4.wiwiss.fu-berlin.de/diseasome/resource/diseasome/");
+//		  defs.put("dbpedia", "http://dbpedia.org/ontology/");
+//		  defs.put("dbpedia-p", "http://dbpedia.org/property/");
+//		  defs.put("dc", "http://purl.org/dc/terms/");
+//		  defs.put("sider", "http://www4.wiwiss.fu-berlin.de/sider/resource/sider/");
+//		  defs.put("drugbank", "http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/");
+//		  defs.put("dailymed", "http://www4.wiwiss.fu-berlin.de/dailymed/resource/dailymed/");
+		  Map<String, String> map = PrefixHelper.getPrefixes();	
+		  for(Entry<String, String> e : map.entrySet())
+			  defs.put(e.getKey(), e.getValue());
+		  return defs;
 	  }
 }

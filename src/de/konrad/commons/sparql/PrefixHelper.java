@@ -647,7 +647,7 @@ public class PrefixHelper
 		{"dv","http://rdf.data-vocabulary.org/#"},
 		{"linkedct","http://data.linkedct.org/resource/linkedct/"},
 		{"compass","http://purl.org/net/compass#"},
-		{"#obs","???"},
+		//{"#obs","???"},
 		{"cito","http://purl.org/net/cito/"},
 		{"postcode","http://data.ordnancesurvey.co.uk/id/postcodeunit/"},
 		{"rail","http://ontologi.es/rail/vocab#"},
@@ -682,7 +682,7 @@ public class PrefixHelper
 		{"agents","http://eulersharp.sourceforge.net/2003/03swap/agent#"},
 		{"nndsr","http://semanticdiet.com/schema/usda/nndsr/"},
 		{"agent","http://eulersharp.sourceforge.net/2003/03swap/agent#"},
-		{"#porn","???"},
+	//	{"#porn","???"},
 		{"elog","http://eulersharp.sourceforge.net/2003/03swap/log-rules#"},
 		{"malignneo","http://www.agfa.com/w3c/2009/malignantNeoplasm#"},
 		{"clineva","http://www.agfa.com/w3c/2009/clinicalEvaluation#"},
@@ -712,5 +712,6 @@ public class PrefixHelper
 		{"pbo","http://purl.org/ontology/pbo/core#"},
 		{"span","http://www.ifomis.org/bfo/1.1/span#"},
 		{"uta","http://uptheasset.org/ontology#"},
-		{"esd","http://def.esd.org.uk/"}};
+		{"esd","http://def.esd.org.uk/"},
+		{"sider", "http://www4.wiwiss.fu-berlin.de/sider/resource/sider/"}};
 }
