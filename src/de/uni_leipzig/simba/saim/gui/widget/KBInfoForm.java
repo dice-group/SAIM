@@ -16,12 +16,11 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 
 import de.uni_leipzig.simba.io.KBInfo;
-import de.uni_leipzig.simba.saim.core.Configuration;
+import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.core.DefaultEndpointLoader;
 import de.uni_leipzig.simba.saim.core.Endpoints;
 import de.uni_leipzig.simba.saim.gui.validator.EndpointURLValidator;
 import de.uni_leipzig.simba.saim.gui.validator.PageSizeValidator;
-import de.uni_leipzig.simba.saim.Messages;
 /** Allows the user to manually set the properties of a knowledge base, which are endpoint URL, graph URI, page size, restrictions */
 @SuppressWarnings("serial")
 public class KBInfoForm extends Form
@@ -195,4 +194,6 @@ public class KBInfoForm extends Form
 		pageSize.setValue(kbInfo.pageSize);
 	}
 
+	
+	
 } 

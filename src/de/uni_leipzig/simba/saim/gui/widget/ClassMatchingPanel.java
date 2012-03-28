@@ -34,12 +34,21 @@ import de.uni_leipzig.simba.saim.util.SortedMapping;
 @SuppressWarnings("serial")
 public class ClassMatchingPanel extends Panel
 {	
-	protected static final boolean	CACHING	= true;
+	protected static final boolean CACHING	= true;
 	Configuration config = Configuration.getInstance();
 	final ComboBox suggestionComboBox = new ComboBox();
 	public ClassMatchingForm sourceClassForm;
 	public ClassMatchingForm targetClassForm;
 
+	public void close()
+	{
+		if(CACHING)
+		{							
+			Cache cache = CacheManager.getInstance().getCache("classmatching");
+			cache.dispose();
+		}
+	}
+	
 	protected void setupContextHelp()
 	{
 		ContextHelp contextHelp = new ContextHelp();
@@ -87,6 +96,8 @@ public class ClassMatchingPanel extends Panel
 			});
 			new Thread()
 			{
+				
+				@SuppressWarnings("unchecked")
 				@Override
 				public void run()
 				{
@@ -100,12 +111,13 @@ public class ClassMatchingPanel extends Panel
 
 					ClassMapper classMapper = new ClassMapper();
 					if(CACHING)
-					{						
+					{							
 						Cache cache = CacheManager.getInstance().getCache("classmatching");
 						List<Object> parameters = Arrays.asList(new Object[] {config.getSource().endpoint,config.getTarget().endpoint,config.getSource().id,config.getTarget().id});
 						if(cache.isKeyInCache(parameters))
 						{		
 							classMatching = new Mapping();
+							
 							classMatching.map = ((HashMap<String,HashMap<String,Double>>) cache.get(parameters).getValue());
 							System.out.println("loading map of size "+classMatching.map.size());
 							System.out.println("cache hit");
@@ -154,6 +166,22 @@ public class ClassMatchingPanel extends Panel
 							sourceClassForm.addItem(entry.getValue().getA(),false);
 							targetClassForm.addItem(entry.getValue().getB(),false);
 						}
+
+
+						// set listener in the thread because the programmatical select must not trigger a select in the class forms because
+						// the user may have already entered something there
+						suggestionComboBox.addListener(new ValueChangeListener() {								
+							@Override
+							public void valueChange(ValueChangeEvent event) {
+								//get Value								
+								Entry<Double, Pair<String>> entry = (Entry<Double, Pair<String>>) suggestionComboBox.getValue();
+								sourceClassForm.addItem(entry.getValue().getA(),true);
+								targetClassForm.addItem(entry.getValue().getB(),true);
+
+								sourceClassForm.requestRepaint();
+								targetClassForm.requestRepaint();
+							}
+						});
 
 						progress.setEnabled(false);
 						removeComponent(progress);

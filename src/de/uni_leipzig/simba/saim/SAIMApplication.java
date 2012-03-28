@@ -25,6 +25,7 @@ import de.uni_leipzig.simba.saim.gui.widget.step.MetricStep;
 
 public class SAIMApplication extends Application
 {
+	private static final long	serialVersionUID	= -7665596682464881860L;
 	private static SAIMApplication application = null; 
 	private final Window mainWindow;
 	private Layout mainLayout;
@@ -44,8 +45,10 @@ public class SAIMApplication extends Application
 
 		mainLayout.addComponent(new StartPanel());
 		wizard = new Wizard();
+
 //		wizardDevelopment();
 		wizardFull();
+
 		mainLayout.addComponent(wizard);
 		
 		setTheme("saim");
@@ -53,7 +56,7 @@ public class SAIMApplication extends Application
 	
 	protected void wizardDevelopment()
 	{
-		//wizard.addStep(new EndpointStep());
+		wizard.addStep(new EndpointStep());
 		HashMap<String,KBInfo> endpoints = DefaultEndpointLoader.getDefaultEndpoints();
 		KBInfo info_s = endpoints.get("lgd.aksw - Drugbank");
 		KBInfo info_t = endpoints.get("lgd.aksw - Sider");

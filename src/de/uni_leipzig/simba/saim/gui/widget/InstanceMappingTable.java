@@ -5,27 +5,23 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.vaadin.cssinject.CSSInject;
-
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
 
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.saim.Messages;
-import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.InstanceMatch;
-public class InstanceMappingTable implements Serializable{
 
+public class InstanceMappingTable implements Serializable
+{
+	private static final long	serialVersionUID	= 4443146911119590775L;
 	Mapping data;
 	List <InstanceMatch> dataList = new LinkedList<InstanceMatch>();
 	BeanItemContainer<InstanceMatch> beanItemContainer;

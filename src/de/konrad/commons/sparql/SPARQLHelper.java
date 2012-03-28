@@ -1,9 +1,6 @@
 package de.konrad.commons.sparql;
 
-import static com.hp.hpl.jena.query.QueryExecutionFactory.sparqlService;
-
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -52,7 +49,6 @@ import com.hp.hpl.jena.vocabulary.OWL;
 //import java.util.logging.*;
 //;
 //// TODO: move all sparql stuff into aksw commons
-@SuppressWarnings("deprecation")
 public class SPARQLHelper
 {
 	//	protected static final Logger log = Logger.getLogger(SPARQLHelper.class.toString());

@@ -2,9 +2,7 @@ package de.uni_leipzig.simba.saim.core;
 
 import java.io.Serializable;
 
-import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Link;
 
 public class InstanceMatch  implements Serializable{
 	public static final int SEED = 23;

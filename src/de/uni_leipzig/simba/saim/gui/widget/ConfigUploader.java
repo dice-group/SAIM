@@ -1,8 +1,5 @@
 	package de.uni_leipzig.simba.saim.gui.widget;
-	import de.uni_leipzig.simba.saim.Messages;
-import de.uni_leipzig.simba.saim.SAIMApplication;
-
-import java.io.File;
+	import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -21,8 +18,10 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FailedEvent;
 import com.vaadin.ui.Upload.SucceededEvent;
-import com.vaadin.ui.Window;
+
 import de.uni_leipzig.simba.io.ConfigReader;
+import de.uni_leipzig.simba.saim.Messages;
+import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 
 public class ConfigUploader extends CustomComponent 
@@ -36,6 +35,7 @@ public class ConfigUploader extends CustomComponent
 	private Button run_def = new Button("rundefaultspec");
 	private static final String DEFAULT_LIMES_XML = "examples/dbpedia-linkedmdb.xml";
 
+	@SuppressWarnings("serial")
 	public ConfigUploader() {
 		root = new Panel("limesupload");
 		root.setWidth("100%");

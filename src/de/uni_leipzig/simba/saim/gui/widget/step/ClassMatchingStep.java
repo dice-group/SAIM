@@ -36,6 +36,7 @@ public class ClassMatchingStep implements WizardStep
 			restr = target.var+" rdf:type ";
 			value = SPARQLHelper.wrapIfNecessary(PrefixHelper.expand(panel.targetClassForm.getField("textfield").getValue().toString()));
 			target.restrictions.add(restr + value);
+			panel.close();
 			return true;
 		}		
 		return false;

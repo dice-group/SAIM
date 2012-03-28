@@ -1,12 +1,9 @@
 package de.uni_leipzig.simba.saim.gui.widget;
 
-import com.vaadin.Application;
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Embedded;
-import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 
 import de.uni_leipzig.simba.saim.SAIMApplication;
@@ -14,6 +11,7 @@ import de.uni_leipzig.simba.saim.SAIMApplication;
  */
 public class StartPanel extends Panel
 {
+	private static final long	serialVersionUID	= 4057340876075722120L;
 
 	public StartPanel()
 	{

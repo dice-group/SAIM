@@ -43,6 +43,7 @@ public class ClassChooser extends Panel
 
 		new Thread()
 		{
+			@SuppressWarnings("serial")
 			@Override
 			public void run()
 			{
