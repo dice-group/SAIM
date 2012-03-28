@@ -28,6 +28,7 @@ public class ConfigUploader extends CustomComponent
 	private Button run_def = new Button("rundefaultspec");
 
 
+	@SuppressWarnings("serial")
 	public ConfigUploader() {
 		root = new Panel("limesupload");
 		root.setWidth("100%");

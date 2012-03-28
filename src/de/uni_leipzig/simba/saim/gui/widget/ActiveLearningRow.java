@@ -12,8 +12,7 @@ import de.uni_leipzig.simba.saim.Messages;
 public class ActiveLearningRow extends Panel
 {	
 	public ActiveLearningRow(final String uri1,final String uri2)
-	{
-		String x = "hello world";
+	{		
 		HorizontalLayout layout = new HorizontalLayout();
 		layout.setWidth("100%");
 		this.setContent(layout);

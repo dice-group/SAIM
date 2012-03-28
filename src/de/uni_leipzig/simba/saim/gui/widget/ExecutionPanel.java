@@ -27,6 +27,7 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 	Button showResults;
 	Layout mainLayout = new VerticalLayout();
 	
+	@SuppressWarnings("serial")
 	public ExecutionPanel() {
 		super(Messages.getString("ExecutionPanel.executelinkspecification")); //$NON-NLS-1$
 		lR = new LimesRunner();

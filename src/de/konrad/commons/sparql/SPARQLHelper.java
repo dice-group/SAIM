@@ -52,7 +52,6 @@ import com.hp.hpl.jena.vocabulary.OWL;
 //import java.util.logging.*;
 //;
 //// TODO: move all sparql stuff into aksw commons
-@SuppressWarnings("deprecation")
 public class SPARQLHelper
 {
 	//	protected static final Logger log = Logger.getLogger(SPARQLHelper.class.toString());

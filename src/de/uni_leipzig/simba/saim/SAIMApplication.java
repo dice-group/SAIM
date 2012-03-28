@@ -45,14 +45,14 @@ public class SAIMApplication extends Application
 		wizard = new Wizard();
 		wizardDevelopment();
 //		wizardFull();
-//		mainLayout.addComponent(wizard);
+		mainLayout.addComponent(wizard);
 		
 		setTheme("saim");
 	}
 	
 	protected void wizardDevelopment()
 	{
-		//wizard.addStep(new EndpointStep());
+		wizard.addStep(new EndpointStep());
 		HashMap<String,KBInfo> endpoints = DefaultEndpointLoader.getDefaultEndpoints();
 		KBInfo info_s = endpoints.get("lgd.aksw - Drugbank");
 		KBInfo info_t = endpoints.get("lgd.aksw - Sider");

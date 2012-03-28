@@ -71,6 +71,8 @@ public class ClassMatchingPanel extends Panel
 			suggestionComboBox.setEnabled(false);
 			new Thread()
 			{
+				
+				@SuppressWarnings("unchecked")
 				@Override
 				public void run()
 				{
@@ -84,12 +86,13 @@ public class ClassMatchingPanel extends Panel
 
 					ClassMapper classMapper = new ClassMapper();
 					if(CACHING)
-					{						
+					{							
 						Cache cache = CacheManager.getInstance().getCache("classmatching");
 						List<Object> parameters = Arrays.asList(new Object[] {config.getSource().endpoint,config.getTarget().endpoint,config.getSource().id,config.getTarget().id});
 						if(cache.isKeyInCache(parameters))
 						{		
 							classMatching = new Mapping();
+							
 							classMatching.map = ((HashMap<String,HashMap<String,Double>>) cache.get(parameters).getValue());
 							System.out.println("loading map of size "+classMatching.map.size());
 							System.out.println("cache hit");
@@ -143,8 +146,7 @@ public class ClassMatchingPanel extends Panel
 						suggestionComboBox.addListener(new ValueChangeListener() {								
 							@Override
 							public void valueChange(ValueChangeEvent event) {
-								//get Value
-								@SuppressWarnings("unchecked")
+								//get Value								
 								Entry<Double, Pair<String>> entry = (Entry<Double, Pair<String>>) suggestionComboBox.getValue();
 								sourceClassForm.addItem(entry.getValue().getA(),true);
 								targetClassForm.addItem(entry.getValue().getB(),true);

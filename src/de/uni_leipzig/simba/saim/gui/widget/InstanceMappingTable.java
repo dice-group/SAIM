@@ -15,10 +15,12 @@ import com.vaadin.ui.Table.ColumnGenerator;
 
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.saim.core.InstanceMatch;
-public class InstanceMappingTable implements Serializable{
+public class InstanceMappingTable implements Serializable
+{
+	private static final long	serialVersionUID	= 4443146911119590775L;
 	Mapping data;
 	List <InstanceMatch> dataList = new LinkedList<InstanceMatch>();
-	BeanItemContainer beanItemContainer;
+	BeanItemContainer<InstanceMatch> beanItemContainer;
 	
 	public InstanceMappingTable(Mapping m) {
 		data = m;
@@ -37,6 +39,7 @@ public class InstanceMappingTable implements Serializable{
 //		return new Table("Instances", instances);
 //	}
 //	
+	@SuppressWarnings("serial")
 	public Table getFlatTable() {
 		
 		//add columns

@@ -37,6 +37,7 @@ public class Pair<T> {
 		if(o == null)
 			return false;
 		if(o.getClass().equals(this.getClass())) {
+			@SuppressWarnings("unchecked")
 			Pair<String> oP = (Pair<String>) o;
 			if(oP.getA().equals(a) && oP.getB().equals(b))
 				return true;

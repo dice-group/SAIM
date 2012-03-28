@@ -11,6 +11,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TabSheet.Tab;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 import de.uni_leipzig.simba.data.Mapping;
@@ -21,7 +22,7 @@ import de.uni_leipzig.simba.saim.core.Configuration;
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
 public class MetricPanel extends Panel
 {	
-	
+	TextField metricTextField = new TextField("Insert metric here");
 	Mapping propMapping;
 	HorizontalLayout layout = new HorizontalLayout();
 	Set<String> sourceProps = new HashSet<String>();
@@ -35,53 +36,62 @@ public class MetricPanel extends Panel
 
 	public MetricPanel()
 	{
-	
+
 		layout.setSpacing(false);
 		layout.setMargin(false);
 		setContent(layout);
 		Panel accordionPanel = new Panel();
 		accordionPanel.setWidth("40em"); //$NON-NLS-1$
 		Panel graphPanel = new Panel();
-		this.getContent().addComponent(accordionPanel);
-		
-		performPropertyMapping();
-		
-		this.getContent().addComponent(graphPanel);
-		{
-			Accordion accordion = new Accordion();
-			accordionPanel.addComponent(accordion);
+		addComponent(accordionPanel);
+		addComponent(graphPanel);
+		final Accordion accordion = new Accordion();
+		accordionPanel.addComponent(accordion);
+
+		new Thread()
+		{			
+			@Override
+			public void run()
 			{
-				VerticalLayout sourceLayout = new VerticalLayout();
-				Tab sourceTab = accordion.addTab(sourceLayout,Messages.getString("MetricPanel.sourceproperties")); //$NON-NLS-1$
-				for(String s : sourceProps)
-					sourceLayout.addComponent(new Label(s)); //$NON-NLS-1$
-//				sourceLayout.addComponent(new Label("example:bla")); //$NON-NLS-1$
+				performPropertyMapping();
+
+
+				{
+					{
+						VerticalLayout sourceLayout = new VerticalLayout();
+						Tab sourceTab = accordion.addTab(sourceLayout,Messages.getString("MetricPanel.sourceproperties")); //$NON-NLS-1$
+						for(String s : sourceProps)
+							sourceLayout.addComponent(new Label(s)); //$NON-NLS-1$
+						//				sourceLayout.addComponent(new Label("example:bla")); //$NON-NLS-1$
+					}
+					{
+						VerticalLayout targetLayout = new VerticalLayout();
+						Tab targetTab = accordion.addTab(targetLayout,Messages.getString("MetricPanel.targetproperties")); //$NON-NLS-1$
+						for(String t : targetProps)
+							targetLayout.addComponent(new Label(t)); //$NON-NLS-1$
+						//				targetLayout.addComponent(new Label("example:blu")); //$NON-NLS-1$
+					}
+					{
+						VerticalLayout functionLayout = new VerticalLayout();
+						Tab functionTab = accordion.addTab(functionLayout,Messages.getString("MetricPanel.functions")); //$NON-NLS-1$
+					}
+					{
+						VerticalLayout metricLayout = new VerticalLayout();
+						Tab metricTab = accordion.addTab(metricLayout,Messages.getString("MetricPanel.metrics")); //$NON-NLS-1$
+					}
+					{
+						VerticalLayout operatorLayout = new VerticalLayout();
+						Tab operatorTab = accordion.addTab(operatorLayout,Messages.getString("MetricPanel.operators"));			 //$NON-NLS-1$
+					}
+				}
 			}
-			{
-				VerticalLayout targetLayout = new VerticalLayout();
-				Tab targetTab = accordion.addTab(targetLayout,Messages.getString("MetricPanel.targetproperties")); //$NON-NLS-1$
-				for(String t : targetProps)
-					targetLayout.addComponent(new Label(t)); //$NON-NLS-1$
-//				targetLayout.addComponent(new Label("example:blu")); //$NON-NLS-1$
-			}
-			{
-				VerticalLayout functionLayout = new VerticalLayout();
-				Tab functionTab = accordion.addTab(functionLayout,Messages.getString("MetricPanel.functions")); //$NON-NLS-1$
-			}
-			{
-				VerticalLayout metricLayout = new VerticalLayout();
-				Tab metricTab = accordion.addTab(metricLayout,Messages.getString("MetricPanel.metrics")); //$NON-NLS-1$
-			}
-			{
-				VerticalLayout operatorLayout = new VerticalLayout();
-				Tab operatorTab = accordion.addTab(operatorLayout,Messages.getString("MetricPanel.operators"));			 //$NON-NLS-1$
-			}
-		}
+		}.start();
+
 		{
 			//		setupContextHelp();
 		}
 	}
-	
+
 	private void performPropertyMapping() {
 		TextArea textArea = new TextArea();
 		Configuration config = Configuration.getInstance();
@@ -96,7 +106,7 @@ public class MetricPanel extends Panel
 		if(classSource != null && classTarget != null) {
 			showErrorMessage("Getting property mapping...");
 			propMapping = propMapper.getPropertyMapping(config.getSource().endpoint,
-		            config.getTarget().endpoint, classSource, classTarget);
+					config.getTarget().endpoint, classSource, classTarget);
 			for(String s : propMapping.map.keySet())
 				for(Entry<String, Double> e : propMapping.map.get(s).entrySet()) {
 					sourceProps.add(s);
@@ -107,7 +117,7 @@ public class MetricPanel extends Panel
 			showErrorMessage("Cannot perform automatic property mapping due to missing class specifications.");
 		}		
 	}
-	
+
 	/**
 	 * Little helper function to retrieve classes out of restrictions of the LIMES SPEC. Whereas, a
 	 * class is in a restriction of the format "?var rdf:type <class>".
@@ -121,7 +131,7 @@ public class MetricPanel extends Panel
 		}
 		return null;
 	}
-	
+
 	private void showErrorMessage(String message) {
 		layout.setComponentError(new UserError(message));
 	}
