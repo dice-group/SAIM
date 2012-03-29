@@ -25,6 +25,7 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 	float maxSteps = 5;
 	Button start;
 	Button showResults;
+	Button startActiveLearning;
 	Layout mainLayout = new VerticalLayout();
 	
 	@SuppressWarnings("serial")
@@ -65,11 +66,20 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 				}.start();				
 			}
 		});
+		startActiveLearning = new Button("start active learning");
+		startActiveLearning.addListener(new ClickListener() {			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				SAIMApplication appl = (SAIMApplication) getApplication();
+				appl.showComponent(new ActiveLearningPanel());
+			}
+		});
 		setWidth("100%"); //$NON-NLS-1$
 		this.setContent(mainLayout);
 		mainLayout.addComponent(progressLabel);
 		mainLayout.addComponent(progress);
 		mainLayout.addComponent(start);
+		mainLayout.addComponent(startActiveLearning);
 	}	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {

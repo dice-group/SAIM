@@ -22,7 +22,7 @@ public class InstanceMatch  implements Serializable{
 	}
 	public InstanceMatch(String uri1, String uri2, double value) {
 		this(uri1, uri2);
-		this.Matchvalue = Matchvalue;
+		this.Matchvalue = value;
 	}
 	public String getUri1() {
 		return uri1;

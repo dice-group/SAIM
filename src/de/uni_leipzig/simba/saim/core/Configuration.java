@@ -17,14 +17,20 @@ public class Configuration {
 	public static final String SETTING_CONFIG = "setting from xml";
 	protected String id = null;
 	protected String name;
-	
+
+	protected double acceptanceThreshold;
+	protected double verificationThreshold;
+	protected int granularity;
+
+	private ConfigReader cR = new ConfigReader();
+
 	protected KBInfo source = null;
 	protected KBInfo target = null;
 	protected String metricExpression;
 	public String getMetricExpression() {
 		return metricExpression;
 	}
-
+	
 	public void setMetricExpression(String metricExpression) {
 		this.metricExpression = metricExpression;
 	}
@@ -36,12 +42,6 @@ public class Configuration {
 	public void setAcceptanceThreshold(double acceptanceThreshold) {
 		this.acceptanceThreshold = acceptanceThreshold;
 	}
-
-	protected double acceptanceThreshold;
-	protected double verificationThreshold;
-	protected int granularity;
-
-	private ConfigReader cR;
 
 	private Configuration() {
 		
@@ -121,4 +121,19 @@ public class Configuration {
 			  defs.put(e.getKey(), e.getValue());
 		  return defs;
 	  }
+	  
+	  public String toString() {
+		return source.toString()+"\n<br>\n"+target.toString();  
+	  }
+	  
+	  public ConfigReader getLimesConfiReader() {
+		  cR.sourceInfo = source;
+		  cR.targetInfo = target;
+		  cR.acceptanceRelation = metricExpression;
+		  cR.acceptanceThreshold = acceptanceThreshold;
+		  cR.verificationThreshold  = verificationThreshold;
+		  cR.granularity = granularity;		 
+		  return cR;
+	  }
+	  
 }

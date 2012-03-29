@@ -25,6 +25,7 @@ public class InstanceMappingTable implements Serializable
 	Mapping data;
 	List <InstanceMatch> dataList = new LinkedList<InstanceMatch>();
 	BeanItemContainer<InstanceMatch> beanItemContainer;
+	Table t;
 	
 	public InstanceMappingTable(Mapping m) {
 		data = m;
@@ -38,7 +39,7 @@ public class InstanceMappingTable implements Serializable
 	public Table getTable() {	
 		beanItemContainer = new BeanItemContainer<InstanceMatch>(InstanceMatch.class);
 		beanItemContainer.addAll(dataList);
-		Table t = new Table(Messages.getString("InstanceMappingTable.instances"), beanItemContainer); //$NON-NLS-1$
+		t = new Table(Messages.getString("InstanceMappingTable.instances"), beanItemContainer); //$NON-NLS-1$
 		t.setWidth("100%"); //$NON-NLS-1$
 		t.setColumnExpandRatio(Messages.getString("InstanceMappingTable.sourceuri"), 0.5f); //$NON-NLS-1$
 		t.setColumnExpandRatio(Messages.getString("InstanceMappingTable.targeturi"), 0.5f); //$NON-NLS-1$
@@ -101,11 +102,29 @@ public class InstanceMappingTable implements Serializable
 			    return bean.getValue();
 			  }
 			});
+		t.setColumnReorderingAllowed(true);
 		t.setVisibleColumns(new Object[] {Messages.getString("InstanceMappingTable.sourceuri"), Messages.getString("InstanceMappingTable.targeturi"), Messages.getString("value"), Messages.getString("InstanceMappingTable.isamatch")}); 
 		// Allow selecting items from the table.
 		t.setSelectable(true);
 		// Send changes in selection immediately to server.
 		t.setImmediate(true);
 		return t;
+	}
+	
+	/**
+	 * Method to get the Mapping out of the table, or for that matter out of the
+	 * underlying BeanContainer.
+	 * @return Mapping holding all checked instances.
+	 */
+	public Mapping tabletoMapping() {
+		if(t == null)
+			return new Mapping();
+		Mapping result = new Mapping();
+		for(InstanceMatch bean : beanItemContainer.getItemIds()) {
+			if(bean.isSelected()) {
+				result.add(bean.getUri1(), bean.getUri2(), 1.0d);
+			}
+		}
+		return result;
 	}
 }

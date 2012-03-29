@@ -68,6 +68,7 @@ public class ConfigUploader extends CustomComponent
 				InputStream inStream;
 				inStream = getClass().getClassLoader().getResourceAsStream(DEFAULT_LIMES_XML);
 				cR.validateAndRead(inStream);
+				// setting location of limes.dtd
 				
 				// set paths to source and target
 				try {
