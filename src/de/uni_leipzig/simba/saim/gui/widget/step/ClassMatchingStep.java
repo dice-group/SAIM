@@ -12,7 +12,6 @@ import de.uni_leipzig.simba.saim.gui.widget.ClassMatchingPanel;
 
 public class ClassMatchingStep implements WizardStep
 {
-
 	ClassMatchingPanel panel;
 	@Override
 	public String getCaption() {return Messages.getString("classmatching");}
