@@ -135,8 +135,9 @@ public class Configuration {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = null;
-			document = builder.parse( new File("template.xml"));
-			System.out.println( document.getFirstChild().getTextContent() );
+			document = builder.parse(getClass().getClassLoader().getResourceAsStream("template.xml"));
+			System.out.println( document.getBaseURI());
+			//getElementById("/LIMES/SOURCE/VAR")
 		}
 		catch (Exception e){throw new RuntimeException(e);}
 	}
