@@ -8,6 +8,7 @@ import de.uni_leipzig.simba.cache.HybridCache;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.filter.Filter;
 import de.uni_leipzig.simba.filter.LinearFilter;
+import de.uni_leipzig.simba.io.ConfigReader;
 import de.uni_leipzig.simba.mapper.SetConstraintsMapper;
 import de.uni_leipzig.simba.mapper.SetConstraintsMapperFactory;
 
@@ -29,6 +30,8 @@ public class LimesRunner implements Serializable {
 	}	
 	
 	public Mapping runConfig(Configuration config) {
+		ConfigReader cR = new ConfigReader();
+		
 		fire("Getting source cache...");
 		HybridCache sC = HybridCache.getData(config.getSource());
 		fire("Getting target cache...");

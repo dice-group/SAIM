@@ -53,9 +53,6 @@ public class EndpointURLValidator implements Validator
 
 		}
 	}			
-	//if(!(s.endsWith("/sparql"))) {throw new InvalidValueException("The Endpoint URL does not end with \"/sparql\".");}			
-
-
 	@Override
 	public boolean isValid(Object value)
 	{

@@ -31,6 +31,8 @@ public class ClassMatchingStep implements WizardStep
 			Configuration config = Configuration.getInstance();
 			KBInfo source = config.getSource();
 			KBInfo target = config.getTarget();
+			source.restrictions.clear();
+			target.restrictions.clear();
 			String restr = source.var+" rdf:type ";		
 			String value = SPARQLHelper.wrapIfNecessary(PrefixHelper.expand(panel.sourceClassForm.getField("textfield").getValue().toString()));
 			source.restrictions.add(restr + value);
