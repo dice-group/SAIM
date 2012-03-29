@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.w3c.dom.Document;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import de.konrad.commons.sparql.PrefixHelper;
 import de.uni_leipzig.simba.io.ConfigReader;
 import de.uni_leipzig.simba.io.KBInfo;
@@ -134,6 +138,18 @@ public class Configuration {
 		  cR.verificationThreshold  = verificationThreshold;
 		  cR.granularity = granularity;		 
 		  return cR;
+	  }
+	  
+	  public void saveToXML(String filename)  {
+	  try{
+	  DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	  DocumentBuilder builder = factory.newDocumentBuilder();
+	  Document document = null;
+	  document = builder.parse(getClass().getClassLoader().getResourceAsStream("template.xml"));
+	  System.out.println( document.getBaseURI());
+	  //getElementById("/LIMES/SOURCE/VAR")
+	  }
+	  catch (Exception e){throw new RuntimeException(e);}
 	  }
 	  
 }
