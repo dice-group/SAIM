@@ -26,7 +26,8 @@ public class ClassMatchingStep implements WizardStep
 	@Override
 	public boolean onAdvance()
 	{
-		if(panel.sourceClassForm.isValid() && panel.targetClassForm.isValid()) {
+		if(panel.sourceClassForm.isValid() && panel.targetClassForm.isValid())
+		{
 			Configuration config = Configuration.getInstance();
 			KBInfo source = config.getSource();
 			KBInfo target = config.getTarget();
