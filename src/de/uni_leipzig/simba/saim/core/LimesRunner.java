@@ -33,8 +33,10 @@ public class LimesRunner implements Serializable {
 		ConfigReader cR = new ConfigReader();
 		
 		fire("Getting source cache...");
+		System.out.println(config.getSource());
 		HybridCache sC = HybridCache.getData(config.getSource());
 		fire("Getting target cache...");
+		System.out.println(config.getTarget());
 		HybridCache tC = HybridCache.getData(config.getTarget());
 		fire("Starting Matching process...");
 		Filter f = new LinearFilter();

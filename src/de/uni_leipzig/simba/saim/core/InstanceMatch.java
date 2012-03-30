@@ -4,12 +4,14 @@ import java.io.Serializable;
 
 import com.vaadin.ui.Label;
 
+import de.konrad.commons.sparql.PrefixHelper;
+
 public class InstanceMatch  implements Serializable{
 	public static final int SEED = 23;
 	String uri1, uri2;
 	double Matchvalue = new Double(0);
 	boolean selected = false;
-	
+	String originalUri1, originalUri2;
 	public boolean isSelected() {
 		return selected;
 	}
@@ -22,19 +24,21 @@ public class InstanceMatch  implements Serializable{
 	}
 	public InstanceMatch(String uri1, String uri2, double value) {
 		this(uri1, uri2);
-		this.Matchvalue = Matchvalue;
+		this.Matchvalue = value;
 	}
 	public String getUri1() {
 		return uri1;
 	}
 	public void setUri1(String uri1) {
 		// avoid <, >, "
+		originalUri1=uri1;
 		this.uri1 = (uri1.replaceAll("[<>\"]", ""));
 	}
 	public String getUri2() {
 		return uri2;
 	}
 	public void setUri2(String uri2) {
+		originalUri2=uri2;
 		this.uri2 = (uri2.replaceAll("[<>\"]", ""));
 	}
 	public double getValue() {
@@ -71,6 +75,12 @@ public class InstanceMatch  implements Serializable{
 	}
 	
 	public static Label getLinkLabelToUri(String uri) {
-		return new Label("<a href='"+uri.replaceAll("[<>\"]", "")+"' target='_blank'>"+uri.replaceAll("[<>\"]", "")+"</a>", Label.CONTENT_XHTML);
+		return new Label("<a href='"+uri.replaceAll("[<>\"]", "")+"' target='_blank'>"+PrefixHelper.abbreviate(uri)+"</a>", Label.CONTENT_XHTML);
+	}
+	public String getOriginalUri1() {
+		return originalUri1;
+	}
+	public String getOriginalUri2() {
+		return originalUri2;
 	}
 }

@@ -26,59 +26,34 @@ public class Configuration {
 	protected String id = null;
 	protected String name;
 
-	protected KBInfo source = null;
-	protected KBInfo target = null;
-	protected String metricExpression;
-	public String getMetricExpression() {
-		return metricExpression;
-	}
-
-	public void setMetricExpression(String metricExpression) {
-		this.metricExpression = metricExpression;
-	}
-
-	public double getAcceptanceThreshold() {
-		return acceptanceThreshold;
-	}
-
-	public void setAcceptanceThreshold(double acceptanceThreshold) {
-		this.acceptanceThreshold = acceptanceThreshold;
-	}
-
 	protected double acceptanceThreshold;
 	protected double verificationThreshold;
 	protected int granularity;
 
-	private ConfigReader cR;
+	private ConfigReader cR = new ConfigReader();
 
-	public Configuration(){}
+	protected KBInfo source = null;
+	protected KBInfo target = null;
+	protected String metricExpression;
+	
+	public String getMetricExpression() {return metricExpression;}
+	public void setMetricExpression(String metricExpression) {	this.metricExpression = metricExpression;}
+	public double getAcceptanceThreshold() {return acceptanceThreshold;}
+	public void setAcceptanceThreshold(double acceptanceThreshold) {this.acceptanceThreshold = acceptanceThreshold;}
 
-	public void store() {
+	private Configuration() {}
+	public void store() {}
 
-	}
+	/** Implements Singleton pattern.*/
+	public static Configuration getInstance() {return instance;}
+	
+	public void setSourceEndpoint(KBInfo source) {	this.source = source;}
+	public void setTargetEndpoint(KBInfo target) {	this.target = target;}
+	public KBInfo getSource() {	return source;}
+	public KBInfo getTarget() {	return target;}
 
-	/**
-	 * Implements Singleton pattern.
-	 * @return
-	 */
-	public static Configuration getInstance() {	
-		return instance;
-	}
-
-	public void setSourceEndpoint(KBInfo source) {
-		this.source = source;
-	}
-	public void setTargetEndpoint(KBInfo target) {
-		this.target = target;
-	}
-	public KBInfo getSource() {
-		return source;
-	}
-	public KBInfo getTarget() {
-		return target;
-	}
-
-	public void setFromConfigReader(ConfigReader cR) {
+	public void setFromConfigReader(ConfigReader cR)
+	{
 		this.cR = cR;
 		source = cR.sourceInfo;
 		target = cR.targetInfo;
@@ -89,14 +64,14 @@ public class Configuration {
 		changes.firePropertyChange(SETTING_CONFIG, null, this);
 	}
 
-	public void addPropertyChangeListener( PropertyChangeListener l ) 
+	public void addPropertyChangeListener(PropertyChangeListener l)
 	{ 
-		changes.addPropertyChangeListener( l ); 
+		changes.addPropertyChangeListener(l); 
 	} 
 
-	public void removePropertyChangeListener( PropertyChangeListener l ) 
+	public void removePropertyChangeListener(PropertyChangeListener l) 
 	{ 
-		changes.removePropertyChangeListener( l ); 
+		changes.removePropertyChangeListener(l); 
 	}
 
 	/**Set default namespaces in both source and target KBInfo  */
@@ -109,7 +84,8 @@ public class Configuration {
 	 * Function returns HashMap of label and uri of often used namespaces.
 	 * @return HashMap<label,uri>
 	 */
-	public HashMap<String, String> getDefaultNameSpaces() {
+	public HashMap<String, String> getDefaultNameSpaces()
+	{
 		HashMap<String, String> defs = new HashMap<String, String>();
 		//		  defs.put("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 		//		  defs.put("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
@@ -140,7 +116,7 @@ public class Configuration {
 			restrictionElement.setText(restriction);
 		}				
 	}
-	
+
 	public void saveToXML(String filename)
 	{
 		try{
@@ -161,5 +137,19 @@ public class Configuration {
 			//getElementById("/LIMES/SOURCE/VAR")
 		}
 		catch (Exception e){throw new RuntimeException(e);}
+	}	
+
+	public String toString() {
+		return source.toString()+"\n<br>\n"+target.toString();  
+	}
+
+	public ConfigReader getLimesConfiReader() {
+		cR.sourceInfo = source;
+		cR.targetInfo = target;
+		cR.acceptanceRelation = metricExpression;
+		cR.acceptanceThreshold = acceptanceThreshold;
+		cR.verificationThreshold  = verificationThreshold;
+		cR.granularity = granularity;		 
+		return cR;
 	}
 }

@@ -1,14 +1,10 @@
-	package de.uni_leipzig.simba.saim.gui.widget;
-	import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+package de.uni_leipzig.simba.saim.gui.widget;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-
-import javax.annotation.Resource;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -25,7 +21,7 @@ import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 
 public class ConfigUploader extends CustomComponent 
-	implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver{
+implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver{
 
 	public static final String UPLOAD_FOLDER = "C:/tmp/uploads/";
 	private Panel root;
@@ -39,17 +35,17 @@ public class ConfigUploader extends CustomComponent
 	public ConfigUploader() {
 		root = new Panel("limesupload");
 		root.setWidth("100%");
-	    setCompositionRoot(root);
-        // Create the Upload component.
-        final Upload upload =
-        new Upload("", this);
-        // Listen for events regarding the success of upload.
-        upload.addListener((Upload.SucceededListener) this);
-        upload.addListener((Upload.FailedListener) this);
-        root.getContent().addComponent(upload);
-        //add Button to proceed
-        proceed.setEnabled(false);
-        proceed.addListener(new Button.ClickListener() {			
+		setCompositionRoot(root);
+		// Create the Upload component.
+		final Upload upload =
+				new Upload("", this);
+		// Listen for events regarding the success of upload.
+		upload.addListener((Upload.SucceededListener) this);
+		upload.addListener((Upload.FailedListener) this);
+		root.getContent().addComponent(upload);
+		//add Button to proceed
+		proceed.setEnabled(false);
+		proceed.addListener(new Button.ClickListener() {			
 			@Override
 			public void buttonClick(ClickEvent event) {
 				Configuration config = Configuration.getInstance();
@@ -59,16 +55,17 @@ public class ConfigUploader extends CustomComponent
 				appl.showComponent(new ExecutionPanel());
 			}
 		});       
-        root.getContent().addComponent(proceed);
-        run_def.addListener(new Button.ClickListener() {			
+		root.getContent().addComponent(proceed);
+		run_def.addListener(new Button.ClickListener() {			
 			@Override
 			public void buttonClick(ClickEvent event) {
-			Configuration config = Configuration.getInstance();
+				Configuration config = Configuration.getInstance();
 				ConfigReader cR = new ConfigReader();
 				InputStream inStream;
 				inStream = getClass().getClassLoader().getResourceAsStream(DEFAULT_LIMES_XML);
 				cR.validateAndRead(inStream);
-				
+				// setting location of limes.dtd
+
 				// set paths to source and target
 				try {
 					URL url = getClass().getClassLoader().getResource("examples/"+cR.sourceInfo.endpoint);//dbpedia-linkedmdb.xml");
@@ -85,49 +82,49 @@ public class ConfigUploader extends CustomComponent
 				appl.showComponent(new ExecutionPanel());				
 			}
 		});
-        root.getContent().addComponent(run_def);
+		root.getContent().addComponent(run_def);
 	}
-	
-	
+
+
 	@Override
 	public OutputStream receiveUpload(String filename, String mimeType) {
 		FileOutputStream fos = null; // Output stream to write to
-	    file = new File(UPLOAD_FOLDER + filename);
-        try {
-            // Open the file for writing.
-            fos = new FileOutputStream(file);
-            proceed.setEnabled(false);
-        } catch (final java.io.FileNotFoundException e) {
-            // Error while opening the file. Not reported here.
-            e.printStackTrace();
-            return null;
-        }
-        return fos; // Return the output stream to write to
+		file = new File(UPLOAD_FOLDER + filename);
+		try {
+			// Open the file for writing.
+			fos = new FileOutputStream(file);
+			proceed.setEnabled(false);
+		} catch (final java.io.FileNotFoundException e) {
+			// Error while opening the file. Not reported here.
+			e.printStackTrace();
+			return null;
+		}
+		return fos; // Return the output stream to write to
 	}
 
 	@Override
 	public void uploadFailed(FailedEvent event) {
 		// Log the failure on screen.
-        root.addComponent(new Label("Uploading "
-                + event.getFilename() + " of type '"
-                + event.getMIMEType() + "' failed."));		
+		root.addComponent(new Label("Uploading "
+				+ event.getFilename() + " of type '"
+				+ event.getMIMEType() + "' failed."));		
 	}
 
 	@Override
 	public void uploadSucceeded(SucceededEvent event) {
-		 root.addComponent(new Label("File " + event.getFilename()
-	                + " of type '" + event.getMIMEType()
-	                + "' uploaded."));		
-		 if(isValidFile(file))
-		 {
-			 proceed.setEnabled(true);
-		 }
+		root.addComponent(new Label("File " + event.getFilename()
+				+ " of type '" + event.getMIMEType()
+				+ "' uploaded."));		
+		if(isValidFile(file))
+		{
+			proceed.setEnabled(true);
+		}
 	}
-	
+
 	private boolean isValidFile(File f) {
 		return cR.validateAndRead(f.getAbsolutePath());
 	}
-	
+
 	public ConfigReader getReaderForUpload() {
 		if(cR.validateAndRead(file.getAbsolutePath()))
 			return cR;
