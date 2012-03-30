@@ -91,7 +91,7 @@ public class InstanceMappingTable implements Serializable
 			  @Override
 			  public Object generateCell(Table source, final Object itemId, final Object columnId) {
 				final InstanceMatch bean = (InstanceMatch) itemId;
-				String uri = String.valueOf(bean.getUri1());
+				String uri = String.valueOf(bean.getUri2());
 			    return InstanceMatch.getLinkLabelToUri(uri);  
 			  }
 			});
@@ -122,7 +122,7 @@ public class InstanceMappingTable implements Serializable
 		Mapping result = new Mapping();
 		for(InstanceMatch bean : beanItemContainer.getItemIds()) {
 			if(bean.isSelected()) {
-				result.add(bean.getUri1(), bean.getUri2(), 1.0d);
+				result.add(bean.getOriginalUri1(), bean.getOriginalUri2(), 1.0d);
 			}
 		}
 		return result;

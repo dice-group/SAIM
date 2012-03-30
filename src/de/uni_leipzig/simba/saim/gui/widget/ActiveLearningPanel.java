@@ -2,15 +2,12 @@ package de.uni_leipzig.simba.saim.gui.widget;
 
 import java.util.HashMap;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.jgap.InvalidConfigurationException;
 
-import com.vaadin.terminal.ErrorMessage;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.UserError;
-import com.vaadin.terminal.Paintable.RepaintRequestListener;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
@@ -19,6 +16,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
 import de.uni_leipzig.simba.data.Mapping;
+import de.uni_leipzig.simba.genetics.core.Metric;
 import de.uni_leipzig.simba.genetics.learner.GeneticActiveLearner;
 import de.uni_leipzig.simba.saim.core.Configuration;
 
@@ -26,12 +24,15 @@ import de.uni_leipzig.simba.saim.core.Configuration;
 @SuppressWarnings("serial")
 public class ActiveLearningPanel extends Panel
 {	
+	static Logger logger = Logger.getLogger("LIMES");
 	Configuration config = Configuration.getInstance();
 	GeneticActiveLearner learner;
 	VerticalLayout layout;
 	Button learn;
+	Button terminate;
 	Layout learnLayout;
 	InstanceMappingTable iMapTable;
+
 //	protected void setupContextHelp()
 //	{
 //		ContextHelp contextHelp = new ContextHelp();
@@ -41,6 +42,7 @@ public class ActiveLearningPanel extends Panel
 
 	public ActiveLearningPanel()
 	{
+		logger.setLevel(Level.WARN);
 		layout = new VerticalLayout();
 		layout.setWidth("100%");
 		setContent(layout);
@@ -59,6 +61,11 @@ public class ActiveLearningPanel extends Panel
 		learn.addListener(new ActiveLearnButtonClickListener(learnLayout));
 		layout.addComponent(learn);
 		learn.setEnabled(true);
+		
+		terminate = new Button("Get best solution so far");
+		terminate.addListener(new ActiveTerminateButtonClickListener(learnLayout));
+		terminate.setEnabled(false);
+		layout.addComponent(terminate);
 		
 		// configure
 		HashMap<String, Object> param = new HashMap<String, Object>();
@@ -81,7 +88,11 @@ public class ActiveLearningPanel extends Panel
 		
 	}
 	
-	
+	/**
+	 * Listener for learn buttton
+	 * @author Lyko
+	 *
+	 */
 	public class ActiveLearnButtonClickListener implements Button.ClickListener {
 		Layout l;
 		/**
@@ -92,22 +103,41 @@ public class ActiveLearningPanel extends Panel
 			this.l = l;		}
 		
 		@Override
-		public void buttonClick(ClickEvent event) {
+		public void buttonClick(ClickEvent event) {		
 			Mapping map;
 			if(iMapTable == null) { // on start
+				logger.info("Starting AL");
 				map = learner.learn(new Mapping());
 				iMapTable = new InstanceMappingTable(map);
 				l.removeAllComponents();
 				l.addComponent(iMapTable.getTable());
 				return;
 			}
-		
+			logger.info("Starting round");
 			map = iMapTable.tabletoMapping();
-			iMapTable = new InstanceMappingTable(map);
-			l.removeAllComponents();
-			l.addComponent(iMapTable.getTable());
-		}
-		
+			map = learner.learn(map);
+			if (map.size()>0) {
+				iMapTable = new InstanceMappingTable(map);
+				l.removeAllComponents();
+				l.addComponent(iMapTable.getTable());
+				terminate.setEnabled(true);	
+			}
+		}		
 	}
 
+	public class ActiveTerminateButtonClickListener implements Button.ClickListener {
+		Layout l;
+		public ActiveTerminateButtonClickListener(Layout l) {
+			this.l = l;
+		}
+		
+		@Override
+		public void buttonClick(ClickEvent event) {
+			Metric metric = learner.terminate();
+			Label label = new Label();
+			label.setCaption("Best solution");
+			label.setValue(metric.expression+" with threshold "+metric.threshold);
+			l.addComponent(label);
+		}
+	}
 }
