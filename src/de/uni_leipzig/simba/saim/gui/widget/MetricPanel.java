@@ -15,6 +15,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 import de.konrad.commons.sparql.PrefixHelper;
+import de.konrad.commons.sparql.SPARQLHelper;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.learning.query.PropertyMapper;
@@ -81,7 +82,8 @@ public class MetricPanel extends Panel
 			@Override
 			public void run()
 			{
-				performPropertyMapping();
+			//	performPropertyMapping();
+				getAllProps();
 				{
 
 					for(String s : sourceProps) {
@@ -115,19 +117,46 @@ public class MetricPanel extends Panel
 						config.getTarget().endpoint, classSource, classTarget);
 				for(String s : propMapping.map.keySet())
 					for(Entry<String, Double> e : propMapping.map.get(s).entrySet()) {
-						s=PrefixHelper.abbreviate(s);
-						sourceProps.add(s);
-						config.getSource().properties.add(s);
-						System.out.println("Adding source property: "+s);
-						String t = PrefixHelper.abbreviate(e.getKey());
-						targetProps.add(t);
-						config.getTarget().properties.add(t);
-						System.out.println("Adding target property: "+t);
+						System.out.println(s + " - " + e.getKey());
+						String s_abr=PrefixHelper.abbreviate(s);
+						sourceProps.add(s_abr);
+						config.getSource().properties.add(s_abr);
+						config.getSource().prefixes.put(PrefixHelper.getPrefixFromURI(s_abr), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
+						System.out.println("Adding source property: "+s_abr+"::::"+PrefixHelper.getPrefixFromURI(s_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
+						targetProps.add(PrefixHelper.abbreviate(e.getKey()));
+						String t_abr=PrefixHelper.abbreviate(e.getKey());
+						config.getTarget().properties.add(t_abr);
+						config.getTarget().prefixes.put(PrefixHelper.getPrefixFromURI(t_abr), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(t_abr)));
+						System.out.println("Adding target property: "+t_abr+"::::"+PrefixHelper.getPrefixFromURI(t_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(t_abr)));
 					}
 			} else {
 				showErrorMessage("Cannot perform automatic property mapping due to missing class specifications.");
 			}		
 		}
+		
+		private void getAllProps() {
+			//for source
+			KBInfo info = Configuration.getInstance().getSource();
+			String className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
+			for(String prop : SPARQLHelper.properties(info.endpoint, info.graph, className)) {
+				String s_abr=PrefixHelper.abbreviate(prop);
+				sourceProps.add(s_abr);
+				Configuration.getInstance().getSource().properties.add(s_abr);
+				 Configuration.getInstance().getSource().prefixes.put(PrefixHelper.getPrefixFromURI(s_abr), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
+				System.out.println("Adding source property: "+s_abr+"::::"+PrefixHelper.getPrefixFromURI(s_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
+			}
+			//for target
+			info = Configuration.getInstance().getTarget();
+			className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
+			for(String prop : SPARQLHelper.properties(info.endpoint, info.graph, className)) {
+				String s_abr=PrefixHelper.abbreviate(prop);
+				targetProps.add(s_abr);
+				Configuration.getInstance().getTarget().properties.add(s_abr);
+				Configuration.getInstance().getTarget().prefixes.put(PrefixHelper.getPrefixFromURI(s_abr), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
+				System.out.println("Adding source property: "+s_abr+"::::"+PrefixHelper.getPrefixFromURI(s_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
+			}	
+		}
+
 
 		/**
 		 * Little helper function to retrieve classes out of restrictions of the LIMES SPEC. Whereas, a

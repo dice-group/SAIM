@@ -46,8 +46,8 @@ public class SAIMApplication extends Application
 		mainLayout.addComponent(new StartPanel());
 		wizard = new Wizard();
 
-		wizardDevelopment();
-//		wizardFull();
+//		wizardDevelopment();
+		wizardFull();
 
 		mainLayout.addComponent(wizard);
 		

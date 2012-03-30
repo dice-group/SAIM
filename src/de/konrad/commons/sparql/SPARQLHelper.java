@@ -147,6 +147,22 @@ public class SPARQLHelper
 		if(uriString.startsWith("http://")) return "<"+uriString+">";
 		return uriString;
 	}
+	
+	/**
+	 * Get all Properties of the given knowledge base
+	 * @param endpoint
+	 * @param graph
+	 * @return
+	 */
+	public static List<String> properties(String endpoint, String graph, String className) {
+		String query = "SELECT DISTINCT ?p\n"+
+		//		"FROM "+wrapIfNecessary(graph)+"\n"+
+				"WHERE { ?s rdf:type "+className+".\n"+
+			    "	?s ?p ?o\n"+
+				"} LIMIT 10";
+		return resultSetToList(querySelect(PrefixHelper.addPrefixes(query), endpoint, graph));		
+	}
+	
 	//
 	//	public static ResultSet query(String endpoint, String graph, String query)
 	//	{

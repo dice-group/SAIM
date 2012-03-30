@@ -75,6 +75,16 @@ public class PrefixHelper
 		return uri.substring(baseURIEnd+1);
 	}
 
+	/** @param uri a URI, either in expanded form like "http://dbpedia.org/ontology/Settlement" or in abbreviated form like "dbo:Settlement".
+	 * @return the prefix (first part) of the URI. The prefix of "http://dbpedia.org/ontology/Settlement" is "http://dbpedia.org/ontology/", for example.
+	 */
+	public static String getPrefixFromURI(String uri)
+	{
+		int baseURIEnd = Math.max(Math.max(uri.lastIndexOf('#'),uri.lastIndexOf('/')),uri.lastIndexOf(':'));
+		if(baseURIEnd==-1) {return uri;}
+		return uri.substring(0, baseURIEnd);
+	}
+	
 	public static String abbreviate(String uri)
 	{
 		if(!uri.startsWith("http://")) return uri;
@@ -714,5 +724,6 @@ public class PrefixHelper
 		{"span","http://www.ifomis.org/bfo/1.1/span#"},
 		{"uta","http://uptheasset.org/ontology#"},
 		{"esd","http://def.esd.org.uk/"},
-		{"sider", "http://www4.wiwiss.fu-berlin.de/sider/resource/sider/"}};
+		{"sider", "http://www4.wiwiss.fu-berlin.de/sider/resource/sider/"},
+		{"diseasome", "http://www4.wiwiss.fu-berlin.de/diseasome/resource/diseasome/"}};
 }
