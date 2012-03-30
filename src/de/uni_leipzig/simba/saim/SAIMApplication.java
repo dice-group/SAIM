@@ -1,13 +1,16 @@
 package de.uni_leipzig.simba.saim;
 
 
+import java.io.File;
 import java.util.HashMap;
 
 import org.vaadin.teemu.wizards.Wizard;
 
 import com.vaadin.Application;
+import com.vaadin.terminal.FileResource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.Link;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.VerticalLayout;
@@ -88,7 +91,8 @@ public class SAIMApplication extends Application
 		MenuItem fileMenu = menuBar.addItem(Messages.getString("file"), null, null);
 		fileMenu.addItem(Messages.getString("open"), null, null).setEnabled(false);
 		fileMenu.addItem(Messages.getString("save"), null, null).setEnabled(false);
-		fileMenu.addItem(Messages.getString("importlimes"), null, uploadConfigCommand).setEnabled(true);		
+		fileMenu.addItem(Messages.getString("importlimes"), null, importLIMESCommand).setEnabled(true);		
+		fileMenu.addItem(Messages.getString("exportlimes"), null, exportLIMESCommand).setEnabled(true);
 		return menuBar;
 	}
 
@@ -145,13 +149,25 @@ public class SAIMApplication extends Application
 //		hor.addComponent(openEndpointDialoge);
 //		gridLayout.addComponent(hor, 0, 1);
 //	}
-	MenuBar.Command uploadConfigCommand = new MenuBar.Command() {
+	MenuBar.Command importLIMESCommand = new MenuBar.Command() {
 	    public void menuSelected(MenuItem selectedItem) {
 	    	sub = new Window(Messages.getString("limesupload"));
 	    	sub.setWidth("700px");
 	    	sub.setModal(true);
 	    	final ConfigUploader upload = new ConfigUploader();
 	    	sub.addComponent(upload);
+	    	getMainWindow().addWindow(sub);
+	    }  
+	};
+
+	MenuBar.Command exportLIMESCommand = new MenuBar.Command() {
+	    public void menuSelected(MenuItem selectedItem) {
+	    	sub = new Window(Messages.getString("limesdownload"));
+	    	sub.setWidth("700px");
+	    	sub.setModal(true);
+	    	Configuration.getInstance().saveToXML("linkspec.xml");
+	    	
+	    	sub.addComponent(new Link("Download linkspec",new FileResource(new File("linkspec.xml"),SAIMApplication.this)));
 	    	getMainWindow().addWindow(sub);
 	    }  
 	};

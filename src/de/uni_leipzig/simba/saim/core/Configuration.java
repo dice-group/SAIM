@@ -2,18 +2,17 @@ package de.uni_leipzig.simba.saim.core;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.File;
-import java.io.IOException;
+import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.input.SAXBuilder;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
+import org.jdom.xpath.XPath;
 
 import de.konrad.commons.sparql.PrefixHelper;
 import de.uni_leipzig.simba.io.ConfigReader;
@@ -129,14 +128,36 @@ public class Configuration {
 		return defs;
 	}
 
+	protected void fillKBElement(Element element, KBInfo kb)
+	{		
+		element.getChild("ID").setText(kb.id);
+		element.getChild("ENDPOINT").setText(kb.endpoint);
+		element.getChild("PAGESIZE").setText(String.valueOf(kb.pageSize));
+		for(String restriction: kb.restrictions)
+		{			
+			Element restrictionElement = new Element("RESTRICTION");
+			element.addContent(restrictionElement);
+			restrictionElement.setText(restriction);
+		}				
+	}
+	
 	public void saveToXML(String filename)
 	{
 		try{
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = null;
-			document = builder.parse(getClass().getClassLoader().getResourceAsStream("template.xml"));
-			System.out.println( document.getBaseURI());
+			document = new SAXBuilder().build(getClass().getClassLoader().getResourceAsStream("template.xml"));			
+			Element sourceElement = (Element) XPath.selectSingleNode(document,"//SOURCE");
+			Element targetElement = (Element) XPath.selectSingleNode(document,"//TARGET");
+			fillKBElement(sourceElement,source);
+			fillKBElement(targetElement,target);
+			Element acceptanceElement = (Element) XPath.selectSingleNode(document,"//ACCEPTANCE");
+			acceptanceElement.getChild("FILE").setText(source.endpoint+'-'+target.endpoint+"-accept");
+			Element reviewElement = (Element) XPath.selectSingleNode(document,"//REVIEW");
+			reviewElement.getChild("FILE").setText(source.endpoint+'-'+target.endpoint+"-review");
+
+			XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
+			out.output(document,new FileOutputStream("linkspec.xml"));
+
 			//getElementById("/LIMES/SOURCE/VAR")
 		}
 		catch (Exception e){throw new RuntimeException(e);}
