@@ -69,8 +69,8 @@ public class ActiveLearningPanel extends Panel
 		
 		// configure
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("populationSize", 10);
-		param.put("generations", 10);
+		param.put("populationSize", 20);
+		param.put("generations", 50);
 		param.put("mutationRate", 0.5f);
 		param.put("preserveFittest",true);
 		param.put("propertyMapping", null);

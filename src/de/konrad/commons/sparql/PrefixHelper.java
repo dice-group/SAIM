@@ -540,6 +540,7 @@ public class PrefixHelper
 		{"dbpp","http://dbpedia.org/property/"},
 		{"gold","http://purl.org/linguistics/gold/"},
 		{"movie","http://data.linkedmdb.org/resource/movie/"},
+		{"film","http://data.linkedmdb.org/resource/film/"},
 		{"xforms","http://www.w3.org/2002/xforms/"},
 		{"sysont","http://ns.ontowiki.net/SysOnt/"},
 		{"label","http://purl.org/net/vocab/2004/03/label#"},

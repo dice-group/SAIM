@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import com.vaadin.ui.Label;
 
+import de.konrad.commons.sparql.PrefixHelper;
+
 public class InstanceMatch  implements Serializable{
 	public static final int SEED = 23;
 	String uri1, uri2;
@@ -73,7 +75,7 @@ public class InstanceMatch  implements Serializable{
 	}
 	
 	public static Label getLinkLabelToUri(String uri) {
-		return new Label("<a href='"+uri.replaceAll("[<>\"]", "")+"' target='_blank'>"+uri.replaceAll("[<>\"]", "")+"</a>", Label.CONTENT_XHTML);
+		return new Label("<a href='"+uri.replaceAll("[<>\"]", "")+"' target='_blank'>"+PrefixHelper.abbreviate(uri)+"</a>", Label.CONTENT_XHTML);
 	}
 	public String getOriginalUri1() {
 		return originalUri1;
