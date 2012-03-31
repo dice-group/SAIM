@@ -21,6 +21,7 @@ import de.uni_leipzig.simba.saim.gui.widget.StartPanel;
 import de.uni_leipzig.simba.saim.gui.widget.step.ActiveLearningStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.ClassMatchingStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.EndpointStep;
+import de.uni_leipzig.simba.saim.gui.widget.step.ExecutionStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.MetricStep;
 
 public class SAIMApplication extends Application
@@ -82,7 +83,8 @@ public class SAIMApplication extends Application
 		wizard.addStep(new EndpointStep());		
 		wizard.addStep(new ClassMatchingStep());
 		wizard.addStep(new MetricStep());
-		wizard.addStep(new ActiveLearningStep());
+//		wizard.addStep(new ActiveLearningStep());
+		wizard.addStep(new ExecutionStep());
 	}
 
 	protected MenuBar buildMainMenu()

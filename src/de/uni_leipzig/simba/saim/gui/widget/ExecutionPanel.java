@@ -12,6 +12,7 @@ import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
+import de.uni_leipzig.simba.controller.Parser;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.LimesRunner;
@@ -30,7 +31,15 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 	
 	@SuppressWarnings("serial")
 	public ExecutionPanel() {
-		super(Messages.getString("ExecutionPanel.executelinkspecification")); //$NON-NLS-1$
+		
+		
+		
+		super(Messages.getString("ExecutionPanel.executelinkspecification")); //$NON-NLS-1$		
+		Label l;
+		Configuration config = Configuration.getInstance();
+		l = new Label(config.toString(), Label.CONTENT_XHTML);
+		mainLayout.addComponent(l);
+
 		lR = new LimesRunner();
 		lR.addPropertyChangeListener(this);
 		progressLabel = new Label(Messages.getString("ExecutionPanel.initialized")); //$NON-NLS-1$

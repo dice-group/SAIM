@@ -97,10 +97,10 @@ public class ManualMetricForm extends Form{
 	
 	public void setDefaultValues() {
 		thresholdTextField.setValue(0.8d);
-		String metric = "trigram(src.geneName, dest.label)";	
-		metric ="ADD(0.5*Trigram(src.rdfs:label,dest.rdfs:label), 0.5*Trigram(src.rdfs:label,dest.sider:sideEffectName))";
+		String metric = "trigram(?src.rdfs:label, ?dest.rdfs:label)";	
+		//metric ="ADD(0.5*Trigram(src.rdfs:label,dest.rdfs:label), 0.5*Trigram(src.rdfs:label,dest.sider:sideEffectName))";
 		//drugbank - sider
-		metric = "trigrams(src.sider:drugName,dest.dailymed:name)";
+		//metric = "trigrams(src.sider:drugName,dest.dailymed:name)";
 		metricTextField.setValue(metric);
 	}
 }

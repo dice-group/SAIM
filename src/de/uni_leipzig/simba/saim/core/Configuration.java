@@ -26,9 +26,9 @@ public class Configuration {
 	protected String id = null;
 	protected String name;
 
-	protected double acceptanceThreshold;
-	protected double verificationThreshold;
-	protected int granularity;
+	protected double acceptanceThreshold=0.5d;
+	protected double verificationThreshold=0.3d;
+	protected int granularity=2;
 
 	private ConfigReader cR = new ConfigReader();
 
@@ -140,16 +140,20 @@ public class Configuration {
 	}	
 
 	public String toString() {
-		return source.toString()+"\n<br>\n"+target.toString();  
+		return source.toString()+"\n<br>\n"+target.toString()+"\n<br>\n"+metricExpression+"\n<br>\n"+acceptanceThreshold;  
 	}
 
 	public ConfigReader getLimesConfiReader() {
+		cR = new ConfigReader();
+		source.var="?src";
+		target.var="?dest";
 		cR.sourceInfo = getSource();
 		cR.targetInfo = getTarget();
 		cR.acceptanceRelation = metricExpression;
 		cR.acceptanceThreshold = acceptanceThreshold;
 		cR.verificationThreshold  = verificationThreshold;
 		cR.granularity = granularity;		 
+	//	cR.
 		return cR;
 	}
 }

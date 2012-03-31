@@ -148,6 +148,10 @@ public class ClassMatchingPanel extends Panel
 						suggestionComboBox.removeAllItems();
 						SortedMapping sorter = new SortedMapping(classMatching);
 						for(Entry<Double, Pair<String>> e: sorter.sort().descendingMap().entrySet()) {
+							// need to swap a and b
+							String b = e.getValue().getA();
+							e.getValue().setA(e.getValue().getB());
+							e.getValue().setB(b);
 							suggestionComboBox.addItem(e);
 							suggestionComboBox.select(e);
 						}

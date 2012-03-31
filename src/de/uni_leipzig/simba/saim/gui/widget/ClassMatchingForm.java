@@ -7,6 +7,7 @@ import com.vaadin.ui.Form;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
 
+import de.konrad.commons.sparql.PrefixHelper;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.gui.widget.ClassChooser.ClassNode;
 
@@ -36,9 +37,17 @@ public class ClassMatchingForm extends Form
 				ClassNode node = (ClassNode) event.getItemId();
 				field.addItem(node.url);
 				field.setValue(node.url);
-				String rest = info.var +" rdf:type "+node.url; //$NON-NLS-1$
+				String rest = info.var +" rdf:type "+PrefixHelper.abbreviate(node.url); //$NON-NLS-1$
 				info.restrictions.clear();
-				info.restrictions.add(rest);				
+				if(node.url != null) {
+					info.restrictions.add(rest);
+					info.prefixes.put(PrefixHelper.getPrefixFromURI(PrefixHelper.abbreviate(node.url)), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(PrefixHelper.abbreviate(node.url))));
+					System.out.println("Setting class restiction to "+rest);
+					System.out.println("...and adding prefix: "+PrefixHelper.abbreviate(node.url)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(PrefixHelper.abbreviate(node.url))));
+				}
+				else {
+					System.out.println("Class Matching Form:: Cannot set class restiction, due to  url=null aborting");
+				}
 			}
 		});
 		addField("textfield", field); //$NON-NLS-1$

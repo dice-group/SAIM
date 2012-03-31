@@ -4,8 +4,11 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Accordion;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
@@ -24,6 +27,8 @@ import de.uni_leipzig.simba.saim.core.Configuration;
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
 public class MetricPanel extends Panel
 {	
+	
+	ManualMetricForm manualMetricForm;
 	private static final long	serialVersionUID	= 6766679517868840795L;
 //	TextField metricTextField = new TextField("Insert metric here");
 	Mapping propMapping;
@@ -42,7 +47,7 @@ public class MetricPanel extends Panel
 		layout.setSpacing(false);
 		layout.setMargin(false);
 		setContent(layout);
-		layout.addComponent(new ManualMetricForm());
+		layout.addComponent(manualMetricForm=new ManualMetricForm());
 		final VerticalLayout accordionLayout = new VerticalLayout();
 		addComponent(accordionLayout);		
 		final ProgressIndicator progress = new ProgressIndicator();
@@ -85,13 +90,49 @@ public class MetricPanel extends Panel
 			//	performPropertyMapping();
 				getAllProps();
 				{
-
 					for(String s : sourceProps) {
-						sourceLayout.addComponent(new Label(s)); //$NON-NLS-1$
+						System.out.println("Addinge check for "+s);
+						final CheckBox check = new CheckBox(s, false);
+					//	check.setCaption(s);
+						check.addListener(new Property.ValueChangeListener() {							
+							@Override
+							public void valueChange(ValueChangeEvent event) {
+								String prop = check.getCaption();
+								if(check.booleanValue() && prop != null && prop.length()>0) {
+									String s_abr=PrefixHelper.abbreviate(prop);
+									sourceProps.add(s_abr);
+									Configuration.getInstance().getSource().properties.add(s_abr);
+									Configuration.getInstance().getSource().prefixes.put(PrefixHelper.getPrefixFromURI(s_abr), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
+									Configuration.getInstance().getSource().functions.put(s_abr, "lowercase");
+									System.out.println("Adding source property: "+s_abr+"::::"+PrefixHelper.getPrefixFromURI(s_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
+								} else {
+									System.out.println("Tried to add a source false property");
+								}
+							}
+						});
+						sourceLayout.addComponent(check); //$NON-NLS-1$
 					}
 
 					for(String t : targetProps) {
-						targetLayout.addComponent(new Label(t));//$NON-NLS-1$
+						System.out.println("Addinge check for "+t);
+						final CheckBox check = new CheckBox(t, false);
+						check.setEnabled(true);
+						check.addListener(new Property.ValueChangeListener() {							
+							@Override
+							public void valueChange(ValueChangeEvent event) {
+								String prop = check.getCaption();
+								if(check.booleanValue() && prop != null && prop.length()>0) {
+									String s_abr=PrefixHelper.abbreviate(prop);
+									Configuration.getInstance().getTarget().properties.add(s_abr);
+									Configuration.getInstance().getTarget().prefixes.put(PrefixHelper.getPrefixFromURI(s_abr), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
+									Configuration.getInstance().getTarget().functions.put(s_abr, "lowercase");
+									System.out.println("Adding target property: "+s_abr+"::::"+PrefixHelper.getPrefixFromURI(s_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
+								} else {
+									System.out.println("Tried to add a target false property");
+								}
+							}
+						});
+						targetLayout.addComponent(check);//$NON-NLS-1$
 					} 
 				}
 				accordionLayout.removeComponent(progress);
@@ -141,9 +182,9 @@ public class MetricPanel extends Panel
 			for(String prop : SPARQLHelper.properties(info.endpoint, info.graph, className)) {
 				String s_abr=PrefixHelper.abbreviate(prop);
 				sourceProps.add(s_abr);
-				Configuration.getInstance().getSource().properties.add(s_abr);
-				 Configuration.getInstance().getSource().prefixes.put(PrefixHelper.getPrefixFromURI(s_abr), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
-				System.out.println("Adding source property: "+s_abr+"::::"+PrefixHelper.getPrefixFromURI(s_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
+//				Configuration.getInstance().getSource().properties.add(s_abr);
+//				 Configuration.getInstance().getSource().prefixes.put(PrefixHelper.getPrefixFromURI(s_abr), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
+//				System.out.println("Adding source property: "+s_abr+"::::"+PrefixHelper.getPrefixFromURI(s_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
 			}
 			//for target
 			info = Configuration.getInstance().getTarget();
@@ -151,9 +192,9 @@ public class MetricPanel extends Panel
 			for(String prop : SPARQLHelper.properties(info.endpoint, info.graph, className)) {
 				String s_abr=PrefixHelper.abbreviate(prop);
 				targetProps.add(s_abr);
-				Configuration.getInstance().getTarget().properties.add(s_abr);
-				Configuration.getInstance().getTarget().prefixes.put(PrefixHelper.getPrefixFromURI(s_abr), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
-				System.out.println("Adding source property: "+s_abr+"::::"+PrefixHelper.getPrefixFromURI(s_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
+//				Configuration.getInstance().getTarget().properties.add(s_abr);
+//				Configuration.getInstance().getTarget().prefixes.put(PrefixHelper.getPrefixFromURI(s_abr), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
+//				System.out.println("Adding source property: "+s_abr+"::::"+PrefixHelper.getPrefixFromURI(s_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
 			}	
 		}
 
@@ -174,5 +215,15 @@ public class MetricPanel extends Panel
 
 		private void showErrorMessage(String message) {
 			layout.setComponentError(new UserError(message));
+		}
+
+		public boolean isValid() {
+			manualMetricForm.validate();
+			if(manualMetricForm.isValid()) {
+				Configuration.getInstance().setMetricExpression(manualMetricForm.metricTextField.getValue().toString());
+				Configuration.getInstance().setAcceptanceThreshold(Double.parseDouble(manualMetricForm.thresholdTextField.getValue().toString()));
+				return true;
+			}
+			return false;
 		}
 	}
