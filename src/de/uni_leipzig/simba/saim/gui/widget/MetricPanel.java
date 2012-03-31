@@ -223,6 +223,8 @@ public class MetricPanel extends Panel
 				Configuration.getInstance().setMetricExpression(manualMetricForm.metricTextField.getValue().toString());
 				Configuration.getInstance().setAcceptanceThreshold(Double.parseDouble(manualMetricForm.thresholdTextField.getValue().toString()));
 				return true;
+			} else {
+				manualMetricForm.setComponentError(new UserError("Please insert something..."));
 			}
 			return false;
 		}

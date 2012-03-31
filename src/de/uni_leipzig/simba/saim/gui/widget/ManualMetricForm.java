@@ -57,8 +57,8 @@ public class ManualMetricForm extends Form{
 				config.setAcceptanceThreshold(threshold);
 //				config.setDefaultNameSpaces();
 				// run it
-				SAIMApplication appl = (SAIMApplication) getApplication();
-				appl.showComponent(new ExecutionPanel());
+//				SAIMApplication appl = (SAIMApplication) getApplication();
+//				appl.showComponent(new ExecutionPanel());
 			}
 		});
 		return b;

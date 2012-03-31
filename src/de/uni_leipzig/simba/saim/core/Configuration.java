@@ -149,7 +149,12 @@ public class Configuration {
 		target.var="?dest";
 		cR.sourceInfo = getSource();
 		cR.targetInfo = getTarget();
-		cR.acceptanceRelation = metricExpression;
+		if(metricExpression == null) {			
+			String defMetric = "trigram(src."+source.properties.get(0)+",dest."+source.properties.get(0)+")";
+			System.out.println("No metricExpression set ... using default: "+defMetric);
+			metricExpression = defMetric;
+		}
+		cR.metricExpression = metricExpression;
 		cR.acceptanceThreshold = acceptanceThreshold;
 		cR.verificationThreshold  = verificationThreshold;
 		cR.granularity = granularity;		 
