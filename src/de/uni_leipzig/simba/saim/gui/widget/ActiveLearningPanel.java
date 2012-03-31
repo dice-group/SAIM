@@ -78,7 +78,6 @@ public class ActiveLearningPanel extends Panel
 		param.put("granularity", 2);
 		param.put("config", config.getLimesConfiReader());
 		learner = new GeneticActiveLearner();
-	
 		try {
 			learner.init(config.getSource(), config.getTarget(), param);
 		} catch (InvalidConfigurationException e) {

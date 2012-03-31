@@ -12,7 +12,7 @@ import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
-import de.uni_leipzig.simba.controller.Parser;
+import de.uni_leipzig.simba.cache.HybridCache;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.LimesRunner;
@@ -23,7 +23,7 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 	Label progressLabel;
 	ProgressIndicator progress;
 	private Mapping m = new Mapping();
-	float maxSteps = 5;
+	float maxSteps = LimesRunner.MAX_STEPS;
 	Button start;
 	Button showResults;
 	Button startActiveLearning;
@@ -40,6 +40,11 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 		l = new Label(config.toString(), Label.CONTENT_XHTML);
 		mainLayout.addComponent(l);
 
+		HybridCache hC = HybridCache.getData(config.getSource());
+		hC.resetIterator();
+		System.out.println(hC.size());
+		System.out.println(hC.getNextInstance());
+		
 		lR = new LimesRunner();
 		lR.addPropertyChangeListener(this);
 		progressLabel = new Label(Messages.getString("ExecutionPanel.initialized")); //$NON-NLS-1$

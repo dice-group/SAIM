@@ -17,7 +17,7 @@ public class LimesRunner implements Serializable {
 	private PropertyChangeSupport changes = new PropertyChangeSupport( this ); 
 	 
 	private int step = 0;
-	private int maxStep = 5;
+	public static final int MAX_STEPS = 5;
 	private String message;
 	public static final String MESSAGE = "message";
 	public static final String STEP = "step";
@@ -30,22 +30,20 @@ public class LimesRunner implements Serializable {
 	}	
 	
 	public Mapping runConfig(Configuration config) {
-		ConfigReader cR = new ConfigReader();
-		
 		fire("Getting source cache...");
-		System.out.println(config.getSource());
+	//	System.out.println(config.getSource());
 		HybridCache sC = HybridCache.getData(config.getSource());
 		fire("Getting target cache...");
-		System.out.println(config.getTarget());
+	//	System.out.println(config.getTarget());
 		HybridCache tC = HybridCache.getData(config.getTarget());
-		fire("Starting Matching process...");
+		fire("Initialize Mapping...");
 		Filter f = new LinearFilter();
 		// call Mapper			
 		SetConstraintsMapper sCM = SetConstraintsMapperFactory.getMapper("simple", 
 				config.getSource(), config.getTarget(), 
 				sC, tC, f, config.granularity);
-		
-		Mapping actualMapping = sCM.getLinks(config.metricExpression, config.acceptanceThreshold);
+		fire("Starting Mapping process...");
+		Mapping actualMapping = sCM.getLinks(config.getMetricExpression(), config.getAcceptanceThreshold());
 		fire("Mapping performed.");
 		return actualMapping;		
 	}
