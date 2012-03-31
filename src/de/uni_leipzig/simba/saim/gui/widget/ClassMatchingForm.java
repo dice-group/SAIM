@@ -37,13 +37,13 @@ public class ClassMatchingForm extends Form
 				ClassNode node = (ClassNode) event.getItemId();
 				field.addItem(node.url);
 				field.setValue(node.url);
-				String rest = info.var +" rdf:type "+PrefixHelper.abbreviate(node.url); //$NON-NLS-1$
+				String pref = PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(PrefixHelper.abbreviate(node.url)));
+				String rest = info.var +" rdf:type "+ PrefixHelper.abbreviate(node.url); //$NON-NLS-1$
 				info.restrictions.clear();
 				if(node.url != null) {
 					info.restrictions.add(rest);
-					info.prefixes.put(PrefixHelper.getPrefixFromURI(PrefixHelper.abbreviate(node.url)), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(PrefixHelper.abbreviate(node.url))));
-					System.out.println("Setting class restiction to "+rest);
-					System.out.println("...and adding prefix: "+PrefixHelper.abbreviate(node.url)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(PrefixHelper.abbreviate(node.url))));
+					if(pref != null)
+						info.prefixes.put(PrefixHelper.getPrefixFromURI(PrefixHelper.abbreviate(node.url)), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(PrefixHelper.abbreviate(node.url))));
 				}
 				else {
 					System.out.println("Class Matching Form:: Cannot set class restiction, due to  url=null aborting");

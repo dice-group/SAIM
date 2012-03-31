@@ -580,6 +580,7 @@ public class PrefixHelper
 		{"ttl","http://www.w3.org/2008/turtle#"},
 		{"pmlt","http://inference-web.org/2.0/pml-trust.owl#"},
 		{"drugbank","http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/"},
+		{"drugbankvocab", "http://www4.wiwiss.fu-berlin.de/drugbank/vocab/resource/class/"},
 		{"geographis","http://telegraphis.net/ontology/geography/geography#"},
 		{"sioca","http://rdfs.org/sioc/actions#"},
 		{"wn20schema","http://www.w3.org/2006/03/wn/wn20/schema/"},
