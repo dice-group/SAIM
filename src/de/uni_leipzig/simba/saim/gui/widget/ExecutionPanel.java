@@ -37,14 +37,7 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 		super(Messages.getString("ExecutionPanel.executelinkspecification")); //$NON-NLS-1$		
 		Label l;
 		Configuration config = Configuration.getInstance();
-		l = new Label(config.toString(), Label.CONTENT_XHTML);
-		mainLayout.addComponent(l);
 
-		HybridCache hC = HybridCache.getData(config.getSource());
-		hC.resetIterator();
-		System.out.println(hC.size());
-		System.out.println(hC.getNextInstance());
-		
 		lR = new LimesRunner();
 		lR.addPropertyChangeListener(this);
 		progressLabel = new Label(Messages.getString("ExecutionPanel.initialized")); //$NON-NLS-1$

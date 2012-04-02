@@ -50,8 +50,6 @@ public class ActiveLearningPanel extends Panel
 		
 		Label l;
 		Configuration config = Configuration.getInstance();
-		l = new Label(config.toString(), Label.CONTENT_XHTML);
-		addComponent(l);
 		
 		learnLayout = new HorizontalLayout();
 		learnLayout.setWidth("100%");
