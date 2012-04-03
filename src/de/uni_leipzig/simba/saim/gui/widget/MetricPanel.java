@@ -6,7 +6,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.vaadin.cytographer.Cytographer;
-import org.vaadin.cytographer.CytographerApplication;
 
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
@@ -50,6 +49,7 @@ public class MetricPanel extends Panel
 	private static final long	serialVersionUID	= 6766679517868840795L;
 //	TextField metricTextField = new TextField("Insert metric here");
 	Mapping propMapping;
+	VerticalLayout mainLayout = new VerticalLayout();
 	HorizontalLayout layout = new HorizontalLayout();
 	Set<String> sourceProps = new HashSet<String>();
 	Set<String> targetProps = new HashSet<String>();
@@ -114,25 +114,32 @@ public class MetricPanel extends Panel
 	
 	public MetricPanel()
 	{
+		
+		mainLayout.setSpacing(false);
+		mainLayout.setMargin(false);
+		mainLayout.setWidth("100%");
 		layout.setSpacing(false);
 		layout.setMargin(false);
-		setContent(layout);
-		layout.addComponent(manualMetricForm=new ManualMetricForm());
+		setContent(mainLayout);
+		layout.setWidth("100%");
+		mainLayout.addComponent(layout);
+		
 		final VerticalLayout accordionLayout = new VerticalLayout();
 		layout.addComponent(accordionLayout);		
 		final ProgressIndicator progress = new ProgressIndicator();
 		progress.setIndeterminate(false);
 		accordionLayout.addComponent(progress);
 		// self config
+		mainLayout.addComponent(manualMetricForm=new ManualMetricForm());
 		selfconfig = new Button("Start SelfConfiguration");
 		selfconfig.setEnabled(false);
 		selfconfig.addListener(new SelfConfigClickListener(layout));
-		layout.addComponent(selfconfig);
+		mainLayout.addComponent(selfconfig);
 		
 		// accordion panel
 		Panel accordionPanel = new Panel();
 		accordionLayout.addComponent(accordionPanel);
-		accordionPanel.setWidth("40em"); //$NON-NLS-1$
+		accordionPanel.setWidth("25em"); //$NON-NLS-1$
 		
 		// add graph panel		
 		layout.addComponent(getGraphPanel());
