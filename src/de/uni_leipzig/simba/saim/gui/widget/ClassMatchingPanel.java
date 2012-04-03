@@ -114,14 +114,16 @@ public class ClassMatchingPanel extends Panel
 					{							
 						Cache cache = CacheManager.getInstance().getCache("classmatching");
 						List<Object> parameters = Arrays.asList(new Object[] {config.getSource().endpoint,config.getTarget().endpoint,config.getSource().id,config.getTarget().id});
-						if(cache.isKeyInCache(parameters))
-						{		
-							classMatching = new Mapping();
-							
-							classMatching.map = ((HashMap<String,HashMap<String,Double>>) cache.get(parameters).getValue());
-							System.out.println("loading map of size "+classMatching.map.size());
-							System.out.println("cache hit");
-						}
+						try {
+							if(cache.isKeyInCache(parameters))
+							{		
+								classMatching = new Mapping();
+								
+								classMatching.map = ((HashMap<String,HashMap<String,Double>>) cache.get(parameters).getValue());
+								System.out.println("loading map of size "+classMatching.map.size());
+								System.out.println("cache hit");
+							}
+						}catch(Exception e){}
 					}									
 					if(classMatching==null)
 					{

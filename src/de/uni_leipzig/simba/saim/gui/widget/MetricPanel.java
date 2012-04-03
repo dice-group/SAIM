@@ -1,16 +1,22 @@
 package de.uni_leipzig.simba.saim.gui.widget;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.github.wolfie.refresher.Refresher;
+import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Accordion;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.TabSheet.Tab;
@@ -19,11 +25,15 @@ import com.vaadin.ui.VerticalLayout;
 
 import de.konrad.commons.sparql.PrefixHelper;
 import de.konrad.commons.sparql.SPARQLHelper;
+import de.uni_leipzig.simba.cache.HybridCache;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.learning.query.PropertyMapper;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.core.Configuration;
+import de.uni_leipzig.simba.saim.gui.widget.ClassMatchingPanel.SuggestionsRefreshListener;
+import de.uni_leipzig.simba.selfconfig.MeshBasedSelfConfigurator;
+import de.uni_leipzig.simba.selfconfig.SimpleClassifier;
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
 public class MetricPanel extends Panel
 {	
@@ -35,6 +45,7 @@ public class MetricPanel extends Panel
 	HorizontalLayout layout = new HorizontalLayout();
 	Set<String> sourceProps = new HashSet<String>();
 	Set<String> targetProps = new HashSet<String>();
+	Button selfconfig;
 	//	protected void setupContextHelp()
 	//	{
 	//		ContextHelp contextHelp = new ContextHelp();
@@ -49,17 +60,23 @@ public class MetricPanel extends Panel
 		setContent(layout);
 		layout.addComponent(manualMetricForm=new ManualMetricForm());
 		final VerticalLayout accordionLayout = new VerticalLayout();
-		addComponent(accordionLayout);		
+		layout.addComponent(accordionLayout);		
 		final ProgressIndicator progress = new ProgressIndicator();
 		progress.setIndeterminate(false);
 		accordionLayout.addComponent(progress);
+		// self config
+		selfconfig = new Button("Start SelfConfiguration");
+		selfconfig.setEnabled(false);
+		selfconfig.addListener(new SelfConfigClickListener(layout));
+		layout.addComponent(selfconfig);
+		
+		// accordion panel
 		Panel accordionPanel = new Panel();
 		accordionLayout.addComponent(accordionPanel);
-		//accordionPanel.setVisible(false);
 		accordionPanel.setWidth("40em"); //$NON-NLS-1$
 		
 		Panel graphPanel = new Panel();		
-		addComponent(graphPanel);
+		layout.addComponent(graphPanel);
 		final Accordion accordion = new Accordion();		
 		accordionPanel.addComponent(accordion);
 
@@ -91,7 +108,6 @@ public class MetricPanel extends Panel
 				getAllProps();
 				{
 					for(String s : sourceProps) {
-						System.out.println("Addinge check for "+s);
 						final CheckBox check = new CheckBox(s, false);
 					//	check.setCaption(s);
 						check.addListener(new Property.ValueChangeListener() {							
@@ -114,7 +130,6 @@ public class MetricPanel extends Panel
 					}
 
 					for(String t : targetProps) {
-						System.out.println("Addinge check for "+t);
 						final CheckBox check = new CheckBox(t, false);
 						check.setEnabled(true);
 						check.addListener(new Property.ValueChangeListener() {							
@@ -182,9 +197,6 @@ public class MetricPanel extends Panel
 			for(String prop : SPARQLHelper.properties(info.endpoint, info.graph, className)) {
 				String s_abr=PrefixHelper.abbreviate(prop);
 				sourceProps.add(s_abr);
-//				Configuration.getInstance().getSource().properties.add(s_abr);
-//				 Configuration.getInstance().getSource().prefixes.put(PrefixHelper.getPrefixFromURI(s_abr), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
-//				System.out.println("Adding source property: "+s_abr+"::::"+PrefixHelper.getPrefixFromURI(s_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
 			}
 			//for target
 			info = Configuration.getInstance().getTarget();
@@ -192,10 +204,9 @@ public class MetricPanel extends Panel
 			for(String prop : SPARQLHelper.properties(info.endpoint, info.graph, className)) {
 				String s_abr=PrefixHelper.abbreviate(prop);
 				targetProps.add(s_abr);
-//				Configuration.getInstance().getTarget().properties.add(s_abr);
-//				Configuration.getInstance().getTarget().prefixes.put(PrefixHelper.getPrefixFromURI(s_abr), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
-//				System.out.println("Adding source property: "+s_abr+"::::"+PrefixHelper.getPrefixFromURI(s_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
 			}	
+			//enable selfconfig
+			selfconfig.setEnabled(true);
 		}
 
 
@@ -228,4 +239,72 @@ public class MetricPanel extends Panel
 			}
 			return false;
 		}
+		
+		public class SelfConfigClickListener implements Button.ClickListener {
+			Layout l;
+			public SelfConfigClickListener(Layout l) {
+				this.l=l;
+			}
+			@Override
+			public void buttonClick(ClickEvent event) {
+				// add all properties
+				for(String s : sourceProps) {
+					Configuration.getInstance().getSource().properties.add(s);
+					Configuration.getInstance().getSource().prefixes.put(PrefixHelper.getPrefixFromURI(s), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s)));
+					Configuration.getInstance().getSource().functions.put(s, "");
+				}
+				for(String s : targetProps) {
+					Configuration.getInstance().getTarget().properties.add(s);
+					Configuration.getInstance().getTarget().prefixes.put(PrefixHelper.getPrefixFromURI(s), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s)));
+					Configuration.getInstance().getTarget().functions.put(s, "");
+				}
+				// run selfconfig
+				l.removeAllComponents();
+				Refresher refresher = new Refresher();
+				SelfConfigRefreshListener listener = new SelfConfigRefreshListener();
+				refresher.addListener(listener);
+				addComponent(refresher);
+				
+				final ProgressIndicator indicator = new ProgressIndicator();
+				indicator.setCaption("Progress");
+				l.addComponent(indicator);
+				indicator.setImmediate(true);
+				
+				final Panel stepPanel = new Panel("Starting self configuration");
+				l.addComponent(stepPanel);
+				
+				new Thread() {
+					public void run() {
+						
+						float steps = 5f;
+						indicator.setValue(new Float(1f/steps));
+						indicator.requestRepaint();
+						stepPanel.setCaption("Getting source cache...");
+						HybridCache sourceCache = HybridCache.getData(Configuration.getInstance().getSource());
+						indicator.setValue(new Float(2f/steps));
+						indicator.requestRepaint();
+						stepPanel.setCaption("Getting target cache...");
+						HybridCache targetCache = HybridCache.getData(Configuration.getInstance().getTarget());
+						indicator.setValue(new Float(3f/steps));
+						stepPanel.setCaption("Performing self configuration...");
+						MeshBasedSelfConfigurator bsc = new MeshBasedSelfConfigurator(sourceCache, targetCache, 0.6, 0.5);
+					    List<SimpleClassifier> cp = bsc.getBestInitialClassifiers();						
+						indicator.setValue(new Float(4f/steps));
+						stepPanel.setCaption("Performed self configuration:");
+					  	for(SimpleClassifier cl : cp) {
+					  		System.out.println(cl);
+					  	}
+						
+					}
+				}.start();
+			}
+			
+		}
+		
+		public class SelfConfigRefreshListener implements RefreshListener
+		{
+			boolean running = true; 
+			private static final long serialVersionUID = -8765221895426102605L;		    
+			@Override public void refresh(final Refresher source)	{if(!running) {removeComponent(source);source.setEnabled(false);}}
+		}	
 	}
