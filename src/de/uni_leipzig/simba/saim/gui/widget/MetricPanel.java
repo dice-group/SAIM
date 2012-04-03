@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.vaadin.cytographer.Cytographer;
+import org.vaadin.cytographer.CytographerApplication;
+
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.vaadin.data.Property;
@@ -22,6 +25,11 @@ import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+
+import csplugins.layout.algorithms.force.ForceDirectedLayout;
+import cytoscape.CyNetwork;
+import cytoscape.Cytoscape;
+import cytoscape.view.CyNetworkView;
 
 import de.konrad.commons.sparql.PrefixHelper;
 import de.konrad.commons.sparql.SPARQLHelper;
@@ -53,6 +61,57 @@ public class MetricPanel extends Panel
 	//		//contextHelp.addHelpForComponent(proposals, "Source properties from the knowledgebase <insert id here> ....");
 	//	}
 
+	
+	
+	private Panel getGraphPanel(){
+		
+		 final int HEIGHT = 450;
+		 final int WIDTH = 800;
+		 final int NODESIZE = 100;
+		
+		Panel graphPanel = new Panel();
+		
+		
+		
+		Cytoscape.createNewSession();	
+		String name = "MyName";
+		CyNetwork cyNetwork = Cytoscape.createNetwork(name, false);		
+		CyNetworkView cyNetworkView = Cytoscape.createNetworkView(cyNetwork);
+
+		Cytographer cytographer = new Cytographer(cyNetwork, cyNetworkView, name, WIDTH, HEIGHT);
+		cytographer.setImmediate(true);
+		cytographer.setWidth(WIDTH + "px");
+		cytographer.setHeight(HEIGHT + "px");
+		cytographer.setTextVisible(true);		
+		cytographer.setNodeSize(NODESIZE, true);
+				
+		// add nodes
+		cytographer.addNode("p.1", 100, 100);
+		cytographer.addNode("c.1", 100, 200);
+		cytographer.addNode("o.1", 100, 300);
+		
+		cytographer.addNode("p.2", 200, 100);
+		cytographer.addNode("c.2", 200, 200);
+		cytographer.addNode("o.2", 200, 300);
+
+		// add edges
+		cytographer.createAnEdge( new String[]{"p.1","c.1","e1"});
+		cytographer.createAnEdge( new String[]{"p.2","c.1","e2"});
+		
+		cytographer.createAnEdge( new String[]{"c.1","o.1","e3"});
+		cytographer.createAnEdge( new String[]{"c.2","o.1","e4"});
+		
+		// set view
+		cyNetworkView.applyLayout(new ForceDirectedLayout());		
+		cytographer.fitToView();
+		
+		// repaint
+		cytographer.repaintGraph();
+		graphPanel.addComponent(cytographer);
+		
+		return graphPanel;		
+	}
+	
 	public MetricPanel()
 	{
 		layout.setSpacing(false);
@@ -75,8 +134,8 @@ public class MetricPanel extends Panel
 		accordionLayout.addComponent(accordionPanel);
 		accordionPanel.setWidth("40em"); //$NON-NLS-1$
 		
-		Panel graphPanel = new Panel();		
-		layout.addComponent(graphPanel);
+		// add graph panel		
+		layout.addComponent(getGraphPanel());
 		final Accordion accordion = new Accordion();		
 		accordionPanel.addComponent(accordion);
 
