@@ -1,0 +1,19 @@
+@import url(../reindeer/styles.css);
+
+.contextmenu {
+	background-color       :    #ffc;
+	border                 :    1px solid #009;
+	font-family            :    Arial,Helvetica,Tahoma,Verdana,sans-serif;
+    font-size              :    11px;
+    line-height            :    normal;
+    margin                 :    2px;
+}
+
+
+.gwt-MenuItem {
+	font-weight            :	normal;
+}
+
+.gwt-MenuItem .mouseover {
+	font-weight            :	bold;
+}
