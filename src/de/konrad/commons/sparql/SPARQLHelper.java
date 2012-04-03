@@ -155,11 +155,12 @@ public class SPARQLHelper
 	 * @return
 	 */
 	public static List<String> properties(String endpoint, String graph, String className) {
-		String query = "SELECT DISTINCT ?p\n"+
+		String query = "SELECT DISTINCT ?p (COUNT(?s) AS ?count)\n"+
 		//		"FROM "+wrapIfNecessary(graph)+"\n"+
 				"WHERE { ?s rdf:type "+className+".\n"+
 			    "	?s ?p ?o\n"+
-				"} LIMIT 10";
+				"} GROUP BY ?p \n"+
+			    "ORDER BY DESC(?count)";
 		return resultSetToList(querySelect(PrefixHelper.addPrefixes(query), endpoint, graph));		
 	}
 	

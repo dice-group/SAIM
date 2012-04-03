@@ -32,10 +32,10 @@ public class ManualMetricForm extends Form{
 		this.addField("metric", metricTextField);
 		this.addField("threshold", thresholdTextField);
 		getFooter().addComponent(okbar);
-		Button okbutton = getOKButton();
-		okbar.addComponent(okbutton);
-		okbar.setComponentAlignment(okbutton, Alignment.TOP_RIGHT);
-		okbar.addComponent(new Button("Reset", this, "setDefaultValues"));
+//		Button okbutton = getOKButton();
+//		okbar.addComponent(okbutton);
+//		okbar.setComponentAlignment(okbutton, Alignment.TOP_RIGHT);
+//		okbar.addComponent(new Button("Reset", this, "setDefaultValues"));
 	}
 	
 

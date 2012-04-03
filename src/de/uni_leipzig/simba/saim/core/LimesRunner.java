@@ -22,7 +22,9 @@ public class LimesRunner implements Serializable {
 	public static final String MESSAGE = "message";
 	public static final String STEP = "step";
 	public static final String FINISHED = "ready";
-		
+	HybridCache tC;
+	HybridCache sC;
+	
 	public LimesRunner() {
 		message = "Initializing Limes...";
 		changes.firePropertyChange(MESSAGE, "", message);
@@ -32,10 +34,10 @@ public class LimesRunner implements Serializable {
 	public Mapping runConfig(Configuration config) {
 		fire("Getting source cache...");
 	//	System.out.println(config.getSource());
-		HybridCache sC = HybridCache.getData(config.getSource());
+		sC = HybridCache.getData(config.getSource());
 		fire("Getting target cache...");
 	//	System.out.println(config.getTarget());
-		HybridCache tC = HybridCache.getData(config.getTarget());
+		tC = HybridCache.getData(config.getTarget());
 		fire("Initialize Mapping...");
 		Filter f = new LinearFilter();
 		// call Mapper			
@@ -62,5 +64,13 @@ public class LimesRunner implements Serializable {
 		  this.message = message;
 		  changes.firePropertyChange(MESSAGE, "", message);
 		  changes.firePropertyChange(STEP, step, ++step);
+	  }
+	  
+	  public HybridCache getSourceCache() {
+		  return sC;
+	  }
+	  
+	  public HybridCache getTargetCache() {
+		  return tC;
 	  }
 }
