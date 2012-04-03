@@ -105,6 +105,7 @@ public class ActiveLearningPanel extends Panel
 			if(iMapTable == null) { // on start
 				logger.info("Starting AL");
 				map = learner.learn(new Mapping());
+				learner.getFitnessFunction().getCache("source").getAllInstances();
 				iMapTable = new InstanceMappingTable(map);
 				l.removeAllComponents();
 				l.addComponent(iMapTable.getTable());
