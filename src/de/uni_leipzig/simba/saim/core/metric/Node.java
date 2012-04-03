@@ -7,13 +7,19 @@ import java.util.Set;
 /** Abstract superclass for the components of a metric.*/
 public abstract class Node
 {
-	public final byte maxChilds = 0;
+	public byte getMaxChilds() {return 0;}
 	public abstract boolean validParentOf(Node n);
 	protected Set<Node> childs = new HashSet<>();
 	
 	public Set<Node> getChilds() {return Collections.unmodifiableSet(childs);}
 	
-	public void addChild(Node n) {if(accepts(n)) childs.add(n);}
+	public Node addChild(Node n)
+	{
+		
+		
+		if(acceptsChild(n)) {childs.add(n);}
+		return n;
+	}
 	
-	public boolean accepts(Node n) {return validParentOf(n)&&childs.size()<maxChilds;}
+	public boolean acceptsChild(Node n) {return validParentOf(n)&&childs.size()<getMaxChilds();}
 }

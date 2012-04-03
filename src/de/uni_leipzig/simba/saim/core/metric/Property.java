@@ -3,10 +3,13 @@ package de.uni_leipzig.simba.saim.core.metric;
 /** A similarity measure.*/
 public class Property extends Node
 {
-	@Override public boolean validParentOf(Node n) {return false;}
+	public byte getMaxChilds() {return 0;}
+	public enum Origin {SOURCE,TARGET};
 	
-	@Override public boolean accepts(Node n)
+	@Override public boolean validParentOf(Node node) {return false;}
+	
+	@Override public boolean acceptsChild(Node n)
 	{
-		return super.accepts(n);
+		return super.acceptsChild(n);
 	}
 }
