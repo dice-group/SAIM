@@ -70,7 +70,7 @@ public class MetricPanel extends Panel
 		 final int NODESIZE = 100;
 		
 		Panel graphPanel = new Panel();
-		
+		graphPanel.setWidth("100%");
 		
 		
 		Cytoscape.createNewSession();	
