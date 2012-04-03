@@ -1,5 +1,7 @@
 package de.uni_leipzig.simba.saim.gui.widget;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
@@ -9,8 +11,13 @@ import org.vaadin.cytographer.Cytographer;
 
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
+import com.google.gwt.user.client.Element;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.event.LayoutEvents.LayoutClickListener;
+import com.vaadin.event.MouseEvents;
+import com.vaadin.event.LayoutEvents.LayoutClickEvent;
+import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
@@ -54,6 +61,14 @@ public class MetricPanel extends Panel
 	Set<String> sourceProps = new HashSet<String>();
 	Set<String> targetProps = new HashSet<String>();
 	Button selfconfig;
+	Cytographer cytographer;
+	
+
+	// should prevent browser's default right click action
+	public static native void disableContextMenu(final Element elem) /*-{
+																		elem.oncontextmenu=function() {return false};
+																		}-*/;
+	
 	//	protected void setupContextHelp()
 	//	{
 	//		ContextHelp contextHelp = new ContextHelp();
@@ -68,48 +83,51 @@ public class MetricPanel extends Panel
 		 final int HEIGHT = 450;
 		 final int WIDTH = 800;
 		 final int NODESIZE = 100;
-		
-		Panel graphPanel = new Panel();
-		graphPanel.setWidth("100%");
-		
-		
-		Cytoscape.createNewSession();	
-		String name = "MyName";
-		CyNetwork cyNetwork = Cytoscape.createNetwork(name, false);		
-		CyNetworkView cyNetworkView = Cytoscape.createNetworkView(cyNetwork);
+		 
+		 Panel graphPanel = new Panel();
+		 Layout graphLayout = new VerticalLayout();
+		 Layout buttonLayout = getButtonLayout();
+		 graphPanel.setContent(graphLayout);
+		 graphPanel.setWidth("100%");
+		 graphLayout.addComponent(buttonLayout);
+		 
+		 Cytoscape.createNewSession();	
+		 String name = "MyName";
+		 CyNetwork cyNetwork = Cytoscape.createNetwork(name, false);		
+		 CyNetworkView cyNetworkView = Cytoscape.createNetworkView(cyNetwork);
 
-		Cytographer cytographer = new Cytographer(cyNetwork, cyNetworkView, name, WIDTH, HEIGHT);
-		cytographer.setImmediate(true);
-		cytographer.setWidth(WIDTH + "px");
-		cytographer.setHeight(HEIGHT + "px");
-		cytographer.setTextVisible(true);		
-		cytographer.setNodeSize(NODESIZE, true);
+		 cytographer = new Cytographer(cyNetwork, cyNetworkView, name, WIDTH, HEIGHT);
+		 cytographer.setImmediate(true);
+		 cytographer.setWidth(WIDTH + "px");
+		 cytographer.setHeight(HEIGHT + "px");
+		 cytographer.setTextVisible(true);		
+		 cytographer.setNodeSize(NODESIZE, true);
 				
-		// add nodes
-		cytographer.addNode("p.1", 100, 100);
-		cytographer.addNode("c.1", 100, 200);
-		cytographer.addNode("o.1", 100, 300);
+		 // add nodes
+		 cytographer.addNode("p.1", 100, 100);
+		 cytographer.addNode("c.1", 100, 200);
+		 cytographer.addNode("o.1", 100, 300);
 		
-		cytographer.addNode("p.2", 200, 100);
-		cytographer.addNode("c.2", 200, 200);
-		cytographer.addNode("o.2", 200, 300);
+		 cytographer.addNode("p.2", 200, 100);
+		 cytographer.addNode("c.2", 200, 200);
+		 cytographer.addNode("o.2", 200, 300);
 
-		// add edges
-		cytographer.createAnEdge( new String[]{"p.1","c.1","e1"});
-		cytographer.createAnEdge( new String[]{"p.2","c.1","e2"});
+		 // add edges
+		 cytographer.createAnEdge( new String[]{"p.1","c.1","e1"});
+		 cytographer.createAnEdge( new String[]{"p.2","c.1","e2"});
+		 
+		 cytographer.createAnEdge( new String[]{"c.1","o.1","e3"});
+		 cytographer.createAnEdge( new String[]{"c.2","o.1","e4"});
+		 
+		 // set view
+		 cyNetworkView.applyLayout(new ForceDirectedLayout());		
+		 cytographer.fitToView();
 		
-		cytographer.createAnEdge( new String[]{"c.1","o.1","e3"});
-		cytographer.createAnEdge( new String[]{"c.2","o.1","e4"});
-		
-		// set view
-		cyNetworkView.applyLayout(new ForceDirectedLayout());		
-		cytographer.fitToView();
-		
-		// repaint
-		cytographer.repaintGraph();
-		graphPanel.addComponent(cytographer);
-		
-		return graphPanel;		
+		 // repaint
+		 cytographer.repaintGraph();
+		 graphLayout.addComponent(cytographer);
+		 //.addListener(MouseEvents.ClickEvent.class, new DummyClickListener(), "click");
+		 return graphPanel;		
 	}
 	
 	public MetricPanel()
@@ -363,8 +381,31 @@ public class MetricPanel extends Panel
 						
 					}
 				}.start();
-			}
-			
+			}			
+		}
+		
+		private Layout getButtonLayout() {
+			Layout l = new HorizontalLayout();
+			Button addPropertyButton = new Button("Add Property");	
+			addPropertyButton.addListener(new Button.ClickListener() {			
+				@Override
+				public void buttonClick(ClickEvent event) {
+					//TODO Window to configure
+					cytographer.addNode("p.rdfs:label", 100, 100);
+					cytographer.repaintGraph();
+				}
+			});
+			l.addComponent(addPropertyButton);
+			Button addMeasureButton = new Button("Add Measure");
+			addMeasureButton.addListener(new Button.ClickListener() {
+				@Override
+				public void buttonClick(ClickEvent event) {
+					cytographer.addNode("m.trigram", 100, 100);
+					cytographer.repaintGraph();
+				}
+			});
+			l.addComponent(addMeasureButton);
+			return l;
 		}
 		
 		public class SelfConfigRefreshListener implements RefreshListener
@@ -372,5 +413,5 @@ public class MetricPanel extends Panel
 			boolean running = true; 
 			private static final long serialVersionUID = -8765221895426102605L;		    
 			@Override public void refresh(final Refresher source)	{if(!running) {removeComponent(source);source.setEnabled(false);}}
-		}	
+		}
 	}
