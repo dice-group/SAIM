@@ -16,8 +16,12 @@ public class NodeTest
 		Property p = new Property("rdf:type",Origin.SOURCE);
 		Property q = new Property("rdf:type",Origin.SOURCE);
 		Property r = new Property("rdf:type",Origin.TARGET);
-		//Property s = new Property("rdf:type",Origin.SOURCE);
+		Node[] nodes = {m,p,q,r};
 		
+		for(int i=0;i<nodes.length;i++)
+			for(int j=i+1;j<nodes.length;j++)
+			{assertTrue(nodes[i].color!=nodes[j].color);}
+		//Property s = new Property("rdf:type",Origin.SOURCE);
 		assertTrue(m.validParentOf(p));
 		assertTrue(m.acceptsChild(p));
 		m.addChild(p);
@@ -28,10 +32,20 @@ public class NodeTest
 		assertFalse(m.acceptsChild(q));
 
 		assertTrue(m.validParentOf(r));
-		assertTrue(m.acceptsChild(r));
-
-		m.addChild(r);	
-
+		assertTrue(m.acceptsChild(r));		
+		assertFalse(m.isComplete());
+		m.addChild(r);
+		assertTrue(m.isComplete());
+		
+		Operator o1 = new Operator();
+		Operator o2 = new Operator();
+		Operator o3 = new Operator();
+		assertTrue(o1.addChild(o2));
+		assertTrue(o2.addChild(o3));
+		// would be a cycle
+		assertFalse(o3.addChild(o1));
+		o2.removeChild(o3);
+		assertTrue(o3.addChild(o1));
+		assertFalse(o1.isComplete());
 	}
-
 }
