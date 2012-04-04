@@ -1,6 +1,7 @@
 package de.uni_leipzig.simba.saim.gui.widget;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -15,31 +16,39 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
 
+import de.uni_leipzig.simba.data.Instance;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.core.InstanceMatch;
 
 public class InstanceMappingTable implements Serializable
 {
-	private static final long	serialVersionUID	= 4443146911119590775L;
-	Mapping data;
-	List <InstanceMatch> dataList = new LinkedList<InstanceMatch>();
+	private static final long serialVersionUID	= 4443146911119590775L;
+	final Mapping data;
+	final List <InstanceMatch> dataList = new LinkedList<InstanceMatch>();
+	final Collection<Instance> sourceCache;
+	final Collection<Instance> targetCache;
+	
 	BeanItemContainer<InstanceMatch> beanItemContainer;
 	Table t;
-	
-	public InstanceMappingTable(Mapping m) {
+	// TODO:  t.setColumnCollapsingAllowed(true);
+	public InstanceMappingTable(Mapping m, Collection<Instance> sourceCache, Collection<Instance> targetCache)
+	{
 		data = m;
+		this.sourceCache=sourceCache;
+		this.targetCache=targetCache;
+		
 		for(String uri1 : data.map.keySet())
-			for(Entry<String, Double> uri2 : data.map.get(uri1).entrySet()) {
-				dataList.add(new InstanceMatch(uri1, uri2.getKey(), uri2.getValue()));
-			}
+			for(Entry<String, Double> uri2 : data.map.get(uri1).entrySet())
+			{dataList.add(new InstanceMatch(uri1, uri2.getKey(), uri2.getValue()));}
 	}
 
-	@SuppressWarnings({ "serial", "unchecked" })
+	@SuppressWarnings({ "serial" })
 	public Table getTable() {	
 		beanItemContainer = new BeanItemContainer<InstanceMatch>(InstanceMatch.class);
 		beanItemContainer.addAll(dataList);
 		t = new Table(Messages.getString("InstanceMappingTable.instances"), beanItemContainer); //$NON-NLS-1$
+		t.addItem();
 		t.setWidth("100%"); //$NON-NLS-1$
 		t.setColumnExpandRatio(Messages.getString("InstanceMappingTable.sourceuri"), 0.5f); //$NON-NLS-1$
 		t.setColumnExpandRatio(Messages.getString("InstanceMappingTable.targeturi"), 0.5f); //$NON-NLS-1$

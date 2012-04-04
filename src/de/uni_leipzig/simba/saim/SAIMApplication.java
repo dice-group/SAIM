@@ -3,6 +3,7 @@ package de.uni_leipzig.simba.saim;
 
 import java.io.File;
 
+import org.vaadin.cssinject.CSSInject;
 import org.vaadin.teemu.wizards.Wizard;
 
 import com.vaadin.Application;
@@ -51,7 +52,6 @@ public class SAIMApplication extends Application
 		wizardFull();
 
 		mainLayout.addComponent(wizard);
-		
 		setTheme("saim");
 	}
 	
