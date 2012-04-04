@@ -39,13 +39,15 @@ public class ClassMatchingPanel extends Panel
 	final ComboBox suggestionComboBox = new ComboBox();
 	public ClassMatchingForm sourceClassForm;
 	public ClassMatchingForm targetClassForm;
-
+	Cache cache = null;
+	
 	public void close()
 	{
-		if(CACHING)
+		if(cache != null)
 		{							
-			Cache cache = CacheManager.getInstance().getCache("classmatching");
-			cache.dispose();
+//			Cache cache = CacheManager.getInstance().getCache("classmatching");
+			cache.flush();
+			cache = null;
 		}
 	}
 	
@@ -66,7 +68,7 @@ public class ClassMatchingPanel extends Panel
 		layout.setWidth("100%");		 //$NON-NLS-1$
 		final ProgressIndicator progress = new ProgressIndicator();
 		progress.setSizeUndefined();
-		Label suggestionLabel = new Label(Messages.getString("suggestions"));		 //$NON-NLS-1$
+		final Label suggestionLabel = new Label(Messages.getString("suggestions"));		 //$NON-NLS-1$
 		suggestionLabel.setSizeUndefined();		
 		layout.addComponent(suggestionLabel);
 		layout.addComponent(progress);
@@ -111,8 +113,9 @@ public class ClassMatchingPanel extends Panel
 
 					ClassMapper classMapper = new ClassMapper();
 					if(CACHING)
-					{							
-						Cache cache = CacheManager.getInstance().getCache("classmatching");
+					{	
+						if(cache == null) 
+							{cache = CacheManager.getInstance().getCache("classmatching");}
 						List<Object> parameters = Arrays.asList(new Object[] {config.getSource().endpoint,config.getTarget().endpoint,config.getSource().id,config.getTarget().id});
 						try {
 							if(cache.isKeyInCache(parameters))
@@ -131,7 +134,9 @@ public class ClassMatchingPanel extends Panel
 						classMatching = classMapper.getMappingClasses(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id);
 						if(CACHING)
 						{
-							Cache cache = CacheManager.getInstance().getCache("classmatching");
+							cache = CacheManager.getInstance().getCache("classmatching");
+							if(cache.getStatus()==net.sf.ehcache.Status.STATUS_UNINITIALISED)
+								{cache.initialise();}					
 							List<Object> parameters = Arrays.asList(new Object[] {config.getSource().endpoint,config.getTarget().endpoint,config.getSource().id,config.getTarget().id});
 							System.out.println("cache saving map of size "+classMatching.map.size());
 							cache.put(new Element(parameters,classMatching.map));
@@ -140,10 +145,7 @@ public class ClassMatchingPanel extends Panel
 					}
 					if(classMatching.map.size()==0)
 					{
-						Label errorLabel = new Label(Messages.getString("ClassMatchingPanel.nosuggestionsfound"));
-						System.out.println("no suggestions found.");
-						layout.addComponent(errorLabel);
-
+						suggestionLabel.setCaption(Messages.getString("ClassMatchingPanel.nosuggestionsfound"));
 					}
 					else
 					{
@@ -188,12 +190,10 @@ public class ClassMatchingPanel extends Panel
 								targetClassForm.requestRepaint();
 							}
 						});
-
-						progress.setEnabled(false);
-						removeComponent(progress);
-
 						System.out.println("suggested enabled: "+suggestionComboBox.size()+" items");					 //$NON-NLS-1$ //$NON-NLS-2$
 					}
+					progress.setEnabled(false);
+					removeComponent(progress);
 					listener.running=false;					
 				}
 			}.start();
