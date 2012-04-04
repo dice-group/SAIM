@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.vaadin.cytographer.widgetset.client.ui.shap.VCycle;
+import org.vaadin.cytographer.widgetset.client.ui.shap.VDiamond;
 import org.vaadin.cytographer.widgetset.client.ui.shap.VRectangle;
 import org.vaadin.cytographer.widgetset.client.ui.shap.VTriangle;
 import org.vaadin.gwtgraphics.client.Group;
@@ -55,8 +56,8 @@ public class VNode extends Group implements ContextListener, MouseDownHandler, M
 		this.graph = graph;
 		this.shape = shape;
 		this.name = name;
-
-		textShape = new Text(0,0, name.substring(2));
+				
+		textShape = new Text(shape.getX()-name.length()/2,shape.getY()-name.length()/2, name.substring(2));
 		textShape.setStrokeOpacity(0);
 
 		setX(shape.getX());
@@ -65,12 +66,6 @@ public class VNode extends Group implements ContextListener, MouseDownHandler, M
 		add(shape);
 		add(textShape);
 		
-		
-//		VTextField vt = new VTextField();
-//		vt.setText("test");
-	
-	
-
 		addClickHandler(this);
 		addMouseDownHandler(this);
 		addMouseUpHandler(this);
@@ -149,12 +144,13 @@ public class VNode extends Group implements ContextListener, MouseDownHandler, M
 		// random
 		switch(kind){
 		//triangle
-		case 'c' : shape = new VTriangle(x,y,style.getNodeSize());break;
+		case 't' : shape = new VTriangle(x,y,style.getNodeSize());break;
 		//rectangle
-		case 'o' : shape = new VRectangle(x,y,style.getNodeSize());break;
+		case 'r' : shape = new VRectangle(x,y,style.getNodeSize());break;
+		case 'd' : shape = new VDiamond(x,y,style.getNodeSize());break;
 		// cycle
 		default:
-		case 'p' : shape = new VCycle(x, y, style.getNodeSize());break;
+		case 'c' : shape = new VCycle(x, y, style.getNodeSize());break;
 		}
 		//style
 		VNode.setStyleToShape(shape, style);
