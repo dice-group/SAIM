@@ -18,6 +18,8 @@ public class VDiamond extends Path {
 		lineRelativelyTo(size, -size);
 		lineRelativelyTo(-size, -size);
 		close();
+
+		this.setFillColor("#EEEE00"); //yellow
 	}
 
 	@Override

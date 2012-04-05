@@ -267,10 +267,10 @@ public class VGraph extends VectorObject {
 
 	public void setNodeSelected(final VNode node, final boolean selected) {
 		if (selected) {
-			node.setFillColor(vVisualStyle.getNodeSelectionColor());
+			//node.setFillColor(vVisualStyle.getNodeSelectionColor());
 			getSelectedShapes().add(node);
 		} else {
-			node.setFillColor(node.getOriginalFillColor());
+			//node.setFillColor(node.getOriginalFillColor());
 			getSelectedShapes().remove(node);
 		}
 	}

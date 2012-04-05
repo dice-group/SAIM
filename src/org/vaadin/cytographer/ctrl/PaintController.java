@@ -32,7 +32,7 @@ public class PaintController {
 		paintTarget.addAttribute("gwidth", graphProperties.getWidth());
 		paintTarget.addAttribute("gheight", graphProperties.getHeight());
 		paintTarget.addAttribute("texts", graphProperties.isTextsVisible());
-
+		
 		final VisualStyle cytoscapeStyle = Cytoscape.getVisualMappingManager().getVisualStyle();
 		// get cytoscape defaults 
 		final Color ec = (Color) cytoscapeStyle.getEdgeAppearanceCalculator().getDefaultAppearance().get(VisualPropertyType.EDGE_COLOR);

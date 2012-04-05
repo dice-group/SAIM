@@ -37,10 +37,10 @@ import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.selfconfig.MeshBasedSelfConfigurator;
 import de.uni_leipzig.simba.selfconfig.SimpleClassifier;
+
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
 public class MetricPanel extends Panel
-{	
-
+{
 	ManualMetricForm manualMetricForm;
 	private static final long	serialVersionUID	= 6766679517868840795L;
 	Mapping propMapping;
@@ -53,37 +53,10 @@ public class MetricPanel extends Panel
 	Button selfconfig;
 	Cytographer cytographer;
 	CyNetworkView cyNetworkView;
-	final VerticalLayout sourceLayout =  new VerticalLayout(), targetLayout =  new VerticalLayout();
-
-
-	private Panel getGraphPanel(){
-
-		final int HEIGHT = 450;
-		final int WIDTH = 800;
-		final int NODESIZE = 100;
-
-		Layout graphLayout = new VerticalLayout();
-		Panel graphPanel = new Panel();
-		graphPanel.setContent(graphLayout);
-		graphPanel.setWidth("100%");
-		//graphLayout.addComponent(getButtonLayout());
-
-		Cytoscape.createNewSession();	
-		String name = "MyName";
-		CyNetwork cyNetwork = Cytoscape.createNetwork(name, false);		
-		cyNetworkView = Cytoscape.createNetworkView(cyNetwork);
-
-		cytographer = new Cytographer(cyNetwork, cyNetworkView, name, WIDTH, HEIGHT);
-		cytographer.setImmediate(true);
-		cytographer.setWidth(WIDTH + "px");
-		cytographer.setHeight(HEIGHT + "px");
-		cytographer.setTextVisible(true);		
-		cytographer.setNodeSize(NODESIZE, true);
-
-		graphLayout.addComponent(cytographer);
-
-		return graphPanel;		
-	}
+	final VerticalLayout sourceLayout =  new VerticalLayout();
+	final VerticalLayout targetLayout =  new VerticalLayout();
+	final VerticalLayout metricsLayout =  new VerticalLayout();
+	final VerticalLayout operatorsLayout =  new VerticalLayout();
 
 	public MetricPanel()
 	{
@@ -119,12 +92,13 @@ public class MetricPanel extends Panel
 		
 		accordion.addTab(sourceLayout,Messages.getString("MetricPanel.sourceproperties"));		
 		accordion.addTab(targetLayout,Messages.getString("MetricPanel.targetproperties"));
-		accordion.addTab(new VerticalLayout(),Messages.getString("MetricPanel.functions")); 
-		accordion.addTab(new VerticalLayout(),Messages.getString("MetricPanel.metrics")); 
-		accordion.addTab(new VerticalLayout(),Messages.getString("MetricPanel.operators"));	
+		accordion.addTab(metricsLayout,Messages.getString("MetricPanel.metrics")); 
+		accordion.addTab(operatorsLayout,Messages.getString("MetricPanel.operators"));	
+		
 
-		// add graph panel		
-		layout.addComponent(getGraphPanel());
+		
+		// add Cytographer
+		layout.addComponent(getCytographer());
 		
 		new Thread(){			
 			@Override
@@ -151,23 +125,7 @@ public class MetricPanel extends Panel
 					//						});
 					sourceLayout.addComponent(check); 
 				}
-				sourceLayout.addListener(new LayoutClickListener(){
-					@Override
-					public void layoutClick(LayoutClickEvent event) {
-						// its left button
-						if(event.getButtonName().equalsIgnoreCase("left")){
-
-							cytographer.addNode(((Label)event.getClickedComponent()).getValue().toString(), 0, 0,Cytographer.Shape.CYCLE);
-							cyNetworkView.applyLayout(new ForceDirectedLayout());		
-							cytographer.fitToView();
-
-							// repaint
-							cytographer.repaintGraph();
-						}
-					}
-				});
-
-
+						
 				for(String t : targetProps) {
 					final Label check = new Label(t);
 
@@ -185,27 +143,38 @@ public class MetricPanel extends Panel
 					//						});
 					targetLayout.addComponent(check);
 				}
-				targetLayout.addListener(new LayoutClickListener(){
-					@Override
-					public void layoutClick(LayoutClickEvent event) {
-						// its left button
-						if(event.getButtonName().equalsIgnoreCase("left")){
-
-							cytographer.addNode(((Label)event.getClickedComponent()).getValue().toString(), 0, 0,Cytographer.Shape.DIAMOND);
-							cyNetworkView.applyLayout(new ForceDirectedLayout());		
-							cytographer.fitToView();
-
-							// repaint
-							cytographer.repaintGraph();
-						}
-					}
-				});
 				accordionLayout.removeComponent(progress);
 				progress.setEnabled(false);
 			}
 		}.start();
+		metricsLayout.addComponent( new Label("a metric"));
+		operatorsLayout.addComponent( new Label("an operator"));
+		
+		sourceLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,Cytographer.Shape.CYCLE));
+		targetLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,Cytographer.Shape.DIAMOND));
+		metricsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,Cytographer.Shape.RECTANGLE));
+		operatorsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,Cytographer.Shape.TRIANGLE));		
 	}
+	private Cytographer getCytographer(){
 
+		final int HEIGHT = 450;
+		final int WIDTH = 800;
+		final int NODESIZE = 100;
+
+		Cytoscape.createNewSession();	
+		String name = "MyName";
+		CyNetwork cyNetwork = Cytoscape.createNetwork(name, false);		
+		cyNetworkView = Cytoscape.createNetworkView(cyNetwork);
+
+		cytographer = new Cytographer(cyNetwork, cyNetworkView, name, WIDTH, HEIGHT);
+		cytographer.setImmediate(true);
+		cytographer.setWidth(WIDTH + "px");
+		cytographer.setHeight(HEIGHT + "px");
+		cytographer.setTextVisible(true);		
+		cytographer.setNodeSize(NODESIZE, true);	
+		
+		return cytographer;		
+	}
 	private void performPropertyMapping() {
 		Configuration config = Configuration.getInstance();
 		config.getSource().properties.clear();
@@ -357,6 +326,32 @@ public class MetricPanel extends Panel
 				removeComponent(source);
 				source.setEnabled(false);
 			}
+		}
+	}
+}
+
+class AccordionLayoutClickListener implements LayoutClickListener{
+
+	private static final long serialVersionUID = -3498649095113131161L;
+	private Cytographer cytographer;
+	private CyNetworkView cyNetworkView;
+	private Cytographer.Shape shape;
+	
+	public AccordionLayoutClickListener(Cytographer cytographer, CyNetworkView cyNetworkView, Cytographer.Shape shape){
+		this.cytographer = cytographer;
+		this.cyNetworkView = cyNetworkView;
+		this.shape = shape;
+	}
+	
+	@Override
+	public void layoutClick(LayoutClickEvent event) {
+		// its left button
+		if(event.getButtonName().equalsIgnoreCase("left")){
+			cytographer.addNode(((Label)event.getClickedComponent()).getValue().toString(), 0, 0,shape);
+			cyNetworkView.applyLayout(new ForceDirectedLayout());		
+			cytographer.fitToView();
+			// repaint
+			cytographer.repaintGraph();
 		}
 	}
 }
