@@ -249,8 +249,8 @@ public class MetricPanel extends Panel
 			config.getSource().properties.clear();
 			config.getTarget().properties.clear();
 			PropertyMapper propMapper = new PropertyMapper();
-			String classSource = getClassOfEndpoint(config.getSource());
-			String classTarget = getClassOfEndpoint(config.getTarget());
+			String classSource = config.getSource().getClassOfendpoint();
+			String classTarget = config.getTarget().getClassOfendpoint();
 			if(classSource != null && classTarget != null) {
 				showErrorMessage("Getting property mapping...");
 				propMapping = propMapper.getPropertyMapping(config.getSource().endpoint,
@@ -291,21 +291,6 @@ public class MetricPanel extends Panel
 			}	
 			//enable selfconfig
 			selfconfig.setEnabled(true);
-		}
-
-
-		/**
-		 * Little helper function to retrieve classes out of restrictions of the LIMES SPEC. Whereas, a
-		 * class is in a restriction of the format "?var rdf:type <class>".
-		 * @param ep
-		 * @return
-		 */
-		private String getClassOfEndpoint(KBInfo ep) {
-			for(String rest : ep.restrictions) {
-				if(rest.matches(".* rdf:type .*"))
-					return rest.substring(rest.indexOf("rdf:type")+8).replaceAll("<", "").replaceAll(">", "").trim();
-			}
-			return null;
 		}
 
 		private void showErrorMessage(String message) {

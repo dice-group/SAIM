@@ -35,15 +35,20 @@ public class ClassMatchingStep implements WizardStep
 			//source
 			source.prefixes.put("rdf", PrefixHelper.getURI("rdf"));
 			String restr = source.var+" rdf:type ";		
-			String value = SPARQLHelper.wrapIfNecessary(PrefixHelper.expand(panel.sourceClassForm.getField("textfield").getValue().toString()));
-			source.restrictions.add(restr + value);
+			String value1 = SPARQLHelper.wrapIfNecessary(PrefixHelper.expand(panel.sourceClassForm.getField("textfield").getValue().toString()));
+			if(value1 != null && value1.length()>0)
+				source.restrictions.add(restr + value1);
 			//target
 			restr = target.var+" rdf:type ";
-			value = SPARQLHelper.wrapIfNecessary(PrefixHelper.expand(panel.targetClassForm.getField("textfield").getValue().toString()));
-			target.restrictions.add(restr + value);
+			String value2 = SPARQLHelper.wrapIfNecessary(PrefixHelper.expand(panel.targetClassForm.getField("textfield").getValue().toString()));
+			if(value2 != null && value2.length()>0)
+				target.restrictions.add(restr + value2);
 			target.prefixes.put("rdf", PrefixHelper.getURI("rdf"));
-			panel.close();
-			return true;
+			if(value1 != null && value2 !=  null && value1.length()>0 && value2.length()>0) {
+				System.out.println("Added class restrictions:\nSource: "+source.restrictions.get(0)+" \nTarget: "+target.restrictions.get(0));
+				panel.close();
+				return true;
+			}
 		}		
 		return false;
 	}
@@ -51,6 +56,7 @@ public class ClassMatchingStep implements WizardStep
 	@Override
 	public boolean onBack()
 	{
+		panel.close();
 		return true;
 	}
 

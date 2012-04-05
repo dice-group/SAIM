@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
 import com.hp.hpl.jena.query.ARQ;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -155,12 +157,15 @@ public class SPARQLHelper
 	 * @return
 	 */
 	public static List<String> properties(String endpoint, String graph, String className) {
-		String query = "SELECT DISTINCT ?p (COUNT(?s) AS ?count)\n"+
+		
+		String query = "\nSELECT DISTINCT ?p "+//(COUNT(?s) AS ?count)\n"+
 		//		"FROM "+wrapIfNecessary(graph)+"\n"+
 				"WHERE { ?s rdf:type "+className+".\n"+
 			    "	?s ?p ?o\n"+
-				"} GROUP BY ?p \n"+
-			    "ORDER BY DESC(?count)";
+			//	"} GROUP BY ?p \n"+
+			//    "ORDER BY DESC(?count)";
+			"}";
+		Logger.getLogger("SAIM").info("Query "+endpoint+" with query:\n"+query);
 		return resultSetToList(querySelect(PrefixHelper.addPrefixes(query), endpoint, graph));		
 	}
 	
