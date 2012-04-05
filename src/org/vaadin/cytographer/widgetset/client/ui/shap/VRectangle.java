@@ -16,6 +16,7 @@ public class VRectangle extends Path {
 		lineRelativelyTo(0, -size*2);
 		lineRelativelyTo(-size*2, 0);
 		close();
+		this.setFillColor("#0000FF"); // blue
 	}
 
 	@Override

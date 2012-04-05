@@ -273,7 +273,7 @@ public class GraphProperties {
 		logger.info("addANewNode: " + id + " " + x + " " + y);
 		
 		CyNode node = network.addNode(Cytoscape.getCyNode(id, true));
-		
+				
 		finalView.addNodeView(node.getRootGraphIndex()).setXPosition(x);
 		finalView.addNodeView(node.getRootGraphIndex()).setYPosition(y);
 

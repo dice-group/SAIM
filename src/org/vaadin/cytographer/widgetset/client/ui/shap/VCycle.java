@@ -10,5 +10,6 @@ public class VCycle extends Circle {
 
 	public VCycle(int x, int y, int radius) {
 		super(x,y,radius);
+		this.setFillColor("#EE7942"); //red
 	}
 }
