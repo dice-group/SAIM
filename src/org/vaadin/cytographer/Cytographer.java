@@ -22,6 +22,10 @@ import cytoscape.view.CyNetworkView;
 public class Cytographer extends AbstractComponent {
 	private static final long serialVersionUID = 8483008141219579936L;
 
+	public enum Shape {
+		CYCLE, RECTANGLE,TRIANGLE,DIAMOND
+	}
+	
 	public enum GraphOperation {
 		REPAINT, SET_NODE_SIZE, SET_VISUAL_STYLE, SET_TEXT_VISIBILITY, SET_OPTIMIZED_STYLES, UPDATE_NODE, SET_ZOOM, REFRESH
 	}
@@ -42,7 +46,14 @@ public class Cytographer extends AbstractComponent {
 		graphProperties.setHeight(height);
 	}
 
-	public void addNode(String id, int x, int y){
+	public void addNode(String id, int x, int y, Shape shape){
+		switch(shape){
+		case CYCLE: id = "c." + id; break;
+		case RECTANGLE : id = "r."+id;break;
+		case DIAMOND: id = "d."+id;break;
+		default:
+		case TRIANGLE : id = "t."+id;break;
+		}
 		graphProperties.addANewNode(id, x, y);
 	}
 	public void createAnEdge(final String[] ids){

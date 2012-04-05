@@ -5,6 +5,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.FileOutputStream;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;

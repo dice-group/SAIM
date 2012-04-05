@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.vaadin.cytographer.widgetset.client.ui.shap.VCycle;
+import org.vaadin.cytographer.widgetset.client.ui.shap.VDiamond;
 import org.vaadin.cytographer.widgetset.client.ui.shap.VRectangle;
 import org.vaadin.cytographer.widgetset.client.ui.shap.VTriangle;
 import org.vaadin.gwtgraphics.client.Group;
@@ -55,8 +56,8 @@ public class VNode extends Group implements ContextListener, MouseDownHandler, M
 		this.graph = graph;
 		this.shape = shape;
 		this.name = name;
-
-		textShape = new Text(0,0, name.substring(2));
+				
+		textShape = new Text(shape.getX()-name.length()/2,shape.getY()-name.length()/2, name.substring(2));
 		textShape.setStrokeOpacity(0);
 
 		setX(shape.getX());
@@ -65,12 +66,6 @@ public class VNode extends Group implements ContextListener, MouseDownHandler, M
 		add(shape);
 		add(textShape);
 		
-		
-//		VTextField vt = new VTextField();
-//		vt.setText("test");
-	
-	
-
 		addClickHandler(this);
 		addMouseDownHandler(this);
 		addMouseUpHandler(this);
@@ -87,7 +82,7 @@ public class VNode extends Group implements ContextListener, MouseDownHandler, M
 		vNode.setTextVisible(style.isTextsVisible());
 	}
 	public static void setStyleToShape(Shape shape,final VVisualStyle style){
-		shape.setFillColor(style.getNodeFillColor());
+		//shape.setFillColor(style.getNodeFillColor());
 		shape.setStrokeColor(style.getNodeBorderColor());
 		shape.setStrokeWidth(style.getNodeBorderWidth());
 	}
@@ -111,19 +106,19 @@ public class VNode extends Group implements ContextListener, MouseDownHandler, M
 		final VNode node = new VNode(cytographer, graph, shape, nodeName,style);
 
 		// node specific styles
-		if (child.hasAttribute("_n1bc")) {
-			shape.setStrokeColor(child.getStringAttribute("_n1bc"));
-		}
-		if (child.hasAttribute("_n1fc")) {
-			shape.setFillColor(child.getStringAttribute("_n1fc"));
-			node.setOriginalFillColor(shape.getFillColor());
-		}
-		if (child.hasAttribute("_n1bw")) {
-			shape.setStrokeWidth(child.getIntAttribute("_n1bw"));
-		}
-		if(shape instanceof Circle  )
-			if (child.hasAttribute("_n1s")) 
-				((Circle)shape).setRadius(child.getIntAttribute("_n1s") / 2);
+//		if (child.hasAttribute("_n1bc")) {
+//			shape.setStrokeColor(child.getStringAttribute("_n1bc"));
+//		}
+//		if (child.hasAttribute("_n1fc")) {
+//			shape.setFillColor(child.getStringAttribute("_n1fc"));
+//			node.setOriginalFillColor(shape.getFillColor());
+//		}
+//		if (child.hasAttribute("_n1bw")) {
+//			shape.setStrokeWidth(child.getIntAttribute("_n1bw"));
+//		}
+//		if(shape instanceof Circle  )
+//			if (child.hasAttribute("_n1s")) 
+//				((Circle)shape).setRadius(child.getIntAttribute("_n1s") / 2);
 
 		return node;
 	}
@@ -138,6 +133,7 @@ public class VNode extends Group implements ContextListener, MouseDownHandler, M
 				"tmp" + new Random().nextInt(1000000),
 				style
 				);
+		
 		node.setOriginalFillColor(style.getNodeFillColor());
 
 		return node;
@@ -146,15 +142,12 @@ public class VNode extends Group implements ContextListener, MouseDownHandler, M
 	public static Shape getShape(int x , int y, final VVisualStyle style,char kind){
 		
 		Shape shape = null;
-		// random
 		switch(kind){
-		//triangle
-		case 'c' : shape = new VTriangle(x,y,style.getNodeSize());break;
-		//rectangle
-		case 'o' : shape = new VRectangle(x,y,style.getNodeSize());break;
-		// cycle
+		case 't' : shape = new VTriangle(x,y,style.getNodeSize());break;
+		case 'r' : shape = new VRectangle(x,y,style.getNodeSize());break;
+		case 'd' : shape = new VDiamond(x,y,style.getNodeSize());break;
 		default:
-		case 'p' : shape = new VCycle(x, y, style.getNodeSize());break;
+		case 'c' : shape = new VCycle(x, y, style.getNodeSize());break;
 		}
 		//style
 		VNode.setStyleToShape(shape, style);
@@ -167,20 +160,20 @@ public class VNode extends Group implements ContextListener, MouseDownHandler, M
 		VNode.setStyleToVNode(this,style);
 
 		// node specific styles
-		if (child.hasAttribute("_n1bc")) {
-			shape.setStrokeColor(child.getStringAttribute("_n1bc"));
-		}
-		if (child.hasAttribute("_n1fc")) {
-			shape.setFillColor(child.getStringAttribute("_n1fc"));
-			setOriginalFillColor(shape.getFillColor());
-		}
-		if (child.hasAttribute("_n1bw")) {
-			shape.setStrokeWidth(child.getIntAttribute("_n1bw"));
-		}
-		if(shape instanceof Circle  )
-			if (child.hasAttribute("_n1s")) {
-				((Circle) shape).setRadius(child.getIntAttribute("_n1s") / 2);
-			}
+//		if (child.hasAttribute("_n1bc")) {
+//			shape.setStrokeColor(child.getStringAttribute("_n1bc"));
+//		}
+//		if (child.hasAttribute("_n1fc")) {
+//			shape.setFillColor(child.getStringAttribute("_n1fc"));
+//			setOriginalFillColor(shape.getFillColor());
+//		}
+//		if (child.hasAttribute("_n1bw")) {
+//			shape.setStrokeWidth(child.getIntAttribute("_n1bw"));
+//		}
+//		if(shape instanceof Circle  )
+//			if (child.hasAttribute("_n1s")) {
+//				((Circle) shape).setRadius(child.getIntAttribute("_n1s") / 2);
+//			}
 	}
 	@Override
 	protected Class<? extends VectorObject> getType() {

@@ -1,3 +1,6 @@
 Semi Automatic Instance Matcher
 
 Requires Java 7
+
+Uses project lombok. If you use an IDE like Eclipse, you need to update it with lombok by doing:
+sudo java -jar /WebContent/WEB-INF/lib/lombok.jar

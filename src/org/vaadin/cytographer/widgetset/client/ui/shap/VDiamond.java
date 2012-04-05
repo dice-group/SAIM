@@ -1,22 +1,25 @@
 package org.vaadin.cytographer.widgetset.client.ui.shap;
 
+
 import org.vaadin.gwtgraphics.client.VectorObject;
 import org.vaadin.gwtgraphics.client.shape.Path;
+
 /**
  * 
  * @author rspeck
  *
  */
-public class VRectangle extends Path {
-
-	public VRectangle(int x, int y, int size) {
+public class VDiamond extends Path {
+	
+	public VDiamond(int x, int y, int size) {
 		super(x,y);
-		moveRelativelyTo(-size,size);
-		lineRelativelyTo(size*2,0);
-		lineRelativelyTo(0, -size*2);
-		lineRelativelyTo(-size*2, 0);
+		moveRelativelyTo(-size,0);
+		lineRelativelyTo(size, size);
+		lineRelativelyTo(size, -size);
+		lineRelativelyTo(-size, -size);
 		close();
-		this.setFillColor("#0000FF"); // blue
+
+		this.setFillColor("#EEEE00"); //yellow
 	}
 
 	@Override

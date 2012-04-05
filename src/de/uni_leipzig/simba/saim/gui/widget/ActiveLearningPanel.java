@@ -30,15 +30,14 @@ public class ActiveLearningPanel extends Panel
 	VerticalLayout layout;
 	Button learn;
 	Button terminate;
-	Layout learnLayout;
-	InstanceMappingTable iMapTable;
+	DetailedInstanceMappingTable iMapTable = null;
 
-//	protected void setupContextHelp()
-//	{
-//		ContextHelp contextHelp = new ContextHelp();
-//		getContent().addComponent(contextHelp);
-//		contextHelp.addHelpForComponent(suggestionComboBox, Messages.getString("classpairsfromlimes")); //$NON-NLS-1$
-//	}
+	//	protected void setupContextHelp()
+	//	{
+	//		ContextHelp contextHelp = new ContextHelp();
+	//		getContent().addComponent(contextHelp);
+	//		contextHelp.addHelpForComponent(suggestionComboBox, Messages.getString("classpairsfromlimes")); //$NON-NLS-1$
+	//	}
 
 	public ActiveLearningPanel()
 	{
@@ -47,10 +46,10 @@ public class ActiveLearningPanel extends Panel
 		layout.setWidth("100%");
 		setContent(layout);
 		//addComponent(new ActiveLearningRow("bla","blubb"));
-		
+
 		Label l;
 		Configuration config = Configuration.getInstance();
-		
+		Layout learnLayout;
 		learnLayout = new HorizontalLayout();
 		learnLayout.setWidth("100%");
 		layout.addComponent(learnLayout);
@@ -59,12 +58,12 @@ public class ActiveLearningPanel extends Panel
 		learn.addListener(new ActiveLearnButtonClickListener(learnLayout));
 		layout.addComponent(learn);
 		learn.setEnabled(true);
-		
+
 		terminate = new Button("Get best solution so far");
 		terminate.addListener(new ActiveTerminateButtonClickListener(learnLayout));
 		terminate.setEnabled(false);
 		layout.addComponent(terminate);
-		
+
 		// configure
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("populationSize", 20);
@@ -82,40 +81,37 @@ public class ActiveLearningPanel extends Panel
 			layout.setComponentError(new UserError(e.getMessage()));
 			e.printStackTrace();
 		}
-		
+
 	}
-	
-	/**
-	 * Listener for learn buttton
-	 * @author Lyko
-	 *
-	 */
-	public class ActiveLearnButtonClickListener implements Button.ClickListener {
+
+	/** Listener for learn buttton @author Lyko */
+	public class ActiveLearnButtonClickListener implements Button.ClickListener
+	{
 		Layout l;
-		/**
-		 * Constructor with the Component to hold the Table.
-		 * @param c
-		 */
-		public ActiveLearnButtonClickListener(Layout l) {
-			this.l = l;		}
-		
+		/** Constructor with the Component to hold the Table.*/
+		public ActiveLearnButtonClickListener(Layout l) {this.l = l;}
+
 		@Override
 		public void buttonClick(ClickEvent event) {		
 			Mapping map;
-			if(iMapTable == null) { // on start
-				logger.info("Starting AL");
+			if(iMapTable == null) // on start
+			{
+				logger.info("Starting Active Learning");
 				map = learner.learn(new Mapping());
-				learner.getFitnessFunction().getCache("source").getAllInstances();
-				iMapTable = new InstanceMappingTable(map);
+			}
+			else
+			{
+				logger.info("Starting round");
+				map = iMapTable.tabletoMapping();
+				map = learner.learn(map);
+			}
+			iMapTable = new DetailedInstanceMappingTable(map,learner.getFitnessFunction().getSourceCache()
+					,learner.getFitnessFunction().getTargetCache());
+			if (map.size()>0)
+			{
 				l.removeAllComponents();
 				l.addComponent(iMapTable.getTable());
-				return;
-			}
-			logger.info("Starting round");
-			map = iMapTable.tabletoMapping();
-			map = learner.learn(map);
-			if (map.size()>0) {
-				iMapTable = new InstanceMappingTable(map);
+
 				l.removeAllComponents();
 				l.addComponent(iMapTable.getTable());
 				terminate.setEnabled(true);	
@@ -128,7 +124,7 @@ public class ActiveLearningPanel extends Panel
 		public ActiveTerminateButtonClickListener(Layout l) {
 			this.l = l;
 		}
-		
+
 		@Override
 		public void buttonClick(ClickEvent event) {
 			Metric metric = learner.terminate();

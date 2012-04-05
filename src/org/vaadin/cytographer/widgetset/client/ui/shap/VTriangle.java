@@ -18,6 +18,7 @@ public class VTriangle extends Path {
 		lineRelativelyTo(-size, -size*2);
 		
 		close();
+		this.setFillColor("#00EE76"); // green
 	}
 
 	@Override
