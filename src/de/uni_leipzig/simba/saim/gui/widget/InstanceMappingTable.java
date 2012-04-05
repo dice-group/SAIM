@@ -2,6 +2,7 @@ package de.uni_leipzig.simba.saim.gui.widget;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -26,25 +27,22 @@ public class InstanceMappingTable implements Serializable
 	private static final long serialVersionUID	= 4443146911119590775L;
 	final Mapping data;
 	final List <InstanceMatch> dataList = new LinkedList<InstanceMatch>();
-	final Collection<Instance> sourceCache;
-	final Collection<Instance> targetCache;
 	
 	BeanItemContainer<InstanceMatch> beanItemContainer;
 	Table t;
 	// TODO:  t.setColumnCollapsingAllowed(true);
-	public InstanceMappingTable(Mapping m, Collection<Instance> sourceCache, Collection<Instance> targetCache)
+	public InstanceMappingTable(Mapping m)
 	{
 		data = m;
-		this.sourceCache=sourceCache;
-		this.targetCache=targetCache;
 		
 		for(String uri1 : data.map.keySet())
 			for(Entry<String, Double> uri2 : data.map.get(uri1).entrySet())
 			{dataList.add(new InstanceMatch(uri1, uri2.getKey(), uri2.getValue()));}
 	}
-
+	
 	@SuppressWarnings({ "serial" })
-	public Table getTable() {	
+	public Table getTable()
+	{	
 		beanItemContainer = new BeanItemContainer<InstanceMatch>(InstanceMatch.class);
 		beanItemContainer.addAll(dataList);
 		t = new Table(Messages.getString("InstanceMappingTable.instances"), beanItemContainer); //$NON-NLS-1$

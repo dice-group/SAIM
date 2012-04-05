@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -145,8 +146,9 @@ public class Configuration {
 
 	public ConfigReader getLimesConfiReader() {
 		cR = new ConfigReader();
-		source.var="?src";
-		target.var="?dest";
+		
+//		source.var="?src";
+//		target.var="?dest";
 		cR.sourceInfo = getSource();
 		cR.targetInfo = getTarget();
 		if(metricExpression == null) {			

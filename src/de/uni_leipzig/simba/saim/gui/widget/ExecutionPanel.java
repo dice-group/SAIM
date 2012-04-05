@@ -4,20 +4,20 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Button.ClickEvent;
 
-import de.uni_leipzig.simba.cache.HybridCache;
 import de.uni_leipzig.simba.data.Mapping;
-import de.uni_leipzig.simba.saim.core.Configuration;
-import de.uni_leipzig.simba.saim.core.LimesRunner;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
+import de.uni_leipzig.simba.saim.core.Configuration;
+import de.uni_leipzig.simba.saim.core.LimesRunner;
 public class ExecutionPanel extends Panel implements PropertyChangeListener {
 	LimesRunner lR;
 	Label progressLabel;
@@ -50,7 +50,7 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				SAIMApplication appl = (SAIMApplication) getApplication();
-				InstanceMappingTable iT = new InstanceMappingTable(m,null,null);
+				DetailedInstanceMappingTable iT = new DetailedInstanceMappingTable(m,lR.getSourceCache(),lR.getTargetCache());
 				appl.showComponent(iT.getTable());
 			}
 		});

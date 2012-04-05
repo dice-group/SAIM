@@ -1,9 +1,8 @@
 package de.uni_leipzig.simba.saim;
 
-
 import java.io.File;
+import java.util.HashMap;
 
-import org.vaadin.cssinject.CSSInject;
 import org.vaadin.teemu.wizards.Wizard;
 
 import com.vaadin.Application;
@@ -16,7 +15,9 @@ import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
+import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.core.Configuration;
+import de.uni_leipzig.simba.saim.core.DefaultEndpointLoader;
 import de.uni_leipzig.simba.saim.gui.widget.ConfigUploader;
 import de.uni_leipzig.simba.saim.gui.widget.StartPanel;
 import de.uni_leipzig.simba.saim.gui.widget.step.ActiveLearningStep;
@@ -57,25 +58,20 @@ public class SAIMApplication extends Application
 	
 	protected void wizardDevelopment()
 	{
-//		wizard.addStep(new EndpointStep());
-//		HashMap<String,KBInfo> endpoints = DefaultEndpointLoader.getDefaultEndpoints();
-//		KBInfo info_s = endpoints.get("lgd.aksw - Drugbank");
-//		KBInfo info_t = endpoints.get("lgd.aksw - Sider");
-//		info_s.var = "?src";
-//		info_t.var = "?dest";
-//		info_s.type = "SPARQL";
-//		info_t.type = "SPARQL";
-//		Configuration.getInstance().setSourceEndpoint(info_s);
-//		Configuration.getInstance().setTargetEndpoint(info_t);
-//		wizard.addStep(new ClassMatchingStep());
-//		wizard.addStep(new MetricStep());
-//		wizard.addStep(new ActiveLearningStep());
-    	sub = new Window(Messages.getString("limesupload"));
-    	sub.setWidth("700px");
-    	sub.setModal(true);
-    	final ConfigUploader upload = new ConfigUploader();
-    	sub.addComponent(upload);
-    	mainWindow.addWindow(sub);
+		wizard.addStep(new EndpointStep());
+		HashMap<String,KBInfo> endpoints = DefaultEndpointLoader.getDefaultEndpoints();
+		KBInfo info_s = endpoints.get("lgd.aksw - Drugbank");
+		KBInfo info_t = endpoints.get("lgd.aksw - Sider");
+		info_s.var = "?src";
+		info_t.var = "?dest";
+		info_s.type = "SPARQL";
+		info_t.type = "SPARQL";
+		Configuration.getInstance().setSourceEndpoint(info_s);
+		Configuration.getInstance().setTargetEndpoint(info_t);
+
+		wizard.addStep(new ClassMatchingStep());
+		wizard.addStep(new MetricStep());
+		wizard.addStep(new ActiveLearningStep());
 	}
 	
 	protected void wizardFull()
