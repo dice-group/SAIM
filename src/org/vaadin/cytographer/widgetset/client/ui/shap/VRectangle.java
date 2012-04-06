@@ -9,14 +9,14 @@ import org.vaadin.gwtgraphics.client.shape.Path;
  */
 public class VRectangle extends Path {
 
-	public VRectangle(int x, int y, int size) {
+	public VRectangle(int x, int y, int size,String color) {
 		super(x,y);
 		moveRelativelyTo(-size,size);
 		lineRelativelyTo(size*2,0);
 		lineRelativelyTo(0, -size*2);
 		lineRelativelyTo(-size*2, 0);
 		close();
-		this.setFillColor("#0000FF"); // blue
+		this.setFillColor(color); // blue
 	}
 
 	@Override

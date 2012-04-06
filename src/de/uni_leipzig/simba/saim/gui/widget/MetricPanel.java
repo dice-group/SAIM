@@ -150,10 +150,10 @@ public class MetricPanel extends Panel
 		metricsLayout.addComponent( new Label("a metric"));
 		operatorsLayout.addComponent( new Label("an operator"));
 		
-		sourceLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,Cytographer.Shape.CYCLE));
-		targetLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,Cytographer.Shape.DIAMOND));
-		metricsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,Cytographer.Shape.RECTANGLE));
-		operatorsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,Cytographer.Shape.TRIANGLE));		
+		sourceLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,Cytographer.Shape.SCYCLE));
+		targetLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,Cytographer.Shape.TCYCLE));
+		metricsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,Cytographer.Shape.TRIANGLE));
+		operatorsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,Cytographer.Shape.DIAMOND));		
 	}
 	private Cytographer getCytographer(){
 

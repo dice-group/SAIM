@@ -124,31 +124,32 @@ public class VNode extends Group implements ContextListener, MouseDownHandler, M
 	}
 	
 	/** create mouse click random node	 */
-	public static VNode createANode(final float x, final float y, final VCytographer cytographer, final VGraph graph, final VVisualStyle style) {
-
-		final VNode node = new VNode(
-				cytographer, 
-				graph,
-				VNode.getShape((int)x,(int)y, style, 'c'), 
-				"tmp" + new Random().nextInt(1000000),
-				style
-				);
-		
-		node.setOriginalFillColor(style.getNodeFillColor());
-
-		return node;
-	}
+//	public static VNode createANode(final float x, final float y, final VCytographer cytographer, final VGraph graph, final VVisualStyle style) {
+//
+//		final VNode node = new VNode(
+//				cytographer, 
+//				graph,
+//				VNode.getShape((int)x,(int)y, style, 'c'), 
+//				"tmp" + new Random().nextInt(1000000),
+//				style
+//				);
+//		
+//		node.setOriginalFillColor(style.getNodeFillColor());
+//
+//		return node;
+//	}
 	/** get the nodes shape */
 	public static Shape getShape(int x , int y, final VVisualStyle style,char kind){
 		
 		Shape shape = null;
 		switch(kind){
-		case 't' : shape = new VTriangle(x,y,style.getNodeSize());break;
-		case 'r' : shape = new VRectangle(x,y,style.getNodeSize());break;
-		case 'd' : shape = new VDiamond(x,y,style.getNodeSize());break;
-		default:
-		case 'c' : shape = new VCycle(x, y, style.getNodeSize());break;
-		}
+		case 'c' : shape = new VTriangle(x,y,style.getNodeSize(),"#FFFF00");break; //yellow 16 VGA
+		case 'a' : shape = new VRectangle(x,y,style.getNodeSize(),"#0000FF");break; // blue 16 VGA
+		case 'b' : shape = new VDiamond(x,y,style.getNodeSize(),"#00C0C0");break; // teal 16 VGA
+		case 's' : shape = new VCycle(x, y, style.getNodeSize(),"#00C000");break; //green 16 VGA
+		default: 
+		case 't' : shape = new VCycle(x, y, style.getNodeSize(),"#FF0000");break; //red 16 VGA
+		} 
 		//style
 		VNode.setStyleToShape(shape, style);
 

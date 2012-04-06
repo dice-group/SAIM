@@ -11,15 +11,14 @@ import org.vaadin.gwtgraphics.client.shape.Path;
  */
 public class VDiamond extends Path {
 	
-	public VDiamond(int x, int y, int size) {
+	public VDiamond(int x, int y, int size,String color) {
 		super(x,y);
 		moveRelativelyTo(-size,0);
 		lineRelativelyTo(size, size);
 		lineRelativelyTo(size, -size);
 		lineRelativelyTo(-size, -size);
 		close();
-
-		this.setFillColor("#EEEE00"); //yellow
+		this.setFillColor(color); 
 	}
 
 	@Override

@@ -23,7 +23,7 @@ public class Cytographer extends AbstractComponent {
 	private static final long serialVersionUID = 8483008141219579936L;
 
 	public enum Shape {
-		CYCLE, RECTANGLE,TRIANGLE,DIAMOND
+		SCYCLE,TCYCLE, RECTANGLE,TRIANGLE,DIAMOND
 	}
 	
 	public enum GraphOperation {
@@ -48,11 +48,12 @@ public class Cytographer extends AbstractComponent {
 
 	public void addNode(String id, int x, int y, Shape shape){
 		switch(shape){
-		case CYCLE: id = "c." + id; break;
-		case RECTANGLE : id = "r."+id;break;
-		case DIAMOND: id = "d."+id;break;
+		case SCYCLE: id = "s." + id; break;
+		case TCYCLE: id = "t." + id; break;
+		case RECTANGLE : id = "a."+id;break;
+		case DIAMOND: id = "b."+id;break;
 		default:
-		case TRIANGLE : id = "t."+id;break;
+		case TRIANGLE : id = "c."+id;break;
 		}
 		graphProperties.addANewNode(id, x, y);
 	}
