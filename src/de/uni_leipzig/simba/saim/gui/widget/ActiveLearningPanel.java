@@ -6,6 +6,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.jgap.InvalidConfigurationException;
 
+import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
@@ -82,7 +83,17 @@ public class ActiveLearningPanel extends Panel
 			layout.setComponentError(new UserError(e.getMessage()));
 			e.printStackTrace();
 		}
+		Mapping map = learner.learn(new Mapping());
+		iMapTable = new InstanceMappingTable(map);
+		if (map.size()>0)
+		{
+			learnLayout.removeAllComponents();
+			learnLayout.addComponent(iMapTable.getTable());
 
+			learnLayout.removeAllComponents();
+			learnLayout.addComponent(iMapTable.getTable());
+			terminate.setEnabled(true);	
+		}
 	}
 
 	/** Listener for learn buttton @author Lyko */
