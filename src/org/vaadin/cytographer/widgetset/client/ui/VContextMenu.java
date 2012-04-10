@@ -38,6 +38,5 @@ public class VContextMenu extends PopupPanel {
 		public void execute() {
 			VContextMenu.this.hide();
 		}
-
 	}
 }

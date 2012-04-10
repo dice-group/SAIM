@@ -24,5 +24,4 @@ public class VContextMenuItem extends MenuItem implements MouseOverHandler, Mous
 	public void onMouseOver(final MouseOverEvent event) {
 		addStyleName("mouseover");
 	}
-
 }

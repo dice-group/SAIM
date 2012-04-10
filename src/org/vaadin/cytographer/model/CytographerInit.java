@@ -6,7 +6,6 @@ import java.util.Properties;
 
 import cytoscape.init.CyInitParams;
 
-@SuppressWarnings("rawtypes")
 public final class CytographerInit implements CyInitParams {
 	
 	public Properties getVizProps() {
@@ -20,7 +19,7 @@ public final class CytographerInit implements CyInitParams {
 	public Properties getProps() {
 		return new Properties();
 	}
-	
+
 	public List getPlugins() {
 		return new ArrayList();
 	}

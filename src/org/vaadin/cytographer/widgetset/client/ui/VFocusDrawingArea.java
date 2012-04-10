@@ -17,6 +17,8 @@ import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.vaadin.terminal.gwt.client.VConsole;
 
 public class VFocusDrawingArea extends DrawingArea implements ContextListener, HasAllKeyHandlers, HasFocusHandlers, MouseDownHandler {
@@ -27,7 +29,14 @@ public class VFocusDrawingArea extends DrawingArea implements ContextListener, H
 		super(width, height);
 		cytographer = vCytographer;
 		addMouseDownHandler(this);
+		DOM.setStyleAttribute(this.getElement(), "border", "1px solid black");
+		disableContextMenu(this.getElement());
+		
 	}
+	// should prevent browser's default right click action
+	public static native void disableContextMenu(final Element elem) /*-{
+																		elem.oncontextmenu=function() {return false};
+																		}-*/;
 
 	@Override
 	public HandlerRegistration addKeyUpHandler(final KeyUpHandler handler) {

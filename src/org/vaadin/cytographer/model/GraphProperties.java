@@ -13,6 +13,7 @@ import java.util.Set;
 
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import com.vaadin.data.Container;
@@ -28,19 +29,27 @@ import cytoscape.view.CyNetworkView;
 
 public class GraphProperties {
 	private static Logger logger = Logger.getLogger(GraphProperties.class);
+	static{
+		logger.setLevel(Level.OFF);
+	}
 
 	private final String title;
 
-	private CyNetwork network;
-	private CyNetworkView finalView;
+	private CyNetwork cyNetwork;
+	private CyNetworkView cyNetworkView;
 
 	private final List<Integer> edges, nodes;
+	private final Map<String, List<Object>> nodeMetadata = new HashMap<>();
+	public enum Shape {
+		SOURCE,TARGET, METRIC, OPERATOR
+	}
+	private Map<Integer, Shape> shapes = new HashMap<Integer, Shape>();
 
-	private final Set<String> selectedNodes = new HashSet<String>();
-	private final Set<String> selectedEdges = new HashSet<String>();
+	private final Set<String> selectedNodes = new HashSet<>();
+	private final Set<String> selectedEdges = new HashSet<>();
 
 	private final Map<String, Edge> edgeMap = new HashMap<String, Edge>();
-	private final Map<Node, List<Edge>> nodeToEdgesMap = new HashMap<Node, List<Edge>>();
+	private final Map<Node, List<Edge>> nodeToEdgesMap = new HashMap<>();
 
 	private int width, height, cytoscapeViewWidth, cytoscapeViewHeight;
 	
@@ -53,19 +62,28 @@ public class GraphProperties {
 	private boolean textsVisible = false;
 	private boolean styleOptimization = false;
 
-	public GraphProperties(final CyNetwork network, final CyNetworkView finalView, final String title) {
-		this.network = network;
-		this.finalView = finalView;
-		this.title = title;
+	public GraphProperties(final CyNetwork network, final CyNetworkView finalView, final String p_title) {
+		cyNetwork = network;
+		cyNetworkView = finalView;
+		title = p_title;
 		edges = new ArrayList<Integer>(Arrays.asList(ArrayUtils.toObject(network.getEdgeIndicesArray())));
 		nodes = new ArrayList<Integer>(Arrays.asList(ArrayUtils.toObject(network.getNodeIndicesArray())));
 		measureDimensions();
 		contructNodeToEdgesMap();
 	}
-
+	public void setNodeMetadata(String node, List<Object> data){
+		this.nodeMetadata.put(node, data);	
+	}
+	public List<Object> getNodeMetadata(String node){
+		List<Object> value =  nodeMetadata.get(node);
+		if(value == null){
+			return new ArrayList<>();
+		}else return value;	
+	}
+	
 	private void contructNodeToEdgesMap() {
 		for (final Integer edgeIndex : edges) {
-			final Edge e = getNetwork().getEdge(edgeIndex);
+			final Edge e = cyNetwork.getEdge(edgeIndex);
 			addEdgeIntoMap(e.getSource(), e);
 			addEdgeIntoMap(e.getTarget(), e);
 			edgeMap.put(e.getIdentifier(), e);
@@ -73,6 +91,9 @@ public class GraphProperties {
 	}
 
 	private void addEdgeIntoMap(final Node node, final Edge e) {
+		if(logger.isDebugEnabled())
+			logger.debug("addEdgeIntoMap:" + node.getIdentifier() + " " + e.getIdentifier());
+		
 		List<Edge> edges = nodeToEdgesMap.get(node);
 		if (edges == null) {
 			edges = new ArrayList<Edge>();
@@ -118,7 +139,7 @@ public class GraphProperties {
 	}
 
 	public CyNetwork getNetwork() {
-		return network;
+		return cyNetwork;
 	}
 
 	public List<Integer> getEdges() {
@@ -178,22 +199,20 @@ public class GraphProperties {
 	}
 
 	public void setNetwork(final CyNetwork network) {
-		this.network = network;
+		this.cyNetwork = network;
 	}
 
 	public void setFinalView(final CyNetworkView finalView) {
-		this.finalView = finalView;
+		this.cyNetworkView = finalView;
 	}
 
 	public void measureDimensions() {
-		// find max and min position of all nodes with edges
 		for (final int ei : edges) {
+			final int x1 = (int) cyNetworkView.getNodeView(cyNetwork.getEdge(ei).getSource()).getXPosition();
+			final int y1 = (int) cyNetworkView.getNodeView(cyNetwork.getEdge(ei).getSource()).getYPosition();
 			
-			final int x1 = (int) finalView.getNodeView(network.getEdge(ei).getSource()).getXPosition();
-			final int y1 = (int) finalView.getNodeView(network.getEdge(ei).getSource()).getYPosition();
-			
-			final int x2 = (int) finalView.getNodeView(network.getEdge(ei).getTarget()).getXPosition();
-			final int y2 = (int) finalView.getNodeView(network.getEdge(ei).getTarget()).getYPosition();
+			final int x2 = (int) cyNetworkView.getNodeView(cyNetwork.getEdge(ei).getTarget()).getXPosition();
+			final int y2 = (int) cyNetworkView.getNodeView(cyNetwork.getEdge(ei).getTarget()).getYPosition();
 			
 			if (x1 > maxX)	maxX = x1;
 			if (x1 < minX) 	minX = x1;
@@ -214,12 +233,11 @@ public class GraphProperties {
 	}
 
 	public void setZoomFactor(final int zoomFactor) {
-		logger.debug("setZoomFactor: " + zoomFactor);
 		this.zoomFactor = zoomFactor;
 	}
 
 	public CyNetworkView getFinalView() {
-		return finalView;
+		return cyNetworkView;
 	}
 
 	public Set<String> getSelectedNodes() {
@@ -231,22 +249,18 @@ public class GraphProperties {
 	}
 
 	public void addSelectedNode(final String n) {
-		logger.debug("addSelectedNode: " + n);
 		selectedNodes.add(n);
 	}
 
 	public void addSelectedEdge(final String e) {
-		logger.debug("addSelectedEdge: " + e);
 		selectedEdges.add(e);
 	}
 
 	public void clearSelectedNodes() {
-		logger.debug("clearSelectedNodes");
 		selectedNodes.clear();
 	}
 
 	public void clearSelectedEdges() {
-		logger.debug("clearSelectedEdges");
 		selectedEdges.clear();
 	}
 
@@ -256,7 +270,7 @@ public class GraphProperties {
 		container.addContainerProperty("identifier", String.class, null);
 
 		for (final Integer nodeIndex : nodes) {
-			final Node n = network.getNode(nodeIndex);
+			final Node n = cyNetwork.getNode(nodeIndex);
 			for (final String str : selectedNodes) {
 				if (str.equals(n.getIdentifier())) {
 					final Item i = container.addItem(n);
@@ -269,32 +283,34 @@ public class GraphProperties {
 		return container;
 	}
 
-	public void addANewNode(final String id, final int x, final int y) {
-		logger.info("addANewNode: " + id + " " + x + " " + y);
+	public void addANewNode(final String id, final int x, final int y, Shape shape) {
 		
-		CyNode node = network.addNode(Cytoscape.getCyNode(id, true));
-				
-		finalView.addNodeView(node.getRootGraphIndex()).setXPosition(x);
-		finalView.addNodeView(node.getRootGraphIndex()).setYPosition(y);
-
+		CyNode node = cyNetwork.addNode(Cytoscape.getCyNode(id, true));			
+		cyNetworkView.addNodeView(node.getRootGraphIndex()).setXPosition(x);
+		cyNetworkView.addNodeView(node.getRootGraphIndex()).setYPosition(y);
 		nodes.add(node.getRootGraphIndex());
+		
+		shapes.put(node.getRootGraphIndex(), shape);
+	}
+	
+	public  Shape getShapes(final String id){
+		return shapes.get(Cytoscape.getCyNode(id, false).getRootGraphIndex());
 	}
 
 	public void removeNode(final String id) {
-		logger.debug("removeNode: " + id);
 		final CyNode node = Cytoscape.getCyNode(id, false);
 		if (node != null) {
 			final List<Edge> edgs = nodeToEdgesMap.remove(node);
 			if (edgs != null) {
 				for (final Edge e : edgs) {
-					network.removeEdge(e.getRootGraphIndex(), true);
+					cyNetwork.removeEdge(e.getRootGraphIndex(), true);
 					edges.remove(Integer.valueOf(e.getRootGraphIndex()));
 					edgeMap.remove(e.getIdentifier());
 					selectedEdges.remove(e.getIdentifier());
 				}
 			}
-			finalView.removeNodeView(node);
-			network.removeNode(node.getRootGraphIndex(), true);
+			cyNetworkView.removeNodeView(node);
+			cyNetwork.removeNode(node.getRootGraphIndex(), true);
 			selectedNodes.remove(node.getIdentifier());
 			nodes.remove(Integer.valueOf(node.getRootGraphIndex()));
 		} else {
@@ -302,36 +318,32 @@ public class GraphProperties {
 		}
 	}
 
-	public void createAnEdge(final String[] ids) {
-		logger.debug("createAnEdge: " + Arrays.toString(ids));
-		final CyNode node1 = Cytoscape.getCyNode(ids[0], false);
-		final CyNode node2 = Cytoscape.getCyNode(ids[1], false);
+	public void createAnEdge(String nodeA, String nodeB, String attribute) {
+		final CyNode node1 = Cytoscape.getCyNode(nodeA, false);
+		final CyNode node2 = Cytoscape.getCyNode(nodeB, false);
 		if (node1 != null && node2 != null) {
-			final CyEdge edge = Cytoscape.getCyEdge(node1, node2, Semantics.INTERACTION, ids[2], true);
-			edge.setIdentifier(ids[2]);
-			network.addEdge(edge);
-			finalView.addEdgeView(edge.getRootGraphIndex());
+			final CyEdge edge = Cytoscape.getCyEdge(node1, node2, Semantics.INTERACTION, attribute, true);
+			edge.setIdentifier(attribute);
+			cyNetwork.addEdge(edge);
+			cyNetworkView.addEdgeView(edge.getRootGraphIndex());
 			edges.add(edge.getRootGraphIndex());
-			edgeMap.put(ids[2], edge);
+			edgeMap.put(attribute, edge);
 			addEdgeIntoMap(node1, edge);
 			addEdgeIntoMap(node2, edge);
 		} else {
-			throw new IllegalStateException("Edge creation failed since node not found " + Arrays.toString(ids));
+			throw new IllegalStateException("Edge creation failed since node not found");
 		}
 	}
 
 	public void removeEdge(final String id) {
-		logger.debug("removeEdge: " + id);
-		System.out.println("removing: " + id);
-		
 		final Edge edge = edgeMap.remove(id);
 		edges.remove(Integer.valueOf(edge.getRootGraphIndex()));
 		selectedEdges.remove(id);
 		
 		removeEdgeFromTheMap(edge, edge.getSource());
 		removeEdgeFromTheMap(edge, edge.getTarget());
-		finalView.removeEdgeView(edge.getRootGraphIndex());
-		network.removeEdge(edge.getRootGraphIndex(), true);
+		cyNetworkView.removeEdgeView(edge.getRootGraphIndex());
+		cyNetwork.removeEdge(edge.getRootGraphIndex(), true);
 	}
 
 	private void removeEdgeFromTheMap(final Edge edge, final Node node) {
@@ -339,7 +351,6 @@ public class GraphProperties {
 			final List<Edge> edgs = nodeToEdgesMap.get(node);
 			if (edgs != null) 
 				edgs.remove(edge);
-			
 		}
 	}
 }

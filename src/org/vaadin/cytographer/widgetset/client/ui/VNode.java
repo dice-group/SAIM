@@ -8,17 +8,12 @@ package org.vaadin.cytographer.widgetset.client.ui;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
-import org.vaadin.cytographer.widgetset.client.ui.shap.VCycle;
-import org.vaadin.cytographer.widgetset.client.ui.shap.VDiamond;
-import org.vaadin.cytographer.widgetset.client.ui.shap.VRectangle;
-import org.vaadin.cytographer.widgetset.client.ui.shap.VTriangle;
+import org.vaadin.cytographer.widgetset.client.ui.node.*;
 import org.vaadin.gwtgraphics.client.Group;
 import org.vaadin.gwtgraphics.client.Shape;
 import org.vaadin.gwtgraphics.client.VectorObject;
 import org.vaadin.gwtgraphics.client.shape.Circle;
-import org.vaadin.gwtgraphics.client.shape.Path;
 import org.vaadin.gwtgraphics.client.shape.Text;
 
 import com.google.gwt.dom.client.NativeEvent;
@@ -32,19 +27,18 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.Command;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.ui.VTextField;
 
-public class VNode extends Group implements ContextListener, MouseDownHandler, MouseUpHandler, MouseMoveHandler, ClickHandler {
+public class VNode extends Group 
+implements ContextListener, MouseDownHandler, MouseUpHandler, MouseMoveHandler, ClickHandler {
 
-	private final VCytographer cytographer;
+	protected final VCytographer cytographer;
 	private Map<String, Command> commandMap;
 
 	private final VGraph graph;
 	private float x, y;
 
 	private Shape shape;
-	private final Text textShape;
+	protected final Text textShape;
 	private final String name;
 
 	private boolean textsVisible = true;
@@ -54,18 +48,18 @@ public class VNode extends Group implements ContextListener, MouseDownHandler, M
 		super();
 		this.cytographer = cytographer;
 		this.graph = graph;
+		VNode.setStyleToShape(shape, style);
 		this.shape = shape;
 		this.name = name;
 				
-		textShape = new Text(shape.getX()-name.length()/2,shape.getY()-name.length()/2, name.substring(2));
+		textShape = new Text(shape.getX()-name.length()/2,shape.getY()-name.length()/2, name);
 		textShape.setStrokeOpacity(0);
 
 		setX(shape.getX());
 		setY(shape.getY());
 
 		add(shape);
-		add(textShape);
-		
+		add(textShape);		
 		addClickHandler(this);
 		addMouseDownHandler(this);
 		addMouseUpHandler(this);
@@ -73,23 +67,9 @@ public class VNode extends Group implements ContextListener, MouseDownHandler, M
 
 		VNode.setStyleToVNode(this,style);		
 	}
-
-	public static void setStyleToVNode(VNode vNode,final VVisualStyle style){
-		
-		vNode.setLabelColor(style.getNodeLabelColor());
-		vNode.setFontSize(style.getNodeFontSize());
-		vNode.setFontFamily(style.getFontFamily());
-		vNode.setTextVisible(style.isTextsVisible());
-	}
-	public static void setStyleToShape(Shape shape,final VVisualStyle style){
-		//shape.setFillColor(style.getNodeFillColor());
-		shape.setStrokeColor(style.getNodeBorderColor());
-		shape.setStrokeWidth(style.getNodeBorderWidth());
-	}
-
-	public static VNode createANode(
+	public static VNode create(
 			final UIDL child, final VCytographer cytographer, final VGraph graph, 
-			final String nodeName, final boolean firstNode, final VVisualStyle style) {
+			final String nodeName, final boolean firstNode, final VVisualStyle style,String shape) {
 
 		// make node 
 		int x,y;
@@ -100,81 +80,35 @@ public class VNode extends Group implements ContextListener, MouseDownHandler, M
 			x = child.getIntAttribute("node2x");
 			y = child.getIntAttribute("node2y");
 		}	
-		Shape shape = VNode.getShape(x,y,style,nodeName.charAt(0));
-
-		// create a new node
-		final VNode node = new VNode(cytographer, graph, shape, nodeName,style);
-
-		// node specific styles
-//		if (child.hasAttribute("_n1bc")) {
-//			shape.setStrokeColor(child.getStringAttribute("_n1bc"));
-//		}
-//		if (child.hasAttribute("_n1fc")) {
-//			shape.setFillColor(child.getStringAttribute("_n1fc"));
-//			node.setOriginalFillColor(shape.getFillColor());
-//		}
-//		if (child.hasAttribute("_n1bw")) {
-//			shape.setStrokeWidth(child.getIntAttribute("_n1bw"));
-//		}
-//		if(shape instanceof Circle  )
-//			if (child.hasAttribute("_n1s")) 
-//				((Circle)shape).setRadius(child.getIntAttribute("_n1s") / 2);
-
-		return node;
-	}
-	
-	/** create mouse click random node	 */
-//	public static VNode createANode(final float x, final float y, final VCytographer cytographer, final VGraph graph, final VVisualStyle style) {
-//
-//		final VNode node = new VNode(
-//				cytographer, 
-//				graph,
-//				VNode.getShape((int)x,(int)y, style, 'c'), 
-//				"tmp" + new Random().nextInt(1000000),
-//				style
-//				);
-//		
-//		node.setOriginalFillColor(style.getNodeFillColor());
-//
-//		return node;
-//	}
-	/** get the nodes shape */
-	public static Shape getShape(int x , int y, final VVisualStyle style,char kind){
 		
-		Shape shape = null;
-		switch(kind){
-		case 'c' : shape = new VTriangle(x,y,style.getNodeSize(),"#FFFF00");break; //yellow 16 VGA
-		case 'a' : shape = new VRectangle(x,y,style.getNodeSize(),"#0000FF");break; // blue 16 VGA
-		case 'b' : shape = new VDiamond(x,y,style.getNodeSize(),"#00C0C0");break; // teal 16 VGA
-		case 's' : shape = new VCycle(x, y, style.getNodeSize(),"#00C000");break; //green 16 VGA
-		default: 
-		case 't' : shape = new VCycle(x, y, style.getNodeSize(),"#FF0000");break; //red 16 VGA
-		} 
-		//style
-		VNode.setStyleToShape(shape, style);
+		if(shape.equals("METRIC"))
+			return new VMetric(cytographer, graph, VMetric.getShape(x,y, style.getNodeSize()), nodeName, style);
+		else if(shape.equals("OPERATOR"))
+			return new VOperator(cytographer, graph, VOperator.getShape(x,y, style.getNodeSize()), nodeName, style);
+		else if(shape.equals("SOURCE"))
+			return new VSource(cytographer, graph, VSource.getShape(x,y, style.getNodeSize()), nodeName, style);
+		else if(shape.equals("TARGET"))
+			return new VTarget(cytographer, graph, VTarget.getShape(x,y, style.getNodeSize()), nodeName, style);
 
-		return shape;
+		else  throw new IllegalStateException("Shape creation failed since shape not found,use:SOURCE,TARGET,METRIC or OPERATOR.");
 	}
-	public void refreshNodeData(final UIDL child, final VVisualStyle style) {
 
+	protected static void setStyleToVNode(VNode vNode,final VVisualStyle style){
+		
+		vNode.setLabelColor(style.getNodeLabelColor());
+		vNode.setFontSize(style.getNodeFontSize());
+		vNode.setFontFamily(style.getFontFamily());
+		vNode.setTextVisible(style.isTextsVisible());
+	}
+	protected static void setStyleToShape(Shape shape,final VVisualStyle style){
+		//shape.setFillColor(style.getNodeFillColor());
+		shape.setStrokeColor(style.getNodeBorderColor());
+		shape.setStrokeWidth(style.getNodeBorderWidth());
+	}
+
+	public void refreshNodeData(final UIDL child, final VVisualStyle style) {
 		VNode.setStyleToShape(shape, style);
 		VNode.setStyleToVNode(this,style);
-
-		// node specific styles
-//		if (child.hasAttribute("_n1bc")) {
-//			shape.setStrokeColor(child.getStringAttribute("_n1bc"));
-//		}
-//		if (child.hasAttribute("_n1fc")) {
-//			shape.setFillColor(child.getStringAttribute("_n1fc"));
-//			setOriginalFillColor(shape.getFillColor());
-//		}
-//		if (child.hasAttribute("_n1bw")) {
-//			shape.setStrokeWidth(child.getIntAttribute("_n1bw"));
-//		}
-//		if(shape instanceof Circle  )
-//			if (child.hasAttribute("_n1s")) {
-//				((Circle) shape).setRadius(child.getIntAttribute("_n1s") / 2);
-//			}
 	}
 	@Override
 	protected Class<? extends VectorObject> getType() {
@@ -182,7 +116,7 @@ public class VNode extends Group implements ContextListener, MouseDownHandler, M
 	}
 
 	public void setView(final Shape view) {
-		this.shape = view;
+		shape = view;
 	}
 
 	public Shape getView() {
@@ -233,11 +167,11 @@ public class VNode extends Group implements ContextListener, MouseDownHandler, M
 	}
 
 	public void setTextVisible(final boolean visible) {
-		if (!visible && textsVisible) {
+		if (!visible && textsVisible) 
 			remove(textShape);
-		} else if (visible && !textsVisible) {
+		else if (visible && !textsVisible)
 			add(textShape);
-		}
+	
 		textsVisible = visible;
 	}
 
@@ -270,9 +204,9 @@ public class VNode extends Group implements ContextListener, MouseDownHandler, M
 
 	@Override
 	public void onClick(final ClickEvent event) {
-		if (cytographer.isOnLink()) {
+		if (cytographer.isOnLink())
 			cytographer.constructLinkTo(this);
-		} else {
+		 else {
 			graph.setNodeSelected((VNode) event.getSource(), !graph.getSelectedShapes().contains(event.getSource()));
 			cytographer.nodeOrEdgeSelectionChanged();
 		}
@@ -290,43 +224,35 @@ public class VNode extends Group implements ContextListener, MouseDownHandler, M
 	@Override
 	public void onMouseDown(final MouseDownEvent event) {
 		if (event.getNativeEvent().getButton() == NativeEvent.BUTTON_RIGHT) {
-			VConsole.log("rightClick");
 			final VContextMenu menu = new VContextMenu(VNode.this);
 			menu.showMenu(event.getClientX(), event.getClientY());
 			cytographer.setCurrentMenu(menu);
-		} else {
+		} else 
 			graph.setMovedShape(this);
-		}
 		event.stopPropagation();
 	}
 
 	@Override
 	public void initCommands(final VContextMenu menu) {
 		commandMap = new HashMap<String, Command>();
-		//		final Command editCommand = menu.new ContextMenuCommand() {
-		//			@Override
-		//			public void execute() {
-		//				super.execute();
-		//				cytographer.editNode(VNode.this);
-		//			}
-		//		};
-		final Command linkCommand = menu.new ContextMenuCommand() {
-			@Override
-			public void execute() {
+		commandMap.put("Link to",  menu.new ContextMenuCommand() {
+			@Override public void execute() {
 				super.execute();
 				cytographer.startLinkingFrom(VNode.this);
 			}
-		};
-		final Command delCommand = menu.new ContextMenuCommand() {
-			@Override
-			public void execute() {
+		});		
+		commandMap.put("Delete", menu.new ContextMenuCommand() {
+			@Override public void execute() {
 				super.execute();
 				cytographer.deleteNode(VNode.this, true);
 			}
-		};
-
-		commandMap.put("Link to", linkCommand);
-		commandMap.put("Delete", delCommand);
+		});
+		commandMap.put("Close", menu.new ContextMenuCommand(){			
+			@Override public void execute(){
+				super.execute();
+				cytographer.removeMenu();
+			}
+		});
 	}
 
 	@Override
@@ -336,11 +262,9 @@ public class VNode extends Group implements ContextListener, MouseDownHandler, M
 
 	@Override
 	public String getCommandName(final Command command) {
-		for (final Map.Entry<String, Command> entry : commandMap.entrySet()) {
-			if (entry.getValue().equals(command)) {
+		for (final Map.Entry<String, Command> entry : commandMap.entrySet()) 
+			if (entry.getValue().equals(command)) 
 				return entry.getKey();
-			}
-		}
 		return null;
 	}
 }

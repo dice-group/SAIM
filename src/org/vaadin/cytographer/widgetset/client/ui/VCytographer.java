@@ -38,8 +38,10 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
 
-public class VCytographer extends Composite 
-	implements Paintable, ClickHandler, DoubleClickHandler, MouseDownHandler, MouseUpHandler, MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
+public class VCytographer extends Composite implements 
+Paintable, ClickHandler,// DoubleClickHandler,
+MouseDownHandler, MouseUpHandler, 
+MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 	
 	private static final double ZOOM_DOWN = 0.90;
 	private static final double ZOOM_UP = 1.10;
@@ -60,19 +62,15 @@ public class VCytographer extends Composite
 
 	private Line linkLine;
 	private VNode linkNode;
-	private VectorObject info;
 	private VContextMenu currentMenu;
 
 	private float startY;
 	private float startX;
 	private int zoomFactor = 0;
-	private float fps = 1;
 	private float angle = 0;
-	private long paintStartTime;
 
 	private boolean onMove = false;
 	private boolean onLink = false;
-	private static final boolean showInfo = true;
 
 	private Set<Integer> currentKeyModifiers;
 	private float centerX = graphWidth / 2f;
@@ -83,6 +81,7 @@ public class VCytographer extends Composite
 	 * then handle any initialization relevant to Vaadin.
 	 */
 	public VCytographer() {
+				
 		panel = new FocusPanel();
 		panel.setSize(graphWidth + "px", graphHeight + "px");
 		panel.addKeyDownHandler(this);
@@ -92,7 +91,7 @@ public class VCytographer extends Composite
 		canvas.addKeyDownHandler(this);
 		canvas.addKeyUpHandler(this);
 		canvas.addMouseMoveHandler(this);
-		canvas.addDoubleClickHandler(this);
+		//canvas.addDoubleClickHandler(this);
 		canvas.addMouseUpHandler(this);
 		canvas.addMouseDownHandler(this);
 		canvas.addClickHandler(this);
@@ -103,21 +102,13 @@ public class VCytographer extends Composite
 		canvas.add(graph);
 		initWidget(panel);
 		setStyleName(CLASSNAME);
-		DOM.setStyleAttribute(canvas.getElement(), "border", "1px solid black");
-		disableContextMenu(canvas.getElement());
 	}
-
-	// should prevent browser's default right click action
-	public static native void disableContextMenu(final Element elem) /*-{
-																		elem.oncontextmenu=function() {return false};
-																		}-*/;
-
 	/**
 	 * Called whenever an update is received from the server
 	 */
 	@Override
-	public void updateFromUIDL(final UIDL uidl, final ApplicationConnection client) {
-	
+	public void updateFromUIDL(final UIDL uidl, final ApplicationConnection client) {	
+				
 		if (client.updateComponent(this, uidl, true)) 
 			return;
 		
@@ -132,25 +123,25 @@ public class VCytographer extends Composite
 		else if ("SET_NODE_SIZE".equals(operation)) {
 			style.setNodeSize(uidl.getIntAttribute("ns") / 2);
 			graph.updateGraphProperties(style);
-			paintGraph();
+//			paintGraph();
 		} else if ("SET_VISUAL_STYLE".equals(operation)) {
 			graph.updateGraphProperties(style);
-			paintGraph();
+//			paintGraph();
 		} else if ("SET_TEXT_VISIBILITY".equals(operation)) {
 			style.setTextsVisible(uidl.getBooleanAttribute("texts"));
 			graph.updateGraphProperties(style);
-			paintGraph();
+//			paintGraph();
 		} else if ("SET_OPTIMIZED_STYLES".equals(operation))
 			graph.paintGraph();
-		else if ("UPDATE_NODE".equals(operation)) 
-			graph.updateNode(uidl, uidl.getStringAttribute("node"));
+		else if ("UPDATE_NODE".equals(operation)) {
+//			graph.updateNode(uidl, uidl.getStringAttribute("node"));
+		}
 		else if ("SET_ZOOM".equals(operation)) 
 			setZoom(uidl.getIntAttribute("zoom"));
 		else if ("REFRESH".equals(operation)) 
 			refresh(uidl);
 		else 
-			repaint(uidl);
-		
+			repaint(uidl);		
 	}
 
 	private void repaint(final UIDL uidl) {
@@ -177,52 +168,22 @@ public class VCytographer extends Composite
 		canvas.getElement().getStyle().setPropertyPx("height", graphHeight);
 	}
 
-	private void paintGraph() {
-		selectionBox.setSelectionBoxVisible(false);
-		fps = 1f / ((System.currentTimeMillis() - paintStartTime) / 1000f);
-		paintStartTime = System.currentTimeMillis();
-		if (showInfo) {
-			if (info != null)
-				canvas.remove(info);
-			canvas.add(info = getInfo());
-		}
-	}
-
-	private VectorObject getInfo() {
-		final NumberFormat df = NumberFormat.getDecimalFormat();
-		final String zoom = df.format(zoomFactor);
-		final String angl = df.format(angle);
-		final String fpss = df.format(fps);
-
-		final Text info = new Text(canvas.getWidth() - 130, 10, "Zoom: " + zoom + " Rot.: " + angl + " Fps " + fpss);
-		info.setStrokeOpacity(0);
-		info.setFillColor(style.getEdgeColor());
-		info.setFontSize(8);
-		return info;
-	}
-
 	@Override
 	public void onMouseDown(final MouseDownEvent event) {
-		VConsole.log("onMouseDown");
 		extractSelection();
 		removeSelectionBox();
-
+		
 		if (currentKeyModifiers.contains(KeyCodes.KEY_CTRL)) {
 			selectionBox.setSelectionBoxStartX(event.getX());
 			selectionBox.setSelectionBoxStartY(event.getY());
 			selectionBox.setSelectionBoxVisible(true);
-			VConsole.log("onMouseDown - selection started:" + selectionBox.getSelectionBoxStartX() + ","
-					+ selectionBox.getSelectionBoxStartY());
 		} else if (event.getSource() instanceof VNode) {
 			onMove = false;
 		} else if (event.getSource() instanceof DrawingArea) {
 			onMove = true;
 			startX = event.getX();
 			startY = event.getY();
-			VConsole.log("onMouseDown - moving");
-		} else {
-			VConsole.error("onMouseDown - UNKNOWN STATE");
-		}
+		} 
 	}
 
 	@Override
@@ -246,12 +207,10 @@ public class VCytographer extends Composite
 			startX = currentX;
 			startY = currentY;
 		}
-
 	}
 
 	@Override
 	public void onMouseUp(final MouseUpEvent event) {
-		VConsole.log("onMouseUp");
 		extractSelection();
 		removeSelectionBox();
 		graph.setMovedShape(null);
@@ -266,7 +225,6 @@ public class VCytographer extends Composite
 		if (selectionBox.isSelectionBoxVisible()) {
 			final int x2 = x1 + selectionBox.getWidth();
 			final int y2 = y1 + selectionBox.getHeight();
-			VConsole.log("selectNodesAndEdgesInTheBox: " + x1 + "," + y1 + " " + x2 + "," + y2);
 			selectNodesAndEdgesInTheBox(x1, y1, x2, y2);
 		}
 	}
@@ -299,7 +257,6 @@ public class VCytographer extends Composite
 		if (selectionBox.isSelectionBoxVisible()) {
 			canvas.remove(selectionBox);
 			selectionBox.setSelectionBoxVisible(false);
-			VConsole.log("selection box removed from canvas");
 			selectionBox.setSelectionBoxRightHandSide(true);
 		}
 	}
@@ -321,7 +278,6 @@ public class VCytographer extends Composite
 
 	@Override
 	public void onClick(final ClickEvent event) {
-		VConsole.log("onClick");
 		removeLinkLine();
 		onMove = false;
 		removeMenu();
@@ -345,6 +301,10 @@ public class VCytographer extends Composite
 		applicationConnection.updateVariable(paintableId, "selectedEdges", edges, false);
 		applicationConnection.updateVariable(paintableId, "selectedNodes", nodes, true);
 	}
+	
+	public void doubleClick(String[] values) {
+		applicationConnection.updateVariable(paintableId, "doubleClick", values, true);		
+	}
 
 	@Override
 	public void onMouseWheel(final MouseWheelEvent event) {
@@ -362,7 +322,7 @@ public class VCytographer extends Composite
 				zoom(ZOOM_DOWN);
 			}
 		}
-		paintGraph();
+//		paintGraph();
 	}
 
 	private void rotate(final double delta) {
@@ -378,13 +338,11 @@ public class VCytographer extends Composite
 
 	private void setZoom(final int newZoomFactor) {
 		if (newZoomFactor > zoomFactor) {
-			for (int i = 0; i < newZoomFactor - zoomFactor; i++) {
-				zoom(ZOOM_UP);
-			}
-		} else {
-			for (int i = 0; i < zoomFactor - newZoomFactor; i++) {
+			for (int i = 0; i < newZoomFactor - zoomFactor; i++) 
+				zoom(ZOOM_UP);			
+		}else {
+			for (int i = 0; i < zoomFactor - newZoomFactor; i++) 
 				zoom(ZOOM_DOWN);
-			}
 		}
 	}
 
@@ -418,22 +376,19 @@ public class VCytographer extends Composite
 
 	@Override
 	public void onKeyUp(final KeyUpEvent event) {
-		VConsole.log("KeyUpEvent");
-		if (currentKeyModifiers.contains(KeyCodes.KEY_CTRL)) {
+		if (currentKeyModifiers.contains(KeyCodes.KEY_CTRL))
 			removeSelectionBox();
-		}
 		currentKeyModifiers.clear();
 	}
 
-	@Override
-	public void onDoubleClick(final DoubleClickEvent event) {
-		VConsole.log("onDoubleClick");
+//	@Override
+//	public void onDoubleClick(final DoubleClickEvent event) {
 //		final int x = event.getX();
 //		final int y = event.getY();
 //		final VNode node = VNode.createANode(x, y, this, graph, style);
 //		graph.addNode(node);
 //		applicationConnection.updateVariable(paintableId, "createdANode", new Object[] { node.getName(), x, y }, true);
-		}
+//		}
 
 	public void removeMenu() {
 		if (currentMenu != null) {
@@ -450,23 +405,14 @@ public class VCytographer extends Composite
 		return currentMenu;
 	}
 
-	public void editNode(final VNode node) {
-		// TODO Auto-generated method stub
-
-	}
-
 	public void startLinkingFrom(final VNode node) {
-		VConsole.log("onlink");
 		onLink = true;
 		linkNode = node;
 		startX = node.getX();
 		startY = node.getY();
 	}
 
-	public void constructLinkTo(final VNode node2) {
-		
-		VConsole.log("linked");
-		
+	public void constructLinkTo(final VNode node2) {		
 		final String name = linkNode.getName() + "_to_" + node2.getName() + "_" + new Random().nextInt(1000);
 		final VEdge edge = VEdge.createAnEdge(null, this, graph, name, linkNode, node2, style);
 		
@@ -480,12 +426,12 @@ public class VCytographer extends Composite
 	}
 
 	public void deleteSelectedItems() {
-		for (final VEdge edge : graph.getSelectedEdges()) {
+		for (final VEdge edge : graph.getSelectedEdges()) 
 			deleteEdge(edge, true);
-		}
-		for (final VNode node : graph.getSelectedShapes()) {
+		
+		for (final VNode node : graph.getSelectedShapes()) 
 			deleteNode(node, true);
-		}
+		
 		// client.sendPendingVariableChanges();
 	}
 
