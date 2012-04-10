@@ -8,7 +8,10 @@ import java.net.URL;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.ListSelect;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FailedEvent;
@@ -27,7 +30,8 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver{
 	private File file;
 	private ConfigReader cR = new ConfigReader();
 	private Button proceed = new Button(Messages.getString("executefile"));
-	private Button run_def = new Button("rundefaultspec");
+	private NativeSelect localExamples = new NativeSelect("Local examples");
+	private Button run_def = new Button("run example");
 	private static final String DEFAULT_LIMES_XML = "examples/dbpedia-linkedmdb.xml";
 
 	@SuppressWarnings("serial")
@@ -51,37 +55,11 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver{
 				config.setFromConfigReader(cR);
 				file.delete();
 				SAIMApplication appl = (SAIMApplication) getApplication();
-				appl.showComponent(new ExecutionPanel());
+				appl.getMainWindow().requestRepaintAll();
 			}
 		});       
 		root.getContent().addComponent(proceed);
-		run_def.addListener(new Button.ClickListener() {			
-			@Override
-			public void buttonClick(ClickEvent event) {
-				Configuration config = Configuration.getInstance();
-				ConfigReader cR = new ConfigReader();
-				InputStream inStream;
-				inStream = getClass().getClassLoader().getResourceAsStream(DEFAULT_LIMES_XML);
-				cR.validateAndRead(inStream);
-				// setting location of limes.dtd
-
-				// set paths to source and target
-				try {
-					URL url = getClass().getClassLoader().getResource("examples/"+cR.sourceInfo.endpoint);//dbpedia-linkedmdb.xml");
-					String path = new File(url.toURI()).getAbsolutePath();
-					cR.sourceInfo.endpoint = path;
-					url = getClass().getClassLoader().getResource("examples/"+cR.targetInfo.endpoint);//dbpedia-linkedmdb.xml");
-					path = new File(url.toURI()).getAbsolutePath();
-					cR.targetInfo.endpoint = path;
-				}catch(URISyntaxException e) {
-					e.printStackTrace();
-				}
-				config.setFromConfigReader(cR);
-				SAIMApplication appl = (SAIMApplication) getApplication();
-				appl.showComponent(new ExecutionPanel());				
-			}
-		});
-		root.getContent().addComponent(run_def);
+		buildLocalExamplesSelection();
 	}
 
 
@@ -131,4 +109,50 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver{
 			return null;
 	}
 
+	
+	/**
+	 * Method to add components to run local examples: for testing e.g. learner or execution.
+	 */
+	private void buildLocalExamplesSelection() {
+		HorizontalLayout subLayout = new HorizontalLayout();
+		subLayout.addComponent(localExamples);
+		subLayout.addComponent(run_def);
+		
+		localExamples.addItem("examples/PublicationData.xml");
+		localExamples.addItem(DEFAULT_LIMES_XML);
+		localExamples.select(DEFAULT_LIMES_XML);
+		// Button to run a default spec locally
+		run_def.addListener(new Button.ClickListener() {			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				Configuration config = Configuration.getInstance();
+				ConfigReader cR = new ConfigReader();
+				InputStream inStream;
+				inStream = getClass().getClassLoader().getResourceAsStream(""+localExamples.getValue());
+				cR.validateAndRead(inStream);
+				// setting location of limes.dtd
+				// set paths to source and target
+				try {
+					URL url;String path;
+					if(cR.sourceInfo.type.equalsIgnoreCase("CSV")) {
+						url = getClass().getClassLoader().getResource("examples/"+cR.sourceInfo.endpoint);//dbpedia-linkedmdb.xml");
+						path = new File(url.toURI()).getAbsolutePath();
+						cR.sourceInfo.endpoint = path;
+					}
+					if(cR.targetInfo.type.equalsIgnoreCase("CSV")) {
+						url = getClass().getClassLoader().getResource("examples/"+cR.targetInfo.endpoint);//dbpedia-linkedmdb.xml");
+						path = new File(url.toURI()).getAbsolutePath();
+						cR.targetInfo.endpoint = path;
+					}
+				}catch(URISyntaxException e) {
+					e.printStackTrace();
+				}
+				config.setFromConfigReader(cR);
+				SAIMApplication appl = (SAIMApplication) getApplication();
+				appl.showComponent(new ExecutionPanel());				
+			}
+		});
+		root.getContent().addComponent(subLayout);
+	}
+	
 }

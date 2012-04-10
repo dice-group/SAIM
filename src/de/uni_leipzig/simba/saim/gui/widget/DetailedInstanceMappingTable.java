@@ -44,6 +44,7 @@ public class DetailedInstanceMappingTable implements Serializable
 		//Instance instance = null;
 		for(String sourceURI: data.map.keySet())
 		{
+//			for(Entry<String, Double> e : data.map.get(sourceURI).entrySet())
 			t.addItem(new ItemUnion(new InstanceItem(sourceCache.getInstance(sourceURI)),
 					new InstanceItem(targetCache.getInstance(data.map.get(sourceURI).keySet().iterator().next()))));
 		}
