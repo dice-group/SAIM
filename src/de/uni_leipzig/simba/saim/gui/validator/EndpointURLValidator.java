@@ -30,6 +30,8 @@ public class EndpointURLValidator implements Validator
 	{
 		if(!(value instanceof String)) {throw new InvalidValueException(Messages.getString("endpointurlnotastring"));}
 		String s = (String)value;
+		if(s.contains(".csv"))
+			return;
 		if(!(s.startsWith("http://"))) {throw new InvalidValueException(Messages.getString("endpointurldoesnotstartwithhttp"));}
 
 		else

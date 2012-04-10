@@ -21,7 +21,7 @@ public class EndpointPanel extends Panel implements PropertyChangeListener
 		Configuration config = Configuration.getInstance();
 		config.addPropertyChangeListener(this);
 		kbISource = new KBInfoForm(Messages.getString("EndpointPanel.configuresourceendpoint"), config.getSource()); //$NON-NLS-1$
-		kbITarget = new KBInfoForm(Messages.getString("EndpointPanel.configuretargetendpoint"), config.getSource()); //$NON-NLS-1$
+		kbITarget = new KBInfoForm(Messages.getString("EndpointPanel.configuretargetendpoint"), config.getTarget()); //$NON-NLS-1$
 		this.addComponent(kbISource);
 		this.addComponent(kbITarget);
 	}

@@ -28,6 +28,7 @@ public class ClassMatchingForm extends Form
 		setLayout(layout);
 		field = new ComboBox(caption);
 		field.setWidth("100%"); //$NON-NLS-1$
+		setDefault(info);
 		chooser = new ClassChooser(info.endpoint, info.id, info.graph);
 		
 		chooser.tree.addListener(new ItemClickListener() {	
@@ -66,4 +67,18 @@ public class ClassMatchingForm extends Form
 		if(select) {field.select(uri);}
 	}
 	
+	/**
+	 * Tries to set default values by reading the KBInfo.
+	 * @param info
+	 */
+	private void setDefault(KBInfo info) {
+		if(info.restrictions.size()>0) {
+			for(String rest : info.restrictions) {
+				if(rest.indexOf("rdf:type")>0) {
+					String className = rest.substring(rest.indexOf("rdf:type")+9).trim();
+					addItem(className, true);
+				}
+			}
+		}
+	}
 }

@@ -74,6 +74,7 @@ public class DevelopMetricStep implements WizardStep {
 
 	@Override
 	public boolean onBack() {
+		((SAIMApplication) SAIMApplication.getInstance()).removeOlderSteps(this);
 		return true;
 	}
 

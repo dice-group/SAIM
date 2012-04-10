@@ -169,8 +169,9 @@ public class KBInfoForm extends Form
 		KBInfo kbInfo = new KBInfo();
 		kbInfo.id = id.getValue().toString();
 		kbInfo.endpoint = url.getValue().toString();
-		kbInfo.graph = graph.getValue().toString();
-		int pageSizeInt = Integer.parseInt((String)pageSize.getValue());
+		if(graph.getValue() != null)
+			kbInfo.graph = graph.getValue().toString();
+		int pageSizeInt = Integer.parseInt(""+pageSize.getValue());
 		kbInfo.pageSize = pageSizeInt;
 		return kbInfo;
 	}
@@ -188,6 +189,7 @@ public class KBInfoForm extends Form
 	
 	public void setValuesFromKBInfo(KBInfo info) {
 		this.kbInfo = info;
+		url.addItem(kbInfo.endpoint);
 		url.setValue(kbInfo.endpoint);
 		graph.setValue(kbInfo.graph);
 		id.setValue(kbInfo.id);
