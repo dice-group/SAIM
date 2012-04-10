@@ -2,8 +2,11 @@ package de.uni_leipzig.simba.saim;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.vaadin.teemu.wizards.Wizard;
+import org.vaadin.teemu.wizards.WizardStep;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.FileResource;
@@ -22,6 +25,7 @@ import de.uni_leipzig.simba.saim.gui.widget.ConfigUploader;
 import de.uni_leipzig.simba.saim.gui.widget.StartPanel;
 import de.uni_leipzig.simba.saim.gui.widget.step.ActiveLearningStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.ClassMatchingStep;
+import de.uni_leipzig.simba.saim.gui.widget.step.DevelopMetricStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.EndpointStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.ExecutionStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.MetricStep;
@@ -59,19 +63,20 @@ public class SAIMApplication extends Application
 	protected void wizardDevelopment()
 	{
 		wizard.addStep(new EndpointStep());
-		HashMap<String,KBInfo> endpoints = DefaultEndpointLoader.getDefaultEndpoints();
-		KBInfo info_s = endpoints.get("lgd.aksw - Drugbank");
-		KBInfo info_t = endpoints.get("lgd.aksw - Sider");
-		info_s.var = "?src";
-		info_t.var = "?dest";
-		info_s.type = "SPARQL";
-		info_t.type = "SPARQL";
-		Configuration.getInstance().setSourceEndpoint(info_s);
-		Configuration.getInstance().setTargetEndpoint(info_t);
+//		HashMap<String,KBInfo> endpoints = DefaultEndpointLoader.getDefaultEndpoints();
+//		KBInfo info_s = endpoints.get("lgd.aksw - Drugbank");
+//		KBInfo info_t = endpoints.get("lgd.aksw - Sider");
+//		info_s.var = "?src";
+//		info_t.var = "?dest";
+//		info_s.type = "SPARQL";
+//		info_t.type = "SPARQL";
+//		Configuration.getInstance().setSourceEndpoint(info_s);
+//		Configuration.getInstance().setTargetEndpoint(info_t);
 
 		wizard.addStep(new ClassMatchingStep());
-		wizard.addStep(new MetricStep());
-		wizard.addStep(new ActiveLearningStep());
+//		wizard.addStep(new MetricStep());
+//		wizard.addStep(new ActiveLearningStep());
+		wizard.addStep(new DevelopMetricStep());
 	}
 	
 	protected void wizardFull()
@@ -180,5 +185,24 @@ public class SAIMApplication extends Application
 		mainWindow.addComponent(buildMainMenu());
 		mainWindow.addComponent(c);
 //		mainWindow.addComponent(new ExecutionPanel());
+	}
+
+	public void setStep(WizardStep oldStep, WizardStep newStep) {
+		List<WizardStep> olderSteps = new LinkedList<WizardStep>();
+		boolean found = false;
+		for(WizardStep s:wizard.getSteps()) {
+			if(s == oldStep) {
+				found = true;
+				continue;
+			}
+			if(found) {
+				olderSteps.add(s);
+			}			
+		}
+		wizard.addStep(newStep);
+		wizard.activateStep(newStep);
+		for(WizardStep os : olderSteps) {
+			wizard.removeStep(os);
+		}
 	}
 }

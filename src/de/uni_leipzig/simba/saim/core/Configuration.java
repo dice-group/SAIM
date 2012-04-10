@@ -3,10 +3,8 @@ package de.uni_leipzig.simba.saim.core;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.FileOutputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
+import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -16,6 +14,7 @@ import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
 
 import de.konrad.commons.sparql.PrefixHelper;
+import de.uni_leipzig.simba.genetics.util.PropertyMapping;
 import de.uni_leipzig.simba.io.ConfigReader;
 import de.uni_leipzig.simba.io.KBInfo;
 
@@ -28,7 +27,7 @@ public class Configuration {
 	protected String name;
 
 	protected double acceptanceThreshold=0.5d;
-	protected double verificationThreshold=0.3d;
+	protected double verificationThreshold=0.4d;
 	protected int granularity=2;
 
 	private ConfigReader cR = new ConfigReader();
@@ -36,6 +35,8 @@ public class Configuration {
 	protected KBInfo source = null;
 	protected KBInfo target = null;
 	protected String metricExpression;
+	
+	protected PropertyMapping propertyMapping = new PropertyMapping(); 
 	
 	public String getMetricExpression() {return metricExpression;}
 	public void setMetricExpression(String metricExpression) {	this.metricExpression = metricExpression;}
@@ -143,19 +144,42 @@ public class Configuration {
 	public String toString() {
 		return source.toString()+"\n<br>\n"+target.toString()+"\n<br>\n"+metricExpression+"\n<br>\n"+acceptanceThreshold;  
 	}
+	
+	/**
+	 * Method adds a property match, and the properties to the according KBInfos.
+	 * @param sourceProp
+	 * @param targetProp
+	 */
+	public void addPropertiesMatch(String sourceProp, String targetProp) {
+		String s_abr=PrefixHelper.abbreviate(sourceProp);
+		String t_abr=PrefixHelper.abbreviate(targetProp);
+		Logger.getLogger("SAIM").info("Adding Property Match: "+s_abr+" - "+t_abr);
+		source.properties.add(s_abr);
+		source.prefixes.put(PrefixHelper.getPrefixFromURI(s_abr), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
+		source.functions.put(s_abr, "lowercase");
+//		System.out.println("Adding source property: "+s_abr+"::::"+PrefixHelper.getPrefixFromURI(s_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
+		target.properties.add(t_abr);
+		target.prefixes.put(PrefixHelper.getPrefixFromURI(t_abr), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(t_abr)));
+		target.functions.put(s_abr, "lowercase");
+//		System.out.println("Adding target property: "+t_abr+"::::"+PrefixHelper.getPrefixFromURI(t_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(t_abr)));
+		this.propertyMapping.addStringPropertyMatch(s_abr, t_abr);
+		
+	}
 
 	public ConfigReader getLimesConfiReader() {
 		cR = new ConfigReader();
-		
-//		source.var="?src";
-//		target.var="?dest";
+//		if(source.var == null)
+			source.var="?src";
+//		if(target.var==null)
+			target.var="?dest";
 		cR.sourceInfo = getSource();
 		cR.targetInfo = getTarget();
-		if(metricExpression == null) {			
-			String defMetric = "trigram(src."+source.properties.get(0)+",dest."+source.properties.get(0)+")";
+//		if(metricExpression == null) {			
+			String defMetric = "trigram("+source.var+"."+source.properties.get(0)+","+target.var+"."+target.properties.get(0)+")";
+			defMetric = defMetric.replaceAll("\\?", "");
 			System.out.println("No metricExpression set ... using default: "+defMetric);
 			metricExpression = defMetric;
-		}
+//		}
 		cR.metricExpression = metricExpression;
 		cR.acceptanceThreshold = acceptanceThreshold;
 		cR.verificationThreshold  = verificationThreshold;

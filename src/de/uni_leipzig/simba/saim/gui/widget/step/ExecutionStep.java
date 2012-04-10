@@ -23,22 +23,6 @@ public class ExecutionStep implements WizardStep, Serializable{
 
 	@Override
 	public Component getContent() {
-		/** Need a window to ask user about next step  **/
-		Window sub = new Window("Decide upon next step");
-		ListSelect selector = new ListSelect("Select next step:");
-		selector.addItem("Execute current Link Specification.");
-		selector.addItem("Learn Link Specification.");
-		selector.setNullSelectionAllowed(false);
-		sub.addComponent(selector);
-		sub.setModal(true);
-		SAIMApplication.getInstance().getMainWindow().addWindow(sub);
-		selector.addListener(new ValueChangeListener() {			
-			@Override
-			public void valueChange(ValueChangeEvent event) {
-				Object o = event.getProperty();
-				System.out.println(o);
-			}
-		});		
 		// TODO Auto-generated method stub
 		return executionPanel = new ExecutionPanel();
 	}

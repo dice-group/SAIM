@@ -8,8 +8,8 @@ import org.vaadin.gwtgraphics.client.shape.Circle;
  */
 public class VCycle extends Circle {
 
-	public VCycle(int x, int y, int radius) {
+	public VCycle(int x, int y, int radius, String color) {
 		super(x,y,radius);
-		this.setFillColor("#EE7942"); //red
+		this.setFillColor(color);
 	}
 }

@@ -428,12 +428,12 @@ public class VCytographer extends Composite
 	@Override
 	public void onDoubleClick(final DoubleClickEvent event) {
 		VConsole.log("onDoubleClick");
-		final int x = event.getX();
-		final int y = event.getY();
-		final VNode node = VNode.createANode(x, y, this, graph, style);
-		graph.addNode(node);
-		applicationConnection.updateVariable(paintableId, "createdANode", new Object[] { node.getName(), x, y }, true);
-	}
+//		final int x = event.getX();
+//		final int y = event.getY();
+//		final VNode node = VNode.createANode(x, y, this, graph, style);
+//		graph.addNode(node);
+//		applicationConnection.updateVariable(paintableId, "createdANode", new Object[] { node.getName(), x, y }, true);
+		}
 
 	public void removeMenu() {
 		if (currentMenu != null) {

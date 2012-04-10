@@ -11,14 +11,14 @@ import org.vaadin.gwtgraphics.client.shape.Path;
  */
 public class VTriangle extends Path {
 	
-	public VTriangle(int x, int y, int size) {
+	public VTriangle(int x, int y, int size,String color) {
 		super(x,y);
 		moveRelativelyTo(-size,size);
 		lineRelativelyTo(size*2, 0);
 		lineRelativelyTo(-size, -size*2);
 		
 		close();
-		this.setFillColor("#00EE76"); // green
+		this.setFillColor(color); // green
 	}
 
 	@Override
