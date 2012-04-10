@@ -160,6 +160,8 @@ public class PaintController {
 				paintTarget.startTag("e");
 				paintTarget.addAttribute("name", "tmp");
 				paintTarget.addAttribute("node1", node1.getIdentifier());
+				paintTarget.addAttribute("meta1", graphProperties.getNodeMetadata(node1.getIdentifier()).toString());
+							
 				paintTarget.addAttribute("shape1", graphProperties.getShapes(node1.getIdentifier()).toString());
 				
 				final double xx1 = graphProperties.getFinalView().getNodeView(node1).getXPosition();
