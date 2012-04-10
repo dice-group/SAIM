@@ -3,6 +3,7 @@ package de.uni_leipzig.simba.saim.core.metric;
 /** A similarity measure.*/
 public class Property extends Node
 {
+	@Override public String getIdentifier() {return "y.rdfs.label";}
 	public byte getMaxChilds() {return 0;}
 	public enum Origin {SOURCE,TARGET};
 	protected final String uri;
@@ -16,6 +17,11 @@ public class Property extends Node
 	{
 		this.uri=url;
 		this.origin=origin;
+	}
+	@Override
+	public String toString()
+	{
+		return null;
 	}
 
 }

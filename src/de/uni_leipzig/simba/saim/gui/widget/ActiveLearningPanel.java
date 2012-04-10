@@ -30,7 +30,8 @@ public class ActiveLearningPanel extends Panel
 	VerticalLayout layout;
 	Button learn;
 	Button terminate;
-	DetailedInstanceMappingTable iMapTable = null;
+	//DetailedInstanceMappingTable iMapTable = null;
+	InstanceMappingTable iMapTable = null;
 
 	//	protected void setupContextHelp()
 	//	{
@@ -105,8 +106,9 @@ public class ActiveLearningPanel extends Panel
 				map = iMapTable.tabletoMapping();
 				map = learner.learn(map);
 			}
-			iMapTable = new DetailedInstanceMappingTable(map,learner.getFitnessFunction().getSourceCache()
-					,learner.getFitnessFunction().getTargetCache());
+			
+			//iMapTable = new DetailedInstanceMappingTable(map,learner.getFitnessFunction().getSourceCache(),learner.getFitnessFunction().getTargetCache());
+			iMapTable = new InstanceMappingTable(map);
 			if (map.size()>0)
 			{
 				l.removeAllComponents();
