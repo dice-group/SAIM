@@ -10,10 +10,13 @@ import org.vaadin.teemu.wizards.WizardStep;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.FileResource;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -162,6 +165,14 @@ public class SAIMApplication extends Application
 	    	sub.setModal(true);
 	    	final ConfigUploader upload = new ConfigUploader();
 	    	sub.addComponent(upload);
+	    	Button ok = new Button("ok");
+	    	sub.addComponent(ok);
+	    	ok.addListener(new ClickListener() {				
+				@Override
+				public void buttonClick(ClickEvent event) {
+					getMainWindow().removeWindow(sub);
+				}
+			});
 	    	getMainWindow().addWindow(sub);
 	    }  
 	};
@@ -201,6 +212,23 @@ public class SAIMApplication extends Application
 		}
 		wizard.addStep(newStep);
 		wizard.activateStep(newStep);
+		for(WizardStep os : olderSteps) {
+			wizard.removeStep(os);
+		}
+	}
+	
+	public void removeOlderSteps(WizardStep oldStep) {
+		List<WizardStep> olderSteps = new LinkedList<WizardStep>();
+		boolean found = false;
+		for(WizardStep s:wizard.getSteps()) {
+			if(s == oldStep) {
+				found = true;
+				continue;
+			}
+			if(found) {
+				olderSteps.add(s);
+			}			
+		}
 		for(WizardStep os : olderSteps) {
 			wizard.removeStep(os);
 		}
