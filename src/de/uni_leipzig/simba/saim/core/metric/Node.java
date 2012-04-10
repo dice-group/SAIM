@@ -1,12 +1,16 @@
 package de.uni_leipzig.simba.saim.core.metric;
 
+import java.awt.Color;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 /** Abstract superclass for the components of a metric.*/
 public abstract class Node
 {
+	/** returns the identifier for this instance, for example "max", "min", or "trigrams".*/
+	public abstract String getIdentifier();	
 	/** the number of "colors" already assigned to nodes (some of which may not exist anymore) to prevent cycles.*/
 	protected static int colors = 0;
 	/** the "color" of the node which is used for cycle prevention. Not related to any "real" color of a graphical representation of the node.*/
@@ -41,6 +45,7 @@ public abstract class Node
 	/** Returns true if the subtree having this node as root node is complete.*/
 	public boolean isComplete()
 	{
+
 		if(childs.size()<getMaxChilds()) {return false;}
 		for(Node child : childs) {if(!child.isComplete()) return false;}
 		return true;
@@ -56,5 +61,20 @@ public abstract class Node
 	{
 		this.color = color;
 		for(Node child : childs) {child.pushDownColor(color);}
-	}	
+	}
+
+	/**	returns the Metric Expression for the metric subtree with this node as a root, e.g. <pre>trigrams(y.dc:title,x.linkedct:condition_name).</pre>*/
+	@Override public String toString()
+	{
+		StringBuilder sb = new StringBuilder(getIdentifier());
+		synchronized(childs)
+		{
+			if(getChilds().isEmpty()) {return sb.toString();}
+			for(Node child: getChilds())
+			{
+				return "";
+			}
+		}
+		return sb.toString();
+	}
 }
