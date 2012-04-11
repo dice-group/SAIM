@@ -19,16 +19,13 @@ import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.learning.query.PropertyMapper;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.core.Configuration;
-import de.uni_leipzig.simba.saim.gui.widget.ActiveLearningPanel;
 import de.uni_leipzig.simba.saim.gui.widget.PropertyMappingGenerator;
 /**
- * Need to configure
+ * Need to configure the learner!
  * @author Lyko
  *
  */
-public class LearningPanel extends Panel {
-	
-	
+public class LearningPanel extends Panel {	
 	Layout mainLayout = new VerticalLayout();
 	ListSelect learnerSelect;
 	Mapping propertyMapping;
@@ -109,6 +106,7 @@ public class LearningPanel extends Panel {
 				mainLayout.removeComponent(learnerSelect);
 				mainLayout.removeComponent(propMappingPanel);
 				mainLayout.removeComponent(propertyGenerator);
+				mainLayout.addComponent(new BatchLearningPanel());
 			}
 			if(event.getProperty().toString().equals(Messages.getString("LearningPanel.gpactivelearner"))) {
 				mainLayout.removeComponent(learnerSelect);

@@ -18,6 +18,8 @@ import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.LimesRunner;
+import de.uni_leipzig.simba.saim.gui.widget.panel.ActiveLearningPanel;
+import de.uni_leipzig.simba.saim.gui.widget.panel.BatchLearningPanel;
 public class ExecutionPanel extends Panel implements PropertyChangeListener {
 	LimesRunner lR;
 	Label progressLabel;
@@ -25,8 +27,9 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 	private Mapping m = new Mapping();
 	float maxSteps = LimesRunner.MAX_STEPS;
 	Button start;
-	Button showResults;
+	//Button showResults;
 	Button startActiveLearning;
+	Button startBatchLearning;
 	Layout mainLayout = new VerticalLayout();
 	
 	@SuppressWarnings("serial")
@@ -44,18 +47,18 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 		progress = new ProgressIndicator();
 	//	progress.setCaption("Progress");
 		progress.setValue(0);
-		showResults = new Button(Messages.getString("ExecutionPanel.showResults"));
-		showResults.setEnabled(false);
-		showResults.addListener(new ClickListener() {			
-			@Override
-			public void buttonClick(ClickEvent event) {
-				SAIMApplication appl = (SAIMApplication) getApplication();
-				InstanceMappingTable iT = new InstanceMappingTable(m);
-				//DetailedInstanceMappingTable iT = new DetailedInstanceMappingTable(m,lR.getSourceCache(),lR.getTargetCache());
-				appl.showComponent(iT.getTable());
-			}
-		});
-		
+//		showResults = new Button(Messages.getString("ExecutionPanel.showResults"));
+//		showResults.setEnabled(false);
+//		showResults.addListener(new ClickListener() {			
+//			@Override
+//			public void buttonClick(ClickEvent event) {
+//				SAIMApplication appl = (SAIMApplication) getApplication();
+//				InstanceMappingTable iT = new InstanceMappingTable(m);
+//				//DetailedInstanceMappingTable iT = new DetailedInstanceMappingTable(m,lR.getSourceCache(),lR.getTargetCache());
+//				appl.showComponent(iT.getTable());
+//			}
+//		});
+//		
 		
 		start = new Button(Messages.getString("ExecutionPanel.startmapping")); //$NON-NLS-1$
 		start.addListener(new ClickListener() {			
@@ -68,8 +71,10 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 						start.setEnabled(false);
 						progress.setValue(1f);
 						progressLabel.setValue(Messages.getString("ExecutionPanel.mappingperformed")); //$NON-NLS-1$
-						showResults.setEnabled(true);
-						mainLayout.addComponent(showResults);
+						SAIMApplication appl = (SAIMApplication) getApplication();
+						InstanceMappingTable iT = new InstanceMappingTable(m);
+						//DetailedInstanceMappingTable iT = new DetailedInstanceMappingTable(m,lR.getSourceCache(),lR.getTargetCache());
+						appl.showComponent(iT.getTable());					
 					}
 				}.start();				
 			}
@@ -82,12 +87,21 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 				appl.showComponent(new ActiveLearningPanel());
 			}
 		});
+		startBatchLearning = new Button("start batch learning");
+		startBatchLearning.addListener(new ClickListener() {			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				SAIMApplication appl = (SAIMApplication) getApplication();
+				appl.showComponent(new BatchLearningPanel());
+			}
+		});
 		setWidth("100%"); //$NON-NLS-1$
 		this.setContent(mainLayout);
 		mainLayout.addComponent(progressLabel);
 		mainLayout.addComponent(progress);
 		mainLayout.addComponent(start);
 		mainLayout.addComponent(startActiveLearning);
+		mainLayout.addComponent(startBatchLearning);
 	}	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {

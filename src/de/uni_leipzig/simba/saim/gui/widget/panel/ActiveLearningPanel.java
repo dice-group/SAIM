@@ -1,6 +1,7 @@
-package de.uni_leipzig.simba.saim.gui.widget;
+package de.uni_leipzig.simba.saim.gui.widget.panel;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -9,6 +10,7 @@ import org.jgap.InvalidConfigurationException;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
@@ -20,60 +22,33 @@ import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.genetics.core.Metric;
 import de.uni_leipzig.simba.genetics.learner.GeneticActiveLearner;
 import de.uni_leipzig.simba.saim.core.Configuration;
+import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
 
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
 @SuppressWarnings("serial")
-public class ActiveLearningPanel extends Panel
+public class ActiveLearningPanel extends MetricLearnPanel
 {	
-	static Logger logger = Logger.getLogger("LIMES");
-	Configuration config = Configuration.getInstance();
-	GeneticActiveLearner learner;
-	VerticalLayout layout;
-	Button learn;
-	Button terminate;
-	//DetailedInstanceMappingTable iMapTable = null;
-	InstanceMappingTable iMapTable = null;
-
-	//	protected void setupContextHelp()
-	//	{
-	//		ContextHelp contextHelp = new ContextHelp();
-	//		getContent().addComponent(contextHelp);
-	//		contextHelp.addHelpForComponent(suggestionComboBox, Messages.getString("classpairsfromlimes")); //$NON-NLS-1$
-	//	}
-
-	public ActiveLearningPanel()
-	{
-		logger.setLevel(Level.WARN);
-		layout = new VerticalLayout();
-		layout.setWidth("100%");
-		setContent(layout);
-		//addComponent(new ActiveLearningRow("bla","blubb"));
-
-		Label l;
-		Configuration config = Configuration.getInstance();
-		Layout learnLayout;
-		learnLayout = new HorizontalLayout();
-		learnLayout.setWidth("100%");
-		layout.addComponent(learnLayout);
-		// add Button
-		learn = new Button("start Learning");
+	public ActiveLearningPanel() {
+		super();
 		learn.addListener(new ActiveLearnButtonClickListener(learnLayout));
-		layout.addComponent(learn);
-		learn.setEnabled(true);
-
-		terminate = new Button("Get best solution so far");
-		terminate.addListener(new ActiveTerminateButtonClickListener(learnLayout));
-		terminate.setEnabled(false);
-		layout.addComponent(terminate);
-
+		init();
+	}
+	
+	/**
+	 * Initialize the specific learner.
+	 */
+	private void init() {
 		// configure
+		if(learner != null) {
+			learner.getFitnessFunction().destroy();
+		}
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("populationSize", 20);
 		param.put("generations", 50);
 		param.put("mutationRate", 0.5f);
 		param.put("preserveFittest",true);
 		param.put("propertyMapping", null);
-		param.put("trainingDataSize", 5);
+		param.put("trainingDataSize", 10);
 		param.put("granularity", 2);
 		param.put("config", config.getLimesConfiReader());
 		learner = new GeneticActiveLearner();
@@ -92,10 +67,9 @@ public class ActiveLearningPanel extends Panel
 
 			learnLayout.removeAllComponents();
 			learnLayout.addComponent(iMapTable.getTable());
-			terminate.setEnabled(true);	
 		}
 	}
-
+	
 	/** Listener for learn buttton @author Lyko */
 	public class ActiveLearnButtonClickListener implements Button.ClickListener
 	{
@@ -130,21 +104,5 @@ public class ActiveLearningPanel extends Panel
 				terminate.setEnabled(true);	
 			}
 		}		
-	}
-
-	public class ActiveTerminateButtonClickListener implements Button.ClickListener {
-		Layout l;
-		public ActiveTerminateButtonClickListener(Layout l) {
-			this.l = l;
-		}
-
-		@Override
-		public void buttonClick(ClickEvent event) {
-			Metric metric = learner.terminate();
-			Label label = new Label();
-			label.setCaption("Best solution");
-			label.setValue(metric.expression+" with threshold "+metric.threshold);
-			l.addComponent(label);
-		}
 	}
 }

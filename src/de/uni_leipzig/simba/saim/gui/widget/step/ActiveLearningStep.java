@@ -5,7 +5,7 @@ import org.vaadin.teemu.wizards.WizardStep;
 import com.vaadin.ui.Component;
 
 import de.uni_leipzig.simba.saim.Messages;
-import de.uni_leipzig.simba.saim.gui.widget.ActiveLearningPanel;
+import de.uni_leipzig.simba.saim.gui.widget.panel.ActiveLearningPanel;
 
 public class ActiveLearningStep implements WizardStep
 {
