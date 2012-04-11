@@ -1,6 +1,7 @@
 package de.uni_leipzig.simba.saim.gui.widget;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -9,6 +10,7 @@ import org.jgap.InvalidConfigurationException;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
@@ -62,7 +64,7 @@ public class ActiveLearningPanel extends Panel
 		learn.setEnabled(true);
 
 		terminate = new Button("Get best solution so far");
-		terminate.addListener(new ActiveTerminateButtonClickListener(learnLayout));
+		terminate.addListener(new ActiveTerminateButtonClickListener(layout));
 		terminate.setEnabled(false);
 		layout.addComponent(terminate);
 
@@ -73,7 +75,7 @@ public class ActiveLearningPanel extends Panel
 		param.put("mutationRate", 0.5f);
 		param.put("preserveFittest",true);
 		param.put("propertyMapping", null);
-		param.put("trainingDataSize", 5);
+		param.put("trainingDataSize", 10);
 		param.put("granularity", 2);
 		param.put("config", config.getLimesConfiReader());
 		learner = new GeneticActiveLearner();
@@ -92,7 +94,6 @@ public class ActiveLearningPanel extends Panel
 
 			learnLayout.removeAllComponents();
 			learnLayout.addComponent(iMapTable.getTable());
-			terminate.setEnabled(true);	
 		}
 	}
 
@@ -134,17 +135,28 @@ public class ActiveLearningPanel extends Panel
 
 	public class ActiveTerminateButtonClickListener implements Button.ClickListener {
 		Layout l;
+		Label label = new Label();
 		public ActiveTerminateButtonClickListener(Layout l) {
 			this.l = l;
 		}
 
 		@Override
 		public void buttonClick(ClickEvent event) {
-			Metric metric = learner.terminate();
-			Label label = new Label();
-			label.setCaption("Best solution");
-			label.setValue(metric.expression+" with threshold "+metric.threshold);
-			l.addComponent(label);
+			boolean alreadyDisplayed = false;
+			Iterator<Component> iter = l.getComponentIterator();
+			while(iter.hasNext()) {
+				if(iter.next().equals(label))
+					alreadyDisplayed = true;
+			}
+			if(alreadyDisplayed)
+				l.removeComponent(label);
+			else {
+				Metric metric = learner.terminate();
+				
+				label.setCaption("Best solution");
+				label.setValue(metric.expression+" with threshold "+metric.threshold);
+				l.addComponent(label);
+			}
 		}
 	}
 }
