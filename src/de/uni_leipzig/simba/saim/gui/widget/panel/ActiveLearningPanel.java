@@ -1,4 +1,4 @@
-package de.uni_leipzig.simba.saim.gui.widget;
+package de.uni_leipzig.simba.saim.gui.widget.panel;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,53 +22,26 @@ import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.genetics.core.Metric;
 import de.uni_leipzig.simba.genetics.learner.GeneticActiveLearner;
 import de.uni_leipzig.simba.saim.core.Configuration;
+import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
 
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
 @SuppressWarnings("serial")
-public class ActiveLearningPanel extends Panel
+public class ActiveLearningPanel extends MetricLearnPanel
 {	
-	static Logger logger = Logger.getLogger("LIMES");
-	Configuration config = Configuration.getInstance();
-	GeneticActiveLearner learner;
-	VerticalLayout layout;
-	Button learn;
-	Button terminate;
-	//DetailedInstanceMappingTable iMapTable = null;
-	InstanceMappingTable iMapTable = null;
-
-	//	protected void setupContextHelp()
-	//	{
-	//		ContextHelp contextHelp = new ContextHelp();
-	//		getContent().addComponent(contextHelp);
-	//		contextHelp.addHelpForComponent(suggestionComboBox, Messages.getString("classpairsfromlimes")); //$NON-NLS-1$
-	//	}
-
-	public ActiveLearningPanel()
-	{
-		logger.setLevel(Level.WARN);
-		layout = new VerticalLayout();
-		layout.setWidth("100%");
-		setContent(layout);
-		//addComponent(new ActiveLearningRow("bla","blubb"));
-
-		Label l;
-		Configuration config = Configuration.getInstance();
-		Layout learnLayout;
-		learnLayout = new HorizontalLayout();
-		learnLayout.setWidth("100%");
-		layout.addComponent(learnLayout);
-		// add Button
-		learn = new Button("start Learning");
+	public ActiveLearningPanel() {
+		super();
 		learn.addListener(new ActiveLearnButtonClickListener(learnLayout));
-		layout.addComponent(learn);
-		learn.setEnabled(true);
-
-		terminate = new Button("Get best solution so far");
-		terminate.addListener(new ActiveTerminateButtonClickListener(layout));
-		terminate.setEnabled(false);
-		layout.addComponent(terminate);
-
+		init();
+	}
+	
+	/**
+	 * Initialize the specific learner.
+	 */
+	private void init() {
 		// configure
+		if(learner != null) {
+			learner.getFitnessFunction().destroy();
+		}
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("populationSize", 20);
 		param.put("generations", 50);
@@ -96,7 +69,7 @@ public class ActiveLearningPanel extends Panel
 			learnLayout.addComponent(iMapTable.getTable());
 		}
 	}
-
+	
 	/** Listener for learn buttton @author Lyko */
 	public class ActiveLearnButtonClickListener implements Button.ClickListener
 	{
@@ -131,34 +104,5 @@ public class ActiveLearningPanel extends Panel
 				terminate.setEnabled(true);	
 			}
 		}		
-	}
-
-	public class ActiveTerminateButtonClickListener implements Button.ClickListener {
-		Layout l;
-		Label label = new Label();
-		public ActiveTerminateButtonClickListener(Layout l) {
-			this.l = l;
-		}
-
-		@Override
-		public void buttonClick(ClickEvent event) {
-			boolean alreadyDisplayed = false;
-			Iterator<Component> iter = l.getComponentIterator();
-			while(iter.hasNext()) {
-				if(iter.next().equals(label))
-					alreadyDisplayed = true;
-			}
-			if(alreadyDisplayed)
-				l.removeComponent(label);
-			else {
-				// get expression and set it
-				Metric metric = learner.terminate();				
-				label.setCaption("Best solution:");
-				label.setValue(metric.expression+" with threshold "+metric.threshold);
-				Configuration.getInstance().setMetricExpression(metric.expression);
-				Configuration.getInstance().setAcceptanceThreshold(metric.threshold);
-				l.addComponent(label);
-			}
-		}
 	}
 }
