@@ -20,6 +20,6 @@ public class Output extends Node
 	/**	returns the Metric Expression for the metric tree, e.g. <pre>trigrams(y.dc:title,x.linkedct:condition_name).</pre>*/
 	@Override public String toString()
 	{
-		return getChilds().isEmpty()?"":getChilds().iterator().next().toString();
+		return (getChilds().isEmpty()?"":getChilds().iterator().next().toString())+(param1!=null?"|"+param1:"")+(param2!=null?"|"+param2:"");
 	}	
 }

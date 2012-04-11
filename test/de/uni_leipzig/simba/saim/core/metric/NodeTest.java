@@ -3,6 +3,8 @@ package de.uni_leipzig.simba.saim.core.metric;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 
 import de.uni_leipzig.simba.saim.core.metric.Property.Origin;
@@ -10,16 +12,30 @@ import de.uni_leipzig.simba.saim.core.metric.Property.Origin;
 public class NodeTest
 {
 	@Test
-	public void test()
+	public void testSplitFunc()
+	{
+		//System.out.println(Arrays.toString(MetricParser.splitFunc("ADD(0.6*jaccard(x.title,y.title)|0.5,0.6*cosine(x.authors,y.authors)|0.5)")));
+		assertTrue(Arrays.equals(
+				MetricParser.splitFunc("ADD(0.6*jaccard(x.title,y.title)|0.5,0.6*cosine(x.authors,y.authors)|0.5)"),
+				new String[]{"ADD","0.6*jaccard(x.title,y.title)|0.5","0.6*cosine(x.authors,y.authors)|0.5"}));
+	}
+
+	@Test
+	public void testParse()
 	{		
+		String s = "ADD(0.6*jaccard(x.title,y.title)|0.5,0.6*cosine(x.authors,y.authors)|0.5)|0.5";
+		System.out.println(s);
+		System.out.println(MetricParser.parse(s,"x"));
+	//	assertTrue(MetricParser.parse(s,"x").toString().equalsIgnoreCase(s));
+		
 		Output o = new Output();
-		Measure m = new Measure("add");
+		Measure m = new Measure("trigrams");
 		o.addChild(m);
 		Property p = new Property("x.rdf:type",Origin.SOURCE);
 		Property q = new Property("rdf:type",Origin.SOURCE);
 		Property r = new Property("y.rdf:type",Origin.TARGET);
 		Node[] nodes = {m,p,q,r};
-		
+
 		for(int i=0;i<nodes.length;i++)
 			for(int j=i+1;j<nodes.length;j++)
 			{assertTrue(nodes[i].color!=nodes[j].color);}
@@ -38,10 +54,9 @@ public class NodeTest
 		assertFalse(m.isComplete());
 		m.addChild(r);
 		assertTrue(m.isComplete());
+
 		assertTrue(m.toString().equals(MetricParser.parse(m.toString(),"x").toString()));
-//		System.out.println(m);		
-//		System.out.println(MetricParser.parse(m.toString(),"x"));
-		
+
 		Operator o1 = new Operator("min");
 		Operator o2 = new Operator("min");
 		Operator o3 = new Operator("min");

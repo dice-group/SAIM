@@ -10,7 +10,7 @@ public class Measure extends Node
 {
 	public Measure(String id) {super(id);}
 	
-	public static final Set<String> identifiers = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(new String[] {"trigram"})));
+	public static final Set<String> identifiers = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(new String[] {"trigrams","jaccard","cosine"})));
 
 	@Override public Set<String> identifiers()	{return identifiers;}	
 	@Override public byte getMaxChilds() {return 2;}
