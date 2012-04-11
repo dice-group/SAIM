@@ -320,8 +320,8 @@ public class MetricPanel extends Panel
 		}			
 	}
 
-
-	public class SelfConfigRefreshListener implements RefreshListener
+/**Listener for the selfconfig button*/
+public class SelfConfigRefreshListener implements RefreshListener
 	{
 		boolean running = true; 
 		private static final long serialVersionUID = -8765221895426102605L;		    
