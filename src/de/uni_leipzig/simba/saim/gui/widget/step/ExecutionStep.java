@@ -4,14 +4,9 @@ import java.io.Serializable;
 
 import org.vaadin.teemu.wizards.WizardStep;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Window;
 
-import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.gui.widget.ExecutionPanel;
 
 public class ExecutionStep implements WizardStep, Serializable{

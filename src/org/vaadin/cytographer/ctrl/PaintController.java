@@ -24,8 +24,20 @@ import cytoscape.visual.VisualStyle;
 public class PaintController {
 
 	private static final int MARGIN = 20;
-	private Set<Integer> paintedNodes = new HashSet<Integer>();
-
+	private Set<Integer> paintedNodes = new HashSet<Integer>();	
+	
+	private Object getNodeAppearance (VisualPropertyType vpt){
+		return Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().get(vpt);
+	}
+	private Object getEdgeAppearance (VisualPropertyType vpt){
+		return Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().get(vpt);
+	}
+	/**
+	 * 
+	 * @param paintTarget
+	 * @param graphProperties
+	 * @throws PaintException
+	 */
 	public void repaintGraph(final PaintTarget paintTarget, final GraphProperties graphProperties) throws PaintException {
 		
 		paintTarget.addAttribute("title", graphProperties.getTitle());
@@ -33,45 +45,44 @@ public class PaintController {
 		paintTarget.addAttribute("gheight", graphProperties.getHeight());
 		paintTarget.addAttribute("texts", graphProperties.isTextsVisible());
 		
-		final VisualStyle cytoscapeStyle = Cytoscape.getVisualMappingManager().getVisualStyle();
-		// get cytoscape defaults 
-		final Color ec = (Color) cytoscapeStyle.getEdgeAppearanceCalculator().getDefaultAppearance().get(VisualPropertyType.EDGE_COLOR);
-		final Color nbc = (Color) cytoscapeStyle.getNodeAppearanceCalculator().getDefaultAppearance().get(VisualPropertyType.NODE_BORDER_COLOR);
-		final Color nfc = (Color) cytoscapeStyle.getNodeAppearanceCalculator().getDefaultAppearance().get(VisualPropertyType.NODE_FILL_COLOR);
-		final Color nlc = (Color) cytoscapeStyle.getNodeAppearanceCalculator().getDefaultAppearance().get(VisualPropertyType.NODE_LABEL_COLOR);
-		final Color elc = (Color) cytoscapeStyle.getNodeAppearanceCalculator().getDefaultAppearance().get(VisualPropertyType.EDGE_LABEL_COLOR);
-		final Number elw = (Number) cytoscapeStyle.getEdgeAppearanceCalculator().getDefaultAppearance().get(VisualPropertyType.EDGE_LINE_WIDTH);
-		final Number nbw = (Number) cytoscapeStyle.getNodeAppearanceCalculator().getDefaultAppearance().get(VisualPropertyType.NODE_LINE_WIDTH);
-		final Number efs = (Number) cytoscapeStyle.getNodeAppearanceCalculator().getDefaultAppearance().get(VisualPropertyType.EDGE_FONT_SIZE);
-		final Number nfs = (Number) cytoscapeStyle.getNodeAppearanceCalculator().getDefaultAppearance().get(VisualPropertyType.NODE_FONT_SIZE);
-		final LineStyle ls = (LineStyle) cytoscapeStyle.getEdgeAppearanceCalculator().getDefaultAppearance().get(VisualPropertyType.EDGE_LINE_STYLE);
-		final String dashArray = getDashArray(ls);
-
-		Number ns = (Number) cytoscapeStyle.getNodeAppearanceCalculator().getDefaultAppearance().get(VisualPropertyType.NODE_SIZE);
-	
-		if (graphProperties.getNodeSize() > 0) 
-			ns = graphProperties.getNodeSize();
+		final Color ec   = (Color) getEdgeAppearance(VisualPropertyType.EDGE_COLOR);
+		final Number elw = (Number) getEdgeAppearance(VisualPropertyType.EDGE_LINE_WIDTH);
 		
+		final Color nbc  = (Color) getNodeAppearance(VisualPropertyType.NODE_BORDER_COLOR);
+		final Color nfc  = (Color) getNodeAppearance(VisualPropertyType.NODE_FILL_COLOR);
+		final Color nlc  = (Color) getNodeAppearance(VisualPropertyType.NODE_LABEL_COLOR);
+		final Color elc  = (Color) getNodeAppearance(VisualPropertyType.EDGE_LABEL_COLOR);
+		final Number nbw = (Number) getNodeAppearance(VisualPropertyType.NODE_LINE_WIDTH);
+		final Number efs = (Number) getNodeAppearance(VisualPropertyType.EDGE_FONT_SIZE);
+		final Number nfs = (Number) getNodeAppearance(VisualPropertyType.NODE_FONT_SIZE);		
+		final String dashArray = getDashArray((LineStyle) getEdgeAppearance(VisualPropertyType.EDGE_LINE_STYLE));
 
-		final Color bc = cytoscapeStyle.getGlobalAppearanceCalculator().getDefaultBackgroundColor();
-		final Color nsc = cytoscapeStyle.getGlobalAppearanceCalculator().getDefaultNodeSelectionColor();
-		final Color esc = cytoscapeStyle.getGlobalAppearanceCalculator().getDefaultEdgeSelectionColor();
+		Number ns = null;	
+		if (graphProperties.getNodeSize() > 0) 
+			ns = graphProperties.getNodeSize();	
+		else
+			ns = (Number) getNodeAppearance(VisualPropertyType.NODE_SIZE);
 
-		paintTarget.addAttribute("bc", getRGB(bc));
+		final Color bc  = Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().getDefaultBackgroundColor();
+		final Color nsc = Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().getDefaultNodeSelectionColor();
+		final Color esc = Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().getDefaultEdgeSelectionColor();
+		
 		paintTarget.addAttribute("ec", getRGB(ec));
 		paintTarget.addAttribute("elw", elw.intValue());
 		paintTarget.addAttribute("nbc", getRGB(nbc));
 		paintTarget.addAttribute("nfc", getRGB(nfc));
-		paintTarget.addAttribute("nsc", getRGB(nsc));
-		paintTarget.addAttribute("esc", getRGB(esc));
 		paintTarget.addAttribute("nlc", getRGB(nlc));
 		paintTarget.addAttribute("elc", getRGB(elc));
 		paintTarget.addAttribute("nbw", nbw.intValue());
-		paintTarget.addAttribute("ns", ns.intValue());
 		paintTarget.addAttribute("efs", efs.intValue());
 		paintTarget.addAttribute("nfs", nfs.intValue());
 		paintTarget.addAttribute("eda", dashArray);
+		paintTarget.addAttribute("ns", ns.intValue());
 		
+		paintTarget.addAttribute("bc", getRGB(bc));
+		paintTarget.addAttribute("nsc", getRGB(nsc));
+		paintTarget.addAttribute("esc", getRGB(esc));
+				
 		paintedNodes = new HashSet<Integer>();
 		for (final int ei : graphProperties.getEdges()) {
 			final Edge e = graphProperties.getNetwork().getEdge(ei);
@@ -84,7 +95,14 @@ public class PaintController {
 			paintTarget.addAttribute("name", e.getIdentifier());
 			paintTarget.addAttribute("node1", node1.getIdentifier());
 			paintTarget.addAttribute("node2", node2.getIdentifier());
-
+			
+			paintTarget.addAttribute("meta1", graphProperties.getNodeMetadata(node1.getIdentifier()).toString());
+			paintTarget.addAttribute("meta2", graphProperties.getNodeMetadata(node2.getIdentifier()).toString());
+			//System.out.println("meta:" +  graphProperties.getNodeMetadata(node1.getIdentifier()).toString());
+			//System.out.println("meta:" +  graphProperties.getNodeMetadata(node2.getIdentifier()).toString());
+			paintTarget.addAttribute("shape1", graphProperties.getShapes(node1.getIdentifier()).toString());
+			paintTarget.addAttribute("shape2", graphProperties.getShapes(node2.getIdentifier()).toString());
+						
 			final double xx1 = graphProperties.getFinalView().getNodeView(node1).getXPosition();
 			final double yy1 = graphProperties.getFinalView().getNodeView(node1).getYPosition();
 			final double xx2 = graphProperties.getFinalView().getNodeView(node2).getXPosition();
@@ -108,9 +126,9 @@ public class PaintController {
 			paintTarget.addAttribute("node2y", y2);
 
 			if (!graphProperties.isStyleOptimization()) {
-				final EdgeAppearance ea = cytoscapeStyle.getEdgeAppearanceCalculator().calculateEdgeAppearance(e, graphProperties.getNetwork());
-				final NodeAppearance n1a = cytoscapeStyle.getNodeAppearanceCalculator().calculateNodeAppearance(node1, graphProperties.getNetwork());
-				final NodeAppearance n2a = cytoscapeStyle.getNodeAppearanceCalculator().calculateNodeAppearance(node2, graphProperties.getNetwork());
+				final EdgeAppearance ea = Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().calculateEdgeAppearance(e, graphProperties.getNetwork());
+				final NodeAppearance n1a = Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().calculateNodeAppearance(node1, graphProperties.getNetwork());
+				final NodeAppearance n2a = Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().calculateNodeAppearance(node2, graphProperties.getNetwork());
 
 				final LineStyle _ls = (LineStyle) ea.get(VisualPropertyType.EDGE_LINE_STYLE);
 				final String _dashArray = getDashArray(_ls);
@@ -142,6 +160,10 @@ public class PaintController {
 				paintTarget.startTag("e");
 				paintTarget.addAttribute("name", "tmp");
 				paintTarget.addAttribute("node1", node1.getIdentifier());
+				paintTarget.addAttribute("meta1", graphProperties.getNodeMetadata(node1.getIdentifier()).toString());
+							
+				paintTarget.addAttribute("shape1", graphProperties.getShapes(node1.getIdentifier()).toString());
+				
 				final double xx1 = graphProperties.getFinalView().getNodeView(node1).getXPosition();
 				final double yy1 = graphProperties.getFinalView().getNodeView(node1).getYPosition();
 				final int x1 = (int) xx1;
@@ -149,7 +171,7 @@ public class PaintController {
 				paintTarget.addAttribute("node1x", x1);
 				paintTarget.addAttribute("node1y", y1);
 				if (!graphProperties.isStyleOptimization()) {
-					final NodeAppearance n1a = cytoscapeStyle.getNodeAppearanceCalculator().calculateNodeAppearance(node1, graphProperties.getNetwork());
+					final NodeAppearance n1a = Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().calculateNodeAppearance(node1, graphProperties.getNetwork());
 
 					paintTarget.addAttribute("_n1bc", getRGB((Color) n1a.get(VisualPropertyType.NODE_BORDER_COLOR)));
 					paintTarget.addAttribute("_n1fc", getRGB((Color) n1a.get(VisualPropertyType.NODE_FILL_COLOR)));

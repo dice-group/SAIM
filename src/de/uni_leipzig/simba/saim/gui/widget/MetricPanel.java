@@ -1,11 +1,13 @@
 package de.uni_leipzig.simba.saim.gui.widget;
 
+import java.awt.Color;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import org.vaadin.cytographer.Cytographer;
+import org.vaadin.cytographer.model.GraphProperties;
 
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
@@ -21,6 +23,7 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 
 import csplugins.layout.algorithms.force.ForceDirectedLayout;
 import cytoscape.CyNetwork;
@@ -34,6 +37,7 @@ import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.learning.query.PropertyMapper;
 import de.uni_leipzig.simba.saim.Messages;
+import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.selfconfig.MeshBasedSelfConfigurator;
 import de.uni_leipzig.simba.selfconfig.SimpleClassifier;
@@ -150,23 +154,24 @@ public class MetricPanel extends Panel
 		metricsLayout.addComponent( new Label("a metric"));
 		operatorsLayout.addComponent( new Label("an operator"));
 		
-		sourceLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,Cytographer.Shape.SCYCLE));
-		targetLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,Cytographer.Shape.TCYCLE));
-		metricsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,Cytographer.Shape.TRIANGLE));
-		operatorsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,Cytographer.Shape.DIAMOND));		
+		sourceLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.SOURCE));
+		targetLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.TARGET));
+		metricsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.METRIC));
+		operatorsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.OPERATOR));		
 	}
 	private Cytographer getCytographer(){
-
+		
 		final int HEIGHT = 450;
 		final int WIDTH = 800;
 		final int NODESIZE = 100;
 
 		Cytoscape.createNewSession();	
+		Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().setDefaultBackgroundColor(Color.WHITE);
 		String name = "MyName";
 		CyNetwork cyNetwork = Cytoscape.createNetwork(name, false);		
 		cyNetworkView = Cytoscape.createNetworkView(cyNetwork);
 
-		cytographer = new Cytographer(cyNetwork, cyNetworkView, name, WIDTH, HEIGHT);
+		cytographer = new Cytographer(cyNetwork, cyNetworkView, name, WIDTH, HEIGHT,SAIMApplication.getInstance().getMainWindow());
 		cytographer.setImmediate(true);
 		cytographer.setWidth(WIDTH + "px");
 		cytographer.setHeight(HEIGHT + "px");
@@ -335,9 +340,9 @@ class AccordionLayoutClickListener implements LayoutClickListener{
 	private static final long serialVersionUID = -3498649095113131161L;
 	private Cytographer cytographer;
 	private CyNetworkView cyNetworkView;
-	private Cytographer.Shape shape;
+	private GraphProperties.Shape shape;
 	
-	public AccordionLayoutClickListener(Cytographer cytographer, CyNetworkView cyNetworkView, Cytographer.Shape shape){
+	public AccordionLayoutClickListener(Cytographer cytographer, CyNetworkView cyNetworkView,GraphProperties.Shape shape){
 		this.cytographer = cytographer;
 		this.cyNetworkView = cyNetworkView;
 		this.shape = shape;

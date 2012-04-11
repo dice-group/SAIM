@@ -5,12 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Table;
 
 import de.uni_leipzig.simba.cache.HybridCache;
-import de.uni_leipzig.simba.data.Instance;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.core.InstanceMatch;

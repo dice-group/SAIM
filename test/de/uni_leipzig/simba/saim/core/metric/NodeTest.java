@@ -11,11 +11,13 @@ public class NodeTest
 {
 	@Test
 	public void test()
-	{
-		Measure m = new Measure();
-		Property p = new Property("rdf:type",Origin.SOURCE);
+	{		
+		Output o = new Output();
+		Measure m = new Measure("add");
+		o.addChild(m);
+		Property p = new Property("x.rdf:type",Origin.SOURCE);
 		Property q = new Property("rdf:type",Origin.SOURCE);
-		Property r = new Property("rdf:type",Origin.TARGET);
+		Property r = new Property("y.rdf:type",Origin.TARGET);
 		Node[] nodes = {m,p,q,r};
 		
 		for(int i=0;i<nodes.length;i++)
@@ -36,10 +38,13 @@ public class NodeTest
 		assertFalse(m.isComplete());
 		m.addChild(r);
 		assertTrue(m.isComplete());
+		assertTrue(m.toString().equals(MetricParser.parse(m.toString(),"x").toString()));
+//		System.out.println(m);		
+//		System.out.println(MetricParser.parse(m.toString(),"x"));
 		
-		Operator o1 = new Operator();
-		Operator o2 = new Operator();
-		Operator o3 = new Operator();
+		Operator o1 = new Operator("min");
+		Operator o2 = new Operator("min");
+		Operator o3 = new Operator("min");
 		assertTrue(o1.addChild(o2));
 		assertTrue(o2.addChild(o3));
 		// would be a cycle

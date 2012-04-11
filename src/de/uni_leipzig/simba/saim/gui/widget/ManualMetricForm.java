@@ -1,17 +1,14 @@
 package de.uni_leipzig.simba.saim.gui.widget;
 
-import com.google.gwt.text.client.DoubleParser;
 import com.vaadin.data.Validator;
 import com.vaadin.data.validator.DoubleValidator;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Button.ClickEvent;
 
-import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 
 public class ManualMetricForm extends Form{

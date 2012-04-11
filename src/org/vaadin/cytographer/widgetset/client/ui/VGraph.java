@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.vaadin.cytographer.widgetset.client.ui.node.VOperator;
 import org.vaadin.gwtgraphics.client.Group;
 import org.vaadin.gwtgraphics.client.Shape;
 import org.vaadin.gwtgraphics.client.VectorObject;
@@ -82,16 +83,23 @@ public class VGraph extends VectorObject {
 			}
 			final String node1name = child.getStringAttribute("node1");
 			final String node2name = child.getStringAttribute("node2");
+			
+			final String meta1 = child.getStringAttribute("meta1");
+			final String meta2 = child.getStringAttribute("meta2");
+			
+			
+			final String shape1 = child.getStringAttribute("shape1");
+			final String shape2 = child.getStringAttribute("shape2");
 
 			VNode node1 = nodes.get(node1name);
 			VNode node2 = nodes.get(node2name);
 			if (node1 == null && node1name != null) {
-				node1 = VNode.createANode(child, vCytographer, this, node1name, true, style);
+				node1 = VNode.create(child, vCytographer, this, node1name, true, style,shape1);
 				updateEdges(node1, false);
 				nodes.put(node1name, node1);
 			}
 			if (node2 == null && node2name != null) {
-				node2 = VNode.createANode(child, vCytographer, this, node2name, false, style);
+				node2 = VNode.create(child, vCytographer, this, node2name, false, style,shape2);
 				updateEdges(node2, false);
 				nodes.put(node2name, node2);
 			}
@@ -99,6 +107,17 @@ public class VGraph extends VectorObject {
 				final VEdge edge = VEdge.createAnEdge(child, vCytographer, this, name, node1, node2, style);
 				createEdgeConnections(edge);
 				edges.put(name, edge);
+			}
+			
+			if(shape1.equals("OPERATOR")){
+				VOperator vp = (VOperator)node1;
+				vp.updateValues(meta1,"");
+				
+			}
+			if(shape2.equals("OPERATOR")){
+				VOperator vp = (VOperator)node2;
+				vp.updateValues(meta2,"");
+				
 			}
 		}
 	}
@@ -155,10 +174,10 @@ public class VGraph extends VectorObject {
 		}
 	}
 
-	public void updateNode(final UIDL uidl, final String id) {
-		final VNode node = getNodes().get(id);
-		// TODO
-	}
+//	public void updateNode(final UIDL uidl, final String id) {
+//		final VNode node = getNodes().get(id);
+//		// TODO
+//	}
 
 	public void moveGraph(final float x, final float y) {
 		for (final VNode shape : getPaintedShapes()) {

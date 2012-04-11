@@ -1,7 +1,6 @@
 package de.uni_leipzig.simba.saim;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,22 +10,19 @@ import org.vaadin.teemu.wizards.WizardStep;
 import com.vaadin.Application;
 import com.vaadin.terminal.FileResource;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.MenuBar;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.core.Configuration;
-import de.uni_leipzig.simba.saim.core.DefaultEndpointLoader;
 import de.uni_leipzig.simba.saim.gui.widget.ConfigUploader;
 import de.uni_leipzig.simba.saim.gui.widget.StartPanel;
-import de.uni_leipzig.simba.saim.gui.widget.step.ActiveLearningStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.ClassMatchingStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.DevelopMetricStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.EndpointStep;
