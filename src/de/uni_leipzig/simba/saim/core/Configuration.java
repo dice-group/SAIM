@@ -168,18 +168,18 @@ public class Configuration {
 
 	public ConfigReader getLimesConfiReader() {
 		cR = new ConfigReader();
-//		if(source.var == null)
+		if(source.var == null)
 			source.var="?src";
-//		if(target.var==null)
+		if(target.var==null)
 			target.var="?dest";
 		cR.sourceInfo = getSource();
 		cR.targetInfo = getTarget();
-//		if(metricExpression == null) {			
+		if(metricExpression == null) {			
 			String defMetric = "trigram("+source.var+"."+source.properties.get(0)+","+target.var+"."+target.properties.get(0)+")";
 			defMetric = defMetric.replaceAll("\\?", "");
 			System.out.println("No metricExpression set ... using default: "+defMetric);
 			metricExpression = defMetric;
-//		}
+		}
 		cR.metricExpression = metricExpression;
 		cR.acceptanceThreshold = acceptanceThreshold;
 		cR.verificationThreshold  = verificationThreshold;
