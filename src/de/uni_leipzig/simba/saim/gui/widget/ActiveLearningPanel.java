@@ -151,10 +151,12 @@ public class ActiveLearningPanel extends Panel
 			if(alreadyDisplayed)
 				l.removeComponent(label);
 			else {
-				Metric metric = learner.terminate();
-				
-				label.setCaption("Best solution");
+				// get expression and set it
+				Metric metric = learner.terminate();				
+				label.setCaption("Best solution:");
 				label.setValue(metric.expression+" with threshold "+metric.threshold);
+				Configuration.getInstance().setMetricExpression(metric.expression);
+				Configuration.getInstance().setAcceptanceThreshold(metric.threshold);
 				l.addComponent(label);
 			}
 		}
