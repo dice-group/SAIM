@@ -97,6 +97,12 @@ public class EndpointTester {
        	return EndpointStatus.EXECUTION_ERROR;
         } catch (Exception e) {
         	return EndpointStatus.OTHER_ERROR;
+        }finally{
+        	executor.shutdown();
         }
+	}
+	
+	public static void main(String args[]) {
+		System.out.println(EndpointTester.testSPARQLEndpointTimeOut("http://www4.wiwiss.fu-berlin.de/dailymed/sparql"));
 	}
 }
