@@ -36,5 +36,16 @@ public class ConfigurationTest
 		c.saveToXML("test.xml");
 		c=null;
 	}
-
+	@Test
+	public void testisPropertyDefined() {
+		Configuration c = Configuration.getInstance();
+		c.setSourceEndpoint(DefaultEndpointLoader.getDefaultEndpoints().get("lgd.aksw - Drugbank"));
+		c.setTargetEndpoint(DefaultEndpointLoader.getDefaultEndpoints().get("lgd.aksw - Sider"));
+		c.addPropertiesMatch("rdfs:label", "rdfs:FalseLable");
+		assertTrue(c.isPropertyDefined("rdfs:label"));
+		assertTrue(c.isPropertyDefined("src.rdfs:label"));
+		assertTrue(c.isPropertyDefined("dest.rdfs:FalseLable"));
+		assertFalse(c.isPropertyDefined("src.rdfs:FalseLable"));
+		c = null;
+	}
 }

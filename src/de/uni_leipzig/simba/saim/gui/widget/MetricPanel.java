@@ -11,10 +11,13 @@ import org.vaadin.cytographer.model.GraphProperties;
 
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
+import com.vaadin.data.Validator;
+import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Accordion;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
@@ -72,10 +75,10 @@ public class MetricPanel extends Panel
 		setContent(mainLayout);
 		layout.setWidth("100%");
 		mainLayout.addComponent(layout);
-
+//		mainLayout.setComponentAlignment(layout, Alignment.TOP_LEFT);
 		final VerticalLayout accordionLayout = new VerticalLayout();
 		layout.addComponent(accordionLayout);	
-		
+//		layout.setComponentAlignment(accordionLayout, Alignment.TOP_LEFT);
 		final ProgressIndicator progress = new ProgressIndicator();
 		progress.setIndeterminate(false);
 		accordionLayout.addComponent(progress);
@@ -187,28 +190,28 @@ public class MetricPanel extends Panel
 		PropertyMapper propMapper = new PropertyMapper();
 		String classSource = getClassOfEndpoint(config.getSource());
 		String classTarget = getClassOfEndpoint(config.getTarget());
-		if(classSource != null && classTarget != null) {
-			showErrorMessage("Getting property mapping...");
-			propMapping = propMapper.getPropertyMapping(config.getSource().endpoint,
-					config.getTarget().endpoint, classSource, classTarget);
-			for(String s : propMapping.map.keySet())
-				for(Entry<String, Double> e : propMapping.map.get(s).entrySet()) {
-					System.out.println(s + " - " + e.getKey());
-					String s_abr=PrefixHelper.abbreviate(s);
-					sourceProps.add(s_abr);
-					config.getSource().properties.add(s_abr);
-					config.getSource().prefixes.put(PrefixHelper.getPrefixFromURI(s_abr), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
-					System.out.println("Adding source property: "+s_abr+"::::"+PrefixHelper.getPrefixFromURI(s_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
-					targetProps.add(PrefixHelper.abbreviate(e.getKey()));
-					String t_abr=PrefixHelper.abbreviate(e.getKey());
-					config.getTarget().properties.add(t_abr);
-					config.getTarget().prefixes.put(PrefixHelper.getPrefixFromURI(t_abr), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(t_abr)));
-					System.out.println("Adding target property: "+t_abr+"::::"+PrefixHelper.getPrefixFromURI(t_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(t_abr)));
-				}
-		} else {
-			showErrorMessage("Cannot perform automatic property mapping due to missing class specifications.");
-		}		
-	}
+//		if(classSource != null && classTarget != null) {
+//			showErrorMessage("Getting property mapping...");
+//			propMapping = propMapper.getPropertyMapping(config.getSource().endpoint,
+//					config.getTarget().endpoint, classSource, classTarget);
+//			for(String s : propMapping.map.keySet())
+//				for(Entry<String, Double> e : propMapping.map.get(s).entrySet()) {
+//					System.out.println(s + " - " + e.getKey());
+//					String s_abr=PrefixHelper.abbreviate(s);
+//					sourceProps.add(s_abr);
+//					config.getSource().properties.add(s_abr);
+//					config.getSource().prefixes.put(PrefixHelper.getPrefixFromURI(s_abr), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
+//					System.out.println("Adding source property: "+s_abr+"::::"+PrefixHelper.getPrefixFromURI(s_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
+//					targetProps.add(PrefixHelper.abbreviate(e.getKey()));
+//					String t_abr=PrefixHelper.abbreviate(e.getKey());
+//					config.getTarget().properties.add(t_abr);
+//					config.getTarget().prefixes.put(PrefixHelper.getPrefixFromURI(t_abr), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(t_abr)));
+//					System.out.println("Adding target property: "+t_abr+"::::"+PrefixHelper.getPrefixFromURI(t_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(t_abr)));
+//				}
+//		} else {
+//			showErrorMessage("Cannot perform automatic property mapping due to missing class specifications.");
+//		}		
+//	}
 
 	private void getAllProps() {
 		//for source
@@ -248,14 +251,20 @@ public class MetricPanel extends Panel
 		layout.setComponentError(new UserError(message));
 	}
 
+	/**
+	 * To decide whether we can proceed to the execution panel
+	 * @return
+	 */
 	public boolean isValid() {
-		manualMetricForm.validate();
+		try{
+			manualMetricForm.validate();
+		}catch(InvalidValueException e) {}
 		if(manualMetricForm.isValid()) {
 			Configuration.getInstance().setMetricExpression(manualMetricForm.metricTextField.getValue().toString());
 			Configuration.getInstance().setAcceptanceThreshold(Double.parseDouble(manualMetricForm.thresholdTextField.getValue().toString()));
 			return true;
 		} else {
-			manualMetricForm.setComponentError(new UserError("Please insert something..."));
+		//	manualMetricForm.setComponentError();
 		}
 		return false;
 	}

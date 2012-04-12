@@ -164,7 +164,7 @@ public class SPARQLHelper
 			    "	?s ?p ?o\n"+
 			//	"} GROUP BY ?p \n"+
 			//    "ORDER BY DESC(?count)";
-			"}";
+			"} LIMIT 100";
 		Logger.getLogger("SAIM").info("Query "+endpoint+" with query:\n"+query);
 		return resultSetToList(querySelect(PrefixHelper.addPrefixes(query), endpoint, graph));		
 	}

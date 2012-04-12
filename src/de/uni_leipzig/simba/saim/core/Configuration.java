@@ -23,6 +23,7 @@ import de.uni_leipzig.simba.saim.core.metric.Output;
 /**Class holds all configuration settings for a linking process. */
 public class Configuration
 {
+	static Logger logger = Logger.getLogger("SAIM");
 	public Output metric = null; 
 	private static Configuration instance = new Configuration();	
 	private PropertyChangeSupport changes = new PropertyChangeSupport( this ); 
@@ -53,8 +54,14 @@ public class Configuration
 	/** Implements Singleton pattern.*/
 	public static Configuration getInstance() {return instance;}
 
-	public void setSourceEndpoint(KBInfo source) {	this.source = source;}
-	public void setTargetEndpoint(KBInfo target) {	this.target = target;}
+	public void setSourceEndpoint(KBInfo source) {	this.source = source;
+		if(source.var == null)
+			source.var = "?src";
+	}
+	public void setTargetEndpoint(KBInfo target) {	this.target = target;
+		if(target.var == null);
+			target.var = "?dest";
+	}
 	public KBInfo getSource() {	return source;}
 	public KBInfo getTarget() {	return target;}
 
@@ -65,7 +72,8 @@ public class Configuration
 		target = cR.targetInfo;
 		metricExpression = cR.metricExpression;
 		metric = MetricParser.parse(metricExpression,cR.sourceInfo.var.replace("?",""));
-		System.out.println("Successfully parsed metric from config reader: "+metric);
+		
+		logger.info("Successfully parsed metric from config reader: "+metric);
 		acceptanceThreshold = cR.acceptanceThreshold;
 		verificationThreshold = cR.verificationThreshold;
 		granularity = cR.granularity;		
@@ -153,8 +161,8 @@ public class Configuration
 
 	/**
 	 * Method adds a property match, and the properties to the according KBInfos.
-	 * @param sourceProp
-	 * @param targetProp
+	 * @param sourceProp source property without heading variable of the KBInfo! Eg. <i>rdf:label</i> not <i>x.rdf:label</i>!
+	 * @param targetProp target property without heading variable of the KBInfo! Eg. <i>rdf:label</i> not <i>y.rdf:label</i>!
 	 */
 	public void addPropertiesMatch(String sourceProp, String targetProp) {
 		String s_abr=PrefixHelper.abbreviate(sourceProp);
@@ -192,5 +200,24 @@ public class Configuration
 		cR.granularity = granularity;		 
 		//	cR.
 		return cR;
+	}
+	
+	/**
+	 * Tests whether or not the given property is part of either source or target endpoint. Expects property to begin with endpoint variable, if
+	 * not we will just look in both endpoints.
+	 * @param prop
+	 * @return
+	 */
+	public boolean isPropertyDefined(String prop) {
+		if(prop.indexOf(".") == -1) {
+			return source.properties.contains(prop) || target.properties.contains(prop);
+		}else {
+			String var = prop.substring(0, prop.indexOf("."));
+			if(source.var.contains(var))
+				return source.properties.contains(prop.substring(prop.indexOf(".")+1));
+			if(target.var.contains(var))
+				return target.properties.contains(prop.substring(prop.indexOf(".")+1));
+			return false;
+		}
 	}
 }

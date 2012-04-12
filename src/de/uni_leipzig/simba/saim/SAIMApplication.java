@@ -44,7 +44,7 @@ public class SAIMApplication extends Application
 	public SAIMApplication()
 	{
 		application=this;
-		mainWindow = new Window(Messages.getString("title"));	
+		mainWindow = new Window(Messages.getString("title"));
 		mainLayout = buildMainLayout();
 		mainWindow.setContent(mainLayout);
 		mainWindow.addComponent(buildMainMenu());

@@ -1,7 +1,10 @@
 package de.uni_leipzig.simba.saim.gui.widget;
 
+import org.apache.log4j.Logger;
+
 import com.vaadin.data.Validator;
 import com.vaadin.data.validator.DoubleValidator;
+import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -9,12 +12,13 @@ import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 
+import de.uni_leipzig.simba.controller.Parser;
 import de.uni_leipzig.simba.saim.core.Configuration;
 
 public class ManualMetricForm extends Form{
 	final TextField metricTextField = new TextField("Insert metric here");
 	final TextField thresholdTextField = new TextField("Acceptance threshold");
-	
+	static Logger logger = Logger.getLogger("SAIM");
 	public ManualMetricForm() {
 		HorizontalLayout perform = new HorizontalLayout();
 		perform.addComponent(metricTextField);
@@ -88,7 +92,36 @@ public class ManualMetricForm extends Form{
 
 		@Override
 		public boolean isValid(Object value) {
-			return value.toString().length()>0;
+			if(value == null || value.toString().length()==0 || !thresholdTextField.isValid()) return false;
+			else {
+				return testPropertiesAreSet(value.toString(), Double.parseDouble(thresholdTextField.getValue().toString()));
+			}
+		}
+	}
+	
+	/**Recursive function using LIMES Parser to test whether all properties of the metric expression are set.*/
+	public boolean testPropertiesAreSet(String expr, double threshold) {
+		logger.info("testing if properties are set...");
+		Configuration config = Configuration.getInstance();
+		Parser parser = new Parser(expr, threshold);
+		if(parser.isAtomic()) {
+			if(config.isPropertyDefined(parser.getTerm1())) {
+				if(config.isPropertyDefined(parser.getTerm2()))
+					return true;
+				else {
+					logger.info("Property "+parser.getTerm2()+" not defined.");
+					this.setComponentError(new UserError("Property "+parser.getTerm2()+" not defined."));
+				}
+			}
+			else {
+				logger.info("Property "+parser.getTerm1()+" not defined.");
+				this.setComponentError(new UserError("Property "+parser.getTerm2()+" not defined."));
+			}
+			
+			return false;
+		} else {
+			logger.info("recursive calls");
+			return testPropertiesAreSet(parser.getTerm1(), parser.threshold1) && testPropertiesAreSet(parser.getTerm2(), parser.threshold2);
 		}
 	}
 	
