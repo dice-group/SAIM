@@ -1,11 +1,13 @@
 package de.uni_leipzig.simba.saim.gui.widget;
 
 import java.awt.Color;
+import java.awt.Shape;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.vaadin.cytographer.Cytographer;
 import org.vaadin.cytographer.model.GraphProperties;
 
@@ -105,7 +107,7 @@ public class MetricPanel extends Panel
 
 		
 		// add Cytographer
-		layout.addComponent(getCytographer());
+		accordionLayout.addComponent(getCytographer());
 		
 		new Thread(){			
 			@Override
@@ -160,7 +162,7 @@ public class MetricPanel extends Panel
 		sourceLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.SOURCE));
 		targetLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.TARGET));
 		metricsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.METRIC));
-		operatorsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.OPERATOR));		
+		operatorsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.OPERATOR));	
 	}
 	private Cytographer getCytographer(){
 		
@@ -361,11 +363,28 @@ class AccordionLayoutClickListener implements LayoutClickListener{
 	public void layoutClick(LayoutClickEvent event) {
 		// its left button
 		if(event.getButtonName().equalsIgnoreCase("left")){
-			cytographer.addNode(((Label)event.getClickedComponent()).getValue().toString(), 0, 0,shape);
+			if(shape.equals(shape.SOURCE)) {
+				String pref = Configuration.getInstance().getSource().var.replaceAll("\\?", "");
+				cytographer.addNode(pref+"."+((Label)event.getClickedComponent()).getValue().toString(), 0, 0, shape);
+				addProperty(((Label)event.getClickedComponent()).getValue().toString(), Configuration.getInstance().getSource());
+			} else if(shape.equals(shape.TARGET)) {
+				String pref = Configuration.getInstance().getTarget().var.replaceAll("\\?", "");
+				cytographer.addNode(pref+"."+((Label)event.getClickedComponent()).getValue().toString(), 0, 0, shape);
+				addProperty(((Label)event.getClickedComponent()).getValue().toString(), Configuration.getInstance().getTarget());
+			} else {
+				cytographer.addNode(((Label)event.getClickedComponent()).getValue().toString(), 0, 0, shape);
+			}
 			cyNetworkView.applyLayout(new ForceDirectedLayout());		
 			cytographer.fitToView();
 			// repaint
 			cytographer.repaintGraph();
 		}
+	}
+	
+	private void addProperty(String s, KBInfo info) {
+		info.properties.add(s);
+		info.prefixes.put(PrefixHelper.getPrefixFromURI(s), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s)));
+		info.functions.put(s, "");
+		Logger.getLogger("SAIM").info(info.var+": adding property: "+s+" with prefix "+PrefixHelper.getPrefixFromURI(s)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s)));
 	}
 }
