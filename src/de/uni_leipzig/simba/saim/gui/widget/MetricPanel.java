@@ -278,7 +278,7 @@ public class MetricPanel extends Panel
 		}
 		@Override
 		public void buttonClick(ClickEvent event) {
-			// add all properties
+			/* add all properties
 			for(String s : sourceProps) {
 				Configuration.getInstance().getSource().properties.add(s);
 				Configuration.getInstance().getSource().prefixes.put(PrefixHelper.getPrefixFromURI(s), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s)));
@@ -288,7 +288,7 @@ public class MetricPanel extends Panel
 				Configuration.getInstance().getTarget().properties.add(s);
 				Configuration.getInstance().getTarget().prefixes.put(PrefixHelper.getPrefixFromURI(s), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s)));
 				Configuration.getInstance().getTarget().functions.put(s, "");
-			}
+			}*/
 			// run selfconfig
 			l.removeAllComponents();
 			Refresher refresher = new Refresher();

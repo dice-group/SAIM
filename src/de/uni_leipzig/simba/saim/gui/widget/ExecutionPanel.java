@@ -20,6 +20,7 @@ import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.LimesRunner;
 import de.uni_leipzig.simba.saim.gui.widget.panel.ActiveLearningPanel;
 import de.uni_leipzig.simba.saim.gui.widget.panel.BatchLearningPanel;
+import de.uni_leipzig.simba.saim.gui.widget.panel.ResultPanel;
 public class ExecutionPanel extends Panel implements PropertyChangeListener {
 	LimesRunner lR;
 	Label progressLabel;
@@ -73,8 +74,9 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 						progressLabel.setValue(Messages.getString("ExecutionPanel.mappingperformed")); //$NON-NLS-1$
 						SAIMApplication appl = (SAIMApplication) getApplication();
 						InstanceMappingTable iT = new InstanceMappingTable(m);
-						//DetailedInstanceMappingTable iT = new DetailedInstanceMappingTable(m,lR.getSourceCache(),lR.getTargetCache());
-						appl.showComponent(iT.getTable());					
+//						DetailedInstanceMappingTable iT = new DetailedInstanceMappingTable(m,lR.getSourceCache(),lR.getTargetCache());
+						ResultPanel results = new ResultPanel(iT);
+						appl.showComponent(results);					
 					}
 				}.start();				
 			}
