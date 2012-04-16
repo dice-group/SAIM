@@ -183,13 +183,13 @@ public class MetricPanel extends Panel
 		
 		return cytographer;		
 	}
-	private void performPropertyMapping() {
-		Configuration config = Configuration.getInstance();
-		config.getSource().properties.clear();
-		config.getTarget().properties.clear();
-		PropertyMapper propMapper = new PropertyMapper();
-		String classSource = getClassOfEndpoint(config.getSource());
-		String classTarget = getClassOfEndpoint(config.getTarget());
+//	private void performPropertyMapping() {
+//		Configuration config = Configuration.getInstance();
+//		config.getSource().properties.clear();
+//		config.getTarget().properties.clear();
+//		PropertyMapper propMapper = new PropertyMapper();
+//		String classSource = getClassOfEndpoint(config.getSource());
+//		String classTarget = getClassOfEndpoint(config.getTarget());
 //		if(classSource != null && classTarget != null) {
 //			showErrorMessage("Getting property mapping...");
 //			propMapping = propMapper.getPropertyMapping(config.getSource().endpoint,
