@@ -28,6 +28,8 @@ public class DefaultEndpointLoader
 		defaults.put("lgd.aksw - Sider", createKBInfo("http://lgd.aksw.org:5678/sparql", "http://www.instancematching.org/oaei/di/sider/", 1000, "sider"));
 		defaults.put("lgd.aksw - Drugbank", createKBInfo("http://lgd.aksw.org:5678/sparql", "http://www.instancematching.org/oaei/di/drugbank/", 1000, "drugbank"));
 		defaults.put("Dailymed", createKBInfo("http://www4.wiwiss.fu-berlin.de/dailymed/sparql", "", 1000, "dailymed"));
+		defaults.put("Drugbank", createKBInfo("http://www4.wiwiss.fu-berlin.de/drugbank/sparql", "", 1000, "drugbank"));
+		defaults.put("Sider", createKBInfo("http://www4.wiwiss.fu-berlin.de/sider/sparql", "", 1000, "sider"));
 		return defaults;
 	}
 }
