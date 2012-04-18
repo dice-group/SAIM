@@ -726,5 +726,6 @@ public class PrefixHelper
 		{"uta","http://uptheasset.org/ontology#"},
 		{"esd","http://def.esd.org.uk/"},
 		{"sider", "http://www4.wiwiss.fu-berlin.de/sider/resource/sider/"},
-		{"diseasome", "http://www4.wiwiss.fu-berlin.de/diseasome/resource/diseasome/"}};
+		{"diseasome", "http://www4.wiwiss.fu-berlin.de/diseasome/resource/diseasome/"},
+		{"bibbaseontology", "http://data.bibbase.org/ontology/#"}};
 }

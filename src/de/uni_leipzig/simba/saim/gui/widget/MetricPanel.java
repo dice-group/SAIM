@@ -219,7 +219,9 @@ public class MetricPanel extends Panel
 		//for source
 		KBInfo info = Configuration.getInstance().getSource();
 		String className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
-		for(String prop : SPARQLHelper.properties(info.endpoint, info.graph, className)) {
+		List<String> propList = SPARQLHelper.properties(info.endpoint, info.graph, className);
+		Logger.getLogger("SAIM").info("Got "+propList.size()+ " source props");
+		for(String prop : propList) {
 			String s_abr=PrefixHelper.abbreviate(prop);
 			sourceProps.add(s_abr);
 		}
@@ -382,9 +384,21 @@ class AccordionLayoutClickListener implements LayoutClickListener{
 	}
 	
 	private void addProperty(String s, KBInfo info) {
+		Logger logger = Logger.getLogger("SAIM");
+		logger.info("Add Property "+s+" to KBInfo "+info.id+" "+info.var);
 		info.properties.add(s);
-		info.prefixes.put(PrefixHelper.getPrefixFromURI(s), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s)));
 		info.functions.put(s, "");
-		Logger.getLogger("SAIM").info(info.var+": adding property: "+s+" with prefix "+PrefixHelper.getPrefixFromURI(s)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s)));
+		if(!PrefixHelper.abbreviate(s).equals(s)) {
+			info.prefixes.put(PrefixHelper.getPrefixFromURI(s), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s)));
+			logger.info(info.var+": adding property: "+s+" with prefix "+PrefixHelper.getPrefixFromURI(s)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s)));
+		} else {
+			if(!s.startsWith("http:")) {
+				logger.info(info.var+": adding property: "+s+" with prefix "+PrefixHelper.getPrefixFromURI(s)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s)));
+				info.prefixes.put(PrefixHelper.getPrefixFromURI(s), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s)));
+			} else {
+				logger.info("Unknown prefix...Should not happen...");
+			}
+			
+		}
 	}
 }
