@@ -58,8 +58,7 @@ public class PrefixHelper
 		if(getPrefix(base)!=null) {return;} // already existing
 		// try to generate something meaningful
 		String prefix = base.replace("http://","").split("[\\./#]")[0];
- 		if(base.length()<fullURI.length()) base+=fullURI.charAt(base.length()); // include "/" and "#" sign 
-		if(prefix.isEmpty()||getPrefixes().containsKey(prefix))
+ 		if(prefix.isEmpty()||getPrefixes().containsKey(prefix))
 		{
 			// didn't work, just generate something
 			prefix  = "prefix"+base.hashCode();			
@@ -125,9 +124,9 @@ public class PrefixHelper
 	{
 		int baseURIEnd = Math.max(Math.max(uri.lastIndexOf('#'),uri.lastIndexOf('/')),uri.lastIndexOf(':'));
 		if(baseURIEnd==-1) {return uri;}
-		return uri.substring(0, baseURIEnd);
+		return uri.substring(0, baseURIEnd+1);
 	}
-
+	
 	public static String abbreviate(String uri)
 	{
 		if(!uri.startsWith("http://")) return uri;
