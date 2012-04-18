@@ -157,16 +157,43 @@ public class SPARQLHelper
 	 * @return
 	 */
 	public static List<String> properties(String endpoint, String graph, String className) {
+		Logger logger = Logger.getLogger("SAIM");
+		String query1 = "SELECT DISTINCT ?s \n" +
+				"WHERE { ?s rdf:type "+className +".\n"+
+				"?s ?p ?o. }\n"+
+				"LIMIT 5";
 		
-		String query = "\nSELECT DISTINCT ?p "+//(COUNT(?s) AS ?count)\n"+
+		List<String> subList = resultSetToList(querySelect(PrefixHelper.addPrefixes(query1), endpoint, graph));
+		logger.info("Got "+subList.size()+" subjects of type "+className+" from "+endpoint);
+		String subQuery = "SELECT DISTINCT ?p WHERE {\n";
+		int i = 0;
+		for(String s : subList) {
+			subQuery += wrapIfNecessary(s)+" ?p ?o"+i+".\n";
+			i++;
+		}
+		subQuery+="}";
+		logger.info("May execute: "+subQuery);
+		
+		
+		return resultSetToList(querySelect(PrefixHelper.addPrefixes(subQuery), endpoint, graph));	
+		/*
+		String query = "\nSELECT ?s ?p "+//(COUNT(?s) AS ?count)\n"+
 		//		"FROM "+wrapIfNecessary(graph)+"\n"+
 				"WHERE { ?s rdf:type "+className+".\n"+
 			    "	?s ?p ?o\n"+
 			//	"} GROUP BY ?p \n"+
 			//    "ORDER BY DESC(?count)";
-			"} LIMIT 100";
+			"} LIMIT 30";
 		Logger.getLogger("SAIM").info("Query "+endpoint+" with query:\n"+query);
-		return resultSetToList(querySelect(PrefixHelper.addPrefixes(query), endpoint, graph));		
+		ResultSet rs = querySelect(PrefixHelper.addPrefixes(query), endpoint, graph);
+		List<String> props = new Vector<String>();
+		while(rs.hasNext()) {
+			QuerySolution qS = rs.next();
+			if(!props.contains(qS.get("?p").toString()))
+				props.add(qS.get("?p").toString());
+		}
+		return props;
+//		return resultSetToList(querySelect(PrefixHelper.addPrefixes(query), endpoint, graph));		*/
 	}
 	
 	//

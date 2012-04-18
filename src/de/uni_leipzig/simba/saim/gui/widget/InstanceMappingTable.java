@@ -45,7 +45,8 @@ public class InstanceMappingTable implements Serializable
 	{	
 		beanItemContainer = new BeanItemContainer<InstanceMatch>(InstanceMatch.class);
 		beanItemContainer.addAll(dataList);
-		t = new Table(Messages.getString("InstanceMappingTable.instances"), beanItemContainer); //$NON-NLS-1$
+//		t = new Table(Messages.getString("InstanceMappingTable.instances"), beanItemContainer); //$NON-NLS-1$
+		t = new Table("", beanItemContainer);
 //		t.addItem();
 		t.setWidth("100%"); //$NON-NLS-1$
 		t.setColumnExpandRatio(Messages.getString("InstanceMappingTable.sourceuri"), 0.5f); //$NON-NLS-1$
@@ -133,5 +134,13 @@ public class InstanceMappingTable implements Serializable
 			}
 		}
 		return result;
+	}
+	
+	/**
+	 * Method to return the source data of the Table.
+	 * @return
+	 */
+	public Mapping getMapping() {
+		return data;
 	}
 }

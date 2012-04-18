@@ -23,7 +23,7 @@
 		<TYPE>CSV</TYPE>
 	</TARGET>
 	
-	<METRIC>trigram(x.title,y.title)</METRIC>
+	<METRIC>trigrams(x.title,y.title)</METRIC>
 	<ACCEPTANCE>
 		<THRESHOLD>0.8</THRESHOLD>
 		<FILE>dbpedia-linkedmdb_accepted.txt</FILE>

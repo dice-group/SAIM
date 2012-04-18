@@ -219,7 +219,9 @@ public class MetricPanel extends Panel
 		//for source
 		KBInfo info = Configuration.getInstance().getSource();
 		String className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
-		for(String prop : SPARQLHelper.properties(info.endpoint, info.graph, className)) {
+		List<String> propList = SPARQLHelper.properties(info.endpoint, info.graph, className);
+		Logger.getLogger("SAIM").info("Got "+propList.size()+ " source props");
+		for(String prop : propList) {
 			String s_abr=PrefixHelper.abbreviate(prop);
 			sourceProps.add(s_abr);
 		}
@@ -278,7 +280,7 @@ public class MetricPanel extends Panel
 		}
 		@Override
 		public void buttonClick(ClickEvent event) {
-			// add all properties
+			/* add all properties
 			for(String s : sourceProps) {
 				Configuration.getInstance().getSource().properties.add(s);
 				Configuration.getInstance().getSource().prefixes.put(PrefixHelper.getBase(s), PrefixHelper.getURI(PrefixHelper.getBase(s)));
@@ -288,7 +290,7 @@ public class MetricPanel extends Panel
 				Configuration.getInstance().getTarget().properties.add(s);
 				Configuration.getInstance().getTarget().prefixes.put(PrefixHelper.getBase(s), PrefixHelper.getURI(PrefixHelper.getBase(s)));
 				Configuration.getInstance().getTarget().functions.put(s, "");
-			}
+			}*/
 			// run selfconfig
 			l.removeAllComponents();
 			Refresher refresher = new Refresher();
@@ -382,9 +384,23 @@ class AccordionLayoutClickListener implements LayoutClickListener{
 	}
 	
 	private void addProperty(String s, KBInfo info) {
+		Logger logger = Logger.getLogger("SAIM");
+		logger.info("Add Property "+s+" to KBInfo "+info.id+" "+info.var);
 		info.properties.add(s);
-		info.prefixes.put(PrefixHelper.getBase(s), PrefixHelper.getURI(PrefixHelper.getBase(s)));
+
 		info.functions.put(s, "");
-		Logger.getLogger("SAIM").info(info.var+": adding property: "+s+" with prefix "+PrefixHelper.getBase(s)+" - "+PrefixHelper.getURI(PrefixHelper.getBase(s)));
+		if(!PrefixHelper.abbreviate(s).equals(s)) {
+			info.prefixes.put(PrefixHelper.getPrefix(s), PrefixHelper.getURI(PrefixHelper.getPrefix(s)));
+			logger.info(info.var+": adding property: "+s+" with prefix "+PrefixHelper.getPrefix(s)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefix(s)));
+		} else {
+			if(!s.startsWith("http:")) {
+				logger.info(info.var+": adding property: "+s+" with prefix "+PrefixHelper.getPrefix(s)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefix(s)));
+				info.prefixes.put(PrefixHelper.getPrefix(s), PrefixHelper.getURI(PrefixHelper.getPrefix(s)));
+			} else {
+				logger.info("Unknown prefix...Should not happen...");
+			}
+			
+		}
+
 	}
 }

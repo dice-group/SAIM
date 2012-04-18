@@ -111,7 +111,7 @@ public class ClassMatchingPanel extends Panel
 
 					Mapping classMatching = null;
 
-					ClassMapper classMapper = new ClassMapper();
+					ClassMapper classMapper = new ClassMapper(10);
 					if(CACHING)
 					{	
 						if(cache == null) 

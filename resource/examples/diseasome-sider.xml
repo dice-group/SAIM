@@ -61,7 +61,7 @@
 		<PROPERTY>rdfs:label</PROPERTY>
 		<PROPERTY>sider:sideEffectName</PROPERTY>
 	</TARGET>
-	<METRIC>ADD(0.5*Trigram(x.rdfs:label,y.rdfs:label), 0.5*Trigram(x.rdfs:label,y.sider:sideEffectName))</METRIC>
+	<METRIC>ADD(0.5*trigrams(x.rdfs:label,y.rdfs:label), 0.5*trigrams(x.rdfs:label,y.sider:sideEffectName))</METRIC>
 	<ACCEPTANCE>
 		<THRESHOLD>0.9</THRESHOLD>
 		<FILE>diseasome_sider_accepted.nt</FILE>

@@ -34,7 +34,7 @@ public class Configuration
 	protected double acceptanceThreshold=0.5d;
 	protected double verificationThreshold=0.4d;
 	protected int granularity=2;
-
+	public String sameAsRelation = "owl:sameAs";
 	private ConfigReader cR = new ConfigReader();
 
 	protected KBInfo source = null;
@@ -194,6 +194,11 @@ public class Configuration
 			System.out.println("No metricExpression set ... using default: "+defMetric);
 			metricExpression = defMetric;
 		}
+		cR.prefixes.putAll(getSource().prefixes);
+		cR.prefixes.putAll(getTarget().prefixes);
+		cR.prefixes.put(PrefixHelper.getPrefix(sameAsRelation), PrefixHelper.getURI(PrefixHelper.getPrefix(sameAsRelation)));
+		cR.verificationRelation = sameAsRelation;
+		cR.acceptanceRelation = sameAsRelation;
 		cR.metricExpression = metricExpression;
 		cR.acceptanceThreshold = acceptanceThreshold;
 		cR.verificationThreshold  = verificationThreshold;
