@@ -21,6 +21,7 @@ import de.uni_leipzig.simba.io.ConfigReader;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
+import de.uni_leipzig.simba.saim.gui.widget.panel.ExecutionPanel;
 
 public class ConfigUploader extends CustomComponent 
 implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver{

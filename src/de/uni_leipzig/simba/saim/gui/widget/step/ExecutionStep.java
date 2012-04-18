@@ -7,7 +7,7 @@ import org.vaadin.teemu.wizards.WizardStep;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Panel;
 
-import de.uni_leipzig.simba.saim.gui.widget.ExecutionPanel;
+import de.uni_leipzig.simba.saim.gui.widget.panel.ExecutionPanel;
 
 public class ExecutionStep implements WizardStep, Serializable{
 	Panel executionPanel;

@@ -8,7 +8,7 @@ import de.konrad.commons.sparql.SPARQLHelper;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.core.Configuration;
-import de.uni_leipzig.simba.saim.gui.widget.ClassMatchingPanel;
+import de.uni_leipzig.simba.saim.gui.widget.panel.ClassMatchingPanel;
 
 public class ClassMatchingStep implements WizardStep
 {

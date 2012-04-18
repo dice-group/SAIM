@@ -4,7 +4,7 @@ import org.vaadin.teemu.wizards.WizardStep;
 
 import com.vaadin.ui.Component;
 
-import de.uni_leipzig.simba.saim.gui.widget.EndpointPanel;
+import de.uni_leipzig.simba.saim.gui.widget.panel.EndpointPanel;
 
 public class PropertyMatchingStep implements WizardStep
 {

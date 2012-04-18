@@ -1,4 +1,4 @@
-package de.uni_leipzig.simba.saim.gui.widget;
+package de.uni_leipzig.simba.saim.gui.widget.panel;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -18,9 +18,7 @@ import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.LimesRunner;
-import de.uni_leipzig.simba.saim.gui.widget.panel.ActiveLearningPanel;
-import de.uni_leipzig.simba.saim.gui.widget.panel.BatchLearningPanel;
-import de.uni_leipzig.simba.saim.gui.widget.panel.ResultPanel;
+import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
 public class ExecutionPanel extends Panel implements PropertyChangeListener {
 	LimesRunner lR;
 	Label progressLabel;

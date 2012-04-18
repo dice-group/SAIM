@@ -6,7 +6,7 @@ import com.vaadin.ui.Component;
 
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.core.Configuration;
-import de.uni_leipzig.simba.saim.gui.widget.EndpointPanel;
+import de.uni_leipzig.simba.saim.gui.widget.panel.EndpointPanel;
 import de.uni_leipzig.simba.saim.Messages;
 public class EndpointStep implements WizardStep
 {

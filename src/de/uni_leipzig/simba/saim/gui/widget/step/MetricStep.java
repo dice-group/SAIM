@@ -8,7 +8,7 @@ import com.vaadin.ui.Component;
 
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.core.Configuration;
-import de.uni_leipzig.simba.saim.gui.widget.MetricPanel;
+import de.uni_leipzig.simba.saim.gui.widget.panel.MetricPanel;
 
 public class MetricStep implements WizardStep, Serializable
 {

@@ -1,4 +1,4 @@
-package de.uni_leipzig.simba.saim.gui.widget;
+package de.uni_leipzig.simba.saim.gui.widget.panel;
 
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.ui.Alignment;

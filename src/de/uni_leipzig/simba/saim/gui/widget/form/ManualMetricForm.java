@@ -1,4 +1,4 @@
-package de.uni_leipzig.simba.saim.gui.widget;
+package de.uni_leipzig.simba.saim.gui.widget.form;
 
 import org.apache.log4j.Logger;
 
@@ -16,8 +16,8 @@ import de.uni_leipzig.simba.controller.Parser;
 import de.uni_leipzig.simba.saim.core.Configuration;
 
 public class ManualMetricForm extends Form{
-	final TextField metricTextField = new TextField("Insert metric here");
-	final TextField thresholdTextField = new TextField("Acceptance threshold");
+	public final TextField metricTextField = new TextField("Insert metric here");
+	public final TextField thresholdTextField = new TextField("Acceptance threshold");
 	static Logger logger = Logger.getLogger("SAIM");
 	public ManualMetricForm() {
 		HorizontalLayout perform = new HorizontalLayout();

@@ -1,4 +1,4 @@
-package de.uni_leipzig.simba.saim.gui.widget;
+package de.uni_leipzig.simba.saim.gui.widget.panel;
 
 import java.awt.Color;
 import java.awt.Shape;
@@ -44,6 +44,7 @@ import de.uni_leipzig.simba.learning.query.PropertyMapper;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
+import de.uni_leipzig.simba.saim.gui.widget.form.ManualMetricForm;
 import de.uni_leipzig.simba.selfconfig.MeshBasedSelfConfigurator;
 import de.uni_leipzig.simba.selfconfig.SimpleClassifier;
 
@@ -214,7 +215,7 @@ public class MetricPanel extends Panel
 //			showErrorMessage("Cannot perform automatic property mapping due to missing class specifications.");
 //		}		
 //	}
-
+	
 	private void getAllProps() {
 		//for source
 		KBInfo info = Configuration.getInstance().getSource();
@@ -273,7 +274,7 @@ public class MetricPanel extends Panel
 		}
 		return false;
 	}
-
+	/**Listener for SelfConfig button.*/
 	public class SelfConfigClickListener implements Button.ClickListener {
 		Layout l;
 		public SelfConfigClickListener(Layout l) {
@@ -348,7 +349,7 @@ public class SelfConfigRefreshListener implements RefreshListener
 		}
 	}
 }
-
+/**Listener to react on clicks in the accordion panel.*/
 class AccordionLayoutClickListener implements LayoutClickListener{
 
 	private static final long serialVersionUID = -3498649095113131161L;
@@ -384,6 +385,11 @@ class AccordionLayoutClickListener implements LayoutClickListener{
 		}
 	}
 	
+	/**
+	 * Method to add Properties to according KBInfo. 
+	 * @param s URI of the property. May or may not be abbreviated.
+	 * @param info KBInfo of endpoint property belongs to.
+	 */
 	private void addProperty(String s, KBInfo info) {
 		Logger logger = Logger.getLogger("SAIM");
 		String prop;

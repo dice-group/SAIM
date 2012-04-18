@@ -16,13 +16,14 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.ConfigUploader;
-import de.uni_leipzig.simba.saim.gui.widget.StartPanel;
+import de.uni_leipzig.simba.saim.gui.widget.panel.StartPanel;
 import de.uni_leipzig.simba.saim.gui.widget.step.ClassMatchingStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.DevelopMetricStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.EndpointStep;
@@ -44,7 +45,7 @@ public class SAIMApplication extends Application
 	public SAIMApplication()
 	{
 		application=this;
-		mainWindow = new Window(Messages.getString("title"));
+		mainWindow = new Window(Messages.getString("title")); //$NON-NLS-1$
 		mainLayout = buildMainLayout();
 		mainWindow.setContent(mainLayout);
 		mainWindow.addComponent(buildMainMenu());
@@ -56,7 +57,7 @@ public class SAIMApplication extends Application
 		wizardFull();
 
 		mainLayout.addComponent(wizard);
-		setTheme("saim");
+		setTheme("saim"); //$NON-NLS-1$
 	}
 	
 	protected void wizardDevelopment()
@@ -90,14 +91,23 @@ public class SAIMApplication extends Application
 	protected MenuBar buildMainMenu()
 	{
 		final MenuBar menuBar = new MenuBar();
-		menuBar.setWidth("100%");
+		menuBar.setWidth("100%"); //$NON-NLS-1$
 		//menuBar.setStyleName("margin1em");
 		
-		MenuItem fileMenu = menuBar.addItem(Messages.getString("file"), null, null);
-		fileMenu.addItem(Messages.getString("open"), null, null).setEnabled(false);
-		fileMenu.addItem(Messages.getString("save"), null, null).setEnabled(false);
-		fileMenu.addItem(Messages.getString("importlimes"), null, importLIMESCommand).setEnabled(true);		
-		fileMenu.addItem(Messages.getString("exportlimes"), null, exportLIMESCommand).setEnabled(true);
+		MenuItem fileMenu = menuBar.addItem(Messages.getString("file"), null, null); //$NON-NLS-1$
+		fileMenu.addItem(Messages.getString("open"), null, null).setEnabled(false); //$NON-NLS-1$
+		fileMenu.addItem(Messages.getString("save"), null, null).setEnabled(false); //$NON-NLS-1$
+		
+		fileMenu.addItem(Messages.getString("importlimes"), null, importLIMESCommand).setEnabled(true);		 //$NON-NLS-1$
+		fileMenu.addItem(Messages.getString("exportlimes"), null, exportLIMESCommand).setEnabled(true); //$NON-NLS-1$
+		
+		MenuItem controlMenu= menuBar.addItem(Messages.getString("SAIMApplication.menurestart"), null, new Command() {			 //$NON-NLS-1$
+			@Override
+			public void menuSelected(MenuItem selectedItem) {
+				((SAIMApplication)SAIMApplication.getInstance()).returnToBegin();
+			}
+		});
+		
 		return menuBar;
 	}
 
@@ -156,12 +166,12 @@ public class SAIMApplication extends Application
 //	}
 	MenuBar.Command importLIMESCommand = new MenuBar.Command() {
 	    public void menuSelected(MenuItem selectedItem) {
-	    	sub = new Window(Messages.getString("limesupload"));
-	    	sub.setWidth("700px");
+	    	sub = new Window(Messages.getString("limesupload")); //$NON-NLS-1$
+	    	sub.setWidth("700px"); //$NON-NLS-1$
 	    	sub.setModal(true);
 	    	final ConfigUploader upload = new ConfigUploader();
 	    	sub.addComponent(upload);
-	    	Button ok = new Button("ok");
+	    	Button ok = new Button("ok"); //$NON-NLS-1$
 	    	sub.addComponent(ok);
 	    	ok.addListener(new ClickListener() {				
 				@Override
@@ -175,16 +185,19 @@ public class SAIMApplication extends Application
 
 	MenuBar.Command exportLIMESCommand = new MenuBar.Command() {
 	    public void menuSelected(MenuItem selectedItem) {
-	    	sub = new Window(Messages.getString("limesdownload"));
-	    	sub.setWidth("700px");
+	    	sub = new Window(Messages.getString("limesdownload")); //$NON-NLS-1$
+	    	sub.setWidth("700px"); //$NON-NLS-1$
 	    	sub.setModal(true);
-	    	Configuration.getInstance().saveToXML("linkspec.xml");
+	    	Configuration.getInstance().saveToXML("linkspec.xml"); //$NON-NLS-1$
 	    	
-	    	sub.addComponent(new Link("Download linkspec",new FileResource(new File("linkspec.xml"),SAIMApplication.this)));
+	    	sub.addComponent(new Link(Messages.getString("SAIMApplication.menudownloadlinkspec"),new FileResource(new File("linkspec.xml"),SAIMApplication.this))); //$NON-NLS-1$ //$NON-NLS-2$
 	    	getMainWindow().addWindow(sub);
 	    }  
 	};
-	
+	/**
+	 * Show a component instead of the wizard. Finishes the Wizard.
+	 * @param c
+	 */
 	public void showComponent(Component c) {
 		mainWindow.removeWindow(sub);
 		wizard.finish();
@@ -192,6 +205,18 @@ public class SAIMApplication extends Application
 		mainWindow.addComponent(buildMainMenu());
 		mainWindow.addComponent(c);
 //		mainWindow.addComponent(new ExecutionPanel());
+	}
+	/**
+	 * Return view to the beginning: showing wizard.
+	 */
+	public void returnToBegin() {
+		mainWindow.removeAllComponents();
+		mainWindow.addComponent(buildMainMenu());
+
+		
+		mainLayout.addComponent(new StartPanel());
+		mainLayout.addComponent(wizard);
+
 	}
 
 	public void setStep(WizardStep oldStep, WizardStep newStep) {

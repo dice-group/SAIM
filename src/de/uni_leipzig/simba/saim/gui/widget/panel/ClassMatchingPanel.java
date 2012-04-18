@@ -1,4 +1,4 @@
-package de.uni_leipzig.simba.saim.gui.widget;
+package de.uni_leipzig.simba.saim.gui.widget.panel;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,6 +28,7 @@ import de.uni_leipzig.simba.learning.query.ClassMapper;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.Pair;
+import de.uni_leipzig.simba.saim.gui.widget.form.ClassMatchingForm;
 import de.uni_leipzig.simba.saim.util.SortedMapping;
 
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/

@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.DefaultEndpointLoader;
-import de.uni_leipzig.simba.saim.gui.widget.ManualMetricForm;
+import de.uni_leipzig.simba.saim.gui.widget.form.ManualMetricForm;
 
 public class TestManualMetricForm {
 	@Test

@@ -1,4 +1,4 @@
-package de.uni_leipzig.simba.saim.gui.widget;
+package de.uni_leipzig.simba.saim.gui.widget.form;
 
 import static de.konrad.commons.sparql.SPARQLHelper.lastPartOfURL;
 import static de.konrad.commons.sparql.SPARQLHelper.rootClasses;

@@ -1,4 +1,4 @@
-package de.uni_leipzig.simba.saim.gui.widget;
+package de.uni_leipzig.simba.saim.gui.widget.form;
 
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
@@ -9,7 +9,7 @@ import com.vaadin.ui.VerticalLayout;
 
 import de.konrad.commons.sparql.PrefixHelper;
 import de.uni_leipzig.simba.io.KBInfo;
-import de.uni_leipzig.simba.saim.gui.widget.ClassChooser.ClassNode;
+import de.uni_leipzig.simba.saim.gui.widget.form.ClassChooser.ClassNode;
 
 /** The class matching consists of two sets of classes from both knowledge bases and a match between them.
  * In RAVEN, the mapping is injective and uniquely defined (there is at most one match for a class).

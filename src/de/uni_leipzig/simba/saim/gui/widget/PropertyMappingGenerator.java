@@ -19,7 +19,7 @@ import de.konrad.commons.sparql.SPARQLHelper;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.core.Configuration;
-import de.uni_leipzig.simba.saim.gui.widget.MetricPanel.SelfConfigRefreshListener;
+import de.uni_leipzig.simba.saim.gui.widget.panel.MetricPanel.SelfConfigRefreshListener;
 
 public class PropertyMappingGenerator extends Panel {
 	VerticalLayout layout = new VerticalLayout();
