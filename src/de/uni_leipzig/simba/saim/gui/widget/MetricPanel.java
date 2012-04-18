@@ -222,6 +222,7 @@ public class MetricPanel extends Panel
 		List<String> propList = SPARQLHelper.properties(info.endpoint, info.graph, className);
 		Logger.getLogger("SAIM").info("Got "+propList.size()+ " source props");
 		for(String prop : propList) {
+			PrefixHelper.generatePrefix(prop);
 			String s_abr=PrefixHelper.abbreviate(prop);
 			sourceProps.add(s_abr);
 		}
@@ -385,14 +386,21 @@ class AccordionLayoutClickListener implements LayoutClickListener{
 	
 	private void addProperty(String s, KBInfo info) {
 		Logger logger = Logger.getLogger("SAIM");
-		logger.info("Add Property "+s+" to KBInfo "+info.id+" "+info.var);
-	
-		s = PrefixHelper.expand(s);
-	
+		String prop;
+		if(s.startsWith("http:")) {//do not have a prefix, so we generate one
+			PrefixHelper.generatePrefix(s);
+			prop = PrefixHelper.abbreviate(s);
+		} else {// have the prefix already
+			prop = s;
+			s = PrefixHelper.expand(s);
+		}
 		
-		PrefixHelper.generatePrefix(s);
+		info.properties.add(prop);
+		info.functions.put(prop, "");
+				
 		String base = PrefixHelper.getBase(s);
 		info.prefixes.put(PrefixHelper.getPrefix(base), PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
-		logger.info(info.var+": adding property: "+s+" with prefix "+PrefixHelper.getPrefix(base)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
+	
+		logger.info(info.var+": adding property: "+prop+" with prefix "+PrefixHelper.getPrefix(base)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
 	}
 }
