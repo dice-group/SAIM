@@ -20,6 +20,7 @@ public class VVisualStyle {
 	private int nodeSize;
 	private int nodeFontSize;
 	private int edgeFontSize;
+	private double fillOpacity; //edge
 
 	private boolean textsVisible = true;
 
@@ -40,10 +41,14 @@ public class VVisualStyle {
 		nodeFontSize = uidl.getIntAttribute("nfs");
 		edgeFontSize = uidl.getIntAttribute("efs");
 		edgeDashArray = uidl.getStringAttribute("eda");
+		fillOpacity = uidl.getDoubleAttribute("efo");
 	}
 
 	public String getBgColor() {
 		return bgColor;
+	}
+	public double getFillOpacity(){
+		return fillOpacity;
 	}
 
 	public void setBgColor(final String bgColor) {

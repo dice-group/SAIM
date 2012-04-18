@@ -9,7 +9,8 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.vaadin.cytographer.Cytographer;
-import org.vaadin.cytographer.model.GraphProperties;
+
+import org.vaadin.cytographer.GraphProperties;
 
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
@@ -34,6 +35,7 @@ import csplugins.layout.algorithms.force.ForceDirectedLayout;
 import cytoscape.CyNetwork;
 import cytoscape.Cytoscape;
 import cytoscape.view.CyNetworkView;
+import cytoscape.visual.VisualPropertyType;
 
 import de.konrad.commons.sparql.PrefixHelper;
 import de.konrad.commons.sparql.SPARQLHelper;
@@ -170,9 +172,14 @@ public class MetricPanel extends Panel
 		final int HEIGHT = 450;
 		final int WIDTH = 800;
 		final int NODESIZE = 100;
-
+		final float EDGE_LABEL_OPACITY = 0f;
+		
 		Cytoscape.createNewSession();	
 		Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().setDefaultBackgroundColor(Color.WHITE);
+		Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_COLOR,Color.BLACK);
+		Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_LABEL_OPACITY,EDGE_LABEL_OPACITY);
+		Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.NODE_SIZE, NODESIZE);
+		
 		String name = "MyName";
 		CyNetwork cyNetwork = Cytoscape.createNetwork(name, false);		
 		cyNetworkView = Cytoscape.createNetworkView(cyNetwork);
@@ -366,18 +373,25 @@ class AccordionLayoutClickListener implements LayoutClickListener{
 	@Override
 	public void layoutClick(LayoutClickEvent event) {
 		// its left button
-		if(event.getButtonName().equalsIgnoreCase("left")){
-			if(shape.equals(shape.SOURCE)) {
+		if(event.getButtonName().equalsIgnoreCase("left") && event.getClickedComponent() instanceof Label ){
+			String label = ((Label)event.getClickedComponent()).getValue().toString();
+			switch(shape){
+			case SOURCE :{
 				String pref = Configuration.getInstance().getSource().var.replaceAll("\\?", "");
-				cytographer.addNode(pref+"."+((Label)event.getClickedComponent()).getValue().toString(), 0, 0, shape);
-				addProperty(((Label)event.getClickedComponent()).getValue().toString(), Configuration.getInstance().getSource());
-			} else if(shape.equals(shape.TARGET)) {
-				String pref = Configuration.getInstance().getTarget().var.replaceAll("\\?", "");
-				cytographer.addNode(pref+"."+((Label)event.getClickedComponent()).getValue().toString(), 0, 0, shape);
-				addProperty(((Label)event.getClickedComponent()).getValue().toString(), Configuration.getInstance().getTarget());
-			} else {
-				cytographer.addNode(((Label)event.getClickedComponent()).getValue().toString(), 0, 0, shape);
+				cytographer.addNode(pref+"."+label, 0, 0, shape);
+				addProperty(label, Configuration.getInstance().getSource());
+				break;
 			}
+			case TARGET : {
+				String pref = Configuration.getInstance().getTarget().var.replaceAll("\\?", "");
+				cytographer.addNode(pref+"."+label, 0, 0, shape);
+				addProperty(label, Configuration.getInstance().getTarget());
+				break;
+			}
+			default :
+					cytographer.addNode(label, 0, 0, shape);
+			}
+
 			cyNetworkView.applyLayout(new ForceDirectedLayout());		
 			cytographer.fitToView();
 			// repaint

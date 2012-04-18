@@ -13,9 +13,7 @@ import com.google.gwt.event.dom.client.DoubleClickHandler;
 
 public class VOperator extends VNode  implements DoubleClickHandler{ 
 	
-	private String value1 = "1";
-	private String value2 = "2";
-	
+
 	protected final Text textShape1;
 	protected final Text textShape2;
 
@@ -23,9 +21,9 @@ public class VOperator extends VNode  implements DoubleClickHandler{
 		super(cytographer,graph,shape,name,style);	
 		addDoubleClickHandler(this);
 		
-		textShape1 = new Text(0,0, value1);
+		textShape1 = new Text(0,0, "");
 		textShape1.setStrokeOpacity(0);
-		textShape2 = new Text(0,0, value2);
+		textShape2 = new Text(0,0, "");
 		textShape2.setStrokeOpacity(0);
 		
 		VOperator.setStyle(style, textShape1);
@@ -50,30 +48,24 @@ public class VOperator extends VNode  implements DoubleClickHandler{
 		textShape2.setText(value2);
 	}
 	public String getValue1(){
-		return value1;
+		return textShape1.getText();
 	}
 	public String getValue2(){
-		return value2;
+		return textShape2.getText();
 	}
 	@Override
 	public void onDoubleClick(DoubleClickEvent event) {
-		final int x = event.getX();
-		final int y = event.getY();
-		String[] values = new String[5];
-		values[0] = this.getName();
-		values[1] = this.getX()+"";
-		values[2] = this.getY()+"";
-		values[3] = this.value1;
-		values[4] = this.value2;
-		
-		cytographer.doubleClick(values);	
-	
+//		final int x = event.getX();
+//		final int y = event.getY();
+		cytographer.doubleClick(new String[]{getName(), getX()+"", getY()+"", getValue1(), getValue2()});		
 	}	
 	@Override
 	public void moveNode(final float x, final float y) {
-		textShape1.setX((int)x);
-		textShape2.setX((int)x);
+
+		textShape1.setX((int)(x-textShape1.getTextWidth()/2));
 		textShape1.setY((int)y+textShape.getFontSize()*2);
+				
+		textShape2.setX((int)(x-textShape2.getTextWidth()/2));
 		textShape2.setY((int)y+textShape.getFontSize()*2+textShape1.getFontSize());
 		super.moveNode(x, y);
 	}

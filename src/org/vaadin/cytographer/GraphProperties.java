@@ -1,4 +1,4 @@
-package org.vaadin.cytographer.model;
+package org.vaadin.cytographer;
 
 import giny.model.Edge;
 import giny.model.Node;
@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import lombok.Getter;
+import lombok.Setter;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Level;
@@ -33,34 +35,35 @@ public class GraphProperties {
 		logger.setLevel(Level.OFF);
 	}
 
-	private final String title;
+	@Getter private final String title;
 
-	private CyNetwork cyNetwork;
-	private CyNetworkView cyNetworkView;
+	@Getter @Setter private CyNetwork cyNetwork;
+	@Getter @Setter private CyNetworkView cyNetworkView;
 
-	private final List<Integer> edges, nodes;
+	@Getter private final List<Integer> edges, nodes;
+	
 	private final Map<String, List<Object>> nodeMetadata = new HashMap<>();
+	
 	public enum Shape {
 		SOURCE,TARGET, METRIC, OPERATOR
 	}
 	private Map<Integer, Shape> shapes = new HashMap<Integer, Shape>();
 
-	private final Set<String> selectedNodes = new HashSet<>();
-	private final Set<String> selectedEdges = new HashSet<>();
+	@Getter private final Set<String> selectedNodes = new HashSet<>();
+	@Getter private final Set<String> selectedEdges = new HashSet<>();
 
 	private final Map<String, Edge> edgeMap = new HashMap<String, Edge>();
 	private final Map<Node, List<Edge>> nodeToEdgesMap = new HashMap<>();
 
-	private int width, height, cytoscapeViewWidth, cytoscapeViewHeight;
-	
-	private int zoomFactor = 0;
-	private double nodeSize = -1;
+	@Getter @Setter private int width, height, cytoscapeViewWidth, cytoscapeViewHeight;	
+	@Getter @Setter private int zoomFactor = 0;
+	@Getter @Setter private double nodeSize = -1;
 
-	private int maxX = Integer.MIN_VALUE, minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, maxY = Integer.MIN_VALUE;
+	@Getter private int maxX = Integer.MIN_VALUE, minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, maxY = Integer.MIN_VALUE;
 
-	private boolean useFitting = false;
-	private boolean textsVisible = false;
-	private boolean styleOptimization = false;
+	@Getter @Setter private boolean useFitting = false;
+	@Getter @Setter private boolean textsVisible = false;
+	@Getter @Setter private boolean styleOptimization = false;
 
 	public GraphProperties(final CyNetwork network, final CyNetworkView finalView, final String p_title) {
 		cyNetwork = network;
@@ -72,7 +75,7 @@ public class GraphProperties {
 		contructNodeToEdgesMap();
 	}
 	public void setNodeMetadata(String node, List<Object> data){
-		this.nodeMetadata.put(node, data);	
+		nodeMetadata.put(node, data);	
 	}
 	public List<Object> getNodeMetadata(String node){
 		List<Object> value =  nodeMetadata.get(node);
@@ -102,110 +105,6 @@ public class GraphProperties {
 		edges.add(e);
 	}
 
-	public int getWidth() {
-		return width;
-	}
-
-	public void setWidth(final int width) {
-		this.width = width;
-	}
-
-	public int getHeight() {
-		return height;
-	}
-
-	public void setHeight(final int height) {
-		this.height = height;
-	}
-
-	public double getNodeSize() {
-		return nodeSize;
-	}
-
-	public void setNodeSize(final double nodeSize) {
-		this.nodeSize = nodeSize;
-	}
-
-	public boolean isStyleOptimization() {
-		return styleOptimization;
-	}
-
-	public void setStyleOptimization(final boolean styleOptimization) {
-		this.styleOptimization = styleOptimization;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public CyNetwork getNetwork() {
-		return cyNetwork;
-	}
-
-	public List<Integer> getEdges() {
-		return edges;
-	}
-
-	public List<Integer> getNodes() {
-		return nodes;
-	}
-
-	public int getMaxX() {
-		return maxX;
-	}
-
-	public int getMinX() {
-		return minX;
-	}
-
-	public int getMinY() {
-		return minY;
-	}
-
-	public int getMaxY() {
-		return maxY;
-	}
-
-	public int getCytoscapeViewWidth() {
-		return cytoscapeViewWidth;
-	}
-
-	public void setCytoscapeViewWidth(final int cytoscapeViewWidth) {
-		this.cytoscapeViewWidth = cytoscapeViewWidth;
-	}
-
-	public int getCytoscapeViewHeight() {
-		return cytoscapeViewHeight;
-	}
-
-	public void setCytoscapeViewHeight(final int cytoscapeViewHeight) {
-		this.cytoscapeViewHeight = cytoscapeViewHeight;
-	}
-
-	public boolean isUseFitting() {
-		return useFitting;
-	}
-
-	public void setFitting(final boolean b) {
-		useFitting = b;
-	}
-
-	public boolean isTextsVisible() {
-		return textsVisible;
-	}
-
-	public void setTextVisible(final boolean b) {
-		textsVisible = b;
-	}
-
-	public void setNetwork(final CyNetwork network) {
-		this.cyNetwork = network;
-	}
-
-	public void setFinalView(final CyNetworkView finalView) {
-		this.cyNetworkView = finalView;
-	}
-
 	public void measureDimensions() {
 		for (final int ei : edges) {
 			final int x1 = (int) cyNetworkView.getNodeView(cyNetwork.getEdge(ei).getSource()).getXPosition();
@@ -226,26 +125,6 @@ public class GraphProperties {
 		}
 		cytoscapeViewWidth = maxX - minX;
 		cytoscapeViewHeight = maxY - minY;
-	}
-
-	public int getZoomFactor() {
-		return zoomFactor;
-	}
-
-	public void setZoomFactor(final int zoomFactor) {
-		this.zoomFactor = zoomFactor;
-	}
-
-	public CyNetworkView getFinalView() {
-		return cyNetworkView;
-	}
-
-	public Set<String> getSelectedNodes() {
-		return selectedNodes;
-	}
-
-	public Set<String> getSelectedEdges() {
-		return selectedEdges;
 	}
 
 	public void addSelectedNode(final String n) {
@@ -288,9 +167,8 @@ public class GraphProperties {
 		CyNode node = cyNetwork.addNode(Cytoscape.getCyNode(id, true));			
 		cyNetworkView.addNodeView(node.getRootGraphIndex()).setXPosition(x);
 		cyNetworkView.addNodeView(node.getRootGraphIndex()).setYPosition(y);
-		nodes.add(node.getRootGraphIndex());
-		
-		shapes.put(node.getRootGraphIndex(), shape);
+		nodes.add(Integer.valueOf(node.getRootGraphIndex()));		
+		shapes.put(Integer.valueOf(node.getRootGraphIndex()), shape);
 	}
 	
 	public  Shape getShapes(final String id){
@@ -313,9 +191,10 @@ public class GraphProperties {
 			cyNetwork.removeNode(node.getRootGraphIndex(), true);
 			selectedNodes.remove(node.getIdentifier());
 			nodes.remove(Integer.valueOf(node.getRootGraphIndex()));
-		} else {
+			shapes.remove(Integer.valueOf(node.getRootGraphIndex()));
+			nodeMetadata.remove(id);			
+		} else 
 			throw new IllegalStateException("Node not found " + id);
-		}
 	}
 
 	public void createAnEdge(String nodeA, String nodeB, String attribute) {

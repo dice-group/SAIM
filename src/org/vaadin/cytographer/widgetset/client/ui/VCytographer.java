@@ -6,14 +6,9 @@ import java.util.Set;
 
 import org.vaadin.gwtgraphics.client.DrawingArea;
 import org.vaadin.gwtgraphics.client.Line;
-import org.vaadin.gwtgraphics.client.VectorObject;
 import org.vaadin.gwtgraphics.client.shape.Circle;
-import org.vaadin.gwtgraphics.client.shape.Text;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
@@ -27,20 +22,15 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
-import com.google.gwt.i18n.client.NumberFormat;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
 
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.VConsole;
 
 public class VCytographer extends Composite implements 
-Paintable, ClickHandler,// DoubleClickHandler,
-MouseDownHandler, MouseUpHandler, 
+Paintable, ClickHandler,MouseDownHandler, MouseUpHandler, 
 MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 	
 	private static final double ZOOM_DOWN = 0.90;
@@ -81,7 +71,7 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 	 * then handle any initialization relevant to Vaadin.
 	 */
 	public VCytographer() {
-				
+		
 		panel = new FocusPanel();
 		panel.setSize(graphWidth + "px", graphHeight + "px");
 		panel.addKeyDownHandler(this);
@@ -91,7 +81,6 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 		canvas.addKeyDownHandler(this);
 		canvas.addKeyUpHandler(this);
 		canvas.addMouseMoveHandler(this);
-		//canvas.addDoubleClickHandler(this);
 		canvas.addMouseUpHandler(this);
 		canvas.addMouseDownHandler(this);
 		canvas.addClickHandler(this);
@@ -131,11 +120,12 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 			style.setTextsVisible(uidl.getBooleanAttribute("texts"));
 			graph.updateGraphProperties(style);
 //			paintGraph();
-		} else if ("SET_OPTIMIZED_STYLES".equals(operation))
-			graph.paintGraph();
-		else if ("UPDATE_NODE".equals(operation)) {
+		} 
+//		else if ("SET_OPTIMIZED_STYLES".equals(operation))
+//			graph.paintGraph();
+//		else if ("UPDATE_NODE".equals(operation)) {
 //			graph.updateNode(uidl, uidl.getStringAttribute("node"));
-		}
+//		}
 		else if ("SET_ZOOM".equals(operation)) 
 			setZoom(uidl.getIntAttribute("zoom"));
 		else if ("REFRESH".equals(operation)) 
@@ -153,6 +143,7 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 		style.parseGeneralStyleAttributesFromUidl(uidl);
 		initializeCanvas();
 		graph.repaintGraph(uidl);
+		graph.moveGraph(0, 0);
 	}
 
 	private void refresh(final UIDL uidl) {
@@ -194,12 +185,11 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 		if (selectionBox.isSelectionBoxVisible()) {
 			selectionBox.drawSelectionBox(canvas, currentX, currentY);
 		} else if (graph.getMovedShape() != null) {
-			final VNode moved = graph.getMovedShape();
-			moved.moveNode(currentX, currentY);
+			graph.getMovedShape().moveNode(currentX, currentY);
 		} else if (onLink) {
-			if (linkLine != null) {
+			if (linkLine != null) 
 				canvas.remove(linkLine);
-			}
+			
 			linkLine = getLinkLine(currentX, currentY);
 			canvas.add(linkLine);
 		} else if (onMove && event.getSource().equals(canvas)) {
@@ -220,12 +210,10 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 	}
 
 	private void extractSelection() {
-		final int x1 = selectionBox.getSelectionBoxStartX();
-		final int y1 = selectionBox.getSelectionBoxStartY();
-		if (selectionBox.isSelectionBoxVisible()) {
-			final int x2 = x1 + selectionBox.getWidth();
-			final int y2 = y1 + selectionBox.getHeight();
-			selectNodesAndEdgesInTheBox(x1, y1, x2, y2);
+		if (selectionBox.isSelectionBoxVisible()){
+			final int x = selectionBox.getSelectionBoxStartX();
+			final int y = selectionBox.getSelectionBoxStartY();
+			selectNodesAndEdgesInTheBox(x, y, x + selectionBox.getWidth(), y + selectionBox.getHeight());
 		}
 	}
 
@@ -240,12 +228,10 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 			if (isInArea(node.getX(), node.getY(), startX, startY, endX, endY)) 
 				graph.setNodeSelected(node, true);
 			
-		
-		for (final VEdge edge : graph.getSelectedEdges()) {
-			if (graph.getSelectedShapes().contains(edge.getFirstNode()) && graph.getSelectedShapes().contains(edge.getSecondNode())) {
+		for (final VEdge edge : graph.getSelectedEdges()) 
+			if (graph.getSelectedShapes().contains(edge.getFirstNode()) && graph.getSelectedShapes().contains(edge.getSecondNode())) 
 				graph.setEdgeSelected(edge, true);
-			}
-		}
+		
 		nodeOrEdgeSelectionChanged();
 	}
 
@@ -310,40 +296,35 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 	public void onMouseWheel(final MouseWheelEvent event) {
 		final int delta = event.getDeltaY();
 		if (currentKeyModifiers.contains(KeyCodes.KEY_ALT)) {
-			if (delta < 0) {
+			if (delta < 0) 
 				rotate(0.05);
-			} else if (delta > 0) {
+			else if (delta > 0) 
 				rotate(-0.05);
-			}
 		} else {
-			if (delta < 0) {
+			if (delta < 0) 
 				zoom(ZOOM_UP);
-			} else if (delta > 0) {
+			 else if (delta > 0) 
 				zoom(ZOOM_DOWN);
-			}
 		}
-//		paintGraph();
 	}
 
 	private void rotate(final double delta) {
 		for (final VNode n : graph.getPaintedShapes()) {
-			final float newX = (float) ((n.getX() - centerX) * Math.cos(delta) - (n.getY() - centerY) * Math.sin(delta)) + centerX;
-			final float newY = (float) ((n.getX() - centerX) * Math.sin(delta) + (n.getY() - centerY) * Math.cos(delta)) + centerY;
-			n.setX(newX);
-			n.setY(newY);
+			final float x = (float) ((n.getX() - centerX) * Math.cos(delta) - (n.getY() - centerY) * Math.sin(delta)) + centerX;
+			final float y = (float) ((n.getX() - centerX) * Math.sin(delta) + (n.getY() - centerY) * Math.cos(delta)) + centerY;
+			n.moveNode(x,y);
 			graph.updateEdges(n, false);
 		}
 		angle += delta;
 	}
 
 	private void setZoom(final int newZoomFactor) {
-		if (newZoomFactor > zoomFactor) {
+		if (newZoomFactor > zoomFactor) 
 			for (int i = 0; i < newZoomFactor - zoomFactor; i++) 
 				zoom(ZOOM_UP);			
-		}else {
+		else
 			for (int i = 0; i < zoomFactor - newZoomFactor; i++) 
 				zoom(ZOOM_DOWN);
-		}
 	}
 
 	private void zoom(final double factor) {
@@ -353,9 +334,9 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 			zoomFactor++;
 		
 		for (final VNode n : graph.getPaintedShapes()) {
-			n.setX((float) ((n.getX() - centerX) * factor) + centerX);
-			n.setY((float) ((n.getY() - centerY) * factor) + centerY);
-
+			
+			n.moveNode(((float) ((n.getX() - centerX) * factor) + centerX),((float) ((n.getY() - centerY) * factor) + centerY));
+			
 			if (n.getView() instanceof Circle) {
 				/*
 				 * if (delta > 1) { ((Circle) n.getView()).setRadius((((Circle)
@@ -380,15 +361,6 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 			removeSelectionBox();
 		currentKeyModifiers.clear();
 	}
-
-//	@Override
-//	public void onDoubleClick(final DoubleClickEvent event) {
-//		final int x = event.getX();
-//		final int y = event.getY();
-//		final VNode node = VNode.createANode(x, y, this, graph, style);
-//		graph.addNode(node);
-//		applicationConnection.updateVariable(paintableId, "createdANode", new Object[] { node.getName(), x, y }, true);
-//		}
 
 	public void removeMenu() {
 		if (currentMenu != null) {

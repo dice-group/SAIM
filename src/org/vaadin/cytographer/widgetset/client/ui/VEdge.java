@@ -71,15 +71,15 @@ public class VEdge extends Line implements ClickHandler {
 	// static method to make an edge
 	public static VEdge createAnEdge(final UIDL child, final VCytographer cytographer, final VGraph graph, final String name, final VNode node1, final VNode node2, final VVisualStyle style) {
 		
-		String str = "";
-		if (name.indexOf("(") != -1 && name.indexOf(")") != -1)
-			str = name.substring(name.indexOf("(") + 1, name.indexOf(")"));
+//		String str = "";
+//		if (name.indexOf("(") != -1 && name.indexOf(")") != -1)
+//			str = name.substring(name.indexOf("(") + 1, name.indexOf(")"));
 		
-		final Text text = new Text((int) (node1.getX() + node2.getX()) / 2, (int) (node1.getY() + node2.getY()) / 2, str);
+		final Text text = new Text((int) (node1.getX() + node2.getX()) / 2, (int) (node1.getY() + node2.getY()) / 2, name);
 		text.setFontSize(style.getEdgeFontSize());
 		text.setFontFamily(style.getFontFamily());
 		text.setStrokeOpacity(0);
-		text.setFillOpacity(1);
+		text.setFillOpacity(style.getFillOpacity());
 		text.setFillColor(style.getEdgeLabelColor());
 		
 		final VEdge edge = new VEdge(cytographer, graph, node1, node2, text, name);
@@ -100,16 +100,7 @@ public class VEdge extends Line implements ClickHandler {
 		}
 		return edge;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+		
 	//getter setter
 	public VNode getFirstNode() {
 		return node1;
@@ -147,6 +138,4 @@ public class VEdge extends Line implements ClickHandler {
 	public String getName() {
 		return name;
 	}
-
-
 }

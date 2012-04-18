@@ -200,6 +200,7 @@ implements ContextListener, MouseDownHandler, MouseUpHandler, MouseMoveHandler, 
 		setX(x);
 		setY(y);
 		graph.updateEdges(this, true);
+
 	}
 
 	@Override
@@ -257,7 +258,7 @@ implements ContextListener, MouseDownHandler, MouseUpHandler, MouseMoveHandler, 
 
 	@Override
 	public Command[] getCommands() {
-		return commandMap.values().toArray(new Command[2]);
+		return commandMap.values().toArray(new Command[3]);
 	}
 
 	@Override
