@@ -173,27 +173,26 @@ public class SPARQLHelper
 		}
 		subQuery+="}";
 		logger.info("May execute: "+subQuery);
-		
-		
-		return resultSetToList(querySelect(PrefixHelper.addPrefixes(subQuery), endpoint, graph));	
-		/*
-		String query = "\nSELECT ?s ?p "+//(COUNT(?s) AS ?count)\n"+
-		//		"FROM "+wrapIfNecessary(graph)+"\n"+
-				"WHERE { ?s rdf:type "+className+".\n"+
-			    "	?s ?p ?o\n"+
-			//	"} GROUP BY ?p \n"+
-			//    "ORDER BY DESC(?count)";
-			"} LIMIT 30";
-		Logger.getLogger("SAIM").info("Query "+endpoint+" with query:\n"+query);
-		ResultSet rs = querySelect(PrefixHelper.addPrefixes(query), endpoint, graph);
-		List<String> props = new Vector<String>();
-		while(rs.hasNext()) {
-			QuerySolution qS = rs.next();
-			if(!props.contains(qS.get("?p").toString()))
-				props.add(qS.get("?p").toString());
+		if(subList.size()>0) {return resultSetToList(querySelect(PrefixHelper.addPrefixes(subQuery), endpoint, graph));}	
+		else {
+			String query = "\nSELECT ?s ?p "+//(COUNT(?s) AS ?count)\n"+
+			//		"FROM "+wrapIfNecessary(graph)+"\n"+
+					"WHERE { ?s rdf:type "+className+".\n"+
+				    "	?s ?p ?o\n"+
+				//	"} GROUP BY ?p \n"+
+				//    "ORDER BY DESC(?count)";
+				"} LIMIT 30";
+			Logger.getLogger("SAIM").info("Query "+endpoint+" with query:\n"+query);
+			ResultSet rs = querySelect(PrefixHelper.addPrefixes(query), endpoint, graph);
+			List<String> props = new Vector<String>();
+			while(rs.hasNext()) {
+				QuerySolution qS = rs.next();
+				if(!props.contains(qS.get("?p").toString()))
+					props.add(qS.get("?p").toString());
+			}
+			return props;
 		}
-		return props;
-//		return resultSetToList(querySelect(PrefixHelper.addPrefixes(query), endpoint, graph));		*/
+//		return resultSetToList(querySelect(PrefixHelper.addPrefixes(query), endpoint, graph));		
 	}
 	
 	//
