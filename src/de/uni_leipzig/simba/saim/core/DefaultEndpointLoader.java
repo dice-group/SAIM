@@ -30,6 +30,7 @@ public class DefaultEndpointLoader
 		defaults.put("Dailymed", createKBInfo("http://www4.wiwiss.fu-berlin.de/dailymed/sparql", "", 1000, "dailymed"));
 		defaults.put("Drugbank", createKBInfo("http://www4.wiwiss.fu-berlin.de/drugbank/sparql", "", 1000, "drugbank"));
 		defaults.put("Sider", createKBInfo("http://www4.wiwiss.fu-berlin.de/sider/sparql", "", 1000, "sider"));
+		defaults.put("Bibbase", createKBInfo("http://data.bibbase.org:2020/sparql", "", 300, "bibbase"));
 		return defaults;
 	}
 }
