@@ -73,7 +73,7 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 						progress.setValue(1f);
 						progressLabel.setValue(Messages.getString("ExecutionPanel.mappingperformed")); //$NON-NLS-1$
 						SAIMApplication appl = (SAIMApplication) getApplication();
-						InstanceMappingTable iT = new InstanceMappingTable(m);
+						InstanceMappingTable iT = new InstanceMappingTable(m, lR.getSourceCache(), lR.getTargetCache());
 //						DetailedInstanceMappingTable iT = new DetailedInstanceMappingTable(m,lR.getSourceCache(),lR.getTargetCache());
 						ResultPanel results = new ResultPanel(iT);
 						appl.showComponent(results);					

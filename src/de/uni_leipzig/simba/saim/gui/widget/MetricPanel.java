@@ -386,21 +386,13 @@ class AccordionLayoutClickListener implements LayoutClickListener{
 	private void addProperty(String s, KBInfo info) {
 		Logger logger = Logger.getLogger("SAIM");
 		logger.info("Add Property "+s+" to KBInfo "+info.id+" "+info.var);
-		info.properties.add(s);
-
-		info.functions.put(s, "");
-		if(!PrefixHelper.abbreviate(s).equals(s)) {
-			info.prefixes.put(PrefixHelper.getPrefix(s), PrefixHelper.getURI(PrefixHelper.getPrefix(s)));
-			logger.info(info.var+": adding property: "+s+" with prefix "+PrefixHelper.getPrefix(s)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefix(s)));
-		} else {
-			if(!s.startsWith("http:")) {
-				logger.info(info.var+": adding property: "+s+" with prefix "+PrefixHelper.getPrefix(s)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefix(s)));
-				info.prefixes.put(PrefixHelper.getPrefix(s), PrefixHelper.getURI(PrefixHelper.getPrefix(s)));
-			} else {
-				logger.info("Unknown prefix...Should not happen...");
-			}
-			
-		}
-
+	
+		s = PrefixHelper.expand(s);
+	
+		
+		PrefixHelper.generatePrefix(s);
+		String base = PrefixHelper.getBase(s);
+		info.prefixes.put(PrefixHelper.getPrefix(base), PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
+		logger.info(info.var+": adding property: "+s+" with prefix "+PrefixHelper.getPrefix(base)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
 	}
 }

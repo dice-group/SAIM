@@ -12,29 +12,42 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.event.MouseEvents.ClickEvent;
+import com.vaadin.event.MouseEvents.ClickListener;
+import com.vaadin.terminal.ClassResource;
+import com.vaadin.terminal.FileResource;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Embedded;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
+import com.vaadin.ui.Window;
 
+import de.uni_leipzig.simba.cache.HybridCache;
 import de.uni_leipzig.simba.data.Instance;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.saim.Messages;
+import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.InstanceMatch;
+import de.uni_leipzig.simba.saim.gui.widget.panel.InstanceInfoPanel;
 
 public class InstanceMappingTable implements Serializable
 {
 	private static final long serialVersionUID	= 4443146911119590775L;
+	final HybridCache sourceCache;
+	final HybridCache targetCache;
 	final Mapping data;
 	final List <InstanceMatch> dataList = new LinkedList<InstanceMatch>();
 	
 	BeanItemContainer<InstanceMatch> beanItemContainer;
 	Table t;
 	// TODO:  t.setColumnCollapsingAllowed(true);
-	public InstanceMappingTable(Mapping m)
+	public InstanceMappingTable(Mapping m, HybridCache sourceCache, HybridCache targetCache)
 	{
 		data = m;
-		
+		this.sourceCache=sourceCache;
+		this.targetCache=targetCache;
 		for(String uri1 : data.map.keySet())
 			for(Entry<String, Double> uri2 : data.map.get(uri1).entrySet())
 			{dataList.add(new InstanceMatch(uri1, uri2.getKey(), uri2.getValue()));}
@@ -86,6 +99,18 @@ public class InstanceMappingTable implements Serializable
                 return checkBox;
             }
         });
+		// add column to display addition info
+		t.addGeneratedColumn("info",new Table.ColumnGenerator() {			
+			@Override
+			public Object generateCell(Table source, Object itemId, Object columnId) {
+				final InstanceMatch bean = (InstanceMatch) itemId;
+				ClassResource cRes = new ClassResource("../../../../icons/emblem-notice.png", SAIMApplication.getInstance());
+				Embedded image = new Embedded("",
+						cRes);
+				image.addListener(new InfoIconClickListener(bean));
+				return image;
+			}
+		});
 		// add column for source uri
 		t.addGeneratedColumn(Messages.getString("InstanceMappingTable.sourceuri"), new Table.ColumnGenerator() { //$NON-NLS-1$
 			  @Override
@@ -111,7 +136,7 @@ public class InstanceMappingTable implements Serializable
 			  }
 			});
 		t.setColumnReorderingAllowed(true);
-		t.setVisibleColumns(new Object[] {Messages.getString("InstanceMappingTable.sourceuri"), Messages.getString("InstanceMappingTable.targeturi"), Messages.getString("value"), Messages.getString("InstanceMappingTable.isamatch")}); 
+		t.setVisibleColumns(new Object[] {"info", Messages.getString("InstanceMappingTable.sourceuri"), Messages.getString("InstanceMappingTable.targeturi"), Messages.getString("value"), Messages.getString("InstanceMappingTable.isamatch")}); 
 		// Allow selecting items from the table.
 		t.setSelectable(true);
 		// Send changes in selection immediately to server.
@@ -142,5 +167,25 @@ public class InstanceMappingTable implements Serializable
 	 */
 	public Mapping getMapping() {
 		return data;
+	}
+	
+	/**Listener reacts on clicks on the info image*/
+	class InfoIconClickListener implements ClickListener {
+		InstanceMatch row; 
+		public InfoIconClickListener(InstanceMatch row) {this.row = row;}
+		@Override
+		public void click(ClickEvent event) {
+			
+			Instance i1 = sourceCache.getInstance(row.getOriginalUri1());
+			Instance i2 = targetCache.getInstance(row.getOriginalUri2());
+			if(i1!=null && i2 != null) {
+				Window sub = new Window();
+				Panel p = new InstanceInfoPanel(i1, i2);
+				sub.setWidth(p.getWidth()+2f, p.getWidthUnits());
+				sub.addComponent(p);
+				SAIMApplication.getInstance().getMainWindow().addWindow(sub);
+				}
+		}
+		
 	}
 }
