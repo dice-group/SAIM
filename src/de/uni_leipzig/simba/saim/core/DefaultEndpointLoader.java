@@ -30,6 +30,10 @@ public class DefaultEndpointLoader
 		defaults.put("Dailymed", createKBInfo("http://www4.wiwiss.fu-berlin.de/dailymed/sparql", "", 1000, "dailymed"));
 		defaults.put("Drugbank", createKBInfo("http://www4.wiwiss.fu-berlin.de/drugbank/sparql", "", 1000, "drugbank"));
 		defaults.put("Sider", createKBInfo("http://www4.wiwiss.fu-berlin.de/sider/sparql", "", 1000, "sider"));
+		
+		defaults.put("Wiktionary", createKBInfo("http://wiktionary.dbpedia.org/sparql", "", 1000, "wiktionary"));
+		defaults.put("WordNet 3.0 (VU Amsterdam)", createKBInfo("http://api.talis.com/stores/wordnet/services/sparql", "", 1000, "wordnet"));
+		defaults.put("WordNet (RKBExplorer)", createKBInfo("http://wordnet.rkbexplorer.com/sparql/", "", 1000, "wordnet"));
 		return defaults;
 	}
 }

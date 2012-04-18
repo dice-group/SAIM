@@ -169,11 +169,11 @@ public class Configuration
 		String t_abr=PrefixHelper.abbreviate(targetProp);
 		Logger.getLogger("SAIM").info("Adding Property Match: "+s_abr+" - "+t_abr);
 		source.properties.add(s_abr);
-		source.prefixes.put(PrefixHelper.getPrefixFromURI(s_abr), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
+		source.prefixes.put(PrefixHelper.getBase(s_abr), PrefixHelper.getURI(PrefixHelper.getBase(s_abr)));
 		source.functions.put(s_abr, "lowercase");
 		//		System.out.println("Adding source property: "+s_abr+"::::"+PrefixHelper.getPrefixFromURI(s_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
 		target.properties.add(t_abr);
-		target.prefixes.put(PrefixHelper.getPrefixFromURI(t_abr), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(t_abr)));
+		target.prefixes.put(PrefixHelper.getBase(t_abr), PrefixHelper.getURI(PrefixHelper.getBase(t_abr)));
 		target.functions.put(s_abr, "lowercase");
 		//		System.out.println("Adding target property: "+t_abr+"::::"+PrefixHelper.getPrefixFromURI(t_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(t_abr)));
 		this.propertyMapping.addStringPropertyMatch(s_abr, t_abr);

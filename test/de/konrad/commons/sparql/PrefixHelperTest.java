@@ -27,6 +27,22 @@ import org.junit.Test;
 public class PrefixHelperTest
 {
 	@Test
+	public void testAddPrefix()
+	{
+		PrefixHelper.addPrefix("elephants","http://elephants.org/");
+		assertTrue(PrefixHelper.getPrefix("http://elephants.org/").equals("elephants"));
+	}
+
+	@Test
+	public void testGeneratePrefix()
+	{
+		PrefixHelper.generatePrefix("http://zebras.org/ontology/NormalZebra");
+		assertTrue(PrefixHelper.getPrefix("http://zebras.org/ontology/")!=null);
+		assertTrue(PrefixHelper.getPrefix("http://lamas.org/ontology/")==null);
+	}
+
+	
+	@Test
 	public void testGetPrefix()
 	{
 		assertTrue(PrefixHelper.getPrefix("http://dbpedia.org/ontology/").equals("dbo"));

@@ -1,44 +1,87 @@
 package de.konrad.commons.sparql;
 
+import static de.konrad.commons.sparql.PrefixHelper.LazyLoaded.prefixToURI;
+import static de.konrad.commons.sparql.PrefixHelper.LazyLoaded.uriToPrefix;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import static de.konrad.commons.sparql.PrefixHelper.LazyLoaded.*;
+import java.util.Random;
 /** @author Konrad Höffner */
 public class PrefixHelper
 {
-	//final static File prefixCSV = new File("config/prefixes.csv");
-	// public static final PrefixHelper INSTANCE = new PrefixHelper(new File("config/prefix.csv"));
-
-	// no bidirectional map as the there may be multiple prefixes for the same URI
-	// in this case uriToPrefix contains the most common prefix 
-	
 	protected static class LazyLoaded
 	{
 		static final Map<String,String> prefixToURI;
 		static final Map<String,String> uriToPrefix;
 		static
 		{
-			Map<String,String> prefixToURIInit = new HashMap<String,String>();
-			Map<String,String> uriToPrefixInit = new HashMap<String,String>();
+			prefixToURI = new HashMap<String,String>();
+			uriToPrefix = new HashMap<String,String>();
 
 			for(String[] prefix : prefixArray)
 			{
-				prefixToURIInit.put(prefix[0], prefix[1]);
+				prefixToURI.put(prefix[0], prefix[1]);
 				// file is sorted by popularity of the prefix in descending order
 				// in case of conflicts we want the most popular prefix
-				if(!uriToPrefixInit.containsKey(prefix[1])) {uriToPrefixInit.put(prefix[1],prefix[0]);}
+				if(!uriToPrefix.containsKey(prefix[1])) {uriToPrefix.put(prefix[1],prefix[0]);}
 			}
-			prefixToURI = Collections.unmodifiableMap(prefixToURIInit);
-			uriToPrefix = Collections.unmodifiableMap(uriToPrefixInit);
+		}
+	}
+	//final static File prefixCSV = new File("config/prefixes.csv");
+	// public static final PrefixHelper INSTANCE = new PrefixHelper(new File("config/prefix.csv"));
+
+	// no bidirectional map as the there may be multiple prefixes for the same URI
+	// in this case uriToPrefix contains the most common prefix 
+
+	/** Adds a new prefix to the PrefixHelper (not persistent). Threadsafe.
+	 * @param prefix the abbreviated url, example "dbo"
+	 * @param uri the url to abbreviate, e.g. "http://dbpedia.org/ontology/
+	 */
+	public static void addPrefix(String prefix, String uri)
+	{
+		synchronized(LazyLoaded.prefixToURI)
+		{
+			synchronized(LazyLoaded.uriToPrefix)
+			{
+				LazyLoaded.prefixToURI.put(prefix,uri);
+				LazyLoaded.uriToPrefix.put(uri,prefix);
+			}
 		}
 	}
 
-	public static String addPrefixes(String query)
+	/** Generated an unused prefix for a uri if there is none and add it to the PrefixHelper (not persistent).
+	 * @param fullURI the full uri, for example "http://dbpedia.org/resource/Elephant"*/
+	public static void generatePrefix(String fullURI)
 	{
+		String base = getBase(fullURI);
+		if(getPrefix(base)!=null) {return;} // already existing
+		// try to generate something meaningful
+		String prefix = base.replace("http://","").split("[\\./#]")[0];
+ 		if(base.length()<fullURI.length()) base+=fullURI.charAt(base.length()); // include "/" and "#" sign 
+		if(prefix.isEmpty()||getPrefixes().containsKey(prefix))
+		{
+			// didn't work, just generate something
+			prefix  = "prefix"+base.hashCode();			
+		}
+		if(prefix.isEmpty()||getPrefixes().containsKey(prefix))
+		{
+			Random random = new Random();
+			// this loop should almost never ever be entered
+			do
+			{
+				prefix  = "prefix"+random.nextLong();
+			}
+			while(prefix.isEmpty()||getPrefixes().containsKey(prefix)); 
+		}
+		addPrefix(prefix,base);
+	}
+
+	public static String addPrefixes(String query)
+	{		
 		return formatPrefixes(restrictPrefixes(getPrefixes(),query))+query;
 	}
-	
+
 	/** returns only the subset of the given prefixes that is referenced in the query  */
 	public static Map<String,String> restrictPrefixes(Map<String,String> prefixes, String query)
 	{
@@ -49,10 +92,10 @@ public class PrefixHelper
 		}
 		return restrictedPrefixes;
 	}
-	
+
 	public static Map<String,String> getPrefixes()
 	{
-		return prefixToURI;
+		return Collections.unmodifiableMap(prefixToURI);
 	}
 
 	public static String getPrefix(String uri)
@@ -76,15 +119,15 @@ public class PrefixHelper
 	}
 
 	/** @param uri a URI, either in expanded form like "http://dbpedia.org/ontology/Settlement" or in abbreviated form like "dbo:Settlement".
-	 * @return the prefix (first part) of the URI. The prefix of "http://dbpedia.org/ontology/Settlement" is "http://dbpedia.org/ontology/", for example.
+	 * @return the base (first part) of the URI. The base of "http://dbpedia.org/ontology/Settlement" is "http://dbpedia.org/ontology/", for example.
 	 */
-	public static String getPrefixFromURI(String uri)
+	public static String getBase(String uri)
 	{
 		int baseURIEnd = Math.max(Math.max(uri.lastIndexOf('#'),uri.lastIndexOf('/')),uri.lastIndexOf(':'));
 		if(baseURIEnd==-1) {return uri;}
 		return uri.substring(0, baseURIEnd);
 	}
-	
+
 	public static String abbreviate(String uri)
 	{
 		if(!uri.startsWith("http://")) return uri;
@@ -139,9 +182,9 @@ public class PrefixHelper
 	//	}
 
 	// init from string, better for gwt which does not allow file reading on client
-	
-	
-	
+
+
+
 
 	//	public PrefixHelper(File file)
 	//	{
@@ -694,7 +737,7 @@ public class PrefixHelper
 		{"agents","http://eulersharp.sourceforge.net/2003/03swap/agent#"},
 		{"nndsr","http://semanticdiet.com/schema/usda/nndsr/"},
 		{"agent","http://eulersharp.sourceforge.net/2003/03swap/agent#"},
-	//	{"#porn","???"},
+		//	{"#porn","???"},
 		{"elog","http://eulersharp.sourceforge.net/2003/03swap/log-rules#"},
 		{"malignneo","http://www.agfa.com/w3c/2009/malignantNeoplasm#"},
 		{"clineva","http://www.agfa.com/w3c/2009/clinicalEvaluation#"},

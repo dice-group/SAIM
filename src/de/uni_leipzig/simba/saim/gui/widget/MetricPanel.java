@@ -281,12 +281,12 @@ public class MetricPanel extends Panel
 			// add all properties
 			for(String s : sourceProps) {
 				Configuration.getInstance().getSource().properties.add(s);
-				Configuration.getInstance().getSource().prefixes.put(PrefixHelper.getPrefixFromURI(s), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s)));
+				Configuration.getInstance().getSource().prefixes.put(PrefixHelper.getBase(s), PrefixHelper.getURI(PrefixHelper.getBase(s)));
 				Configuration.getInstance().getSource().functions.put(s, "");
 			}
 			for(String s : targetProps) {
 				Configuration.getInstance().getTarget().properties.add(s);
-				Configuration.getInstance().getTarget().prefixes.put(PrefixHelper.getPrefixFromURI(s), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s)));
+				Configuration.getInstance().getTarget().prefixes.put(PrefixHelper.getBase(s), PrefixHelper.getURI(PrefixHelper.getBase(s)));
 				Configuration.getInstance().getTarget().functions.put(s, "");
 			}
 			// run selfconfig
@@ -383,8 +383,8 @@ class AccordionLayoutClickListener implements LayoutClickListener{
 	
 	private void addProperty(String s, KBInfo info) {
 		info.properties.add(s);
-		info.prefixes.put(PrefixHelper.getPrefixFromURI(s), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s)));
+		info.prefixes.put(PrefixHelper.getBase(s), PrefixHelper.getURI(PrefixHelper.getBase(s)));
 		info.functions.put(s, "");
-		Logger.getLogger("SAIM").info(info.var+": adding property: "+s+" with prefix "+PrefixHelper.getPrefixFromURI(s)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s)));
+		Logger.getLogger("SAIM").info(info.var+": adding property: "+s+" with prefix "+PrefixHelper.getBase(s)+" - "+PrefixHelper.getURI(PrefixHelper.getBase(s)));
 	}
 }
