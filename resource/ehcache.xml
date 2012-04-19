@@ -11,11 +11,12 @@
 		eternal="true"
         maxElementsInMemory="100">
 </cache>
-<!-- <cache name="propertymapping"
+<cache name="propertymapping"
  diskPersistent="true"
 		eternal="true"
         maxElementsInMemory="1000">
 </cache>
+<!-- 
 <cache name="metric"
  diskPersistent="true"
 		eternal="true"

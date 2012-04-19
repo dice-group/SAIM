@@ -2,10 +2,16 @@ package de.uni_leipzig.simba.saim.gui.widget.panel;
 
 import java.awt.Color;
 import java.awt.Shape;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
 
 import org.apache.log4j.Logger;
 import org.vaadin.cytographer.Cytographer;
@@ -55,6 +61,7 @@ public class MetricPanel extends Panel
 {
 	ManualMetricForm manualMetricForm;
 	private static final long	serialVersionUID	= 6766679517868840795L;
+	private static final boolean CACHING = true;
 	Mapping propMapping;
 	VerticalLayout mainLayout = new VerticalLayout();
 	HorizontalLayout layout = new HorizontalLayout();
@@ -62,6 +69,9 @@ public class MetricPanel extends Panel
 	Set<String> sourceProps = new HashSet<String>();
 	Set<String> targetProps = new HashSet<String>();
 
+	Cache cache = null;
+	final static Logger logger = Logger.getLogger("SAIM");
+	
 	Button selfconfig;
 	Cytographer cytographer;
 	CyNetworkView cyNetworkView;
@@ -224,24 +234,65 @@ public class MetricPanel extends Panel
 //	}
 	
 	private void getAllProps() {
-		//for source
-		KBInfo info = Configuration.getInstance().getSource();
+		Configuration config = Configuration.getInstance();
+		List<String> propListSource = null;
+		List<String> propListTarget = null;
+		KBInfo info = config.getSource();
 		String className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
-		List<String> propList = SPARQLHelper.properties(info.endpoint, info.graph, className);
-		Logger.getLogger("SAIM").info("Got "+propList.size()+ " source props");
-		for(String prop : propList) {
-			PrefixHelper.generatePrefix(prop);
+		if(CACHING) {
+			cache = CacheManager.getInstance().getCache("propertymapping");
+//			if(cache.getStatus()==net.sf.ehcache.Status.STATUS_UNINITIALISED) {cache.initialise();}					
+			List<Object> parameters = Arrays.asList(new Object[] {info.endpoint, info.graph, className});
+			try{
+				if(cache.isKeyInCache(parameters))
+				{		
+					propListSource = (List<String>) cache.get(parameters).getValue();
+					logger.info("Property List Cache hit: "+info.endpoint);
+				}
+			} catch(Exception e){logger.info("PropertyMapping cache exception:"+e.getMessage());}
+			if(propListSource == null || propListSource.size()==0) {
+				propListSource = SPARQLHelper.properties(info.endpoint, info.graph, className);
+				cache.put(new Element(parameters, propListSource));
+				cache.flush();	
+			}
+			// target
+			info = config.getTarget();
+			className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
+			parameters = Arrays.asList(new Object[] {info.endpoint, info.graph, className});
+			try{
+				if(cache.isKeyInCache(parameters))
+				{		
+					propListTarget = (List<String>) cache.get(parameters).getValue();
+					logger.info("Property List Cache hit: "+info.endpoint);
+				}
+			} catch(Exception e){logger.info("PropertyMapping cache exception:"+e.getMessage());}
+			if(propListTarget == null || propListTarget.size()==0) {
+				propListTarget = SPARQLHelper.properties(info.endpoint, info.graph, className);
+				if(cache.getStatus()==net.sf.ehcache.Status.STATUS_UNINITIALISED) {cache.initialise();}					
+				cache.put(new Element(parameters, propListTarget));
+				cache.flush();	
+			}
+			
+		}
+		else {
+			info = config.getSource();
+			className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
+			propListSource = SPARQLHelper.properties(info.endpoint, info.graph, className);
+			Logger.getLogger("SAIM").info("Got "+propListSource.size()+ " source props");
+			info = config.getTarget();
+			className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
+			propListTarget = SPARQLHelper.properties(info.endpoint, info.graph, className);
+			Logger.getLogger("SAIM").info("Got "+propListTarget.size()+ " target props");
+		}
+		for(String prop : propListSource) {
 			String s_abr=PrefixHelper.abbreviate(prop);
 			sourceProps.add(s_abr);
 		}
-		//for target
-		info = Configuration.getInstance().getTarget();
-		className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
-		for(String prop : SPARQLHelper.properties(info.endpoint, info.graph, className)) {
+		
+		for(String prop : propListTarget) {
 			String s_abr=PrefixHelper.abbreviate(prop);
 			targetProps.add(s_abr);
-		}	
-		//enable selfconfig
+		}
 		selfconfig.setEnabled(true);
 	}
 

@@ -9,6 +9,7 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
+import org.apache.log4j.Logger;
 import org.vaadin.jonatan.contexthelp.ContextHelp;
 
 import com.github.wolfie.refresher.Refresher;
@@ -41,7 +42,7 @@ public class ClassMatchingPanel extends Panel
 	public ClassMatchingForm sourceClassForm;
 	public ClassMatchingForm targetClassForm;
 	Cache cache = null;
-	
+	static Logger logger = Logger.getLogger("SAIM");
 	public void close()
 	{
 		if(cache != null)
@@ -124,14 +125,13 @@ public class ClassMatchingPanel extends Panel
 								classMatching = new Mapping();
 								
 								classMatching.map = ((HashMap<String,HashMap<String,Double>>) cache.get(parameters).getValue());
-								System.out.println("loading map of size "+classMatching.map.size());
-								System.out.println("cache hit");
+								logger.info("Class Mapping Cache hit: "+"loading map of size "+classMatching.map.size());
 							}
 						}catch(Exception e){}
 					}									
 					if(classMatching==null)
 					{
-						System.out.println("cache miss");
+						logger.info("Class Mapping Cache miss.");
 						classMatching = classMapper.getMappingClasses(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id);
 						if(CACHING)
 						{
