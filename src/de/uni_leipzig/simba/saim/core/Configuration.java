@@ -40,6 +40,7 @@ public class Configuration
 	protected KBInfo source = null;
 	protected KBInfo target = null;
 	protected String metricExpression;
+	public boolean isLocal  = false;
 
 	protected PropertyMapping propertyMapping = new PropertyMapping(); 
 
@@ -76,7 +77,9 @@ public class Configuration
 		logger.info("Successfully parsed metric from config reader: "+metric);
 		acceptanceThreshold = cR.acceptanceThreshold;
 		verificationThreshold = cR.verificationThreshold;
-		granularity = cR.granularity;		
+		granularity = cR.granularity;
+		if(source.type.equalsIgnoreCase("CSV") || target.type.equalsIgnoreCase("CSV"))
+			this.isLocal = true;
 		changes.firePropertyChange(SETTING_CONFIG, null, this);
 	}
 

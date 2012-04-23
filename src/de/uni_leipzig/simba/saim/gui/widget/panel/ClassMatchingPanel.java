@@ -36,7 +36,7 @@ import de.uni_leipzig.simba.saim.util.SortedMapping;
 @SuppressWarnings("serial")
 public class ClassMatchingPanel extends Panel
 {	
-	protected static final boolean CACHING	= true;
+	public static final boolean CACHING	= true;
 	Configuration config = Configuration.getInstance();
 	final ComboBox suggestionComboBox = new ComboBox();
 	public ClassMatchingForm sourceClassForm;

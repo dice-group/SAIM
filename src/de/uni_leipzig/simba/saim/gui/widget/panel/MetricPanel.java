@@ -235,6 +235,19 @@ public class MetricPanel extends Panel
 	
 	private void getAllProps() {
 		Configuration config = Configuration.getInstance();
+		if(config.isLocal) {
+			selfconfig.setEnabled(true);
+			for(String prop : config.getSource().properties) {
+				String s_abr=PrefixHelper.abbreviate(prop);
+				sourceProps.add(s_abr);
+			}
+			
+			for(String prop : config.getTarget().properties) {
+				String s_abr=PrefixHelper.abbreviate(prop);
+				targetProps.add(s_abr);
+			}
+			return;
+		}
 		List<String> propListSource = null;
 		List<String> propListTarget = null;
 		KBInfo info = config.getSource();
@@ -340,73 +353,36 @@ public class MetricPanel extends Panel
 		}
 		@Override
 		public void buttonClick(ClickEvent event) {
-			/* add all properties
-			for(String s : sourceProps) {
-				Configuration.getInstance().getSource().properties.add(s);
-				Configuration.getInstance().getSource().prefixes.put(PrefixHelper.getBase(s), PrefixHelper.getURI(PrefixHelper.getBase(s)));
-				Configuration.getInstance().getSource().functions.put(s, "");
-			}
-			for(String s : targetProps) {
-				Configuration.getInstance().getTarget().properties.add(s);
-				Configuration.getInstance().getTarget().prefixes.put(PrefixHelper.getBase(s), PrefixHelper.getURI(PrefixHelper.getBase(s)));
-				Configuration.getInstance().getTarget().functions.put(s, "");
-			}*/
-			// run selfconfig
 			l.removeAllComponents();
-			Refresher refresher = new Refresher();
-			SelfConfigRefreshListener listener = new SelfConfigRefreshListener();
-			refresher.addListener(listener);
-			addComponent(refresher);
+			l.addComponent(new SelfConfigPanel(l));
+//			Refresher refresher = new Refresher();
+//			SelfConfigRefreshListener listener = new SelfConfigRefreshListener();
+//			refresher.addListener(listener);
+//			addComponent(refresher);
+//
+//			final ProgressIndicator indicator = new ProgressIndicator();
+//			indicator.setCaption("Progress");
+//			l.addComponent(indicator);
+//			indicator.setImmediate(true);
 
-			final ProgressIndicator indicator = new ProgressIndicator();
-			indicator.setCaption("Progress");
-			l.addComponent(indicator);
-			indicator.setImmediate(true);
-
-			final Panel stepPanel = new Panel("Starting self configuration");
-			l.addComponent(stepPanel);
-
-			new Thread() {
-				public void run() {
-
-					float steps = 5f;
-					indicator.setValue(new Float(1f/steps));
-					indicator.requestRepaint();
-					stepPanel.setCaption("Getting source cache...");
-					HybridCache sourceCache = HybridCache.getData(Configuration.getInstance().getSource());
-					indicator.setValue(new Float(2f/steps));
-					indicator.requestRepaint();
-					stepPanel.setCaption("Getting target cache...");
-					HybridCache targetCache = HybridCache.getData(Configuration.getInstance().getTarget());
-					indicator.setValue(new Float(3f/steps));
-					stepPanel.setCaption("Performing self configuration...");
-					MeshBasedSelfConfigurator bsc = new MeshBasedSelfConfigurator(sourceCache, targetCache, 0.6, 0.5);
-					List<SimpleClassifier> cp = bsc.getBestInitialClassifiers();						
-					indicator.setValue(new Float(4f/steps));
-					stepPanel.setCaption("Performed self configuration:");
-					for(SimpleClassifier cl : cp) {
-						System.out.println(cl);
-					}
-
-				}
-			}.start();
 		}			
 	}
-
-/**Listener for the selfconfig button*/
-public class SelfConfigRefreshListener implements RefreshListener
-	{
-		boolean running = true; 
-		private static final long serialVersionUID = -8765221895426102605L;		    
-		@Override 
-		public void refresh(final Refresher source)	{
-			if(!running) {
-				removeComponent(source);
-				source.setEnabled(false);
-			}
-		}
-	}
 }
+//
+///**To enable refreshing while multithreading*/
+//public class SelfConfigRefreshListener implements RefreshListener
+//	{
+//		boolean running = true; 
+//		private static final long serialVersionUID = -8765221895426102605L;		    
+//		@Override 
+//		public void refresh(final Refresher source)	{
+//			if(!running) {
+//				removeComponent(source);
+//				source.setEnabled(false);
+//			}
+//		}
+//	}
+//}
 /**Listener to react on clicks in the accordion panel.*/
 class AccordionLayoutClickListener implements LayoutClickListener{
 

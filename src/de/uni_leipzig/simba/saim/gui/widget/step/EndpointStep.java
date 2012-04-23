@@ -24,19 +24,22 @@ public class EndpointStep implements WizardStep
 	@Override
 	public boolean onAdvance()
 	{
-		if(panel.kbISource.isValid() && panel.kbITarget.isValid())
-		{
-			// Proceed
-			Configuration config = Configuration.getInstance();
-			KBInfo source = panel.kbISource.getKBInfo();
-			source.var = "?src";
-			KBInfo target = panel.kbITarget.getKBInfo();
-			target.var = "?dest";
-			config.setSourceEndpoint(source);
-			config.setTargetEndpoint(target);
-			//panel.getWindow().showNotification(source + "\n\n" + target);
+		Configuration config = Configuration.getInstance();
+		if(config.isLocal)
 			return true;
-		}
+		else
+			if(panel.kbISource.isValid() && panel.kbITarget.isValid())
+			{
+				// Proceed			
+				KBInfo source = panel.kbISource.getKBInfo();
+				source.var = "?src";
+				KBInfo target = panel.kbITarget.getKBInfo();
+				target.var = "?dest";
+				config.setSourceEndpoint(source);
+				config.setTargetEndpoint(target);
+				//panel.getWindow().showNotification(source + "\n\n" + target);
+				return true;
+			}
 		return false;
 	}
 

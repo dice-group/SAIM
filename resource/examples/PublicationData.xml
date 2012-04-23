@@ -27,7 +27,7 @@
 		<TYPE>CSV</TYPE>
 	</TARGET>
 	
-	<METRIC>ADD(0.6*jaccard(x.title,y.title)|0.5,0.6*cosine(x.authors,y.authors)|0.5)|0.5</METRIC>
+	<METRIC>jaccard(x.title,y.title)|0.5</METRIC>
 	<ACCEPTANCE>
 		<THRESHOLD>0.6047183264539443</THRESHOLD>
 		<FILE>pub_accepted.txt</FILE>
