@@ -42,7 +42,7 @@ public class Configuration
 	protected String metricExpression;
 	public boolean isLocal  = false;
 
-	protected PropertyMapping propertyMapping = new PropertyMapping(); 
+	public PropertyMapping propertyMapping = new PropertyMapping(); 
 
 	public String getMetricExpression() {return metricExpression;}
 	public void setMetricExpression(String metricExpression) {	this.metricExpression = metricExpression;}

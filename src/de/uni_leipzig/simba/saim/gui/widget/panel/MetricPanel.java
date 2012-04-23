@@ -346,7 +346,7 @@ public class MetricPanel extends Panel
 		return false;
 	}
 	/**Listener for SelfConfig button.*/
-	public class SelfConfigClickListener implements Button.ClickListener {
+	public static class SelfConfigClickListener implements Button.ClickListener {
 		Layout l;
 		public SelfConfigClickListener(Layout l) {
 			this.l=l;

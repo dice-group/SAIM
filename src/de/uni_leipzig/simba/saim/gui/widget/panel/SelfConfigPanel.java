@@ -10,11 +10,13 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ProgressIndicator;
+import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
 
 import de.uni_leipzig.simba.cache.HybridCache;
+import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.selfconfig.MeshBasedSelfConfigurator;
 import de.uni_leipzig.simba.selfconfig.SimpleClassifier;
@@ -30,6 +32,9 @@ public class SelfConfigPanel extends Panel{
 	Panel resultPanel;
 	Button nextRound;
 	Button generateMetrik;
+	Select resultSelect = new Select();
+
+	
 	/**
 	 * Constructor to may embed Panel in a parent component, e.g. an existing WizardStep Component.
 	 * @param parentComponent
@@ -62,6 +67,34 @@ public class SelfConfigPanel extends Panel{
 		stepPanel.setCaption("Starting self configuration");
 		mainLayout.addComponent(stepPanel);
 
+		resultSelect.setCaption("Computed classifiers");
+		resultSelect.setNullSelectionAllowed(false);
+		
+
+		mainLayout.removeComponent(indicator);
+		mainLayout.removeComponent(stepPanel);
+		resultPanel = new Panel();
+		mainLayout.addComponent(resultPanel);
+		// Buttons
+		VerticalLayout resultLayout = new VerticalLayout();
+		HorizontalLayout buttonLayout = new HorizontalLayout();
+		resultLayout.addComponent(resultSelect);
+		resultLayout.addComponent(buttonLayout);
+		resultPanel.setContent(resultLayout);		
+		nextRound = new Button("Compute next round");
+		nextRound.addListener(new NextRoundButtonClickListener());
+		generateMetrik = new Button("Generate Metric");
+		generateMetrik.addListener(new GenerateMetricButtonClickListener(mainLayout));
+		buttonLayout.addComponent(nextRound);
+		buttonLayout.addComponent(generateMetrik);
+		
+		performSelfConfiguration();
+	}
+	
+	/**
+	 * PerformsSelfConfiguration
+	 */
+	protected void performSelfConfiguration() {
 		new Thread() {
 			public void run() {
 
@@ -87,28 +120,20 @@ public class SelfConfigPanel extends Panel{
 			}
 		}.start();
 	}
+	
 	/**
 	 * Method to show results after initialization.
 	 */
 	private void showResults() {
-		String outString  = "";
-		System.out.println("Computed classifiers:");
+		Configuration config = Configuration.getInstance();
 		for(SimpleClassifier cl : classifiers) {
-			System.out.println(cl);
-			outString +=cl.toString()+"<\br>";
+			resultSelect.addItem(cl);
+			resultSelect.select(cl);
+			config.addPropertiesMatch(cl.sourceProperty, cl.targetProperty);
 		}
-		mainLayout.removeComponent(indicator);
-		mainLayout.removeComponent(stepPanel);
-		resultPanel = new Panel();
-		mainLayout.addComponent(resultPanel);
-		// Buttons
-		HorizontalLayout buttonLayout = new HorizontalLayout();
-		resultPanel.setCaption(outString);
-		resultPanel.setContent(buttonLayout);		
-		nextRound = new Button("Compute next round");
-		generateMetrik = new Button("Generate Metric");
+		
 		if(classifiers.isEmpty())
-			generateMetrik.setEnabled(false);
+			generateMetrik.setEnabled(false);		
 		
 		
 	}
@@ -127,21 +152,38 @@ public class SelfConfigPanel extends Panel{
 	}
 	
 	/**Implements Listener for generateMetrik Button*/
-	class generateMetricButtonClickListener implements Button.ClickListener {
-
+	class GenerateMetricButtonClickListener implements Button.ClickListener {
+		Layout l;
+		public GenerateMetricButtonClickListener(Layout content) {
+			l = content;
+		}
+		
 		@Override
 		public void buttonClick(ClickEvent event) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-		private String generateMetric() {
+			SimpleClassifier cl = (SimpleClassifier) resultSelect.getValue();
+			String metric = generateMetric(cl);
+			System.out.println(metric + " >= "+cl.threshold);
+			Configuration.getInstance().setMetricExpression(metric);
+			Configuration.getInstance().setAcceptanceThreshold(cl.threshold);
+			l.removeAllComponents();
+			l.addComponent(new ExecutionPanel());
+		}		
+		private String generateMetric(SimpleClassifier cl) {
+			KBInfo source=Configuration.getInstance().getSource();
+			KBInfo target=Configuration.getInstance().getTarget();
 			String metric = "";
-			for(SimpleClassifier cl : classifiers) {
-				
-			}
+			
+			metric += cl.measure+"("+source.var.replaceAll("\\?", "")+"."+cl.sourceProperty;
+			metric +=","+target.var.replaceAll("\\?", "")+"."+cl.targetProperty+")";
 			return metric;
-		}
-		
+		}		
+	}
+	/**Controls Action taken by nextRound Button.*/
+	class NextRoundButtonClickListener implements Button.ClickListener {
+		@Override
+		public void buttonClick(ClickEvent event) {
+			classifiers = bsc.learnClassifer(classifiers);
+			showResults();
+		}		
 	}
 }

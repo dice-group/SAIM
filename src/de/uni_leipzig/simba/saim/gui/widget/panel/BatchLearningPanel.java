@@ -30,7 +30,7 @@ public class BatchLearningPanel extends MetricLearnPanel {
 		param.put("generations", 50);
 		param.put("mutationRate", 0.5f);
 		param.put("preserveFittest",true);
-		param.put("propertyMapping", null);
+		param.put("propertyMapping", config.propertyMapping);
 		param.put("trainingDataSize", 20);
 		param.put("granularity", 2);
 		param.put("config", config.getLimesConfiReader());

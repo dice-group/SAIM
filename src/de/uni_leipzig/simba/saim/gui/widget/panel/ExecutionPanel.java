@@ -2,12 +2,15 @@ package de.uni_leipzig.simba.saim.gui.widget.panel;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.Table;
@@ -29,6 +32,7 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 	//Button showResults;
 	Button startActiveLearning;
 	Button startBatchLearning;
+	Button startSelfConfig;
 	Layout mainLayout = new VerticalLayout();
 	
 	@SuppressWarnings("serial")
@@ -58,6 +62,7 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 //			}
 //		});
 //		
+		mainLayout.addComponent(showPropertyMatching());
 		
 		start = new Button(Messages.getString("ExecutionPanel.startmapping")); //$NON-NLS-1$
 		start.addListener(new ClickListener() {			
@@ -95,6 +100,11 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 				appl.showComponent(new BatchLearningPanel());
 			}
 		});
+		startSelfConfig = new Button("Start self configuration");
+		
+		startSelfConfig.addListener(new MetricPanel.SelfConfigClickListener(mainLayout));
+		
+		
 		setWidth("100%"); //$NON-NLS-1$
 		this.setContent(mainLayout);
 		mainLayout.addComponent(progressLabel);
@@ -102,6 +112,7 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 		mainLayout.addComponent(start);
 		mainLayout.addComponent(startActiveLearning);
 		mainLayout.addComponent(startBatchLearning);
+		mainLayout.addComponent(startSelfConfig);
 	}	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
@@ -114,5 +125,38 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 			progress.setValue(newV/maxSteps);
 			progress.requestRepaint();
 		}
+	}
+	
+	private Panel showPropertyMatching() {
+		Panel p = new Panel();
+		if(!Configuration.getInstance().propertyMapping.wasSet()) {
+			p.setContent(new Panel("No Property Mapping defined."));
+		} else {
+			p.setCaption("Property Mapping");
+			VerticalLayout panelLayout = new VerticalLayout();
+			p.setContent(panelLayout);
+		
+			ListSelect stringSelect = new ListSelect("String properties");
+			stringSelect.setNullSelectionAllowed(false);
+			stringSelect.setRows(Configuration.getInstance().propertyMapping.getStringPropMapping().map.size());
+			for(Entry<String, HashMap<String, Double>> entry : Configuration.getInstance().propertyMapping.getStringPropMapping().map.entrySet()) {
+				for(String t : entry.getValue().keySet()) {
+					stringSelect.addItem(entry.getKey() +" - "+t);
+				}
+			}
+			ListSelect numberSelect = new ListSelect("NumberProperty");
+			numberSelect.setNullSelectionAllowed(false);
+			numberSelect.setRows(Configuration.getInstance().propertyMapping.getNumberPropMapping().map.size());
+			for(Entry<String, HashMap<String, Double>> entry : Configuration.getInstance().propertyMapping.getNumberPropMapping().map.entrySet()) {
+				for(String t : entry.getValue().keySet()) {
+					numberSelect.addItem(entry.getKey() +" - "+t);
+				}
+			}
+			if(Configuration.getInstance().propertyMapping.getStringPropMapping().size>0)
+				panelLayout.addComponent(stringSelect);
+			if(Configuration.getInstance().propertyMapping.getNumberPropMapping().size>0)
+				panelLayout.addComponent(numberSelect);
+		}
+		return p;
 	}
 }

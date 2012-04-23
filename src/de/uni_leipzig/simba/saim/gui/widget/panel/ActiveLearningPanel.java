@@ -47,7 +47,7 @@ public class ActiveLearningPanel extends MetricLearnPanel
 		param.put("generations", 50);
 		param.put("mutationRate", 0.5f);
 		param.put("preserveFittest",true);
-		param.put("propertyMapping", null);
+		param.put("propertyMapping", config.propertyMapping);
 		param.put("trainingDataSize", 10);
 		param.put("granularity", 2);
 		param.put("config", config.getLimesConfiReader());
