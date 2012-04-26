@@ -11,6 +11,23 @@ import de.uni_leipzig.simba.saim.core.metric.Property.Origin;
 
 public class NodeTest
 {
+	
+	String[] testMetrics = {"jaccard(x.dc:title,y.dc:title)",
+			"trigrams(x.dc:title,y.dc:title)",
+			"trigrams(x.dc:title,y.dc:title)|0.6",
+			"ADD(0.6*jaccard(x.dc:title,y.dc:title)|0.5,0.6*cosine(x.authors,y.authors)|0.5)|0.5",
+			};
+	@Test
+	public void testMetricParsing() {
+		for(String s : testMetrics) {
+			System.out.println("testing: "+s);
+			Output o = MetricParser.parse(s,"x");
+			System.out.println("parsed : "+o);	
+			assertTrue(o.toString().equals(s));
+			assertTrue(o.isComplete());
+		}
+		String s = "ADD(0.6*jaccard(x.dc:title,y.dc:title)|0.5,0.6*cosine(x.authors,y.authors)|0.5)|0.5";	
+	}
 	@Test
 	public void testSplitFunc()
 	{
@@ -23,11 +40,6 @@ public class NodeTest
 	@Test
 	public void testParse()
 	{
-		String s = "ADD(0.6*jaccard(x.dc:title,y.dc:title)|0.5,0.6*cosine(x.authors,y.authors)|0.5)|0.5";
-		System.out.println(s);
-		System.out.println(MetricParser.parse(s,"x"));
-	//	assertTrue(MetricParser.parse(s,"x").toString().equalsIgnoreCase(s));
-		
 		Output o = new Output();
 		Measure m = new Measure("trigrams");
 		o.addChild(m);
@@ -68,4 +80,5 @@ public class NodeTest
 		assertTrue(o3.addChild(o1));
 		assertFalse(o1.isComplete());
 	}
+
 }
