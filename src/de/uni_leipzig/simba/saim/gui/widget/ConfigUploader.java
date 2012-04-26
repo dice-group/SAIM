@@ -23,6 +23,7 @@ import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.panel.ExecutionPanel;
 
+@SuppressWarnings("serial")
 public class ConfigUploader extends CustomComponent 
 implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver{
 
@@ -30,12 +31,11 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver{
 	private Panel root;
 	private File file;
 	private ConfigReader cR = new ConfigReader();
-	private Button proceed = new Button(Messages.getString("executefile"));
-	private NativeSelect localExamples = new NativeSelect("Local examples");
-	private Button run_def = new Button("run example");
+	private Button executeFileButton = new Button(Messages.getString("executefile"));
+	private NativeSelect localExamplesSelect = new NativeSelect(Messages.getString("localexamples"));
+	private Button runExampleButton = new Button(Messages.getString("runexample"));
 	private static final String DEFAULT_LIMES_XML = "examples/dbpedia-linkedmdb.xml";
 
-	@SuppressWarnings("serial")
 	public ConfigUploader() {
 		root = new Panel("limesupload");
 		root.setWidth("100%");
@@ -48,8 +48,8 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver{
 		upload.addListener((Upload.FailedListener) this);
 		root.getContent().addComponent(upload);
 		//add Button to proceed
-		proceed.setEnabled(false);
-		proceed.addListener(new Button.ClickListener() {			
+		executeFileButton.setEnabled(false);
+		executeFileButton.addListener(new Button.ClickListener() {			
 			@Override
 			public void buttonClick(ClickEvent event) {
 				Configuration config = Configuration.getInstance();
@@ -59,7 +59,7 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver{
 				appl.getMainWindow().requestRepaintAll();
 			}
 		});       
-		root.getContent().addComponent(proceed);
+		root.getContent().addComponent(executeFileButton);
 		buildLocalExamplesSelection();
 	}
 
@@ -71,7 +71,7 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver{
 		try {
 			// Open the file for writing.
 			fos = new FileOutputStream(file);
-			proceed.setEnabled(false);
+			executeFileButton.setEnabled(false);
 		} catch (final java.io.FileNotFoundException e) {
 			// Error while opening the file. Not reported here.
 			e.printStackTrace();
@@ -95,7 +95,7 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver{
 				+ "' uploaded."));		
 		if(isValidFile(file))
 		{
-			proceed.setEnabled(true);
+			executeFileButton.setEnabled(true);
 		}
 	}
 
@@ -111,25 +111,23 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver{
 	}
 
 	
-	/**
-	 * Method to add components to run local examples: for testing e.g. learner or execution.
-	 */
+	/** Method to add components to run local examples: for testing e.g. learner or execution.*/
 	private void buildLocalExamplesSelection() {
 		HorizontalLayout subLayout = new HorizontalLayout();
-		subLayout.addComponent(localExamples);
-		subLayout.addComponent(run_def);
+		subLayout.addComponent(localExamplesSelect);
+		subLayout.addComponent(runExampleButton);
 		
-		localExamples.addItem("examples/PublicationData.xml");
-		localExamples.addItem(DEFAULT_LIMES_XML);
-		localExamples.select(DEFAULT_LIMES_XML);
+		localExamplesSelect.addItem("examples/PublicationData.xml");
+		localExamplesSelect.addItem(DEFAULT_LIMES_XML);
+		localExamplesSelect.select(DEFAULT_LIMES_XML);
 		// Button to run a default spec locally
-		run_def.addListener(new Button.ClickListener() {			
+		runExampleButton.addListener(new Button.ClickListener() {			
 			@Override
 			public void buttonClick(ClickEvent event) {
 				Configuration config = Configuration.getInstance();
 				ConfigReader cR = new ConfigReader();
 				InputStream inStream;
-				inStream = getClass().getClassLoader().getResourceAsStream(""+localExamples.getValue());
+				inStream = getClass().getClassLoader().getResourceAsStream(""+localExamplesSelect.getValue());
 				cR.validateAndRead(inStream);
 				// setting location of limes.dtd
 				// set paths to source and target
@@ -155,5 +153,4 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver{
 		});
 		root.getContent().addComponent(subLayout);
 	}
-	
 }

@@ -34,6 +34,7 @@ import de.uni_leipzig.simba.saim.gui.widget.step.EndpointStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.ExecutionStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.MetricStep;
 
+@SuppressWarnings("serial")
 public class SAIMApplication extends Application
 {
 	private static final long	serialVersionUID	= -7665596682464881860L;
@@ -49,7 +50,6 @@ public class SAIMApplication extends Application
 	public SAIMApplication()
 	{		
 		BasicConfigurator.configure();
-		logger = Logger.getLogger("SAIM");
 		
 		application=this;
 		mainWindow = new Window(Messages.getString("title")); //$NON-NLS-1$
@@ -190,6 +190,7 @@ public class SAIMApplication extends Application
 	    }  
 	};
 
+	
 	MenuBar.Command exportLIMESCommand = new MenuBar.Command() {
 	    public void menuSelected(MenuItem selectedItem) {
 	    	sub = new Window(Messages.getString("limesdownload")); //$NON-NLS-1$

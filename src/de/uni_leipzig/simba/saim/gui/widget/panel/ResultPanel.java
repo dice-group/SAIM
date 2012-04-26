@@ -17,6 +17,7 @@ import com.vaadin.ui.Window;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.io.Serializer;
 import de.uni_leipzig.simba.io.SerializerFactory;
+import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
@@ -28,7 +29,7 @@ public class ResultPanel extends Panel{
 	Configuration config = Configuration.getInstance();
 	
 	public ResultPanel(InstanceMappingTable iT) {
-		super("Results");
+		super(Messages.getString("results")); //$NON-NLS-1$
 		this.data = iT;
 		init();
 	}
@@ -37,24 +38,24 @@ public class ResultPanel extends Panel{
 		layout = new VerticalLayout();
 		layout.setWidth("100%");
 		this.setContent(layout);
-		downloadResults = new Button("Save");
+		downloadResults = new Button(Messages.getString(Messages.getString("save"))); //$NON-NLS-1$
 		downloadResults.addListener(new DownLoadButtonClickListener());		
 		layout.addComponent(data.getTable());
 		layout.addComponent(downloadResults);
 	}
 	
 	
-	/**ClickListener for the Button to download results**/
+	/**ClickListener for the Button to download results**/	
 	class DownLoadButtonClickListener implements Button.ClickListener {
 		@Override
 		public void buttonClick(ClickEvent event) {
 			
 			Window download = new Window();
-			download.setWidth("700px");
-			download.setCaption("Download results");
-			Serializer serial = SerializerFactory.getSerializer("N3");
-			String fileName   = "";
-			fileName += config.getSource().id+"_"+config.getTarget().id+".nt";
+			download.setWidth("700px"); //$NON-NLS-1$
+			download.setCaption(Messages.getString("downloadresults")); //$NON-NLS-1$
+			Serializer serial = SerializerFactory.getSerializer("N3"); //$NON-NLS-1$
+			String fileName   = ""; //$NON-NLS-1$
+			fileName += config.getSource().id+"_"+config.getTarget().id+".nt"; //$NON-NLS-1$ //$NON-NLS-2$
 			serial.open(fileName);
 			String predicate = config.getLimesConfiReader().acceptanceRelation;
 			// print prefixes
@@ -66,7 +67,7 @@ public class ResultPanel extends Panel{
 				}
 			}
 			serial.close();
-			download.addComponent(new Link("Download linkspec",new FileResource(new File(fileName), SAIMApplication.getInstance())));
+			download.addComponent(new Link(Messages.getString("downloadlinkspec"),new FileResource(new File(fileName), SAIMApplication.getInstance()))); //$NON-NLS-1$
 			download.setModal(true);
 			getWindow().addWindow(download);
 		}

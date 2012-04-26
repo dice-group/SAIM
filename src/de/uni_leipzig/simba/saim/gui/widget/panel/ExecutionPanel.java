@@ -84,7 +84,7 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 				}.start();				
 			}
 		});
-		startActiveLearning = new Button("start active learning");
+		startActiveLearning = new Button(Messages.getString("ExecutionPanel.startactivelearning")); //$NON-NLS-1$
 		startActiveLearning.addListener(new ClickListener() {			
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -92,7 +92,7 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 				appl.showComponent(new ActiveLearningPanel());
 			}
 		});
-		startBatchLearning = new Button("start batch learning");
+		startBatchLearning = new Button(Messages.getString("ExecutionPanel.startbatchlearning")); //$NON-NLS-1$
 		startBatchLearning.addListener(new ClickListener() {			
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -100,7 +100,7 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 				appl.showComponent(new BatchLearningPanel());
 			}
 		});
-		startSelfConfig = new Button("Start self configuration");
+		startSelfConfig = new Button(Messages.getString("ExecutionPanel.startselfconfiguration")); //$NON-NLS-1$
 		
 		startSelfConfig.addListener(new MetricPanel.SelfConfigClickListener(mainLayout));
 		
@@ -130,26 +130,26 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 	private Panel showPropertyMatching() {
 		Panel p = new Panel();
 		if(!Configuration.getInstance().propertyMapping.wasSet()) {
-			p.setContent(new Panel("No Property Mapping defined."));
+			p.setContent(new Panel(Messages.getString("ExecutionPanel.nopropertymappingdefined"))); //$NON-NLS-1$
 		} else {
-			p.setCaption("Property Mapping");
+			p.setCaption(Messages.getString("ExecutionPanel.propertymapping")); //$NON-NLS-1$
 			VerticalLayout panelLayout = new VerticalLayout();
 			p.setContent(panelLayout);
 		
-			ListSelect stringSelect = new ListSelect("String properties");
+			ListSelect stringSelect = new ListSelect(Messages.getString("ExecutionPanel.stringproperties")); //$NON-NLS-1$
 			stringSelect.setNullSelectionAllowed(false);
 			stringSelect.setRows(Configuration.getInstance().propertyMapping.getStringPropMapping().map.size());
 			for(Entry<String, HashMap<String, Double>> entry : Configuration.getInstance().propertyMapping.getStringPropMapping().map.entrySet()) {
 				for(String t : entry.getValue().keySet()) {
-					stringSelect.addItem(entry.getKey() +" - "+t);
+					stringSelect.addItem(entry.getKey() +" - "+t); //$NON-NLS-1$
 				}
 			}
-			ListSelect numberSelect = new ListSelect("NumberProperty");
+			ListSelect numberSelect = new ListSelect(Messages.getString("ExecutionPanel.numberproperty")); //$NON-NLS-1$
 			numberSelect.setNullSelectionAllowed(false);
 			numberSelect.setRows(Configuration.getInstance().propertyMapping.getNumberPropMapping().map.size());
 			for(Entry<String, HashMap<String, Double>> entry : Configuration.getInstance().propertyMapping.getNumberPropMapping().map.entrySet()) {
 				for(String t : entry.getValue().keySet()) {
-					numberSelect.addItem(entry.getKey() +" - "+t);
+					numberSelect.addItem(entry.getKey() +" - "+t); //$NON-NLS-1$
 				}
 			}
 			if(Configuration.getInstance().propertyMapping.getStringPropMapping().size>0)
