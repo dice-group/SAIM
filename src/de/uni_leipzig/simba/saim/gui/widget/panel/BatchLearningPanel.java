@@ -11,6 +11,7 @@ import com.vaadin.ui.Button.ClickEvent;
 
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.genetics.learner.GeneticBatchLearner;
+import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
 
 public class BatchLearningPanel extends MetricLearnPanel {
@@ -77,13 +78,13 @@ public class BatchLearningPanel extends MetricLearnPanel {
 			
 			//iMapTable = new DetailedInstanceMappingTable(map,learner.getFitnessFunction().getSourceCache(),learner.getFitnessFunction().getTargetCache());
 			iMapTable = new InstanceMappingTable(map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache());
+			l.removeAllComponents();
+			l.addComponent(iMapTable.getTable());
+			l.removeAllComponents();
+			l.addComponent(iMapTable.getTable());
 			if (map.size()>0)
 			{
-				l.removeAllComponents();
-				l.addComponent(iMapTable.getTable());
-
-				l.removeAllComponents();
-				l.addComponent(iMapTable.getTable());
+				SAIMApplication.getInstance().getMainWindow().showNotification("Learning without additional training data");
 				terminate.setEnabled(true);	
 			}
 		}		

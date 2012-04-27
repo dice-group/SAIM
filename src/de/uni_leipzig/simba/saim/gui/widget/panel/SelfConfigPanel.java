@@ -23,7 +23,8 @@ import de.uni_leipzig.simba.selfconfig.ComplexClassifier;
 import de.uni_leipzig.simba.selfconfig.MeshBasedSelfConfigurator;
 import de.uni_leipzig.simba.selfconfig.SimpleClassifier;
 /**
- * Displays self configuration panel.
+ * Displays self configuration panel. Loads data as in Configuration specified and the runs the 
+ * MeshBasedSelfConfigurator.
  * @author Lyko
  *
  */
@@ -148,7 +149,9 @@ public class SelfConfigPanel extends Panel{
 		for(SimpleClassifier cl : classifiers) {
 			resultSelect.addItem(cl);
 			resultSelect.select(cl);
-			config.addPropertiesMatch(cl.sourceProperty, cl.targetProperty);
+			if(cl.measure.equalsIgnoreCase("euclidean")) {
+				config.addPropertiesMatch(cl.sourceProperty, cl.targetProperty);
+			}				
 		}
 		
 		if(classifiers.isEmpty())
