@@ -54,6 +54,7 @@ import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.form.ManualMetricForm;
+import de.uni_leipzig.simba.saim.gui.widget.form.PreprocessingForm;
 import de.uni_leipzig.simba.selfconfig.MeshBasedSelfConfigurator;
 import de.uni_leipzig.simba.selfconfig.SimpleClassifier;
 
@@ -237,6 +238,7 @@ public class MetricPanel extends Panel
 	private void getAllProps() {
 		Configuration config = Configuration.getInstance();
 		if(config.isLocal) {
+			logger.info("Local data - using specified properties");
 			selfconfig.setEnabled(true);
 			for(String prop : config.getSource().properties) {
 				String s_abr=PrefixHelper.abbreviate(prop);
@@ -444,7 +446,12 @@ class AccordionLayoutClickListener implements LayoutClickListener{
 		}
 		
 		info.properties.add(prop);
-		info.functions.put(prop, "");
+//		info.functions.put(prop, "");
+		//show preprocessing window
+		Window sub = new Window("Define property "+prop);
+		sub.setModal(true);
+		sub.addComponent(new PreprocessingForm(info, prop));
+		SAIMApplication.getInstance().getMainWindow().addWindow(sub);
 				
 		String base = PrefixHelper.getBase(s);
 		info.prefixes.put(PrefixHelper.getPrefix(base), PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
