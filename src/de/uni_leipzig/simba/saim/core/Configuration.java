@@ -126,6 +126,8 @@ public class Configuration
 
 	protected void fillKBElement(Element element, KBInfo kb)
 	{		
+		if(kb == null)
+			return;
 		element.getChild("ID").setText(kb.id);
 		element.getChild("ENDPOINT").setText(kb.endpoint);
 		element.getChild("PAGESIZE").setText(String.valueOf(kb.pageSize));
@@ -146,9 +148,13 @@ public class Configuration
 			Element targetElement = (Element) XPath.selectSingleNode(document,"//TARGET");
 			fillKBElement(sourceElement,source);
 			fillKBElement(targetElement,target);
+			Element metricElement = (Element) XPath.selectSingleNode(document,"//METRIC");
+			metricElement.setText(metricExpression);
 			Element acceptanceElement = (Element) XPath.selectSingleNode(document,"//ACCEPTANCE");
 			acceptanceElement.getChild("FILE").setText(source.endpoint+'-'+target.endpoint+"-accept");
+			acceptanceElement.getChild("THRESHOLD").setText(""+acceptanceThreshold);
 			Element reviewElement = (Element) XPath.selectSingleNode(document,"//REVIEW");
+			reviewElement.getChild("THRESHOLD").setText(""+verificationThreshold);
 			reviewElement.getChild("FILE").setText(source.endpoint+'-'+target.endpoint+"-review");
 
 			XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
