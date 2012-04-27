@@ -4,7 +4,9 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.FileOutputStream;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -23,7 +25,7 @@ import de.uni_leipzig.simba.saim.core.metric.Output;
 /**Class holds all configuration settings for a linking process. */
 public class Configuration
 {
-	static Logger logger = Logger.getLogger("SAIM");
+	static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 	public Output metric = null; 
 	private static Configuration instance = new Configuration();	
 	private PropertyChangeSupport changes = new PropertyChangeSupport( this ); 
@@ -170,7 +172,7 @@ public class Configuration
 	public void addPropertiesMatch(String sourceProp, String targetProp) {
 		String s_abr=PrefixHelper.abbreviate(sourceProp);
 		String t_abr=PrefixHelper.abbreviate(targetProp);
-		Logger.getLogger("SAIM").info("Adding Property Match: "+s_abr+" - "+t_abr);
+		logger.info("Adding Property Match: "+s_abr+" - "+t_abr);
 		if(!source.properties.contains(s_abr)) {
 			source.properties.add(s_abr);
 			source.prefixes.put(PrefixHelper.getBase(s_abr), PrefixHelper.getURI(PrefixHelper.getBase(s_abr)));

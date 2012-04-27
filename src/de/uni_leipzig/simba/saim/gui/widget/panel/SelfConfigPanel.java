@@ -120,7 +120,7 @@ public class SelfConfigPanel extends Panel{
 				
 				bsc = new MeshBasedSelfConfigurator(sourceCache, targetCache, 0.6, 0.5);
 				classifiers = bsc.getBestInitialClassifiers();
-				 
+				showResults();
 				indicator.setValue(new Float(4f/steps));
 				stepPanel.setCaption(Messages.getString("SelfConfigPanel.gotinitialclassifiers")); //$NON-NLS-1$
 				

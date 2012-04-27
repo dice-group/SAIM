@@ -13,7 +13,8 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vaadin.cytographer.Cytographer;
 
 import org.vaadin.cytographer.GraphProperties;
@@ -70,7 +71,7 @@ public class MetricPanel extends Panel
 	Set<String> targetProps = new HashSet<String>();
 
 	Cache cache = null;
-	final static Logger logger = Logger.getLogger("SAIM");
+	final static Logger logger = LoggerFactory.getLogger(MetricPanel.class);
 	
 	Button selfconfig;
 	Cytographer cytographer;
@@ -291,11 +292,11 @@ public class MetricPanel extends Panel
 			info = config.getSource();
 			className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
 			propListSource = SPARQLHelper.properties(info.endpoint, info.graph, className);
-			Logger.getLogger("SAIM").info("Got "+propListSource.size()+ " source props");
+			logger.info("Got "+propListSource.size()+ " source props");
 			info = config.getTarget();
 			className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
 			propListTarget = SPARQLHelper.properties(info.endpoint, info.graph, className);
-			Logger.getLogger("SAIM").info("Got "+propListTarget.size()+ " target props");
+			logger.info("Got "+propListTarget.size()+ " target props");
 		}
 		for(String prop : propListSource) {
 			String s_abr=PrefixHelper.abbreviate(prop);
@@ -432,8 +433,8 @@ class AccordionLayoutClickListener implements LayoutClickListener{
 	 * @param info KBInfo of endpoint property belongs to.
 	 */
 	private void addProperty(String s, KBInfo info) {
-		Logger logger = Logger.getLogger("SAIM");
 		String prop;
+		
 		if(s.startsWith("http:")) {//do not have a prefix, so we generate one
 			PrefixHelper.generatePrefix(s);
 			prop = PrefixHelper.abbreviate(s);
@@ -448,6 +449,6 @@ class AccordionLayoutClickListener implements LayoutClickListener{
 		String base = PrefixHelper.getBase(s);
 		info.prefixes.put(PrefixHelper.getPrefix(base), PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
 	
-		logger.info(info.var+": adding property: "+prop+" with prefix "+PrefixHelper.getPrefix(base)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
+		LoggerFactory.getLogger(AccordionLayoutClickListener.class).info(info.var+": adding property: "+prop+" with prefix "+PrefixHelper.getPrefix(base)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
 	}
 }

@@ -4,9 +4,8 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.spi.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.vaadin.teemu.wizards.Wizard;
 import org.vaadin.teemu.wizards.WizardStep;
@@ -44,12 +43,12 @@ public class SAIMApplication extends Application
 //	private GridLayout gridLayout;
 	private Wizard wizard;
 	Window sub;
-	static Logger logger;
+	static final Logger logger = LoggerFactory.getLogger(SAIMApplication.class);
 	public static Application getInstance() {return application;}
 	
 	public SAIMApplication()
 	{		
-		BasicConfigurator.configure();
+//		BasicConfigurator.configure();
 		
 		application=this;
 		mainWindow = new Window(Messages.getString("title")); //$NON-NLS-1$
