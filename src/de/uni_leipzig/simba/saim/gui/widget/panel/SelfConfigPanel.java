@@ -1,6 +1,10 @@
 package de.uni_leipzig.simba.saim.gui.widget.panel;
 
+import java.util.LinkedList;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
@@ -29,7 +33,7 @@ import de.uni_leipzig.simba.selfconfig.SimpleClassifier;
  *
  */
 public class SelfConfigPanel extends Panel{
-	
+	static final Logger logger = LoggerFactory.getLogger(SelfConfigPanel.class);
 	private Component parentComponent;
 	private Layout mainLayout;
 	MeshBasedSelfConfigurator bsc;
@@ -39,7 +43,7 @@ public class SelfConfigPanel extends Panel{
 	final Panel stepPanel = new Panel();
 	Panel resultPanel;
 //	Button nextRound;
-	Button generateMetrik;
+	Button generateMetric;
 	Select resultSelect = new Select();
 
 	
@@ -90,10 +94,11 @@ public class SelfConfigPanel extends Panel{
 		resultPanel.setContent(resultLayout);		
 //		nextRound = new Button(Messages.getString("SelfConfigPanel.nextroundbutton")); //$NON-NLS-1$
 //		nextRound.addListener(new NextRoundButtonClickListener());
-		generateMetrik = new Button(Messages.getString("SelfConfigPanel.generatemetricbutton")); //$NON-NLS-1$
-		generateMetrik.addListener(new GenerateMetricButtonClickListener(mainLayout));
+		generateMetric = new Button(Messages.getString("SelfConfigPanel.generatemetricbutton")); //$NON-NLS-1$
+		generateMetric.addListener(new GenerateMetricButtonClickListener(mainLayout));
+		generateMetric.setEnabled(false);
 //		buttonLayout.addComponent(nextRound);
-		buttonLayout.addComponent(generateMetrik);
+		buttonLayout.addComponent(generateMetric);
 		
 		performSelfConfiguration();
 	}
@@ -121,7 +126,7 @@ public class SelfConfigPanel extends Panel{
 				
 				bsc = new MeshBasedSelfConfigurator(sourceCache, targetCache, 0.6, 0.5);
 				classifiers = bsc.getBestInitialClassifiers();
-				showResults();
+				showSimpleClassifiers();
 				indicator.setValue(new Float(4f/steps));
 				stepPanel.setCaption(Messages.getString("SelfConfigPanel.gotinitialclassifiers")); //$NON-NLS-1$
 				
@@ -131,11 +136,10 @@ public class SelfConfigPanel extends Panel{
 				for(SimpleClassifier co:cc.classifiers) {
 					System.out.println(co);
 				}
-				System.out.println(cc.fMeasure);
 //				classifiers = cc.classifiers;
 				indicator.setValue(new Float(5f/steps));
-				stepPanel.setCaption(Messages.getString("SelfConfigPanel.complexclassifiercaption")+cc); //$NON-NLS-1$
-				showResults();
+				stepPanel.setCaption(Messages.getString("SelfConfigPanel.complexclassifiercaption")); //$NON-NLS-1$
+				showComplexClassifier();
 
 			}
 		}.start();
@@ -144,20 +148,29 @@ public class SelfConfigPanel extends Panel{
 	/**
 	 * Method to show results after initialization.
 	 */
-	private void showResults() {
+	private void showSimpleClassifiers() {
 		Configuration config = Configuration.getInstance();
 		for(SimpleClassifier cl : classifiers) {
 			resultSelect.addItem(cl);
 			resultSelect.select(cl);
 			if(cl.measure.equalsIgnoreCase("euclidean")) {
-				config.addPropertiesMatch(cl.sourceProperty, cl.targetProperty);
-			}				
-		}
-		
-		if(classifiers.isEmpty())
-			generateMetrik.setEnabled(false);		
-		
-		
+				logger.info("Adding number propertyMatch between: "+cl.sourceProperty +" - "+ cl.targetProperty);
+				config.addPropertiesMatch(cl.sourceProperty, cl.targetProperty, false);
+			}else {
+				config.addPropertiesMatch(cl.sourceProperty, cl.targetProperty, true);
+				logger.info("Adding string propertyMatch between: "+cl.sourceProperty +" - "+ cl.targetProperty);
+			}
+		}			
+	}
+	
+	/**Method shows complex classifier*/
+	private void showComplexClassifier() {
+		if(this.cc == null)
+			return;
+		Panel result = new Panel("Classifier: "+generateMetric(cc.classifiers, "")
+				+ " with pseudo f-measure="+cc.fMeasure);
+		stepPanel.addComponent(result);
+		generateMetric.setEnabled(true);
 	}
 	
 	/**To enable refreshing while multithreading*/
@@ -181,35 +194,58 @@ public class SelfConfigPanel extends Panel{
 		}
 		
 		@Override
-		public void buttonClick(ClickEvent event) {
-			SimpleClassifier cl = (SimpleClassifier) resultSelect.getValue();
-			String metric = generateMetric(cl);
-			System.out.println(metric + " >= "+cl.threshold); //$NON-NLS-1$
+		public void buttonClick(ClickEvent event) {			
+			if(cc.classifiers.size()==1) {
+				Configuration.getInstance().setAcceptanceThreshold(cc.classifiers.get(0).threshold);
+			}
+			String metric = generateMetric(cc.classifiers, "");
+		
 			Configuration.getInstance().setMetricExpression(metric);
-			Configuration.getInstance().setAcceptanceThreshold(cl.threshold);
+//			Configuration.getInstance().setAcceptanceThreshold(cl.threshold);
 			l.removeAllComponents();
 			l.addComponent(new ExecutionPanel());
-		}		
-		private String generateMetric(SimpleClassifier sl) {
-			KBInfo source=Configuration.getInstance().getSource();
-			KBInfo target=Configuration.getInstance().getTarget();
-			String metric = ""; //$NON-NLS-1$
-			
-			metric += sl.measure+"("+source.var.replaceAll("\\?", "")+"."+sl.sourceProperty; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-			metric +=","+target.var.replaceAll("\\?", "")+"."+sl.targetProperty+")|"+sl.threshold; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-			return metric;
 		}
+	}
+	
+	
+	/**
+	 * Generates Metric out of one SimpleClassifier
+	 * @param sl 
+	 * @return String like: <i>measure(sourceProp,targetProp)|threshold</i>
+	 */
+	private String generateMetric(SimpleClassifier sl) {
+		KBInfo source=Configuration.getInstance().getSource();
+		KBInfo target=Configuration.getInstance().getTarget();
+		String metric = ""; //$NON-NLS-1$
+		
+		metric += sl.measure+"("+source.var.replaceAll("\\?", "")+"."+sl.sourceProperty; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		metric +=","+target.var.replaceAll("\\?", "")+"."+sl.targetProperty+")|"+sl.threshold; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		return metric;
+	}
 
-//		private String generateMetric(ComplexClassifier cl) {
-//			if(cl.classifiers.size()>1) {//more than a measure
-//				String complexMetric = "AND(";
-//				complexMetric+=generateMetric(cl.classifiers.get(0))+","+generateMetric(cl.classifiers.get(1));
-//				complexMetric+=")";
-//				return complexM
-//			} else {//multiple measures
-//				return generateMetric(cl.classifiers.get(0));
-//			}
-//		}
+	/**
+	 * Recursive function to produce metric out of complex classifier.
+	 * @param sCList List of simple classifier which remain to be added.
+	 * @param expr The metric expression so far.
+	 * @return
+	 */
+	private String generateMetric(List<SimpleClassifier> sCList, String expr) {
+		if(sCList.size()==0)
+			return expr;
+		if(expr.length() == 0) {// nothing generated before
+			if(sCList.size()==1) {
+				String metric = generateMetric(sCList.get(0));
+				return metric.substring(0, metric.lastIndexOf("|"));
+			}
+			else {// recursive
+				String nestedExpr = "AND("+generateMetric(sCList.remove(0))+","+generateMetric(sCList.remove(0))+")";
+				return generateMetric(sCList, nestedExpr);
+			}
+		} else { // have to combine, recursive
+			String nestedExpr = "AND("+expr+","+generateMetric(sCList.remove(0))+")";
+			return generateMetric(sCList, nestedExpr);
+			
+		}
 	}
 //	/**Controls Action taken by nextRound Button.*/
 //	class NextRoundButtonClickListener implements Button.ClickListener {

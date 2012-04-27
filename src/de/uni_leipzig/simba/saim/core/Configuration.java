@@ -168,10 +168,9 @@ public class Configuration
 	 * @param sourceProp source property without heading variable of the KBInfo! Eg. <i>rdf:label</i> not <i>x.rdf:label</i>!
 	 * @param targetProp target property without heading variable of the KBInfo! Eg. <i>rdf:label</i> not <i>y.rdf:label</i>!
 	 */
-	public void addPropertiesMatch(String sourceProp, String targetProp) {
+	public void addPropertiesMatch(String sourceProp, String targetProp, boolean stringProps) {
 		String s_abr=PrefixHelper.abbreviate(sourceProp);
 		String t_abr=PrefixHelper.abbreviate(targetProp);
-		logger.info("Adding Property Match: "+s_abr+" - "+t_abr);
 		if(!source.properties.contains(s_abr)) {
 			source.properties.add(s_abr);
 			source.prefixes.put(PrefixHelper.getBase(s_abr), PrefixHelper.getURI(PrefixHelper.getBase(s_abr)));
@@ -181,11 +180,23 @@ public class Configuration
 		if(!target.properties.contains(t_abr)) {
 			target.properties.add(t_abr);
 			target.prefixes.put(PrefixHelper.getBase(t_abr), PrefixHelper.getURI(PrefixHelper.getBase(t_abr)));
-			target.functions.put(s_abr, "lowercase");
+			target.functions.put(t_abr, "lowercase");
 		}
-		//		System.out.println("Adding target property: "+t_abr+"::::"+PrefixHelper.getPrefixFromURI(t_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(t_abr)));
-		this.propertyMapping.addStringPropertyMatch(s_abr, t_abr);
-
+		if(stringProps) {
+			logger.info("Adding String Property Match: "+s_abr+" - "+t_abr);
+			propertyMapping.addStringPropertyMatch(s_abr, t_abr);
+			if(!source.functions.containsKey(s_abr))
+				source.functions.put(s_abr, "lowercase");
+			if(!target.functions.containsKey(t_abr))
+				target.functions.put(t_abr, "lowercase");
+		} else {
+			logger.info("Adding Number Property Match: "+s_abr+" - "+t_abr);
+			propertyMapping.addNumberPropertyMatch(s_abr, t_abr);
+			if(!source.functions.containsKey(s_abr))
+				source.functions.put(s_abr, "number");
+			if(!target.functions.containsKey(t_abr))
+				target.functions.put(t_abr, "number");
+		}
 	}
 
 	public ConfigReader getLimesConfiReader() {

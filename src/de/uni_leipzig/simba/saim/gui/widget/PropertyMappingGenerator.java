@@ -97,7 +97,7 @@ public class PropertyMappingGenerator extends Panel {
 			String targetProp = targetSelector.getValue().toString();
 			// adding Properties
 			if(sourceProp != null && sourceProp.length()>0 && targetProp != null && targetProp.length()>0 )
-				Configuration.getInstance().addPropertiesMatch(sourceProp, targetProp);
+				Configuration.getInstance().addPropertiesMatch(sourceProp, targetProp, true);
 		}		
 	}
 	
