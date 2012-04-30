@@ -221,7 +221,14 @@ public class Configuration
 		}
 		cR.prefixes.putAll(getSource().prefixes);
 		cR.prefixes.putAll(getTarget().prefixes);
-		cR.prefixes.put(PrefixHelper.getPrefix(sameAsRelation), PrefixHelper.getURI(PrefixHelper.getPrefix(sameAsRelation)));
+		String base = PrefixHelper.getBase(sameAsRelation);
+		if(base.endsWith(":")) {
+			base = base.substring(0,base.length()-1);
+		}
+		cR.prefixes.put(base, PrefixHelper.getURI(base));
+		if(cR.prefixes.containsKey(null)) {
+			logger.error("Something went wrong with prefixes...");
+		}
 		cR.verificationRelation = sameAsRelation;
 		cR.acceptanceRelation = sameAsRelation;
 		cR.metricExpression = metricExpression;

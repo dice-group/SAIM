@@ -72,7 +72,7 @@ public class ExecutionPanel extends Panel implements PropertyChangeListener {
 					@Override
 					public void run() {
 						m = lR.runConfig(Configuration.getInstance());	
-						start.setEnabled(false);
+//						start.setEnabled(false);
 						progress.setValue(1f);
 						progressLabel.setValue(Messages.getString("ExecutionPanel.mappingperformed")); //$NON-NLS-1$
 						SAIMApplication appl = (SAIMApplication) getApplication();
