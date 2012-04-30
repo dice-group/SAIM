@@ -52,7 +52,12 @@ public class MetricParser
 		else
 		{ 
 			int i = s.lastIndexOf("|");
-			if(i==-1||s.lastIndexOf("|")<s.lastIndexOf(")")) return s;
+			if(i==-1||i<s.lastIndexOf(")")) {return s;}
+//			if(s.lastIndexOf("|")>s.lastIndexOf(")"))
+//			{
+//				s = s.substring(0,s.lastIndexOf("|"));
+//				return setParametersFromString(node,s,pos);
+//			}
 			Double d = Double.valueOf(s.substring(i+1));
 			s = s.substring(0,i);
 			switch(pos)
@@ -102,6 +107,9 @@ public class MetricParser
 		if(s.isEmpty()) throw new MetricFormatException();
 		Output output = new Output();
 		s = setParametersFromString(output,s,0);
+		// at the moment the very last parameter is ignored because the global threshold is set elsewhere
+		output.param1=null;
+		output.param2=null;
 		output.addChild(parsePart(output, s,sourceVar,0));
 		return output;
 	}

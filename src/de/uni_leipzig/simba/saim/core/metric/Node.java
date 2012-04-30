@@ -83,12 +83,23 @@ public abstract class Node
 			for(Node child: getChilds())
 			{
 				if(i==0) {sb.append('(');} else {sb.append(',');}
+				if(this.hasFrontParameters())
+				{
+					Double p;
+					if((p=(i==0?param1:param2))!=null) 	{sb.append(p+"*");}
+				}
 //				if(id.equalsIgnoreCase("add"))
 //				{
 //					if(i==0&&param1!=null)			{sb.append(param1.toString()+'*');} // toString() because automatic conversion will add the char with the double
 //					else if(i==1&&param2!=null)	{sb.append(param2.toString()+'*');}
 //				}
 				sb.append(child.toString());
+				
+				if(!this.hasFrontParameters())
+				{
+					Double p;
+					if((p=(i==0?param1:param2))!=null) 	{sb.append('|'+p);}
+				}
 				i++;
 			}
 		}
@@ -128,4 +139,11 @@ public abstract class Node
 	//				childs.equals(node.childs);
 	//	}
 	public boolean hasFrontParameters() {return "add".equalsIgnoreCase(id);}
+	
+	@Override public boolean equals(Object o)
+	{
+		if(o==null||!(this.getClass()==o.getClass())) return false;
+		// @TODO maybe implement non-tostring equals later?
+		return this.toString().equals(o.toString());
+	}
 }

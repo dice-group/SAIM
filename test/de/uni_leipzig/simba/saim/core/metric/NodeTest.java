@@ -12,10 +12,11 @@ import de.uni_leipzig.simba.saim.core.metric.Property.Origin;
 public class NodeTest
 {
 	
-	String[] testMetrics = {"jaccard(x.dc:title,y.dc:title)",
+	String[] testMetrics = {/*"jaccard(x.dc:title,y.dc:title)",
 			"trigrams(x.dc:title,y.dc:title)",
-			"trigrams(x.dc:title,y.dc:title)|0.6",
-			"ADD(0.6*jaccard(x.dc:title,y.dc:title)|0.5,0.6*cosine(x.authors,y.authors)|0.5)|0.5",
+			"trigrams(x.dc:title,y.dc:title)|0.6",*/
+			"ADD(0.6*jaccard(x.dc:title,y.dc:title),0.6*cosine(x.authors,y.authors))",
+			//"MAX(jaccard(x.dc:title,y.dc:title)|0.5,0.6*cosine(x.authors,y.authors)|0.5)|0.5"
 			};
 	@Test
 	public void testMetricParsing() {
@@ -23,11 +24,12 @@ public class NodeTest
 			System.out.println("testing: "+s);
 			Output o = MetricParser.parse(s,"x");
 			System.out.println("parsed : "+o);	
-			assertTrue(o.toString().equals(s));
+			assertTrue(o.toString().equalsIgnoreCase(s));
 			assertTrue(o.isComplete());
 		}
 		String s = "ADD(0.6*jaccard(x.dc:title,y.dc:title)|0.5,0.6*cosine(x.authors,y.authors)|0.5)|0.5";	
 	}
+	
 	@Test
 	public void testSplitFunc()
 	{
@@ -44,7 +46,7 @@ public class NodeTest
 		Measure m = new Measure("trigrams");
 		o.addChild(m);
 		Property p = new Property("x.rdf:type",Origin.SOURCE);
-		Property q = new Property("rdf:type",Origin.SOURCE);
+		Property q = new Property("x.rdf:type",Origin.SOURCE);
 		Property r = new Property("y.rdf:type",Origin.TARGET);
 		Node[] nodes = {m,p,q,r};
 

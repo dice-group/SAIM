@@ -60,7 +60,7 @@
 		<RESTRICTION>?y rdf:type sider:drugs</RESTRICTION>
 		<PROPERTY>sider:drugName</PROPERTY>
 	</TARGET>
-	<METRIC>Trigram(x.drugbank:brandName,y.sider:drugName)</METRIC>
+	<METRIC>trigrams(x.drugbank:brandName,y.sider:drugName)</METRIC>
 	<ACCEPTANCE>
 		<THRESHOLD>1.0</THRESHOLD>
 		<FILE>drugbank_sider_accepted.nt</FILE>

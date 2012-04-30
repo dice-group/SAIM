@@ -20,11 +20,11 @@ public class EndpointURLValidator implements Validator
 	public EndpointURLValidator() {	component = null;}
 	public EndpointURLValidator(Component component) {this.component = component;}
 
-//	protected validationColor()
-//	{
-//		
-//	}
-	
+	//	protected validationColor()
+	//	{
+	//		
+	//	}
+
 	@Override
 	public void validate(Object value) throws InvalidValueException
 	{
@@ -44,15 +44,20 @@ public class EndpointURLValidator implements Validator
 			}
 
 			if(status==EndpointStatus.OK)
-			{
-				component.removeStyleName("invalid");
-				if(component!=null) {component.setStyleName("valid");}
+			{				
+				if(component!=null)
+				{
+					component.setStyleName("valid");
+					component.removeStyleName("invalid");
+				}
 				return;
 			}
-			component.removeStyleName("valid");
-			component.setStyleName("invalid");
+			if(component!=null)
+			{
+				component.removeStyleName("valid");
+				component.setStyleName("invalid");
+			}
 			throw new InvalidValueException(Messages.getString("endpointstatus")+status.toString());
-
 		}
 	}			
 	@Override

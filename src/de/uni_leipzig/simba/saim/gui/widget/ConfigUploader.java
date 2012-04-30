@@ -41,8 +41,7 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver{
 		root.setWidth("100%");
 		setCompositionRoot(root);
 		// Create the Upload component.
-		final Upload upload =
-				new Upload("", this);
+		final Upload upload = new Upload("", this);
 		// Listen for events regarding the success of upload.
 		upload.addListener((Upload.SucceededListener) this);
 		upload.addListener((Upload.FailedListener) this);

@@ -55,9 +55,9 @@ public class SPARQLHelper
 {
 	//	protected static final Logger log = Logger.getLogger(SPARQLHelper.class.toString());
 	//	public static final String GEONAMES_ENDPOINT_INTERNAL = "http://lgd.aksw.org:8900/sparql";
-	public static final String DBPEDIA_ENDPOINT = "http://dbpedia.org/sparql/";
-	public static final String DBPEDIA_ENDPOINT_OFFICIAL = "http://dbpedia.org/sparql/";
-	public static final String DBPEDIA_ENDPOINT_LIVE = "http://live.dbpedia.org/sparql/";
+	public static final String DBPEDIA_ENDPOINT_OFFICIAL = "http://dbpedia.org/sparql";
+	public static final String DBPEDIA_ENDPOINT_LIVE = "http://live.dbpedia.org/sparql";
+	public static final String DBPEDIA_ENDPOINT = DBPEDIA_ENDPOINT_OFFICIAL;
 	//
 	//	public static final String DBPEDIA_ENDPOINT = DBPEDIA_ENDPOINT_OFFICIAL; 
 	//

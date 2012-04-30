@@ -10,7 +10,7 @@ public class EndpointsTest
 //	public void testPrefixOf()
 //	{
 //		System.out.println(Endpoints.prefixOf(""));
-//		assertTrue(Endpoints.prefixOf("http://dbpedia").contains("http://dbpedia.org/sparql"));
+//		assertTrue(Endpoints.prefixOf("http://dbpedia").contains(TestingDefaults.sparqlEndpoint));
 //	}
 
 }
