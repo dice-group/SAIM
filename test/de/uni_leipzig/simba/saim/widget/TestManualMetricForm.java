@@ -14,12 +14,12 @@ public class TestManualMetricForm {
 		Configuration c = Configuration.getInstance();
 		c.setSourceEndpoint(DefaultEndpointLoader.getDefaultEndpoints().get("lgd.aksw - Drugbank"));
 		c.setTargetEndpoint(DefaultEndpointLoader.getDefaultEndpoints().get("lgd.aksw - Sider"));
-		c.addPropertiesMatch("rdfs:label", "rdfs:FalseLable");
+		c.addPropertiesMatch("rdfs:label", "rdfs:FalseLable", true);
 		ManualMetricForm form = new ManualMetricForm();
 		
 		assertTrue(form.testPropertiesAreSet("trigrams(src.rdfs:label,dest.rdfs:FalseLable)", 0.5d));
-		assertTrue(form.testPropertiesAreSet("ADD(0.1*trigrams(src.rdfs:label,dest.rdfs:FalseLable)|0.5,0.9*trigrams(src.rdfs:label,dest.rdfs:FalseLable)|0.5)", 0.5d));
-		assertTrue(form.testPropertiesAreSet("AND(ADD(0.1*trigrams(src.rdfs:label,dest.rdfs:FalseLable)|0.5,0.9*trigrams(src.rdfs:label,dest.rdfs:FalseLable)|0.5)|0.6, trigrams(src.rdfs:label,dest.rdfs:FalseLable)|0.9)", 0.5d));
+		assertTrue(form.testPropertiesAreSet("ADD(0.1*trigrams(src.rdfs:label,dest.rdfs:FalseLable)|0.5,0.9*trigrams(src.rdfs:label,dest.rdfs:FalseLable))", 0.5d));
+		assertTrue(form.testPropertiesAreSet("AND(ADD(0.1*trigrams(src.rdfs:label,dest.rdfs:FalseLable),0.9*trigrams(src.rdfs:label,dest.rdfs:FalseLable)), trigrams(src.rdfs:label,dest.rdfs:FalseLable))", 0.5d));
 		
 		assertFalse(form.testPropertiesAreSet("trigrams(src.rdfs:someOtherProp,dest.rdfs:FalseLable)", 0.5d));
 		assertFalse(form.testPropertiesAreSet("trigrams(src.rdfs:FalseLable,dest.rdfs:FalseLable)", 0.5d));

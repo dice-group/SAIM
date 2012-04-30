@@ -22,7 +22,7 @@ public class DefaultEndpointLoader
 	 */
 	public static HashMap<String, KBInfo> getDefaultEndpoints() {
 		HashMap<String, KBInfo> defaults = new HashMap<>();
-//		defaults.put("DBPedia - default graph", createKBInfo("http://dbpedia.org/sparql","http://dbpedia.org",10000,"dbpedia"));	
+		defaults.put("DBPedia - default graph", createKBInfo("http://dbpedia.org/sparql","http://dbpedia.org",10000,"dbpedia"));	
 		defaults.put("DBPedia live - default graph", createKBInfo("http://live.dbpedia.org/sparql","http://dbpedia.org",1000,"dbpedia"));
 		defaults.put("lgd.aksw - Diseasome", createKBInfo("http://lgd.aksw.org:5678/sparql", "http://www.instancematching.org/oaei/di/diseasome/", 1000, "diseasome"));
 		defaults.put("lgd.aksw - Sider", createKBInfo("http://lgd.aksw.org:5678/sparql", "http://www.instancematching.org/oaei/di/sider/", 1000, "sider"));

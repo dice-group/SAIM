@@ -27,7 +27,7 @@ public class ConfigurationTest
 		c.setTargetEndpoint(DefaultEndpointLoader.getDefaultEndpoints().get("lgd.aksw - Sider"));
 		c.source.restrictions.add("testsourcerestriction1");
 		c.target.restrictions.add("testtargetrestriction1");
-		c.addPropertiesMatch("rdfs:label", "rdf:type");
+		c.addPropertiesMatch("rdfs:label", "rdf:type", true);
 		ConfigReader cR = c.getLimesConfiReader();
 		System.out.println(cR.metricExpression);
 		assertNotNull(cR.metricExpression);
@@ -70,7 +70,7 @@ public class ConfigurationTest
 		Configuration c = Configuration.getInstance();
 		c.setSourceEndpoint(DefaultEndpointLoader.getDefaultEndpoints().get("lgd.aksw - Drugbank"));
 		c.setTargetEndpoint(DefaultEndpointLoader.getDefaultEndpoints().get("lgd.aksw - Sider"));
-		c.addPropertiesMatch("rdfs:label", "rdfs:FalseLable");
+		c.addPropertiesMatch("rdfs:label", "rdfs:FalseLable", true);
 		assertTrue(c.isPropertyDefined("rdfs:label"));
 		assertTrue(c.isPropertyDefined("src.rdfs:label"));
 		assertTrue(c.isPropertyDefined("dest.rdfs:FalseLable"));

@@ -104,6 +104,8 @@ public class PrefixHelper
 
 	public static synchronized String getURI(String prefix)
 	{
+//		if(prefix.endsWith(":"))
+//			prefix = prefix.substring(0, prefix.length()-1);
 		return prefixToURI.get(prefix);		
 	}
 

@@ -9,7 +9,8 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vaadin.jonatan.contexthelp.ContextHelp;
 
 import com.github.wolfie.refresher.Refresher;
@@ -42,7 +43,7 @@ public class ClassMatchingPanel extends Panel
 	public ClassMatchingForm sourceClassForm;
 	public ClassMatchingForm targetClassForm;
 	Cache cache = null;
-	static Logger logger = Logger.getLogger("SAIM");
+	static final Logger logger = LoggerFactory.getLogger(ClassMatchingPanel.class);
 	public void close()
 	{
 		if(cache != null)

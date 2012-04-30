@@ -85,7 +85,7 @@ public class LearningPanel extends Panel {
 				public void buttonClick(ClickEvent event) {
 					for(String s : propertyMapping.map.keySet()) {
 						for(Entry<String, Double> e : propertyMapping.map.get(s).entrySet()) {
-							Configuration.getInstance().addPropertiesMatch(s, e.getKey());
+							Configuration.getInstance().addPropertiesMatch(s, e.getKey(), true);
 						}
 					}
 					usePropMapping.setEnabled(false);

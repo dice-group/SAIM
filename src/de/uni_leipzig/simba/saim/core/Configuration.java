@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -125,6 +126,8 @@ public class Configuration
 
 	private void fillKBElement(Element element, KBInfo kb)
 	{		
+		if(kb == null)
+			return;
 		element.getChild("ID").setText(kb.id);
 		element.getChild("ENDPOINT").setText(kb.endpoint);
 		element.getChild("GRAPH").setText(kb.graph);
@@ -168,6 +171,7 @@ public class Configuration
 			Element targetElement = rootElement.getChild("TARGET");
 			fillKBElement(sourceElement,source);
 			fillKBElement(targetElement,target);
+
 			
 			rootElement.getChild("METRIC").setText(metric.toString());
 			{
@@ -177,6 +181,7 @@ public class Configuration
 			}
 			{
 			Element reviewElement = rootElement.getChild("REVIEW");
+
 			reviewElement.getChild("FILE").setText(source.endpoint+'-'+target.endpoint+"-review");
 			reviewElement.getChild("THRESHOLD").setText(Double.toString(reviewThreshold));
 			}
@@ -197,19 +202,36 @@ public class Configuration
 	 * @param sourceProp source property without heading variable of the KBInfo! Eg. <i>rdf:label</i> not <i>x.rdf:label</i>!
 	 * @param targetProp target property without heading variable of the KBInfo! Eg. <i>rdf:label</i> not <i>y.rdf:label</i>!
 	 */
-	public void addPropertiesMatch(String sourceProp, String targetProp) {
+	public void addPropertiesMatch(String sourceProp, String targetProp, boolean stringProps) {
 		String s_abr=PrefixHelper.abbreviate(sourceProp);
 		String t_abr=PrefixHelper.abbreviate(targetProp);
-		Logger.getLogger("SAIM").info("Adding Property Match: "+s_abr+" - "+t_abr);
-		source.properties.add(s_abr);
-		source.prefixes.put(PrefixHelper.getBase(s_abr), PrefixHelper.getURI(PrefixHelper.getBase(s_abr)));
-		source.functions.put(s_abr, "lowercase");
+		if(!source.properties.contains(s_abr)) {
+			source.properties.add(s_abr);
+			source.prefixes.put(PrefixHelper.getBase(s_abr), PrefixHelper.getURI(PrefixHelper.getBase(s_abr)));
+			source.functions.put(s_abr, "lowercase");	
+		}
 		//		System.out.println("Adding source property: "+s_abr+"::::"+PrefixHelper.getPrefixFromURI(s_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
-		target.properties.add(t_abr);
-		target.prefixes.put(PrefixHelper.getBase(t_abr), PrefixHelper.getURI(PrefixHelper.getBase(t_abr)));
-		target.functions.put(s_abr, "lowercase");
-		//		System.out.println("Adding target property: "+t_abr+"::::"+PrefixHelper.getPrefixFromURI(t_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(t_abr)));
-		this.propertyMapping.addStringPropertyMatch(s_abr, t_abr);
+
+		if(!target.properties.contains(t_abr)) {
+			target.properties.add(t_abr);
+			target.prefixes.put(PrefixHelper.getBase(t_abr), PrefixHelper.getURI(PrefixHelper.getBase(t_abr)));
+			target.functions.put(t_abr, "lowercase");
+		}
+		if(stringProps) {
+			logger.info("Adding String Property Match: "+s_abr+" - "+t_abr);
+			propertyMapping.addStringPropertyMatch(s_abr, t_abr);
+			if(!source.functions.containsKey(s_abr))
+				source.functions.put(s_abr, "lowercase");
+			if(!target.functions.containsKey(t_abr))
+				target.functions.put(t_abr, "lowercase");
+		} else {
+			logger.info("Adding Number Property Match: "+s_abr+" - "+t_abr);
+			propertyMapping.addNumberPropertyMatch(s_abr, t_abr);
+			if(!source.functions.containsKey(s_abr))
+				source.functions.put(s_abr, "number");
+			if(!target.functions.containsKey(t_abr))
+				target.functions.put(t_abr, "number");
+		}
 	}
 
 	public ConfigReader getLimesConfiReader() {
@@ -228,7 +250,14 @@ public class Configuration
 		}
 		cR.prefixes.putAll(getSource().prefixes);
 		cR.prefixes.putAll(getTarget().prefixes);
-		cR.prefixes.put(PrefixHelper.getPrefix(sameAsRelation), PrefixHelper.getURI(PrefixHelper.getPrefix(sameAsRelation)));
+		String base = PrefixHelper.getBase(sameAsRelation);
+		if(base.endsWith(":")) {
+			base = base.substring(0,base.length()-1);
+		}
+		cR.prefixes.put(base, PrefixHelper.getURI(base));
+		if(cR.prefixes.containsKey(null)) {
+			logger.error("Something went wrong with prefixes...");
+		}
 		cR.verificationRelation = sameAsRelation;
 		cR.acceptanceRelation = sameAsRelation;
 		cR.metricExpression = metricExpression;

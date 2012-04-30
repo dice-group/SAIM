@@ -23,6 +23,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import de.uni_leipzig.simba.saim.core.Configuration;
+
 /** @author Konrad Höffner */
 public class PrefixHelperTest
 {
@@ -71,5 +73,17 @@ public class PrefixHelperTest
 	public void testSuffix()
 	{
 		assertTrue(PrefixHelper.getSuffix("http://dbpedia.org/ontology/Settlement").equals("Settlement"));
+	}
+	
+	@Test
+	public void testOWL() {
+		String sameAsRelation = Configuration.getInstance().sameAsRelation;
+		String base = PrefixHelper.getBase(sameAsRelation);
+		if(base.endsWith(":")) {
+			base = base.substring(0,base.length()-1);
+		}
+		assertNotNull(PrefixHelper.getURI(base));
+		
+//		PrefixHelper.getPrefix(PrefixHelper.getBase(sameAsRelation)), PrefixHelper.getURI(PrefixHelper.getBase(sameAsRelation))
 	}
 }
