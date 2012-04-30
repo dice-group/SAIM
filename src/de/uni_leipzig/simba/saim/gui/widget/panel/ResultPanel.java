@@ -59,7 +59,7 @@ public class ResultPanel extends Panel{
 			serial.open(fileName);
 			String predicate = config.getLimesConfiReader().acceptanceRelation;
 			// print prefixes
-			serial.printPrefixes(config.getLimesConfiReader().prefixes);
+			serial.setPrefixes(config.getLimesConfiReader().prefixes);
 			Mapping m = data.getMapping();
 			for(String uri1 : m.map.keySet()) {
 				for(Entry<String, Double> e : m.map.get(uri1).entrySet()) {

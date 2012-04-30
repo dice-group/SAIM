@@ -116,7 +116,7 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver{
 		HorizontalLayout subLayout = new HorizontalLayout();
 		subLayout.addComponent(localExamplesSelect);
 		subLayout.addComponent(runExampleButton);
-		
+		//@TODO generic way to load config.xmls.
 		localExamplesSelect.addItem("examples/PublicationData.xml");
 		localExamplesSelect.addItem(DEFAULT_LIMES_XML);
 		localExamplesSelect.select(DEFAULT_LIMES_XML);

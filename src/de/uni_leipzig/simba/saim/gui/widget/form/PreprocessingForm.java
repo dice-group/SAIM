@@ -1,6 +1,8 @@
 package de.uni_leipzig.simba.saim.gui.widget.form;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.slf4j.Logger;
@@ -49,7 +51,10 @@ public class PreprocessingForm extends Form{
 				@Override
 				public void valueChange(
 						com.vaadin.data.Property.ValueChangeEvent event) {
-					addPreprocessing(box.getKey());
+					if(box.getValue().booleanValue())
+						addPreprocessing(box.getKey());
+					else
+						removePreprocessing(box.getKey());
 				}
 			});
 			this.addField(box.getKey(), box.getValue());
@@ -72,6 +77,25 @@ public class PreprocessingForm extends Form{
 			}
 			logger.info("Adding preprocessing "+funcChain+" to property "+prop+" for "+info.id);
 			info.functions.put(prop, funcChain);
+		}
+	}
+	
+	/**
+	 * Remove preprocessing functions.
+	 * @param name
+	 */
+	private void removePreprocessing(String name) {
+		if(info.functions.containsKey(prop)) {
+			logger.info("removing preprocessing function "+name);
+			String split[] = info.functions.get(prop).split("->");
+			List<String> funcList = new LinkedList();
+			for(int i = 0; i<split.length; i++) {
+				if(!split[i].equals(name))
+					funcList.add(split[i]);
+			}
+			info.functions.remove(prop);
+			for(String func:funcList)
+				addPreprocessing(func);
 		}
 	}
 }
