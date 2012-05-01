@@ -62,7 +62,8 @@ public class PaintController {
 		final Color bc  = Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().getDefaultBackgroundColor();
 		final Color nsc = Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().getDefaultNodeSelectionColor();
 		final Color esc = Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().getDefaultEdgeSelectionColor();
-		final float efo = (float) Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().get(VisualPropertyType.EDGE_LABEL_OPACITY);
+		final double efo = (double) Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().get(VisualPropertyType.EDGE_LABEL_OPACITY);
+		
 		
 		paintTarget.addAttribute("ec", getRGB(ec));
 		paintTarget.addAttribute("elw", elw.intValue());
@@ -95,6 +96,9 @@ public class PaintController {
 			paintTarget.addAttribute("name", e.getIdentifier());
 			paintTarget.addAttribute("node1", node1.getIdentifier());
 			paintTarget.addAttribute("node2", node2.getIdentifier());
+			
+			paintTarget.addAttribute("node1name", graphProperties.getNodeNames().get(Integer.parseInt(node1.getIdentifier())));
+			paintTarget.addAttribute("node2name", graphProperties.getNodeNames().get(Integer.parseInt(node2.getIdentifier())));
 			
 			paintTarget.addAttribute("meta1", graphProperties.getNodeMetadata(node1.getIdentifier()).toString());
 			paintTarget.addAttribute("meta2", graphProperties.getNodeMetadata(node2.getIdentifier()).toString());
@@ -159,6 +163,7 @@ public class PaintController {
 				paintTarget.startTag("e");
 				paintTarget.addAttribute("name", "tmp");
 				paintTarget.addAttribute("node1", node1.getIdentifier());
+				paintTarget.addAttribute("node1name", graphProperties.getNodeNames().get(Integer.parseInt(node1.getIdentifier())));
 				paintTarget.addAttribute("meta1", graphProperties.getNodeMetadata(node1.getIdentifier()).toString());
 							
 				paintTarget.addAttribute("shape1", graphProperties.getShapes(node1.getIdentifier()).toString());

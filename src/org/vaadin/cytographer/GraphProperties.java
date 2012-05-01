@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import lombok.Getter;
@@ -29,18 +30,22 @@ import cytoscape.Cytoscape;
 import cytoscape.data.Semantics;
 import cytoscape.view.CyNetworkView;
 
+
 public class GraphProperties {
 	private static Logger logger = Logger.getLogger(GraphProperties.class);
 	static{
 		logger.setLevel(Level.OFF);
 	}
-
+	private Random rand = new Random();
+	
 	@Getter private final String title;
 
 	@Getter @Setter private CyNetwork cyNetwork;
 	@Getter @Setter private CyNetworkView cyNetworkView;
 
 	@Getter private final List<Integer> edges, nodes;
+	
+	@Getter private Map<Integer, String> nodeNames = new HashMap<Integer,String>();
 	
 	private final Map<String, List<Object>> nodeMetadata = new HashMap<>();
 	
@@ -162,16 +167,33 @@ public class GraphProperties {
 		return container;
 	}
 
-	public void addANewNode(final String id, final int x, final int y, Shape shape) {
+	public int  addANewNode(final String name, final int x, final int y, Shape shape) {
+	
+		// search for a free node	
+		CyNode node = null;
+		int random = -1;
+		do{
+			random = rand.nextInt(999999999);
+			node = Cytoscape.getCyNode(random+"") ;
+		}while(node != null);
 		
-		CyNode node = cyNetwork.addNode(Cytoscape.getCyNode(id, true));			
+		node = Cytoscape.getCyNode(random+"", true);		
+		node.setIdentifier(node.getRootGraphIndex()+"");
+		
+		nodeNames.put(node.getRootGraphIndex(), name);			
+		node = cyNetwork.addNode(node);	
+		
 		cyNetworkView.addNodeView(node.getRootGraphIndex()).setXPosition(x);
 		cyNetworkView.addNodeView(node.getRootGraphIndex()).setYPosition(y);
-		nodes.add(Integer.valueOf(node.getRootGraphIndex()));		
-		shapes.put(Integer.valueOf(node.getRootGraphIndex()), shape);
+		
+		nodes.add(node.getRootGraphIndex());		
+		shapes.put(node.getRootGraphIndex(), shape);
+		
+		return node.getRootGraphIndex();
 	}
 	
 	public  Shape getShapes(final String id){
+		
 		return shapes.get(Cytoscape.getCyNode(id, false).getRootGraphIndex());
 	}
 
@@ -197,9 +219,11 @@ public class GraphProperties {
 			throw new IllegalStateException("Node not found " + id);
 	}
 
-	public void createAnEdge(String nodeA, String nodeB, String attribute) {
-		final CyNode node1 = Cytoscape.getCyNode(nodeA, false);
-		final CyNode node2 = Cytoscape.getCyNode(nodeB, false);
+	public void createAnEdge(int nodeIdA, int nodeIdB, String attribute) {
+		
+		final CyNode node1 = Cytoscape.getCyNode(nodeIdA+"", false);
+		final CyNode node2 = Cytoscape.getCyNode(nodeIdB+"", false);
+		
 		if (node1 != null && node2 != null) {
 			final CyEdge edge = Cytoscape.getCyEdge(node1, node2, Semantics.INTERACTION, attribute, true);
 			edge.setIdentifier(attribute);

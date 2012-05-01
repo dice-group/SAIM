@@ -56,14 +56,14 @@ public class VGraph extends VectorObject {
 			if (name == null || name.isEmpty()) {
 				continue;
 			}
-			final String node1name = child.getStringAttribute("node1");
-			final String node2name = child.getStringAttribute("node2");
+			final String node1id = child.getStringAttribute("node1");
+			final String node2id = child.getStringAttribute("node2");
 
 			
-			final VNode node1 = nodes.get(node1name);
+			final VNode node1 = nodes.get(node1id);
 			VNode node2 = null;
-			if(node2name != null)
-				node2 = nodes.get(node2name);
+			if(node2id != null)
+				node2 = nodes.get(node2id);
 
 			node1.refreshNodeData(child, vVisualStyle);
 			
@@ -92,25 +92,29 @@ public class VGraph extends VectorObject {
 			if (name == null || name.isEmpty()) 
 				continue;
 			
-			final String node1name = child.getStringAttribute("node1");
-			final String node2name = child.getStringAttribute("node2");
-			VNode node1 = nodes.get(node1name);
+			final String node1id = child.getStringAttribute("node1");
+			final String node2id = child.getStringAttribute("node2");
+			
+			final String node1Name  = child.getStringAttribute("node1name");
+			final String node2Name  = child.getStringAttribute("node2name");
+			
+			VNode node1 = nodes.get(node1id);
 			VNode node2 = null;
-			if(node2name!=null)
-				node2 = nodes.get(node2name);
+			if(node2id!=null)
+				node2 = nodes.get(node2id);
 
 			final String shape1 = child.getStringAttribute("shape1");
 			final String shape2 = child.getStringAttribute("shape2");
 
-			if (node1 == null && node1name != null) {
-				node1 = VNode.create(child, vCytographer, this, node1name, true, style,shape1);
+			if (node1 == null && node1id != null) {
+				node1 = VNode.create(child, vCytographer, this, node1Name,node1id, true, style,shape1);
 				updateEdges(node1, false);
-				nodes.put(node1name, node1);
+				nodes.put(node1id, node1);
 			}
-			if (node2 == null && node2name != null) {
-				node2 = VNode.create(child, vCytographer, this, node2name, false, style,shape2);
+			if (node2 == null && node2id != null) {
+				node2 = VNode.create(child, vCytographer, this, node2Name,node2id, false, style,shape2);
 				updateEdges(node2, false);
-				nodes.put(node2name, node2);
+				nodes.put(node2id, node2);
 			}
 			if (node1 != null && node2 != null) {
 				final VEdge edge = VEdge.createAnEdge(child, vCytographer, this, name, node1, node2, style);
@@ -323,7 +327,7 @@ public class VGraph extends VectorObject {
 
 	public void addNode(final VNode node) {
 		vFocusDrawingArea.add(node);
-		nodes.put(node.getName(), node);
+		nodes.put(node.getID().toString(), node);
 		paintedShapes.add(node);
 	}
 
@@ -356,7 +360,7 @@ public class VGraph extends VectorObject {
 		
 		vFocusDrawingArea.remove(node);
 		paintedShapes.remove(node);
-		if (nodes.remove(node.getName()) == null) 
+		if (nodes.remove(node.getID().toString()) == null) 
 			VConsole.log("node not found" + node.getName());		
 		selectedShapes.remove(node);
 

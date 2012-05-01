@@ -48,10 +48,10 @@ public class Cytographer extends AbstractComponent {
 		this.mainWindow = mainWindow;
 	}
 
-	public void addNode(String id, int x, int y, GraphProperties.Shape shape){
-		graphProperties.addANewNode(id, x, y,shape);
+	public int  addNode(String name, int x, int y, GraphProperties.Shape shape){
+		return graphProperties.addANewNode(name, x, y,shape);
 	}
-	public void createAnEdge(String nodeA, String nodeB, String attribute) {
+	public void createAnEdge(int nodeA, int nodeB, String attribute) {
 		graphProperties.createAnEdge(nodeA, nodeB, attribute);
 	}
 	 
@@ -117,7 +117,7 @@ public class Cytographer extends AbstractComponent {
 		}
 		if (variables.containsKey("edgeCreated")) {
 			String[] args = (String[]) variables.get("edgeCreated");
-			graphProperties.createAnEdge(args[0],args[1],args[2]);
+			graphProperties.createAnEdge(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2]);
 		}
 		if (variables.containsKey("removedEdge")) {
 			graphProperties.removeEdge((String) variables.get("removedEdge"));
@@ -151,6 +151,16 @@ public class Cytographer extends AbstractComponent {
 			mywindow.setPositionX(Math.round(Float.valueOf(args[1])));
 			mywindow.setPositionY(Math.round(Float.valueOf(args[2])));			
 			mainWindow.addWindow(mywindow);
+		}
+		if (variables.containsKey("onNodeMouseUp")) {
+			final String[] args = (String[]) variables.get("onNodeMouseUp");
+			
+			String nodeID = args[0];
+			String x = args[1];
+			String y = args[2];
+			
+			graphProperties.getCyNetworkView().getNodeView(new Integer(nodeID)).setXPosition(Double.parseDouble(x));
+			graphProperties.getCyNetworkView().getNodeView(new Integer(nodeID)).setYPosition(Double.parseDouble(y));
 		}
 	}
 

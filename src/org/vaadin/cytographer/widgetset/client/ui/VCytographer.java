@@ -292,6 +292,10 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 		applicationConnection.updateVariable(paintableId, "doubleClick", values, true);		
 	}
 
+	public void onNodeMouseUp(String[] values){
+		
+		applicationConnection.updateVariable(paintableId, "onNodeMouseUp", values, true);				
+	}
 	@Override
 	public void onMouseWheel(final MouseWheelEvent event) {
 		final int delta = event.getDeltaY();
@@ -385,10 +389,10 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 	}
 
 	public void constructLinkTo(final VNode node2) {		
-		final String name = linkNode.getName() + "_to_" + node2.getName() + "_" + new Random().nextInt(1000);
+		final String name = linkNode.getID() + "_to_" + node2.getID() + "_" + new Random().nextInt(1000);
 		final VEdge edge = VEdge.createAnEdge(null, this, graph, name, linkNode, node2, style);
 		
-		applicationConnection.updateVariable(paintableId, "edgeCreated", new String[] { linkNode.getName(), node2.getName(), name }, true);
+		applicationConnection.updateVariable(paintableId, "edgeCreated", new String[] { linkNode.getID().toString(), node2.getID().toString(), name }, true);
 		
 		graph.addEdge(edge);
 	}
@@ -408,7 +412,7 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 	}
 
 	public void deleteNode(final VNode node, final boolean immediate) {
-		applicationConnection.updateVariable(paintableId, "removedNode", node.getName(), immediate);
+		applicationConnection.updateVariable(paintableId, "removedNode", node.getID().toString(), immediate);
 		graph.removeNode(node);
 	}
 

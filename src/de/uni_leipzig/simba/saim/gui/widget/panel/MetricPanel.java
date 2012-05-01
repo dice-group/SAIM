@@ -184,7 +184,7 @@ public class MetricPanel extends Panel
 		final int HEIGHT = 450;
 		final int WIDTH = 800;
 		final int NODESIZE = 100;
-		final float EDGE_LABEL_OPACITY = 0f;
+		final double EDGE_LABEL_OPACITY = 0d;
 		
 		Cytoscape.createNewSession();	
 		Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().setDefaultBackgroundColor(Color.WHITE);

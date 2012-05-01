@@ -40,18 +40,23 @@ implements ContextListener, MouseDownHandler, MouseUpHandler, MouseMoveHandler, 
 	private Shape shape;
 	protected final Text textShape;
 	private final String name;
+	private Integer id = null;
+	
+	public Integer getID(){
+		return id;
+	}
 
 	private boolean textsVisible = true;
 	private String originalFillColor;
 
-	public VNode(final VCytographer cytographer, final VGraph graph, final Shape shape, final String name,final VVisualStyle style) {
+	public VNode(final VCytographer cytographer, final VGraph graph, final Shape shape, final String name,final String nodeID, final VVisualStyle style) {
 		super();
 		this.cytographer = cytographer;
 		this.graph = graph;
 		VNode.setStyleToShape(shape, style);
 		this.shape = shape;
 		this.name = name;
-				
+		this.id = Integer.parseInt(nodeID);		
 		textShape = new Text(shape.getX()-name.length()/2,shape.getY()-name.length()/2, name);
 		textShape.setStrokeOpacity(0);
 
@@ -69,7 +74,7 @@ implements ContextListener, MouseDownHandler, MouseUpHandler, MouseMoveHandler, 
 	}
 	public static VNode create(
 			final UIDL child, final VCytographer cytographer, final VGraph graph, 
-			final String nodeName, final boolean firstNode, final VVisualStyle style,String shape) {
+			 final String nodeName, final String nodeID,final boolean firstNode, final VVisualStyle style,String shape) {
 
 		// make node 
 		int x,y;
@@ -82,13 +87,13 @@ implements ContextListener, MouseDownHandler, MouseUpHandler, MouseMoveHandler, 
 		}	
 		
 		if(shape.equals("METRIC"))
-			return new VMetric(cytographer, graph, VMetric.getShape(x,y, style.getNodeSize()), nodeName, style);
+			return new VMetric(cytographer, graph, VMetric.getShape(x,y, style.getNodeSize()), nodeName,nodeID, style);
 		else if(shape.equals("OPERATOR"))
-			return new VOperator(cytographer, graph, VOperator.getShape(x,y, style.getNodeSize()), nodeName, style);
+			return new VOperator(cytographer, graph, VOperator.getShape(x,y, style.getNodeSize()), nodeName,nodeID, style);
 		else if(shape.equals("SOURCE"))
-			return new VSource(cytographer, graph, VSource.getShape(x,y, style.getNodeSize()), nodeName, style);
+			return new VSource(cytographer, graph, VSource.getShape(x,y, style.getNodeSize()), nodeName,nodeID, style);
 		else if(shape.equals("TARGET"))
-			return new VTarget(cytographer, graph, VTarget.getShape(x,y, style.getNodeSize()), nodeName, style);
+			return new VTarget(cytographer, graph, VTarget.getShape(x,y, style.getNodeSize()), nodeName,nodeID, style);
 
 		else  throw new IllegalStateException("Shape creation failed since shape not found,use:SOURCE,TARGET,METRIC or OPERATOR.");
 	}
@@ -220,6 +225,8 @@ implements ContextListener, MouseDownHandler, MouseUpHandler, MouseMoveHandler, 
 	@Override
 	public void onMouseUp(final MouseUpEvent event) {
 		graph.setMovedShape(null);
+		// update position of node
+		cytographer.onNodeMouseUp(new String[]{getID().toString(), String.valueOf(getX()), String.valueOf(getY())});
 	}
 
 	@Override

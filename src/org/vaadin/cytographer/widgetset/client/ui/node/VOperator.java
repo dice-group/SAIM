@@ -17,8 +17,8 @@ public class VOperator extends VNode  implements DoubleClickHandler{
 	protected final Text textShape1;
 	protected final Text textShape2;
 
-	public VOperator(final VCytographer cytographer, final VGraph graph, final Shape shape, final String name,final VVisualStyle style) {
-		super(cytographer,graph,shape,name,style);	
+	public VOperator(final VCytographer cytographer, final VGraph graph, final Shape shape, final String name,final String id,final VVisualStyle style) {
+		super(cytographer,graph,shape,name,id,style);	
 		addDoubleClickHandler(this);
 		
 		textShape1 = new Text(0,0, "");
@@ -57,7 +57,7 @@ public class VOperator extends VNode  implements DoubleClickHandler{
 	public void onDoubleClick(DoubleClickEvent event) {
 //		final int x = event.getX();
 //		final int y = event.getY();
-		cytographer.doubleClick(new String[]{getName(), getX()+"", getY()+"", getValue1(), getValue2()});		
+		cytographer.doubleClick(new String[]{getID().toString(), getX()+"", getY()+"", getValue1(), getValue2()});		
 	}	
 	@Override
 	public void moveNode(final float x, final float y) {
