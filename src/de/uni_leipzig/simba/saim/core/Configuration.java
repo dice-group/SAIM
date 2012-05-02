@@ -32,23 +32,41 @@ public class Configuration
 	private String id = null;
 	private String name;
 
-	private double acceptanceThreshold=0.5d;
-	private double reviewThreshold=0.4d;
+//	private double acceptanceThreshold=0.5d;
+//	private double reviewThreshold=0.4d;
 	int granularity=2;
 	public String sameAsRelation = "owl:sameAs";
 	private ConfigReader cR = new ConfigReader();
 
 	public KBInfo source = null;
 	public KBInfo target = null;
-	//private String metricExpression;
 	public boolean isLocal  = false;
 
 	volatile public PropertyMapping propertyMapping = new PropertyMapping(); 
 
-	//public String getMetricExpression() {return metricExpression;}
-	//public void setMetricExpression(String metricExpression) {	this.metricExpression = metricExpression;}
-	public double getAcceptanceThreshold() {return acceptanceThreshold;}
-	public void setAcceptanceThreshold(double acceptanceThreshold) {this.acceptanceThreshold = acceptanceThreshold;}
+	public String getMetricExpression() {
+		return metric.toString();
+	}
+	
+	public void setMetricExpression(String metricExpression) {
+		metric = MetricParser.parse(metricExpression, source.var);
+	}
+	public double getAcceptanceThreshold() {
+		return metric.param1;
+	}
+	public void setAcceptanceThreshold(double acceptanceThreshold) {
+		if(metric == null)
+			metric = new Output();
+		metric.param1 = acceptanceThreshold;
+	}
+	public double getVerificationThreshold() {
+		return metric.param2;
+	}
+	public void setVerificationThreshold(double verificationThreshold) {
+		if(metric == null)
+			metric = new Output();
+		metric.param1 = verificationThreshold;
+	}
 
 	Configuration() {}
 	public void store() {}
@@ -72,12 +90,12 @@ public class Configuration
 		this.cR = cR;
 		source = cR.sourceInfo;
 		target = cR.targetInfo;
-		//metricExpression = cR.metricExpression;
-		metric = MetricParser.parse(metricExpression,cR.sourceInfo.var.replace("?",""));
 
+		metric = MetricParser.parse(cR.metricExpression,cR.sourceInfo.var.replace("?",""));
+		setAcceptanceThreshold(cR.acceptanceThreshold);
+		metric.param2 = cR.verificationThreshold;
+		
 		logger.info("Successfully parsed metric from config reader: "+metric);
-		acceptanceThreshold = cR.acceptanceThreshold;
-		reviewThreshold = cR.verificationThreshold;
 		granularity = cR.granularity;
 		if(source.type.equalsIgnoreCase("CSV") || target.type.equalsIgnoreCase("CSV"))
 			this.isLocal = true;
@@ -177,13 +195,13 @@ public class Configuration
 			{
 			Element acceptanceElement = rootElement.getChild("ACCEPTANCE");
 			acceptanceElement.getChild("FILE").setText(source.endpoint+'-'+target.endpoint+"-accept");
-			acceptanceElement.getChild("THRESHOLD").setText(Double.toString(acceptanceThreshold));
+			acceptanceElement.getChild("THRESHOLD").setText(Double.toString(getAcceptanceThreshold()));
 			}
 			{
 			Element reviewElement = rootElement.getChild("REVIEW");
 
 			reviewElement.getChild("FILE").setText(source.endpoint+'-'+target.endpoint+"-review");
-			reviewElement.getChild("THRESHOLD").setText(Double.toString(reviewThreshold));
+			reviewElement.getChild("THRESHOLD").setText(Double.toString(getVerificationThreshold()));
 			}
 			XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
 			out.output(document,new FileOutputStream(filename));
@@ -194,7 +212,7 @@ public class Configuration
 	}	
 
 	public String toString() {
-		return source.toString()+"\n<br>\n"+target.toString()+"\n<br>\n"+metricExpression+"\n<br>\n"+acceptanceThreshold;  
+		return source.toString()+"\n<br>\n"+target.toString()+"\n<br>\n"+metric.toString()+"\n<br>\n"+getAcceptanceThreshold();  
 	}
 
 	/**
@@ -242,11 +260,11 @@ public class Configuration
 			target.var="?dest";
 		cR.sourceInfo = getSource();
 		cR.targetInfo = getTarget();
-		if(metricExpression == null) {			
+		if(getMetricExpression() == null) {			
 			String defMetric = "trigram("+source.var+"."+source.properties.get(0)+","+target.var+"."+target.properties.get(0)+")";
 			defMetric = defMetric.replaceAll("\\?", "");
 			System.out.println("No metricExpression set ... using default: "+defMetric);
-			metricExpression = defMetric;
+			setMetricExpression(defMetric);
 		}
 		cR.prefixes.putAll(getSource().prefixes);
 		cR.prefixes.putAll(getTarget().prefixes);
@@ -260,9 +278,9 @@ public class Configuration
 		}
 		cR.verificationRelation = sameAsRelation;
 		cR.acceptanceRelation = sameAsRelation;
-		cR.metricExpression = metricExpression;
-		cR.acceptanceThreshold = acceptanceThreshold;
-		cR.verificationThreshold  = reviewThreshold;
+		cR.metricExpression = getMetricExpression();
+		cR.acceptanceThreshold = getAcceptanceThreshold();
+		cR.verificationThreshold  = getVerificationThreshold();
 		cR.granularity = granularity;		 
 		//	cR.
 		return cR;
@@ -293,7 +311,7 @@ public class Configuration
 		final int prime = 31;
 		int result = 1;
 		long temp;
-		temp = Double.doubleToLongBits(acceptanceThreshold);
+		temp = Double.doubleToLongBits(getAcceptanceThreshold());
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + granularity;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
@@ -306,7 +324,7 @@ public class Configuration
 				+ ((sameAsRelation == null) ? 0 : sameAsRelation.hashCode());
 		result = prime * result + ((source == null) ? 0 : source.hashCode());
 		result = prime * result + ((target == null) ? 0 : target.hashCode());
-		temp = Double.doubleToLongBits(reviewThreshold);
+		temp = Double.doubleToLongBits(getVerificationThreshold());
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
@@ -317,8 +335,8 @@ public class Configuration
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		Configuration other = (Configuration) obj;
-		if (Double.doubleToLongBits(acceptanceThreshold) != Double
-				.doubleToLongBits(other.acceptanceThreshold)) return false;
+		if (Double.doubleToLongBits(getAcceptanceThreshold()) != Double
+				.doubleToLongBits(other.getAcceptanceThreshold())) return false;
 		if (granularity != other.granularity) return false;
 		if (id == null)
 		{
@@ -331,11 +349,11 @@ public class Configuration
 			if (other.metric != null) return false;
 		}
 		else if (!metric.equals(other.metric)) return false;
-		if (metricExpression == null)
+		if (getMetricExpression() == null)
 		{
-			if (other.metricExpression != null) return false;
+			if (other.getMetricExpression() != null) return false;
 		}
-		else if (!metricExpression.equals(other.metricExpression)) return false;
+		else if (!getMetricExpression().equals(other.getMetricExpression())) return false;
 		if (name == null)
 		{
 			if (other.name != null) return false;
@@ -367,8 +385,8 @@ public class Configuration
 			if (other.target != null) return false;
 		}
 		else if (!target.equals(other.target)) return false;
-		if (Double.doubleToLongBits(reviewThreshold) != Double
-				.doubleToLongBits(other.reviewThreshold)) return false;
+		if (Double.doubleToLongBits(getVerificationThreshold()) != Double
+				.doubleToLongBits(other.getVerificationThreshold())) return false;
 		return true;
 	}
 }
