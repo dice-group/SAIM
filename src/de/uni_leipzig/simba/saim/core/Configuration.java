@@ -40,13 +40,13 @@ public class Configuration
 
 	public KBInfo source = null;
 	public KBInfo target = null;
-	private String metricExpression;
+	//private String metricExpression;
 	public boolean isLocal  = false;
 
 	volatile public PropertyMapping propertyMapping = new PropertyMapping(); 
 
-	public String getMetricExpression() {return metricExpression;}
-	public void setMetricExpression(String metricExpression) {	this.metricExpression = metricExpression;}
+	//public String getMetricExpression() {return metricExpression;}
+	//public void setMetricExpression(String metricExpression) {	this.metricExpression = metricExpression;}
 	public double getAcceptanceThreshold() {return acceptanceThreshold;}
 	public void setAcceptanceThreshold(double acceptanceThreshold) {this.acceptanceThreshold = acceptanceThreshold;}
 
@@ -72,7 +72,7 @@ public class Configuration
 		this.cR = cR;
 		source = cR.sourceInfo;
 		target = cR.targetInfo;
-		metricExpression = cR.metricExpression;
+		//metricExpression = cR.metricExpression;
 		metric = MetricParser.parse(metricExpression,cR.sourceInfo.var.replace("?",""));
 
 		logger.info("Successfully parsed metric from config reader: "+metric);
@@ -299,9 +299,6 @@ public class Configuration
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + (isLocal ? 1231 : 1237);
 		result = prime * result + ((metric == null) ? 0 : metric.hashCode());
-		result = prime
-				* result
-				+ ((metricExpression == null) ? 0 : metricExpression.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		//		result = prime * result
 		//				+ ((propertyMapping == null) ? 0 : propertyMapping.hashCode());

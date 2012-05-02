@@ -12,11 +12,11 @@ import de.uni_leipzig.simba.saim.core.metric.Property.Origin;
 public class NodeTest
 {
 	
-	String[] testMetrics = {/*"jaccard(x.dc:title,y.dc:title)",
+	String[] testMetrics = {"jaccard(x.dc:title,y.dc:title)",
 			"trigrams(x.dc:title,y.dc:title)",
-			"trigrams(x.dc:title,y.dc:title)|0.6",*/
+			"trigrams(x.dc:title,y.dc:title)|0.6",
 			"ADD(0.6*jaccard(x.dc:title,y.dc:title),0.6*cosine(x.authors,y.authors))",
-			//"MAX(jaccard(x.dc:title,y.dc:title)|0.5,0.6*cosine(x.authors,y.authors)|0.5)|0.5"
+			"MAX(jaccard(x.dc:title,y.dc:title)|0.5,0.6*cosine(x.authors,y.authors)|0.5)|0.5"
 			};
 	@Test
 	public void testMetricParsing() {
