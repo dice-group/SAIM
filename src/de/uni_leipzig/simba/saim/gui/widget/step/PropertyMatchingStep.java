@@ -4,24 +4,25 @@ import org.vaadin.teemu.wizards.WizardStep;
 
 import com.vaadin.ui.Component;
 
-import de.uni_leipzig.simba.saim.gui.widget.panel.EndpointPanel;
+import de.uni_leipzig.simba.saim.Messages;
+import de.uni_leipzig.simba.saim.gui.widget.panel.PropertyMatchingPanel;
 
 public class PropertyMatchingStep implements WizardStep
 {
 
 	@Override
-	public String getCaption() {return "Property Matching";}
+	public String getCaption() {return Messages.getString("propertymatching");}
 
 	@Override
 	public Component getContent()
 	{
-		return new EndpointPanel();
+		return new PropertyMatchingPanel();
 	}
 
 	@Override
 	public boolean onAdvance()
 	{
-		return false;
+		return true;
 	}
 
 	@Override

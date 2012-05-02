@@ -110,7 +110,8 @@ public class MetricParser
 		// at the moment the very last parameter is ignored because the global threshold is set elsewhere
 		output.param1=null;
 		output.param2=null;
-		output.addChild(parsePart(output, s,sourceVar,0));
+		try{output.addChild(parsePart(output, s,sourceVar,0));}
+		catch(MetricFormatException e) {throw new MetricFormatException("Error parsing metric expression \""+s+"\".",e);}		
 		return output;
 	}
 }

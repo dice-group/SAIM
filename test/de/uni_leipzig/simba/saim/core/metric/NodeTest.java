@@ -14,14 +14,13 @@ public class NodeTest
 	
 	String[] testMetrics = {"jaccard(x.dc:title,y.dc:title)",
 			"trigrams(x.dc:title,y.dc:title)",
-			"trigrams(x.dc:title,y.dc:title)|0.6",
 
 			"levenshtein(x.dc:title,y.dc:title)",
 			"cosine(x.dc:title,y.dc:title)",
 			"euclidean(x.dc:title,y.dc:title)",
 
 			"ADD(0.6*jaccard(x.dc:title,y.dc:title),0.6*cosine(x.authors,y.authors))",
-			"MAX(jaccard(x.dc:title,y.dc:title)|0.5,0.6*cosine(x.authors,y.authors)|0.5)|0.5"
+			"MAX(jaccard(x.dc:title,y.dc:title)|0.3,0.6*cosine(x.authors,y.authors)|0.7)"
 			};
 	@Test
 	public void testMetricParsing() {
@@ -29,7 +28,7 @@ public class NodeTest
 			System.out.println("testing: "+s);
 			Output o = MetricParser.parse(s,"x");
 			System.out.println("parsed : "+o);	
-			assertTrue(o.toString().equalsIgnoreCase(s));
+			assertTrue("metric strings not equal, s="+s+", o="+o,o.toString().equalsIgnoreCase(s));
 			assertTrue(o.isComplete());
 		}
 		String s = "ADD(0.6*jaccard(x.dc:title,y.dc:title)|0.5,0.6*cosine(x.authors,y.authors)|0.5)|0.5";	
