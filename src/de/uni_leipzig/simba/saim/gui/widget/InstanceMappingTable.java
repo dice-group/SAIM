@@ -104,6 +104,7 @@ public class InstanceMappingTable implements Serializable
 			@Override
 			public Object generateCell(Table source, Object itemId, Object columnId) {
 				final InstanceMatch bean = (InstanceMatch) itemId;
+				// TODO is there a more elegant way for this?
 				ClassResource cRes = new ClassResource("../../../../icons/emblem-notice.png", SAIMApplication.getInstance());
 				Embedded image = new Embedded("",
 						cRes);

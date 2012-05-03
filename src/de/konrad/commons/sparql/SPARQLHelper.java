@@ -177,7 +177,7 @@ public class SPARQLHelper
 		else {
 			String query = "\nSELECT ?s ?p "+//(COUNT(?s) AS ?count)\n"+
 			//		"FROM "+wrapIfNecessary(graph)+"\n"+
-					"WHERE { ?s rdf:type "+className+".\n"+
+					"WHERE { ?s rdf:type "+wrapIfNecessary(className)+".\n"+
 				    "	?s ?p ?o\n"+
 				//	"} GROUP BY ?p \n"+
 				//    "ORDER BY DESC(?count)";

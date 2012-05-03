@@ -13,6 +13,8 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.junit.Test;
 
+import com.vaadin.terminal.ClassResource;
+
 public class ResourceTest {
 	@Test
 	public void testResource() throws FileNotFoundException {		
@@ -29,5 +31,6 @@ public class ResourceTest {
 			e.printStackTrace();
 		}//url.getFile();//URLDecoder.decode(url.getPath(),System.);
 	
+		//new ClassResource("img/no_crystal_clear_32.png",getApplication()))
 	}
 }
