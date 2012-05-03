@@ -159,7 +159,7 @@ public class SPARQLHelper
 	public static List<String> properties(String endpoint, String graph, String className) {
 		Logger logger = Logger.getLogger("SAIM");
 		String query1 = "SELECT DISTINCT ?s \n" +
-				"WHERE { ?s rdf:type "+className +".\n"+
+				"WHERE { ?s rdf:type "+wrapIfNecessary(className)+".\n"+
 				"?s ?p ?o. }\n"+
 				"LIMIT 5";
 		
