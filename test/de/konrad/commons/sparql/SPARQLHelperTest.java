@@ -22,11 +22,13 @@ package de.konrad.commons.sparql;
 import static de.konrad.commons.sparql.SPARQLHelper.querySelect;
 import static de.konrad.commons.sparql.SPARQLHelper.resultSetToList;
 import static de.konrad.commons.sparql.SPARQLHelper.rootClasses;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Map;
 
 import org.junit.Test;
+import org.junit.internal.runners.statements.Fail;
 
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.core.DefaultEndpointLoader;
@@ -91,6 +93,11 @@ public class SPARQLHelperTest
 				SPARQLHelper.DBPEDIA_ENDPOINT, null).next().getLiteral("o").getInt())==341);
 	}
 
+	@Test
+	public void testProperties()
+	{
+		fail("not implemented yet");
+	}
 
 	//	@Test
 	//	public void testDataType()
