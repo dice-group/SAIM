@@ -1,6 +1,9 @@
 build
+nohup.out
+tmp.xml
 WebContent/VAADIN/widgetsets
-
+doc
+linkspec.xml
 /.settings
 /.classpath
 /.project

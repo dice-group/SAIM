@@ -9,20 +9,21 @@ import de.uni_leipzig.simba.saim.gui.widget.panel.PropertyMatchingPanel;
 
 public class PropertyMatchingStep implements WizardStep
 {
-
+	PropertyMatchingPanel panel;
+	
 	@Override
 	public String getCaption() {return Messages.getString("propertymatching");}
 
 	@Override
 	public Component getContent()
 	{
-		return new PropertyMatchingPanel();
+		return (panel=new PropertyMatchingPanel());
 	}
 
 	@Override
 	public boolean onAdvance()
 	{
-		return true;
+		return panel.isValid();
 	}
 
 	@Override

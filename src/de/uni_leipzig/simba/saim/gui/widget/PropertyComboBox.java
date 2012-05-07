@@ -3,10 +3,11 @@ package de.uni_leipzig.simba.saim.gui.widget;
 import java.util.List;
 
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.NativeSelect;
 
 import de.uni_leipzig.simba.saim.Messages;
 
-public class PropertyComboBox extends ComboBox
+public class PropertyComboBox extends NativeSelect
 {
 	//public PropertyComboBox(String title) {super(title);this();}
 	public PropertyComboBox(List<String> properties)
@@ -23,8 +24,9 @@ public class PropertyComboBox extends ComboBox
 		this.setMultiSelect(false);
 
 		this.setNewItemsAllowed(false);
-		this.setInputPrompt(Messages.getString("property"));
-		this.setReadOnly(true);
+		
+		//this.setInputPrompt(Messages.getString("property"));
+		//this.setReadOnly(true);
 //
 //		this.setNullSelectionAllowed(false);
 	}

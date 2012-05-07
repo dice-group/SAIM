@@ -1,5 +1,9 @@
 @import "../reindeer/styles.css";
 
+.v-table-cell-content {
+    vertical-align: middle;
+}
+
 .v-form fieldset {
     border: thin solid;
     border-color: lavender;
