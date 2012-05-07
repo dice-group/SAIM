@@ -18,7 +18,7 @@ public class NodeTest
 			"levenshtein(x.dc:title,y.dc:title)",
 			"cosine(x.dc:title,y.dc:title)",
 			"euclidean(x.dc:title,y.dc:title)",
-
+			"jaccard(src.dailymed:name,dest.rdfs:label)",
 			"ADD(0.6*jaccard(x.dc:title,y.dc:title),0.6*cosine(x.authors,y.authors))",
 			"MAX(jaccard(x.dc:title,y.dc:title)|0.3,0.6*cosine(x.authors,y.authors)|0.7)"
 			};
