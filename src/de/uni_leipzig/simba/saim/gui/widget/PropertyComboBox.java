@@ -2,6 +2,8 @@ package de.uni_leipzig.simba.saim.gui.widget;
 
 import java.util.List;
 
+import javax.security.auth.login.Configuration;
+
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.NativeSelect;
 
@@ -9,6 +11,7 @@ import de.uni_leipzig.simba.saim.Messages;
 
 public class PropertyComboBox extends NativeSelect
 {
+	
 	//public PropertyComboBox(String title) {super(title);this();}
 	public PropertyComboBox(List<String> properties)
 	{

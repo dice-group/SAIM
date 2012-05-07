@@ -26,7 +26,7 @@ public class MetricStep implements WizardStep, Serializable
 	@Override
 	public boolean onAdvance()
 	{
-		System.out.println(Configuration.getInstance().toString());
+//		System.out.println(Configuration.getInstance().toString());
 		if(metricPanel.isValid())
 			return true;
 		else

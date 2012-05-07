@@ -212,7 +212,9 @@ public class Configuration
 	}	
 
 	public String toString() {
-		return source.toString()+"\n<br>\n"+target.toString()+"\n<br>\n"+metric.toString()+"\n<br>\n"+getAcceptanceThreshold();  
+		String output= source.toString()+"\n<br>\n"+target.toString()+"\n<br>\n";
+		if(metric != null) output +=metric.toString();
+		return output;
 	}
 
 	/**
