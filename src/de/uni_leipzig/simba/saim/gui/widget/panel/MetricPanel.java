@@ -221,7 +221,7 @@ public class MetricPanel extends Panel
 	private void getAllProps() {
 		Configuration config = Configuration.getInstance();
 //		if(config.isLocal) {
-			logger.info("Local data - using specified properties");
+//			logger.info("Local data - using specified properties");
 			selfconfig.setEnabled(true);
 			for(String prop : config.getSource().properties) {
 				String s_abr=PrefixHelper.abbreviate(prop);
