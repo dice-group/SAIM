@@ -220,7 +220,7 @@ public class MetricPanel extends Panel
 	
 	private void getAllProps() {
 		Configuration config = Configuration.getInstance();
-		if(config.isLocal) {
+//		if(config.isLocal) {
 			logger.info("Local data - using specified properties");
 			selfconfig.setEnabled(true);
 			for(String prop : config.getSource().properties) {
@@ -232,29 +232,30 @@ public class MetricPanel extends Panel
 				String s_abr=PrefixHelper.abbreviate(prop);
 				targetProps.add(s_abr);
 			}
+
+			selfconfig.setEnabled(true);
 			return;
-		}
-		List<String> propListSource = null;
-		List<String> propListTarget = null;
-		KBInfo info = config.getSource();
-		String	className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
-		propListSource = SPARQLHelper.properties(info.endpoint, info.graph, className);
-		logger.info("Got "+propListSource.size()+ " source props");
-		info = config.getTarget();
-		className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
-		propListTarget = SPARQLHelper.properties(info.endpoint, info.graph, className);
-		logger.info("Got "+propListTarget.size()+ " target props");
-	
-		for(String prop : propListSource) {
-			String s_abr=PrefixHelper.abbreviate(prop);
-			sourceProps.add(s_abr);
-		}
-		
-		for(String prop : propListTarget) {
-			String s_abr=PrefixHelper.abbreviate(prop);
-			targetProps.add(s_abr);
-		}
-		selfconfig.setEnabled(true);
+//		}
+//		List<String> propListSource = null;
+//		List<String> propListTarget = null;
+//		KBInfo info = config.getSource();
+//		String	className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
+//		propListSource = SPARQLHelper.properties(info.endpoint, info.graph, className);
+//		logger.info("Got "+propListSource.size()+ " source props");
+//		info = config.getTarget();
+//		className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
+//		propListTarget = SPARQLHelper.properties(info.endpoint, info.graph, className);
+//		logger.info("Got "+propListTarget.size()+ " target props");
+//	
+//		for(String prop : propListSource) {
+//			String s_abr=PrefixHelper.abbreviate(prop);
+//			sourceProps.add(s_abr);
+//		}
+//		
+//		for(String prop : propListTarget) {
+//			String s_abr=PrefixHelper.abbreviate(prop);
+//			targetProps.add(s_abr);
+//		}
 	}
 
 
