@@ -19,12 +19,20 @@ public class EndpointURLValidator implements Validator
 
 	public EndpointURLValidator() {	component = null;}
 	public EndpointURLValidator(Component component) {this.component = component;}
+	
+	private EndpointTester tester = new EndpointTester(); 
 
 	//	protected validationColor()
 	//	{
 	//		
 	//	}
 
+	/**	terminates the EndpointURLValidator and all it's running threads and connections. */
+	public void close()
+	{
+		tester.shutdownNow();
+	}
+	
 	@Override
 	public void validate(Object value) throws InvalidValueException
 	{
@@ -38,8 +46,8 @@ public class EndpointURLValidator implements Validator
 		{
 			EndpointStatus status = validateCache.get(s);
 			if(status==null)
-			{
-				status = EndpointTester.testSPARQLEndpointTimeOut(s);
+			{				
+				status = tester.testSPARQLEndpointTimeOut(s);
 				validateCache.put(s,status);
 			}
 

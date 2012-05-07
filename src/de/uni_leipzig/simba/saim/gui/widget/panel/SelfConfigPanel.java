@@ -1,6 +1,5 @@
 package de.uni_leipzig.simba.saim.gui.widget.panel;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -13,11 +12,11 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Layout;
-import com.vaadin.ui.Panel;
 
 import de.uni_leipzig.simba.cache.HybridCache;
 import de.uni_leipzig.simba.io.KBInfo;
@@ -33,7 +32,7 @@ import de.uni_leipzig.simba.selfconfig.SimpleClassifier;
  *
  */
 public class SelfConfigPanel extends Panel{
-	static final Logger logger = LoggerFactory.getLogger(SelfConfigPanel.class);
+	private static final Logger logger = LoggerFactory.getLogger(SelfConfigPanel.class);
 	private Component parentComponent;
 	private Layout mainLayout;
 	MeshBasedSelfConfigurator bsc;
