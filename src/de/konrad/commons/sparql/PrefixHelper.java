@@ -51,11 +51,13 @@ public class PrefixHelper
 	}
 
 	/** Generated an unused prefix for a uri if there is none and add it to the PrefixHelper (not persistent).
-	 * @param fullURI the full uri, for example "http://dbpedia.org/resource/Elephant"*/
-	public static void generatePrefix(String fullURI)
+	 * @param fullURI the full uri, for example "http://dbpedia.org/resource/Elephant"
+	 * @return String[]{prefix,url}
+	 */
+	public static String[] generatePrefix(String fullURI)
 	{
 		String base = getBase(fullURI);
-		if(getPrefix(base)!=null) {return;} // already existing
+		if(getPrefix(base)!=null) {return new String[]{getPrefix(base),base};} // already existing
 		// try to generate something meaningful
 		String prefix = base.replace("http://","").split("[\\./#]")[0];
  		if(prefix.isEmpty()||getPrefixes().containsKey(prefix))
@@ -74,6 +76,7 @@ public class PrefixHelper
 			while(prefix.isEmpty()||getPrefixes().containsKey(prefix)); 
 		}
 		addPrefix(prefix,base);
+		return new String[]{prefix,base};
 	}
 
 	public static String addPrefixes(String query)

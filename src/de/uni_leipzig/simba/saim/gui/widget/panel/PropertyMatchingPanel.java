@@ -1,9 +1,16 @@
 package de.uni_leipzig.simba.saim.gui.widget.panel;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vaadin.jonatan.contexthelp.ContextHelp;
 
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -15,17 +22,23 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 
+import de.konrad.commons.sparql.PrefixHelper;
 import de.konrad.commons.sparql.SPARQLHelper;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.Messages;
+import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.PropertyComboBox;
+import de.uni_leipzig.simba.saim.gui.widget.form.PreprocessingForm;
 
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
 @SuppressWarnings("serial")
 public class PropertyMatchingPanel extends Panel
 {		
+	private static final boolean CACHING = true;
+	private static final Logger logger = LoggerFactory.getLogger(PropertyMatchingPanel.class);
 	private List<Object[]> rows = new Vector<Object[]>();
 	private KBInfo source = Configuration.getInstance().source;
 	private KBInfo target = Configuration.getInstance().target;	
@@ -33,7 +46,7 @@ public class PropertyMatchingPanel extends Panel
 	private Table table = new Table();
 	private List<String> sourceProperties;
 	private List<String> targetProperties;
-
+	Cache cache = null;
 	private Object columnValue(Object o)
 	{
 		return ((PropertyComboBox)o).getValue();
@@ -98,6 +111,10 @@ public class PropertyMatchingPanel extends Panel
 			{
 				if(!(((PropertyComboBox)row[0]).getValue()==null||((PropertyComboBox)row[1]).getValue()==null))
 				{
+					Configuration config = Configuration.getInstance();
+					addProperty(((PropertyComboBox)row[0]).getValue().toString(),config.getSource());
+					addProperty(((PropertyComboBox)row[1]).getValue().toString(),config.getTarget());
+					config.addPropertiesMatch(((PropertyComboBox)row[0]).getValue().toString(), ((PropertyComboBox)row[1]).getValue().toString(), true);
 					Object[] row = createTableRow();
 					table.addItem(row,row);
 				}
@@ -140,9 +157,34 @@ public class PropertyMatchingPanel extends Panel
 	@Override
 	public void attach()
 	{
-		super.attach();			
-		sourceProperties = allPropertiesFromKBInfo(source);
-		targetProperties = allPropertiesFromKBInfo(target);
+		super.attach();
+		getAllProperties();
+//		List<String> sourcePropertiesFull = new LinkedList<String>();
+//		List<String> targetPropertiesFull = new LinkedList<String>();
+//		sourceProperties = new LinkedList<String>();
+//		targetProperties = new LinkedList<String>();
+//		if(Configuration.getInstance().isLocal) {
+//			for(String prop : Configuration.getInstance().getSource().properties) {
+//				sourcePropertiesFull.add(prop);
+//			}
+//			
+//			for(String prop : Configuration.getInstance().getTarget().properties) {
+//				targetPropertiesFull.add(prop);
+//			}
+//		} else {
+//			sourcePropertiesFull = allPropertiesFromKBInfo(source);
+//			targetPropertiesFull = allPropertiesFromKBInfo(target);
+//		}		
+//		// abbreviate
+//		for(String prop : sourcePropertiesFull) {
+//			String s_abr=PrefixHelper.abbreviate(prop);
+//			sourceProperties.add(s_abr);
+//		}
+//		
+//		for(String prop : targetPropertiesFull) {
+//			String s_abr=PrefixHelper.abbreviate(prop);
+//			targetProperties.add(s_abr);
+//		}
 		//table.setWidth("100%");
 		addComponent(table);		
 		closeImageResource = new ClassResource("img/no_crystal_clear_16.png",getApplication());		
@@ -178,4 +220,112 @@ public class PropertyMatchingPanel extends Panel
 	//			addComponent(targetPropertyComboBox);
 	//		}
 	//	}
+	
+	/**
+	 * Method to add Properties to according KBInfo. 
+	 * @param s URI of the property. May or may not be abbreviated.
+	 * @param info KBInfo of endpoint property belongs to.
+	 */
+	private void addProperty(String s, KBInfo info) {
+		String prop;
+		System.out.println("Add property "+s+" to "+info.id);
+		if(s.startsWith("http:")) {//do not have a prefix, so we generate one
+			PrefixHelper.generatePrefix(s);
+			prop = PrefixHelper.abbreviate(s);
+		} else {// have the prefix already
+			prop = s;
+			s = PrefixHelper.expand(s);
+		}
+		
+		info.properties.add(prop);
+		info.functions.put(prop,"lowercase");
+//		info.functions.put(prop, "");
+		//show preprocessing window
+//		Window sub = new Window("Define property "+prop);
+//		sub.setModal(true);
+//		sub.addComponent(new PreprocessingForm(info, prop));
+//		SAIMApplication.getInstance().getMainWindow().addWindow(sub);
+				
+		String base = PrefixHelper.getBase(s);
+		info.prefixes.put(PrefixHelper.getPrefix(base), PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
+	
+		LoggerFactory.getLogger(AccordionLayoutClickListener.class).info(info.var+": adding property: "+prop+" with prefix "+PrefixHelper.getPrefix(base)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
+	}
+	
+	private void getAllProperties() {
+		sourceProperties = new LinkedList<String>();
+		targetProperties = new LinkedList<String>();
+		Configuration config = Configuration.getInstance();
+		if(config.isLocal) {
+			logger.info("Local data - using specified properties");
+			for(String prop : config.getSource().properties) {
+				String s_abr=PrefixHelper.abbreviate(prop);
+				sourceProperties.add(s_abr);
+			}
+			
+			for(String prop : config.getTarget().properties) {
+				String s_abr=PrefixHelper.abbreviate(prop);
+				targetProperties.add(s_abr);
+			}
+			return;
+		}
+		List<String> propListSource = null;
+		List<String> propListTarget = null;
+		KBInfo info = config.getSource();
+		String className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
+		if(CACHING) {
+			cache = CacheManager.getInstance().getCache("propertymapping");
+//			if(cache.getStatus()==net.sf.ehcache.Status.STATUS_UNINITIALISED) {cache.initialise();}					
+			List<Object> parameters = Arrays.asList(new Object[] {info.endpoint, info.graph, className});
+			try{
+				if(cache.isKeyInCache(parameters))
+				{		
+					propListSource = (List<String>) cache.get(parameters).getValue();
+					logger.info("Property List Cache hit: "+info.endpoint);
+				}
+			} catch(Exception e){logger.info("PropertyMapping cache exception:"+e.getMessage());}
+			if(propListSource == null || propListSource.size()==0) {
+				propListSource = SPARQLHelper.properties(info.endpoint, info.graph, className);
+				cache.put(new Element(parameters, propListSource));
+				cache.flush();	
+			}
+			// target
+			info = config.getTarget();
+			className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
+			parameters = Arrays.asList(new Object[] {info.endpoint, info.graph, className});
+			try{
+				if(cache.isKeyInCache(parameters))
+				{		
+					propListTarget = (List<String>) cache.get(parameters).getValue();
+					logger.info("Property List Cache hit: "+info.endpoint);
+				}
+			} catch(Exception e){logger.info("PropertyMapping cache exception:"+e.getMessage());}
+			if(propListTarget == null || propListTarget.size()==0) {
+				propListTarget = SPARQLHelper.properties(info.endpoint, info.graph, className);
+				if(cache.getStatus()==net.sf.ehcache.Status.STATUS_UNINITIALISED) {cache.initialise();}					
+				cache.put(new Element(parameters, propListTarget));
+				cache.flush();	
+			}
+			
+		}
+		else {
+			info = config.getSource();
+			className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
+			propListSource = SPARQLHelper.properties(info.endpoint, info.graph, className);
+			logger.info("Got "+propListSource.size()+ " source props");
+			info = config.getTarget();
+			className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
+			propListTarget = SPARQLHelper.properties(info.endpoint, info.graph, className);
+			logger.info("Got "+propListTarget.size()+ " target props");
+		}
+		for(String prop : propListSource) {
+			String s_abr=PrefixHelper.abbreviate(prop);
+			sourceProperties.add(s_abr);
+		}
+		
+		for(String prop : propListTarget) {
+			String s_abr=PrefixHelper.abbreviate(prop);
+			targetProperties.add(s_abr);
+		}
+	}
 }
