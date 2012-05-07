@@ -17,7 +17,7 @@ public class EndpointTesterTest
 	{
 		for(int i=0;i<endpoints.length;i++)
 		{
-			EndpointStatus status = EndpointTester.testSPARQLEndpointTimeOut(endpoints[i]);
+			EndpointStatus status = new EndpointTester().testSPARQLEndpointTimeOut(endpoints[i]);
 			assertTrue(endpoints[i]+"->"+status.toString(),status==endpointStatusse[i]);
 		}
 	}

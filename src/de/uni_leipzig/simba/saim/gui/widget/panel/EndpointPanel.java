@@ -3,6 +3,7 @@ package de.uni_leipzig.simba.saim.gui.widget.panel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import com.google.gwt.core.client.impl.AsyncFragmentLoader.Logger;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
 
@@ -11,6 +12,7 @@ import de.uni_leipzig.simba.saim.gui.widget.form.KBInfoForm;
 import de.uni_leipzig.simba.saim.Messages;
 public class EndpointPanel extends Panel implements PropertyChangeListener
 {
+
 	public KBInfoForm kbISource;
 	public KBInfoForm kbITarget;
 
@@ -25,6 +27,13 @@ public class EndpointPanel extends Panel implements PropertyChangeListener
 		kbITarget = new KBInfoForm(Messages.getString("EndpointPanel.configuretargetendpoint"), config.getTarget()); //$NON-NLS-1$
 		this.addComponent(kbISource);
 		this.addComponent(kbITarget);
+	}
+
+	public void close()
+	{
+		
+		kbISource.close();
+		kbITarget.close();
 	}
 
 	@Override
