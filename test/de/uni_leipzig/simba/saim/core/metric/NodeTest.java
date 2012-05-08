@@ -21,7 +21,6 @@ public class NodeTest
 			"ADD(0.6*jaccard(x.dc:title,y.dc:title),0.6*cosine(x.authors,y.authors))",
 			"AND(levenshtein(x.rdfs:label,y.rdfs:label)|1.0,levenshtein(x.dbp:name,y.dbp:name)|1.0)",
 			"MAX(jaccard(x.dc:title,y.dc:title)|0.3,cosine(x.authors,y.authors)|0.7)"
-			
 			};
 	@Test
 	public void testMetricParsing() {
@@ -87,5 +86,4 @@ public class NodeTest
 		assertTrue(o3.addChild(o1));
 		assertFalse(o1.isComplete());
 	}
-
 }

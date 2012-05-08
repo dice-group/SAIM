@@ -12,7 +12,7 @@ import net.sf.ehcache.Element;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vaadin.jonatan.contexthelp.ContextHelp;
+import org.vaadin.cssinject.CSSInject;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -25,7 +25,6 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 import de.konrad.commons.sparql.PrefixHelper;
 import de.konrad.commons.sparql.SPARQLHelper;
@@ -33,10 +32,8 @@ import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.learning.query.PropertyMapper;
 import de.uni_leipzig.simba.saim.Messages;
-import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.PropertyComboBox;
-import de.uni_leipzig.simba.saim.gui.widget.form.PreprocessingForm;
 
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
 @SuppressWarnings("serial")
@@ -46,14 +43,14 @@ public class PropertyMatchingPanel extends Panel
 	private Layout mainLayout;
 	private static final Logger logger = LoggerFactory.getLogger(PropertyMatchingPanel.class);
 	private List<Object[]> rows = new Vector<Object[]>();
-	private KBInfo source = Configuration.getInstance().source;
-	private KBInfo target = Configuration.getInstance().target;	
+	//	private KBInfo source = Configuration.getInstance().source;
+	//	private KBInfo target = Configuration.getInstance().target;	
 	private ClassResource closeImageResource;
 	private Table table = new Table();
 	private List<String> sourceProperties;
 	private List<String> targetProperties;
 	Cache cache = null;
-	
+
 	Mapping propertyMapping;
 	Thread propMapper = new Thread(){
 		@Override
@@ -62,8 +59,7 @@ public class PropertyMatchingPanel extends Panel
 			displayPropertyMapping();
 		}
 	};
-	
-	
+
 	private Object columnValue(Object o)
 	{
 		return ((PropertyComboBox)o).getValue();
@@ -150,8 +146,15 @@ public class PropertyMatchingPanel extends Panel
 		PropertyComboBox sourceBox = new PropertyComboBox(sourceProperties);		
 		PropertyComboBox targetBox = new PropertyComboBox(targetProperties);
 		//Embedded closeImage = new Embedded("",closeImageResource);
+		//		CSSInject css = new CSSInject();
+		//		css.setValue(".center {margin-left:auto;margin-right:auto;}");
+		//		this.getContent().addComponent(css);
+		// TODO:  make the button smaller but keep the cross in the middle 
 		Button closeRowButton = new Button();
-		closeRowButton.setIcon(closeImageResource);		
+		//		closeRowButton.setWidth("24px");
+		closeRowButton.setIcon(closeImageResource);
+		//		closeRowButton.setStyleName("center");
+
 		final Object[] row = {sourceBox,targetBox,closeRowButton};
 		sourceBox.addListener(new RowChangeListener(row));
 		targetBox.addListener(new RowChangeListener(row));
@@ -178,33 +181,33 @@ public class PropertyMatchingPanel extends Panel
 	{
 		super.attach();
 		getAllProperties();
-//		List<String> sourcePropertiesFull = new LinkedList<String>();
-//		List<String> targetPropertiesFull = new LinkedList<String>();
-//		sourceProperties = new LinkedList<String>();
-//		targetProperties = new LinkedList<String>();
-//		if(Configuration.getInstance().isLocal) {
-//			for(String prop : Configuration.getInstance().getSource().properties) {
-//				sourcePropertiesFull.add(prop);
-//			}
-//			
-//			for(String prop : Configuration.getInstance().getTarget().properties) {
-//				targetPropertiesFull.add(prop);
-//			}
-//		} else {
-//			sourcePropertiesFull = allPropertiesFromKBInfo(source);
-//			targetPropertiesFull = allPropertiesFromKBInfo(target);
-//		}		
-//		// abbreviate
-//		for(String prop : sourcePropertiesFull) {
-//			String s_abr=PrefixHelper.abbreviate(prop);
-//			sourceProperties.add(s_abr);
-//		}
-//		
-//		for(String prop : targetPropertiesFull) {
-//			String s_abr=PrefixHelper.abbreviate(prop);
-//			targetProperties.add(s_abr);
-//		}
-		//table.setWidth("100%");
+		//		List<String> sourcePropertiesFull = new LinkedList<String>();
+		//		List<String> targetPropertiesFull = new LinkedList<String>();
+		//		sourceProperties = new LinkedList<String>();
+		//		targetProperties = new LinkedList<String>();
+		//		if(Configuration.getInstance().isLocal) {
+		//			for(String prop : Configuration.getInstance().getSource().properties) {
+		//				sourcePropertiesFull.add(prop);
+		//			}
+		//			
+		//			for(String prop : Configuration.getInstance().getTarget().properties) {
+		//				targetPropertiesFull.add(prop);
+		//			}
+		//		} else {
+		//			sourcePropertiesFull = allPropertiesFromKBInfo(source);
+		//			targetPropertiesFull = allPropertiesFromKBInfo(target);
+		//		}		
+		//		// abbreviate
+		//		for(String prop : sourcePropertiesFull) {
+		//			String s_abr=PrefixHelper.abbreviate(prop);
+		//			sourceProperties.add(s_abr);
+		//		}
+		//		
+		//		for(String prop : targetPropertiesFull) {
+		//			String s_abr=PrefixHelper.abbreviate(prop);
+		//			targetProperties.add(s_abr);
+		//		}
+		table.setWidth("100%");
 		addComponent(table);		
 		closeImageResource = new ClassResource("img/no_crystal_clear_16.png",getApplication());		
 		/* Define the names and data types of columns.
@@ -212,7 +215,7 @@ public class PropertyMatchingPanel extends Panel
 		table.addContainerProperty(Messages.getString("sourceproperty"), PropertyComboBox.class,  null);
 		table.addContainerProperty(Messages.getString("targetproperty"), PropertyComboBox.class,  null);
 		table.addContainerProperty("", Button.class,  null);
-		//		table.setColumnWidth("",20);
+		//table.setColumnWidth("",48);
 
 		/* Add a few items in the table. */
 
@@ -239,7 +242,7 @@ public class PropertyMatchingPanel extends Panel
 	//			addComponent(targetPropertyComboBox);
 	//		}
 	//	}
-	
+
 	/**
 	 * Method to add Properties to according KBInfo. 
 	 * @param s URI of the property. May or may not be abbreviated.
@@ -255,22 +258,22 @@ public class PropertyMatchingPanel extends Panel
 			prop = s;
 			s = PrefixHelper.expand(s);
 		}
-		
+
 		info.properties.add(prop);
 		info.functions.put(prop,"lowercase");
-//		info.functions.put(prop, "");
+		//		info.functions.put(prop, "");
 		//show preprocessing window
-//		Window sub = new Window("Define property "+prop);
-//		sub.setModal(true);
-//		sub.addComponent(new PreprocessingForm(info, prop));
-//		SAIMApplication.getInstance().getMainWindow().addWindow(sub);
-				
+		//		Window sub = new Window("Define property "+prop);
+		//		sub.setModal(true);
+		//		sub.addComponent(new PreprocessingForm(info, prop));
+		//		SAIMApplication.getInstance().getMainWindow().addWindow(sub);
+
 		String base = PrefixHelper.getBase(s);
 		info.prefixes.put(PrefixHelper.getPrefix(base), PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
-	
+
 		LoggerFactory.getLogger(AccordionLayoutClickListener.class).info(info.var+": adding property: "+prop+" with prefix "+PrefixHelper.getPrefix(base)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
 	}
-	
+
 	private void getAllProperties() {
 		sourceProperties = new LinkedList<String>();
 		targetProperties = new LinkedList<String>();
@@ -281,7 +284,7 @@ public class PropertyMatchingPanel extends Panel
 				String s_abr=PrefixHelper.abbreviate(prop);
 				sourceProperties.add(s_abr);
 			}
-			
+
 			for(String prop : config.getTarget().properties) {
 				String s_abr=PrefixHelper.abbreviate(prop);
 				targetProperties.add(s_abr);
@@ -294,7 +297,7 @@ public class PropertyMatchingPanel extends Panel
 		String className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
 		if(CACHING) {
 			cache = CacheManager.getInstance().getCache("propertymapping");
-//			if(cache.getStatus()==net.sf.ehcache.Status.STATUS_UNINITIALISED) {cache.initialise();}					
+			//			if(cache.getStatus()==net.sf.ehcache.Status.STATUS_UNINITIALISED) {cache.initialise();}					
 			List<Object> parameters = Arrays.asList(new Object[] {info.endpoint, info.graph, className});
 			try{
 				if(cache.isKeyInCache(parameters))
@@ -325,7 +328,7 @@ public class PropertyMatchingPanel extends Panel
 				cache.put(new Element(parameters, propListTarget));
 				cache.flush();	
 			}
-			
+
 		}
 		else {
 			info = config.getSource();
@@ -341,13 +344,13 @@ public class PropertyMatchingPanel extends Panel
 			String s_abr=PrefixHelper.abbreviate(prop);
 			sourceProperties.add(s_abr);
 		}
-		
+
 		for(String prop : propListTarget) {
 			String s_abr=PrefixHelper.abbreviate(prop);
 			targetProperties.add(s_abr);
 		}
 	}
-	
+
 	/**
 	 * Method tries to getpropertyMapping
 	 */
@@ -364,7 +367,7 @@ public class PropertyMatchingPanel extends Panel
 			for(Entry<String, Double> e : propertyMapping.map.get(key).entrySet()) {
 				System.out.println("Mapped: "+key+" to "+e.getKey()+" :: "+e.getValue());
 				vert2.addComponent(new Label("Mapped: "+key+" to "+e.getKey()+" :: "+e.getValue()));
-				
+
 			}
 		}
 		showPropMapping.addComponent(vert2);
