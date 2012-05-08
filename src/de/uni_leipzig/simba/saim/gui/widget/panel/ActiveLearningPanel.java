@@ -21,6 +21,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.genetics.core.Metric;
 import de.uni_leipzig.simba.genetics.learner.GeneticActiveLearner;
+import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
@@ -44,14 +45,14 @@ public class ActiveLearningPanel extends MetricLearnPanel
 			learner.getFitnessFunction().destroy();
 		}
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("populationSize", 20);
-		param.put("generations", 50);
-		param.put("mutationRate", 0.5f);
-		param.put("preserveFittest",true);
-		param.put("propertyMapping", config.propertyMapping);
-		param.put("trainingDataSize", 10);
-		param.put("granularity", 2);
-		param.put("config", config.getLimesConfiReader());
+		param.put("populationSize", 20); //$NON-NLS-1$
+		param.put("generations", 50); //$NON-NLS-1$
+		param.put("mutationRate", 0.5f); //$NON-NLS-1$
+		param.put("preserveFittest",true); //$NON-NLS-1$
+		param.put("propertyMapping", config.propertyMapping); //$NON-NLS-1$
+		param.put("trainingDataSize", 10); //$NON-NLS-1$
+		param.put("granularity", 2); //$NON-NLS-1$
+		param.put("config", config.getLimesConfiReader()); //$NON-NLS-1$
 		learner = new GeneticActiveLearner();
 		try {
 			learner.init(config.getSource(), config.getTarget(), param);
@@ -83,13 +84,15 @@ public class ActiveLearningPanel extends MetricLearnPanel
 			Mapping map;
 			if(iMapTable == null) // on start
 			{
-				logger.info("Starting Active Learning");
+				logger.info("Starting Active Learning"); //$NON-NLS-1$
 				map = learner.learn(new Mapping());
 			}
 			else
 			{
-				logger.info("Starting round");
+				logger.info("Starting round"); //$NON-NLS-1$
 				map = iMapTable.tabletoMapping();
+				if(map.size()==0)
+					SAIMApplication.getInstance().getMainWindow().showNotification(Messages.getString("ActiveLearningPanel.learningwithoutnotification")); //$NON-NLS-1$
 				map = learner.learn(map);
 			}
 			
@@ -102,7 +105,6 @@ public class ActiveLearningPanel extends MetricLearnPanel
 			l.addComponent(iMapTable.getTable());
 			if (map.size()>0)
 			{
-				SAIMApplication.getInstance().getMainWindow().showNotification("Learning without additional training data");
 				terminate.setEnabled(true);	
 			}
 		}		
