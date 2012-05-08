@@ -86,7 +86,7 @@ public abstract class Node
 				if(this.hasFrontParameters())
 				{
 					Double p;
-					if((p=(i==0?param1:param2))!=null) 	{sb.append(p+"*");}
+					if((p=(i==0?param1:param2))!=null) 	{sb.append(p);sb.append('*');}
 				}
 //				if(id.equalsIgnoreCase("add"))
 //				{
@@ -98,7 +98,7 @@ public abstract class Node
 				if(!this.hasFrontParameters())
 				{
 					Double p;
-					if((p=(i==0?param1:param2))!=null) 	{sb.append('|'+p);}
+					if((p=(i==0?param1:param2))!=null) 	{sb.append('|');sb.append(p);}
 				}
 				i++;
 			}

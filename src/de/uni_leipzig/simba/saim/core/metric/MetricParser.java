@@ -86,7 +86,7 @@ public class MetricParser
 
 		Node node = Node.createNode(id);
 		s=setParametersFromString(parent,s,pos);
-
+		tokens = splitFunc(s); // update tokens in case s was updated
 		int i=0;
 		for(String argument: Arrays.copyOfRange(tokens,1,tokens.length))
 		{
