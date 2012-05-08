@@ -49,7 +49,8 @@ public class Configuration
 	}
 	
 	public void setMetricExpression(String metricExpression) {
-		metric = MetricParser.parse(metricExpression, source.var);
+		logger.info("Setting metric expression to "+metricExpression+" using the source.var "+source.var);
+		metric = MetricParser.parse(metricExpression, source.var.replaceAll("\\?", ""));
 	}
 	public double getAcceptanceThreshold() {
 		return metric.param1;
