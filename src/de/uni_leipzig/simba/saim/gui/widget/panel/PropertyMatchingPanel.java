@@ -3,6 +3,7 @@ package de.uni_leipzig.simba.saim.gui.widget.panel;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Vector;
 
 import net.sf.ehcache.Cache;
@@ -19,6 +20,8 @@ import com.vaadin.terminal.ClassResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
@@ -26,7 +29,9 @@ import com.vaadin.ui.Window;
 
 import de.konrad.commons.sparql.PrefixHelper;
 import de.konrad.commons.sparql.SPARQLHelper;
+import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.io.KBInfo;
+import de.uni_leipzig.simba.learning.query.PropertyMapper;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
@@ -38,6 +43,7 @@ import de.uni_leipzig.simba.saim.gui.widget.form.PreprocessingForm;
 public class PropertyMatchingPanel extends Panel
 {		
 	private static final boolean CACHING = true;
+	private Layout mainLayout;
 	private static final Logger logger = LoggerFactory.getLogger(PropertyMatchingPanel.class);
 	private List<Object[]> rows = new Vector<Object[]>();
 	private KBInfo source = Configuration.getInstance().source;
@@ -47,6 +53,17 @@ public class PropertyMatchingPanel extends Panel
 	private List<String> sourceProperties;
 	private List<String> targetProperties;
 	Cache cache = null;
+	
+	Mapping propertyMapping;
+	Thread propMapper = new Thread(){
+		@Override
+		public void run() {
+			performAutomaticPropertyMapping();
+			displayPropertyMapping();
+		}
+	};
+	
+	
 	private Object columnValue(Object o)
 	{
 		return ((PropertyComboBox)o).getValue();
@@ -87,11 +104,13 @@ public class PropertyMatchingPanel extends Panel
 
 	public PropertyMatchingPanel()
 	{
-		setContent(new VerticalLayout());
+		mainLayout = new VerticalLayout();
+		setContent(mainLayout);
 		getContent().setWidth("100%");
 		/* Create the table with a caption. */
 
 		//	setupContextHelp();
+		propMapper.start();
 	}
 
 	private class RowChangeListener implements ValueChangeListener
@@ -327,5 +346,28 @@ public class PropertyMatchingPanel extends Panel
 			String s_abr=PrefixHelper.abbreviate(prop);
 			targetProperties.add(s_abr);
 		}
+	}
+	
+	/**
+	 * Method tries to getpropertyMapping
+	 */
+	private void performAutomaticPropertyMapping() {
+		Configuration config = Configuration.getInstance();
+		PropertyMapper propMap = new PropertyMapper();
+		propertyMapping = propMap.getPropertyMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().getClassOfendpoint(), config.getTarget().getClassOfendpoint());
+	}
+	private void displayPropertyMapping() {
+		Panel showPropMapping = new Panel("Computed propertyMapping");
+		VerticalLayout vert2 = new VerticalLayout();
+		String s = "";
+		for(String key : propertyMapping.map.keySet()) {
+			for(Entry<String, Double> e : propertyMapping.map.get(key).entrySet()) {
+				System.out.println("Mapped: "+key+" to "+e.getKey()+" :: "+e.getValue());
+				vert2.addComponent(new Label("Mapped: "+key+" to "+e.getKey()+" :: "+e.getValue()));
+				
+			}
+		}
+		showPropMapping.addComponent(vert2);
+		mainLayout.addComponent(showPropMapping);		
 	}
 }

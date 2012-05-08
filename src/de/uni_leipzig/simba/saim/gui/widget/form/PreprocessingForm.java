@@ -1,9 +1,11 @@
 package de.uni_leipzig.simba.saim.gui.widget.form;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,10 +43,24 @@ public class PreprocessingForm extends Form{
 	}
 	
 	private void init() {
+		Set<String> choosen = new HashSet<String>();
+		if(info.functions.get(prop)!=null &&info.functions.get(prop).trim().length()>0) {
+			String split[] = info.functions.get(prop).split("->");
+			for(String preproc : split) {
+				if(preproc.trim().length()>0)
+					choosen.add(preproc.trim());		
+			}
+		}
 		boxes.put("lowercase", new CheckBox("lowercase"));
 		boxes.put("uppercase", new CheckBox("uppercase"));
 		boxes.put("nolang", new CheckBox("nolang"));
 		boxes.put("number", new CheckBox("number"));
+		
+		for(String choosed: choosen ) {
+			if(boxes.get(choosed) != null) {
+				boxes.get(choosed).setValue(true);
+			}
+		}
 		
 		for(final Entry<String, CheckBox> box : boxes.entrySet()) {
 			box.getValue().addListener(new ValueChangeListener() {
