@@ -61,12 +61,15 @@ public class Configuration
 		metric.param1 = acceptanceThreshold;
 	}
 	public double getVerificationThreshold() {
-		return metric.param2;
+		if( metric.param2 == null)
+			return getAcceptanceThreshold()-0.1d;
+		else
+			return metric.param2;
 	}
 	public void setVerificationThreshold(double verificationThreshold) {
 		if(metric == null)
 			metric = new Output();
-		metric.param1 = verificationThreshold;
+		metric.param2 = verificationThreshold;
 	}
 
 	Configuration() {}
