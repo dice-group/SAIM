@@ -390,8 +390,8 @@ class AccordionLayoutClickListener implements LayoutClickListener{
 			prop = s;
 			s = PrefixHelper.expand(s);
 		}
-		
-		info.properties.add(prop);
+		if(!info.properties.contains(prop))
+			info.properties.add(prop);
 //		info.functions.put(prop, "");
 		//show preprocessing window
 		Window sub = new Window("Define property "+prop);

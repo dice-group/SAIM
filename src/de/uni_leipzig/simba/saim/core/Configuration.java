@@ -49,7 +49,8 @@ public class Configuration
 	}
 	
 	public void setMetricExpression(String metricExpression) {
-		metric = MetricParser.parse(metricExpression, source.var);
+		logger.info("Setting metric expression to "+metricExpression+" using the source.var "+source.var);
+		metric = MetricParser.parse(metricExpression, source.var.replaceAll("\\?", ""));
 	}
 	public double getAcceptanceThreshold() {
 		return metric.param1;
@@ -60,12 +61,15 @@ public class Configuration
 		metric.param1 = acceptanceThreshold;
 	}
 	public double getVerificationThreshold() {
-		return metric.param2;
+		if( metric.param2 == null)
+			return getAcceptanceThreshold()-0.1d;
+		else
+			return metric.param2;
 	}
 	public void setVerificationThreshold(double verificationThreshold) {
 		if(metric == null)
 			metric = new Output();
-		metric.param1 = verificationThreshold;
+		metric.param2 = verificationThreshold;
 	}
 
 	Configuration() {}

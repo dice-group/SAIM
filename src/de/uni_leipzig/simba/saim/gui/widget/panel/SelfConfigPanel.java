@@ -1,5 +1,6 @@
 package de.uni_leipzig.simba.saim.gui.widget.panel;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -42,9 +43,9 @@ public class SelfConfigPanel extends Panel{
 	final Panel stepPanel = new Panel();
 	Panel resultPanel;
 //	Button nextRound;
-	Button generateMetric;
+//	Button generateMetric;
 	Select resultSelect = new Select();
-
+	String generatedMetricexpression = "";
 	
 	/**
 	 * Constructor to may embed Panel in a parent component, e.g. an existing WizardStep Component.
@@ -93,11 +94,11 @@ public class SelfConfigPanel extends Panel{
 		resultPanel.setContent(resultLayout);		
 //		nextRound = new Button(Messages.getString("SelfConfigPanel.nextroundbutton")); //$NON-NLS-1$
 //		nextRound.addListener(new NextRoundButtonClickListener());
-		generateMetric = new Button(Messages.getString("SelfConfigPanel.generatemetricbutton")); //$NON-NLS-1$
-		generateMetric.addListener(new GenerateMetricButtonClickListener(mainLayout));
-		generateMetric.setEnabled(false);
+//		generateMetric = new Button(Messages.getString("SelfConfigPanel.generatemetricbutton")); //$NON-NLS-1$
+//		generateMetric.addListener(new GenerateMetricButtonClickListener(mainLayout));
+//		generateMetric.setEnabled(false);
 //		buttonLayout.addComponent(nextRound);
-		buttonLayout.addComponent(generateMetric);
+//		buttonLayout.addComponent(generateMetric);
 		
 		performSelfConfiguration();
 	}
@@ -128,18 +129,23 @@ public class SelfConfigPanel extends Panel{
 				showSimpleClassifiers();
 				indicator.setValue(new Float(4f/steps));
 				stepPanel.setCaption(Messages.getString("SelfConfigPanel.gotinitialclassifiers")); //$NON-NLS-1$
-				
-//				classifiers = bsc.learnClassifer(classifiers);
-				cc = bsc.getZoomedHillTop(5, 5, classifiers);
-				System.out.println(cc);
-				for(SimpleClassifier co:cc.classifiers) {
-					System.out.println(co);
+				if(classifiers.size()>0) {
+					classifiers = bsc.learnClassifer(classifiers);
+					cc = bsc.getZoomedHillTop(5, 5, classifiers);
+					System.out.println(cc);
+					for(SimpleClassifier co:cc.classifiers) {
+						System.out.println(co);
+					}
+//					classifiers = cc.classifiers;
+					indicator.setValue(new Float(5f/steps));
+					stepPanel.setCaption(Messages.getString("SelfConfigPanel.complexclassifiercaption")); //$NON-NLS-1$
+					generatedMetricexpression = generateMetric(cc.classifiers, "");
+					showComplexClassifier();
+					Configuration.getInstance().setMetricExpression(generatedMetricexpression);
+				} else {
+					indicator.setValue(new Float(5f/steps));
+					stepPanel.setCaption(Messages.getString("SelfConfigPanel.nosimpleclassifiers"));
 				}
-//				classifiers = cc.classifiers;
-				indicator.setValue(new Float(5f/steps));
-				stepPanel.setCaption(Messages.getString("SelfConfigPanel.complexclassifiercaption")); //$NON-NLS-1$
-				showComplexClassifier();
-
 			}
 		}.start();
 	}
@@ -159,17 +165,20 @@ public class SelfConfigPanel extends Panel{
 				config.addPropertiesMatch(cl.sourceProperty, cl.targetProperty, true);
 				logger.info("Adding string propertyMatch between: "+cl.sourceProperty +" - "+ cl.targetProperty);
 			}
-		}			
+		}
+		
 	}
 	
 	/**Method shows complex classifier*/
 	private void showComplexClassifier() {
 		if(this.cc == null)
 			return;
-		Panel result = new Panel("Classifier: "+generateMetric(cc.classifiers, "")
+		
+		Panel result = new Panel("Classifier: "+generatedMetricexpression
 				+ " with pseudo f-measure="+cc.fMeasure);
 		stepPanel.addComponent(result);
-		generateMetric.setEnabled(true);
+		
+//		generateMetric.setEnabled(true);
 	}
 	
 	/**To enable refreshing while multithreading*/
@@ -197,7 +206,7 @@ public class SelfConfigPanel extends Panel{
 			if(cc.classifiers.size()==1) {
 				Configuration.getInstance().setAcceptanceThreshold(cc.classifiers.get(0).threshold);
 			}
-			String metric = generateMetric(cc.classifiers, "");
+			String metric = generatedMetricexpression;
 		
 			Configuration.getInstance().setMetricExpression(metric);
 //			Configuration.getInstance().setAcceptanceThreshold(cl.threshold);
@@ -228,7 +237,12 @@ public class SelfConfigPanel extends Panel{
 	 * @param expr The metric expression so far.
 	 * @return
 	 */
-	private String generateMetric(List<SimpleClassifier> sCList, String expr) {
+	private String generateMetric(List<SimpleClassifier> originalCCList, String expr) {
+		// need to copy them
+		List<SimpleClassifier> sCList = new LinkedList<SimpleClassifier>();
+		for(SimpleClassifier sC: originalCCList)
+			sCList.add(sC);
+		
 		if(sCList.size()==0)
 			return expr;
 		if(expr.length() == 0) {// nothing generated before
@@ -242,8 +256,7 @@ public class SelfConfigPanel extends Panel{
 			}
 		} else { // have to combine, recursive
 			String nestedExpr = "AND("+expr+","+generateMetric(sCList.remove(0))+")";
-			return generateMetric(sCList, nestedExpr);
-			
+			return generateMetric(sCList, nestedExpr);			
 		}
 	}
 //	/**Controls Action taken by nextRound Button.*/
