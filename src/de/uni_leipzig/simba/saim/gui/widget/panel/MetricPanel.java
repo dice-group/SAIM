@@ -223,17 +223,18 @@ public class MetricPanel extends Panel
 //		if(config.isLocal) {
 //			logger.info("Local data - using specified properties");
 			selfconfig.setEnabled(true);
-			for(String prop : config.getSource().properties) {
-				String s_abr=PrefixHelper.abbreviate(prop);
-				sourceProps.add(s_abr);
-			}
-			
-			for(String prop : config.getTarget().properties) {
-				String s_abr=PrefixHelper.abbreviate(prop);
-				targetProps.add(s_abr);
-			}
-
-			selfconfig.setEnabled(true);
+			if( config.getSource() != null && config.getSource().properties != null) {
+				for(String prop : config.getSource().properties) {
+					String s_abr=PrefixHelper.abbreviate(prop);
+					sourceProps.add(s_abr);
+				}
+				
+				for(String prop : config.getTarget().properties) {
+					String s_abr=PrefixHelper.abbreviate(prop);
+					targetProps.add(s_abr);
+				}
+				selfconfig.setEnabled(true);
+			}			
 			return;
 //		}
 //		List<String> propListSource = null;
