@@ -39,12 +39,13 @@ public class InstanceMappingTable implements Serializable
 	final HybridCache targetCache;
 	final Mapping data;
 	final List <InstanceMatch> dataList = new LinkedList<InstanceMatch>();
-	
+	private boolean showBoxes = true;
 	BeanItemContainer<InstanceMatch> beanItemContainer;
 	Table t;
 	// TODO:  t.setColumnCollapsingAllowed(true);
-	public InstanceMappingTable(Mapping m, HybridCache sourceCache, HybridCache targetCache)
+	public InstanceMappingTable(Mapping m, HybridCache sourceCache, HybridCache targetCache, boolean showBoxes)
 	{
+		this.showBoxes = showBoxes;
 		data = m;
 		this.sourceCache=sourceCache;
 		this.targetCache=targetCache;
@@ -77,28 +78,31 @@ public class InstanceMappingTable implements Serializable
 			//	SAIMApplication.getInstance().getMainWindow().open(new ExternalResource(m.getUri1()), "_");
 			}
 		});
-		t.addGeneratedColumn(Messages.getString("InstanceMappingTable.isamatch"), new ColumnGenerator() { //$NON-NLS-1$
-            @Override
-            public Component generateCell(final Table source, final Object itemId, final Object columnId) {
-            	final InstanceMatch bean = (InstanceMatch) itemId;
-                final CheckBox checkBox = new CheckBox();
-                checkBox.setImmediate(true);
-                checkBox.addListener(new Property.ValueChangeListener() {
-                    @Override
-                    public void valueChange(final ValueChangeEvent event) {
-                        bean.setSelected((Boolean) event.getProperty().getValue());
-                        System.out.println("Selected " + bean); //$NON-NLS-1$
-                    }
-                });
+		if(showBoxes) {
+			t.addGeneratedColumn(Messages.getString("InstanceMappingTable.isamatch"), new ColumnGenerator() { //$NON-NLS-1$
+	            @Override
+	            public Component generateCell(final Table source, final Object itemId, final Object columnId) {
+	            	final InstanceMatch bean = (InstanceMatch) itemId;
+	                final CheckBox checkBox = new CheckBox();
+	                checkBox.setImmediate(true);
+	                checkBox.addListener(new Property.ValueChangeListener() {
+	                    @Override
+	                    public void valueChange(final ValueChangeEvent event) {
+	                        bean.setSelected((Boolean) event.getProperty().getValue());
+	                        System.out.println("Selected " + bean); //$NON-NLS-1$
+	                    }
+	                });
 
-                if (bean.isSelected()) {
-                    checkBox.setValue(true);
-                } else {
-                    checkBox.setValue(false);
-                }
-                return checkBox;
-            }
-        });
+	                if (bean.isSelected()) {
+	                    checkBox.setValue(true);
+	                } else {
+	                    checkBox.setValue(false);
+	                }
+	                return checkBox;
+	            }
+	        });
+		}
+		
 		// add column to display addition info
 		t.addGeneratedColumn("info",new Table.ColumnGenerator() {			
 			@Override
@@ -137,7 +141,11 @@ public class InstanceMappingTable implements Serializable
 			  }
 			});
 		t.setColumnReorderingAllowed(true);
-		t.setVisibleColumns(new Object[] {"info", Messages.getString("InstanceMappingTable.sourceuri"), Messages.getString("InstanceMappingTable.targeturi"), Messages.getString("value"), Messages.getString("InstanceMappingTable.isamatch")}); 
+		if(showBoxes)
+			t.setVisibleColumns(new Object[] {"info", Messages.getString("InstanceMappingTable.sourceuri"), Messages.getString("InstanceMappingTable.targeturi"), Messages.getString("value"), Messages.getString("InstanceMappingTable.isamatch")});
+		else
+			t.setVisibleColumns(new Object[] {"info", Messages.getString("InstanceMappingTable.sourceuri"), Messages.getString("InstanceMappingTable.targeturi"), Messages.getString("value")});
+		
 		// Allow selecting items from the table.
 		t.setSelectable(true);
 		// Send changes in selection immediately to server.
