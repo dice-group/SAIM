@@ -75,14 +75,14 @@ public class PropertyMappingGenerator extends Panel {
 	private void getAllProps() {
 		//for source
 		KBInfo info = Configuration.getInstance().getSource();
-		String className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
+		String className = info.getClassOfendpoint();
 		for(String prop : SPARQLHelper.properties(info.endpoint, info.graph, className)) {
 			String s_abr=PrefixHelper.abbreviate(prop);
 			sourceProps.add(s_abr);
 		}
 		//for target
 		info = Configuration.getInstance().getTarget();
-		className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
+		className = info.getClassOfendpoint();
 		for(String prop : SPARQLHelper.properties(info.endpoint, info.graph, className)) {
 			String s_abr=PrefixHelper.abbreviate(prop);
 			targetProps.add(s_abr);

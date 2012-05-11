@@ -13,6 +13,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 
 import de.uni_leipzig.simba.controller.Parser;
+import de.uni_leipzig.simba.genetics.util.Pair;
 import de.uni_leipzig.simba.saim.core.Configuration;
 
 public class ManualMetricForm extends Form{
@@ -126,11 +127,23 @@ public class ManualMetricForm extends Form{
 	}
 	
 	public void setDefaultValues() {
-		thresholdTextField.setValue(0.8d);
-		String metric = "trigram(src.rdfs:label, dest.rdfs:label)";	
-		//metric ="ADD(0.5*Trigram(src.rdfs:label,dest.rdfs:label), 0.5*Trigram(src.rdfs:label,dest.sider:sideEffectName))";
-		//drugbank - sider
-		//metric = "trigrams(src.sider:drugName,dest.dailymed:name)";
-		metricTextField.setValue(metric);
+		Configuration config = Configuration.getInstance();
+		if(config.getMetricExpression() == null) {
+			if (config.propertyMapping == null || config.propertyMapping.stringPropPairs.size() == 0) {
+				return;
+			} else {
+				Pair<String> propPair = config.propertyMapping.stringPropPairs.get(0);
+				String metric = "trigram(";
+				metric += config.getSource().var.replaceAll("\\?", "")+"."+propPair.a;
+				metric +=",";
+				metric += config.getTarget().var.replaceAll("\\?", "")+"."+propPair.b;
+				metric += ")";
+				metricTextField.setValue(metric);
+				thresholdTextField.setValue("0.5d");
+			}			
+		} else {
+			metricTextField.setValue(config.getMetricExpression());
+			thresholdTextField.setValue(config.getAcceptanceThreshold());
+		}		
 	}
 }

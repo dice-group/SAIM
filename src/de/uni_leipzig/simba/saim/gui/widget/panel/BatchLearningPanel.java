@@ -82,11 +82,11 @@ public class BatchLearningPanel extends MetricLearnPanel {
 			l.addComponent(iMapTable.getTable());
 			l.removeAllComponents();
 			l.addComponent(iMapTable.getTable());
-			if (map.size()>0)
+			if (map.size()==0)
 			{
 				SAIMApplication.getInstance().getMainWindow().showNotification("Learning without additional training data");
-				terminate.setEnabled(true);	
 			}
+			terminate.setEnabled(true);	
 		}		
 	}
 }

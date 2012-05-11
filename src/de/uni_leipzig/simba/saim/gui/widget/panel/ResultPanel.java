@@ -18,7 +18,6 @@ import de.konrad.commons.sparql.PrefixHelper;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.io.Serializer;
 import de.uni_leipzig.simba.io.SerializerFactory;
-import de.uni_leipzig.simba.io.serializer.SimpleN3Serializer;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
