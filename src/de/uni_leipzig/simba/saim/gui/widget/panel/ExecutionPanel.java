@@ -23,6 +23,11 @@ import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.LimesRunner;
 import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
 import de.uni_leipzig.simba.saim.gui.widget.Listener.MetricPanelListeners;
+/**
+ * Panel to execute a Mapping.
+ * @author Lyko
+ *
+ */
 public class ExecutionPanel extends PerformPanel implements PropertyChangeListener {
 	LimesRunner lR;
 	Label progressLabel;

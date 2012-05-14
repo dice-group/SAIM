@@ -98,7 +98,7 @@ public class MetricPanel extends Panel
 		accordionLayout.addComponent(accordionPanel);
 		accordionPanel.setWidth("25em");
 
-		final Accordion accordion = new Accordion();		
+		Accordion accordion = new Accordion();		
 		accordionPanel.addComponent(accordion);
 		
 		accordion.addTab(sourceLayout,Messages.getString("MetricPanel.sourceproperties"));		

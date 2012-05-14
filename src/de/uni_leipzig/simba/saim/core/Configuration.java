@@ -54,11 +54,17 @@ public class Configuration
 		logger.info("Setting metric expression to "+metricExpression+" using the source.var "+source.var);
 		
 		if(metric != null) {
-			double param1 = metric.param1;
-			double param2 = metric.param2;		
+			double param1 = 2.0d;
+			double param2 = 2.0d;
+			if(metric.param1 != null)
+				param1 = metric.param1;
+			if(metric.param2 != null)
+				param2 = metric.param2;		
 			metric = MetricParser.parse(metricExpression, source.var.replaceAll("\\?", ""));
-			metric.param1 = param1;
-			metric.param2 = param2;
+			if(param1 <= 1)
+				metric.param1 = param1;
+			if(param2 <= 1)
+				metric.param2 = param2;
 		} else {
 			//donno
 			metric = MetricParser.parse(metricExpression, source.var.replaceAll("\\?", ""));

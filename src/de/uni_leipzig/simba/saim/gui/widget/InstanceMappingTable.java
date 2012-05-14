@@ -93,7 +93,7 @@ public class InstanceMappingTable implements Serializable
 	                    }
 	                });
 
-	                if (bean.isSelected()) {
+	                if (bean.isSelected() || bean.getValue()>=0.75d) {
 	                    checkBox.setValue(true);
 	                } else {
 	                    checkBox.setValue(false);
