@@ -70,7 +70,7 @@ public class ResultPanel extends Panel{
 				}
 			}
 			serial.close();
-			download.addComponent(new Link(Messages.getString("downloadlinkspec"),new FileResource(new File(fileName), SAIMApplication.getInstance()))); //$NON-NLS-1$
+			download.addComponent(new Link(Messages.getString("downloadresults"),new FileResource(new File(fileName), SAIMApplication.getInstance()))); //$NON-NLS-1$
 			download.setModal(true);
 			getWindow().addWindow(download);
 		}
