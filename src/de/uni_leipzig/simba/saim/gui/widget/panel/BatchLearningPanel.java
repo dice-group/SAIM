@@ -43,7 +43,7 @@ public class BatchLearningPanel extends MetricLearnPanel {
 			e.printStackTrace();
 		}
 		Mapping map = learner.learn(new Mapping());
-		iMapTable = new InstanceMappingTable(map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache());
+		iMapTable = new InstanceMappingTable(map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache(), true);
 		if (map.size()>0)
 		{
 			learnLayout.removeAllComponents();
@@ -77,16 +77,16 @@ public class BatchLearningPanel extends MetricLearnPanel {
 			}
 			
 			//iMapTable = new DetailedInstanceMappingTable(map,learner.getFitnessFunction().getSourceCache(),learner.getFitnessFunction().getTargetCache());
-			iMapTable = new InstanceMappingTable(map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache());
+			iMapTable = new InstanceMappingTable(map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache(), true);
 			l.removeAllComponents();
 			l.addComponent(iMapTable.getTable());
 			l.removeAllComponents();
 			l.addComponent(iMapTable.getTable());
-			if (map.size()>0)
+			if (map.size()==0)
 			{
 				SAIMApplication.getInstance().getMainWindow().showNotification("Learning without additional training data");
-				terminate.setEnabled(true);	
 			}
+			terminate.setEnabled(true);	
 		}		
 	}
 }

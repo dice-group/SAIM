@@ -1,8 +1,10 @@
 package de.uni_leipzig.simba.saim.gui.widget.panel;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
@@ -12,7 +14,6 @@ import net.sf.ehcache.Element;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vaadin.cssinject.CSSInject;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -20,9 +21,11 @@ import com.vaadin.terminal.ClassResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
@@ -40,7 +43,7 @@ import de.uni_leipzig.simba.saim.gui.widget.PropertyComboBox;
 public class PropertyMatchingPanel extends Panel
 {		
 	private static final boolean CACHING = true;
-	private Layout mainLayout;
+	private final Layout mainLayout;
 	private static final Logger logger = LoggerFactory.getLogger(PropertyMatchingPanel.class);
 	private List<Object[]> rows = new Vector<Object[]>();
 	//	private KBInfo source = Configuration.getInstance().source;
@@ -48,15 +51,34 @@ public class PropertyMatchingPanel extends Panel
 	private ClassResource closeImageResource;
 	private Table table = new Table();
 	private List<String> sourceProperties;
-	private List<String> targetProperties;
-	Cache cache = null;
+	private List<String> targetProperties;	
+	private final ProgressIndicator progress = new ProgressIndicator();
+	private Label progressLabel = new Label("test");
 
-	Mapping propertyMapping;
-	Thread propMapper = new Thread(){
+	Cache cache = null;
+	
+	Thread propMapper = new Thread()
+	{
 		@Override
-		public void run() {
-			performAutomaticPropertyMapping();
-			displayPropertyMapping();
+		public void run()
+		{
+			progress.setVisible(true);
+			progressLabel.setVisible(true);
+			Map<String,HashMap<String,Double>> map = performAutomaticPropertyMapping().map;
+//			try{Thread.sleep(4000);} catch (InterruptedException e) {e.printStackTrace();}
+//			Map<String,HashMap<String,Double>> map = mockPropertyMap();
+			displayPropertyMapping(map);
+			progress.setVisible(false);
+			progressLabel.setVisible(false);
+		}
+
+		private Map<String, HashMap<String, Double>> mockPropertyMap()
+		{
+			Map<String, HashMap<String, Double>> map = new HashMap<>();
+			HashMap<String,Double> value = new HashMap<>();
+			value.put("rdfs:label",0.337);
+			map.put("rdfs:label",value);
+			return map;
 		}
 	};
 
@@ -101,12 +123,19 @@ public class PropertyMatchingPanel extends Panel
 	public PropertyMatchingPanel()
 	{
 		mainLayout = new VerticalLayout();
+
 		setContent(mainLayout);
 		getContent().setWidth("100%");
 		/* Create the table with a caption. */
 
 		//	setupContextHelp();
+		Layout progressLayout = new HorizontalLayout();
+		mainLayout.addComponent(progressLayout);
+		progress.setIndeterminate(true);
+		progressLayout.addComponent(progressLabel);
+		progressLayout.addComponent(progress);
 		propMapper.start();
+		System.out.println("thread started");
 	}
 
 	private class RowChangeListener implements ValueChangeListener
@@ -354,20 +383,30 @@ public class PropertyMatchingPanel extends Panel
 	/**
 	 * Method tries to getpropertyMapping
 	 */
-	private void performAutomaticPropertyMapping() {
+	private Mapping performAutomaticPropertyMapping() {
 		Configuration config = Configuration.getInstance();
 		PropertyMapper propMap = new PropertyMapper();
-		propertyMapping = propMap.getPropertyMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().getClassOfendpoint(), config.getTarget().getClassOfendpoint());
+		return propMap.getPropertyMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().getClassOfendpoint(), config.getTarget().getClassOfendpoint());
 	}
-	private void displayPropertyMapping() {
+			
+	private void displayPropertyMapping(Map<String, HashMap<String, Double>> map)
+	{
 		Panel showPropMapping = new Panel("Computed propertyMapping");
 		VerticalLayout vert2 = new VerticalLayout();
-		String s = "";
-		for(String key : propertyMapping.map.keySet()) {
-			for(Entry<String, Double> e : propertyMapping.map.get(key).entrySet()) {
-				System.out.println("Mapped: "+key+" to "+e.getKey()+" :: "+e.getValue());
+		//String s = "";
+		for(String key : map.keySet()) {
+			for(Entry<String, Double> e : map.get(key).entrySet())
+			{
+				Object[] row = createTableRow();
+				PropertyComboBox sourceBox = (PropertyComboBox) row[0];
+				PropertyComboBox targetBox = (PropertyComboBox) row[1];
+				sourceBox.addItem(key);
+				sourceBox.select(key);
+				targetBox.addItem(e.getKey());
+				targetBox.select(e.getKey());
+				table.addItem(row,row);
+				logger.debug("Mapped: "+key+" to "+e.getKey()+" :: "+e.getValue());
 				vert2.addComponent(new Label("Mapped: "+key+" to "+e.getKey()+" :: "+e.getValue()));
-
 			}
 		}
 		showPropMapping.addComponent(vert2);

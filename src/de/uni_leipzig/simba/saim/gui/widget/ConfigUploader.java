@@ -147,7 +147,7 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver{
 				}
 				config.setFromConfigReader(cR);
 				SAIMApplication appl = (SAIMApplication) getApplication();
-				appl.showComponent(new ExecutionPanel());				
+				appl.refresh();				
 			}
 		});
 		root.getContent().addComponent(subLayout);

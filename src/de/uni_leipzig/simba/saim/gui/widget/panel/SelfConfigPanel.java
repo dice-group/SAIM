@@ -22,6 +22,7 @@ import com.vaadin.ui.VerticalLayout;
 import de.uni_leipzig.simba.cache.HybridCache;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.Messages;
+import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.selfconfig.ComplexClassifier;
 import de.uni_leipzig.simba.selfconfig.MeshBasedSelfConfigurator;
@@ -32,9 +33,9 @@ import de.uni_leipzig.simba.selfconfig.SimpleClassifier;
  * @author Lyko
  *
  */
-public class SelfConfigPanel extends Panel{
+public class SelfConfigPanel extends PerformPanel{
 	private static final Logger logger = LoggerFactory.getLogger(SelfConfigPanel.class);
-	private Component parentComponent;
+//	private Component parentComponent;
 	private Layout mainLayout;
 	MeshBasedSelfConfigurator bsc;
 	List<SimpleClassifier> classifiers;
@@ -46,14 +47,15 @@ public class SelfConfigPanel extends Panel{
 //	Button generateMetric;
 	Select resultSelect = new Select();
 	String generatedMetricexpression = "";
+	Thread thread;
 	
 	/**
 	 * Constructor to may embed Panel in a parent component, e.g. an existing WizardStep Component.
 	 * @param parentComponent
 	 */
-	public SelfConfigPanel(Component parentComponent) {
+	public SelfConfigPanel() {//Component parentComponent) {
 		super();
-		this.parentComponent = parentComponent;
+//		this.parentComponent = parentComponent;
 		init();
 	}
 	/**
@@ -100,7 +102,7 @@ public class SelfConfigPanel extends Panel{
 //		buttonLayout.addComponent(nextRound);
 //		buttonLayout.addComponent(generateMetric);
 		
-		performSelfConfiguration();
+	
 	}
 	
 	/**
@@ -109,7 +111,7 @@ public class SelfConfigPanel extends Panel{
 	protected void performSelfConfiguration() {
 		mainLayout.addComponent(indicator);
 		mainLayout.addComponent(stepPanel);
-		new Thread() {
+		thread = new Thread() {
 			public void run() {
 
 				float steps = 5f;
@@ -141,13 +143,16 @@ public class SelfConfigPanel extends Panel{
 					stepPanel.setCaption(Messages.getString("SelfConfigPanel.complexclassifiercaption")); //$NON-NLS-1$
 					generatedMetricexpression = generateMetric(cc.classifiers, "");
 					showComplexClassifier();
+					
 					Configuration.getInstance().setMetricExpression(generatedMetricexpression);
+					Configuration.getInstance().setAcceptanceThreshold(getThreshold(cc.classifiers));
 				} else {
 					indicator.setValue(new Float(5f/steps));
 					stepPanel.setCaption(Messages.getString("SelfConfigPanel.nosimpleclassifiers"));
 				}
 			}
-		}.start();
+		};
+		thread.start();
 	}
 	
 	/**
@@ -259,6 +264,16 @@ public class SelfConfigPanel extends Panel{
 			return generateMetric(sCList, nestedExpr);			
 		}
 	}
+	
+	private double getThreshold(List<SimpleClassifier> classifiers) {
+		double min = Double.MAX_VALUE;
+		for(SimpleClassifier sC : classifiers) {
+			if(sC.threshold <= min)
+				min = sC.threshold;
+		}
+		return min>1?0.5d:min;
+	}
+	
 //	/**Controls Action taken by nextRound Button.*/
 //	class NextRoundButtonClickListener implements Button.ClickListener {
 //		@Override
@@ -267,4 +282,15 @@ public class SelfConfigPanel extends Panel{
 //			showResults();
 //		}		
 //	}
+	@SuppressWarnings("deprecation")
+	@Override
+	public void onClose() {
+		thread.stop();
+		((SAIMApplication) SAIMApplication.getInstance()).refresh();
+		
+	}
+	@Override
+	public void start() {
+		performSelfConfiguration();
+	}
 }

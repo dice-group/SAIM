@@ -3,19 +3,16 @@ package de.uni_leipzig.simba.saim.gui.widget.panel;
 import java.awt.Color;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vaadin.cytographer.Cytographer;
 import org.vaadin.cytographer.GraphProperties;
-
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
@@ -23,7 +20,6 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-
 import csplugins.layout.algorithms.force.ForceDirectedLayout;
 import cytoscape.CyNetwork;
 import cytoscape.Cytoscape;
@@ -35,6 +31,7 @@ import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
+import de.uni_leipzig.simba.saim.gui.widget.Listener.MetricPanelListeners;
 import de.uni_leipzig.simba.saim.gui.widget.form.ManualMetricForm;
 import de.uni_leipzig.simba.saim.gui.widget.form.PreprocessingForm;
 
@@ -47,13 +44,17 @@ public class MetricPanel extends Panel
 	Mapping propMapping;
 	HorizontalLayout mainLayout = new HorizontalLayout();
 	HorizontalLayout layout = new HorizontalLayout();
-
+	HorizontalLayout buttonLayout = new HorizontalLayout();
+	
 	Set<String> sourceProps = new HashSet<String>();
 	Set<String> targetProps = new HashSet<String>();
 
 	final static Logger logger = LoggerFactory.getLogger(MetricPanel.class);
 	
-	Button selfconfig;
+	Button selfConfigButton;
+	Button learnButton;
+	Button startMapping;
+	
 	Cytographer cytographer;
 	CyNetworkView cyNetworkView;
 	final VerticalLayout sourceLayout =  new VerticalLayout();
@@ -86,10 +87,9 @@ public class MetricPanel extends Panel
 		accordionLayout.addComponent(progress);
 		// self config
 		mainLayout.addComponent(manualMetricForm=new ManualMetricForm());
-		selfconfig = new Button("Start SelfConfiguration");
-		selfconfig.setEnabled(false);
-		selfconfig.addListener(new SelfConfigClickListener(layout));
-		mainLayout.addComponent(selfconfig);
+		
+		//buttons		
+		mainLayout.addComponent(getButtonLayout());
 
 		// accordion panel
 		Panel accordionPanel = new Panel();
@@ -99,6 +99,7 @@ public class MetricPanel extends Panel
 
 		final Accordion accordion = new Accordion();		
 		accordion.setHeight("100%");
+
 		accordionPanel.addComponent(accordion);
 		
 		accordion.addTab(sourceLayout,Messages.getString("MetricPanel.sourceproperties"));		
@@ -107,7 +108,7 @@ public class MetricPanel extends Panel
 		accordion.addTab(operatorsLayout,Messages.getString("MetricPanel.operators"));	
 				
 		// add Cytographer
-		accordionLayout.addComponent(getCytographer());
+		layout.addComponent(getCytographer());
 		
 		new Thread(){			
 			@Override
@@ -117,39 +118,11 @@ public class MetricPanel extends Panel
 
 				for(String s : sourceProps) {
 					final Label check = new Label(s);
-
-					//	check.setCaption(s);
-					//						check.addListener(new Property.ValueChangeListener() {							
-					//							@Override
-					//							public void valueChange(ValueChangeEvent event) {
-					//								String prop = check.getCaption();
-					//								if(check.booleanValue() && prop != null && prop.length()>0) {
-					//									String s_abr=PrefixHelper.abbreviate(prop);
-					//									sourceProps.add(s_abr);
-					//									Configuration.getInstance().getSource().properties.add(s_abr);
-					//									Configuration.getInstance().getSource().prefixes.put(PrefixHelper.getPrefixFromURI(s_abr), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
-					//									Configuration.getInstance().getSource().functions.put(s_abr, "lowercase");
-					//									System.out.println("Adding source property: "+s_abr+"::::"+PrefixHelper.getPrefixFromURI(s_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
-					//							}
-					//						});
 					sourceLayout.addComponent(check); 
 				}
 						
 				for(String t : targetProps) {
 					final Label check = new Label(t);
-
-					//						check.addListener(new Property.ValueChangeListener() {							
-					//							@Override
-					//							public void valueChange(ValueChangeEvent event) {
-					//								String prop = check.getCaption();
-					//								if(check.booleanValue() && prop != null && prop.length()>0) {
-					//									String s_abr=PrefixHelper.abbreviate(prop);
-					//									Configuration.getInstance().getTarget().properties.add(s_abr);
-					//									Configuration.getInstance().getTarget().prefixes.put(PrefixHelper.getPrefixFromURI(s_abr), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
-					//									Configuration.getInstance().getTarget().functions.put(s_abr, "lowercase");
-					//									System.out.println("Adding target property: "+s_abr+"::::"+PrefixHelper.getPrefixFromURI(s_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
-					//							}
-					//						});
 					targetLayout.addComponent(check);
 				}
 				accordionLayout.removeComponent(progress);
@@ -162,7 +135,9 @@ public class MetricPanel extends Panel
 		sourceLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.SOURCE));
 		targetLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.TARGET));
 		metricsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.METRIC));
-		operatorsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.OPERATOR));	
+		operatorsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.OPERATOR));
+		
+		this.checkButtons();
 	}
 	private Cytographer getCytographer(){
 		
@@ -190,74 +165,28 @@ public class MetricPanel extends Panel
 		
 		return cytographer;		
 	}
-//	private void performPropertyMapping() {
-//		Configuration config = Configuration.getInstance();
-//		config.getSource().properties.clear();
-//		config.getTarget().properties.clear();
-//		PropertyMapper propMapper = new PropertyMapper();
-//		String classSource = getClassOfEndpoint(config.getSource());
-//		String classTarget = getClassOfEndpoint(config.getTarget());
-//		if(classSource != null && classTarget != null) {
-//			showErrorMessage("Getting property mapping...");
-//			propMapping = propMapper.getPropertyMapping(config.getSource().endpoint,
-//					config.getTarget().endpoint, classSource, classTarget);
-//			for(String s : propMapping.map.keySet())
-//				for(Entry<String, Double> e : propMapping.map.get(s).entrySet()) {
-//					System.out.println(s + " - " + e.getKey());
-//					String s_abr=PrefixHelper.abbreviate(s);
-//					sourceProps.add(s_abr);
-//					config.getSource().properties.add(s_abr);
-//					config.getSource().prefixes.put(PrefixHelper.getPrefixFromURI(s_abr), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
-//					System.out.println("Adding source property: "+s_abr+"::::"+PrefixHelper.getPrefixFromURI(s_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
-//					targetProps.add(PrefixHelper.abbreviate(e.getKey()));
-//					String t_abr=PrefixHelper.abbreviate(e.getKey());
-//					config.getTarget().properties.add(t_abr);
-//					config.getTarget().prefixes.put(PrefixHelper.getPrefixFromURI(t_abr), PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(t_abr)));
-//					System.out.println("Adding target property: "+t_abr+"::::"+PrefixHelper.getPrefixFromURI(t_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(t_abr)));
-//				}
-//		} else {
-//			showErrorMessage("Cannot perform automatic property mapping due to missing class specifications.");
-//		}		
-//	}
+
 	
 	private void getAllProps() {
 		Configuration config = Configuration.getInstance();
 //		if(config.isLocal) {
 //			logger.info("Local data - using specified properties");
-			selfconfig.setEnabled(true);
-			for(String prop : config.getSource().properties) {
-				String s_abr=PrefixHelper.abbreviate(prop);
-				sourceProps.add(s_abr);
-			}
-			
-			for(String prop : config.getTarget().properties) {
-				String s_abr=PrefixHelper.abbreviate(prop);
-				targetProps.add(s_abr);
-			}
-
-			selfconfig.setEnabled(true);
+	
+			if( config.getSource() != null && config.getSource().properties != null && config.getSource().properties.size()>0 &&
+					config.getTarget() != null && config.getTarget().properties != null && config.getTarget().properties.size()>0) {
+				for(String prop : config.getSource().properties) {
+					String s_abr=PrefixHelper.abbreviate(prop);
+					sourceProps.add(s_abr);
+				}
+				
+				for(String prop : config.getTarget().properties) {
+					String s_abr=PrefixHelper.abbreviate(prop);
+					targetProps.add(s_abr);
+				}
+				selfConfigButton.setEnabled(true);
+				selfConfigButton.setEnabled(true);
+			}			
 			return;
-//		}
-//		List<String> propListSource = null;
-//		List<String> propListTarget = null;
-//		KBInfo info = config.getSource();
-//		String	className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
-//		propListSource = SPARQLHelper.properties(info.endpoint, info.graph, className);
-//		logger.info("Got "+propListSource.size()+ " source props");
-//		info = config.getTarget();
-//		className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
-//		propListTarget = SPARQLHelper.properties(info.endpoint, info.graph, className);
-//		logger.info("Got "+propListTarget.size()+ " target props");
-//	
-//		for(String prop : propListSource) {
-//			String s_abr=PrefixHelper.abbreviate(prop);
-//			sourceProps.add(s_abr);
-//		}
-//		
-//		for(String prop : propListTarget) {
-//			String s_abr=PrefixHelper.abbreviate(prop);
-//			targetProps.add(s_abr);
-//		}
 	}
 
 
@@ -296,44 +225,43 @@ public class MetricPanel extends Panel
 		}
 		return false;
 	}
-	/**Listener for SelfConfig button.*/
-	public static class SelfConfigClickListener implements Button.ClickListener {
-		Layout l;
-		public SelfConfigClickListener(Layout l) {
-			this.l=l;
-		}
-		@Override
-		public void buttonClick(ClickEvent event) {
-			l.removeAllComponents();
-			l.addComponent(new SelfConfigPanel(l));
-//			Refresher refresher = new Refresher();
-//			SelfConfigRefreshListener listener = new SelfConfigRefreshListener();
-//			refresher.addListener(listener);
-//			addComponent(refresher);
-//
-//			final ProgressIndicator indicator = new ProgressIndicator();
-//			indicator.setCaption("Progress");
-//			l.addComponent(indicator);
-//			indicator.setImmediate(true);
+	
+	public Layout getButtonLayout() {
+		selfConfigButton = new Button("Start SelfConfiguration");
+		selfConfigButton.setEnabled(false);
+		selfConfigButton.addListener(new MetricPanelListeners.SelfConfigClickListener());
+		this.learnButton = new Button("Learn Metric");
+		learnButton.setEnabled(false);
+		learnButton.addListener(new MetricPanelListeners.LearnClickListener());
+		this.startMapping = new Button("Start Mapping process");
+		startMapping.setEnabled(false);
+		startMapping.addListener(new MetricPanelListeners.StartMappingListener());
+		buttonLayout.addComponent(selfConfigButton);
+		buttonLayout.addComponent(learnButton);
+		buttonLayout.addComponent(startMapping);
+		return buttonLayout;		
+	}
+	
+	/**
+	 * Checks whether the Buttons (selfconfig, learning and startMapping) could be activated.
+	 */
+	public void checkButtons() {
+		Configuration config = Configuration.getInstance();
+		if( config.getSource() != null && config.getSource().properties != null && config.getSource().properties.size()>0 &&
+				config.getTarget() != null && config.getTarget().properties != null && config.getTarget().properties.size()>0) {
+			selfConfigButton.setEnabled(true);
+			if(config.getMetricExpression() != null && config.getMetricExpression().length()>0) {
+				learnButton.setEnabled(true);
+				startMapping.setEnabled(true);
 
-		}			
+				manualMetricForm.metricTextField.setValue(config.getMetricExpression());
+				manualMetricForm.thresholdTextField.setValue(config.getAcceptanceThreshold());
+			}
+		}
 	}
 }
-//
-///**To enable refreshing while multithreading*/
-//public class SelfConfigRefreshListener implements RefreshListener
-//	{
-//		boolean running = true; 
-//		private static final long serialVersionUID = -8765221895426102605L;		    
-//		@Override 
-//		public void refresh(final Refresher source)	{
-//			if(!running) {
-//				removeComponent(source);
-//				source.setEnabled(false);
-//			}
-//		}
-//	}
-//}
+
+
 /**Listener to react on clicks in the accordion panel.*/
 class AccordionLayoutClickListener implements LayoutClickListener{
 

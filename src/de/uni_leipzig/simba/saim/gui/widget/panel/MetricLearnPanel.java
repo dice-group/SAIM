@@ -17,6 +17,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import de.uni_leipzig.simba.genetics.core.Metric;
 import de.uni_leipzig.simba.genetics.learner.GeneticActiveLearner;
 import de.uni_leipzig.simba.genetics.learner.LinkSpecificationLearner;
+import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
 import de.uni_leipzig.simba.saim.gui.widget.panel.ActiveLearningPanel.ActiveLearnButtonClickListener;
@@ -25,7 +26,7 @@ import de.uni_leipzig.simba.saim.gui.widget.panel.ActiveLearningPanel.ActiveLear
  * @author Lyko
  *
  */
-public class MetricLearnPanel extends Panel{
+public class MetricLearnPanel extends  PerformPanel{
 	public static Logger logger = Logger.getLogger("LIMES");
 	protected Configuration config = Configuration.getInstance();
 	public LinkSpecificationLearner learner;
@@ -42,18 +43,22 @@ public class MetricLearnPanel extends Panel{
 		layout.setWidth("100%");
 		setContent(layout);
 		
-		learnLayout = new HorizontalLayout();
-		learnLayout.setWidth("100%");
-		layout.addComponent(learnLayout);
+	
 		// add Button
 		learn = new Button("learn");
 		layout.addComponent(learn);
 		learn.setEnabled(true);
 
+		HorizontalLayout solution = new HorizontalLayout();
+		
 		terminate = new Button("Get best solution so far");
-		terminate.addListener(new TerminateButtonClickListener(layout));
+		terminate.addListener(new TerminateButtonClickListener(solution));
 		terminate.setEnabled(false);
 		layout.addComponent(terminate);
+		layout.addComponent(solution);
+		learnLayout = new HorizontalLayout();
+		learnLayout.setWidth("100%");
+		layout.addComponent(learnLayout);
 	}
 	
 	public class TerminateButtonClickListener implements Button.ClickListener {
@@ -80,8 +85,20 @@ public class MetricLearnPanel extends Panel{
 				label.setValue(metric.expression+" with threshold "+metric.threshold);
 				Configuration.getInstance().setMetricExpression(metric.expression);
 				Configuration.getInstance().setAcceptanceThreshold(metric.threshold);
+				((SAIMApplication) SAIMApplication.getInstance()).refresh();
 				l.addComponent(label);
 			}
 		}
+	}
+
+	@Override
+	public void onClose() {
+		((SAIMApplication) SAIMApplication.getInstance()).refresh();		
+	}
+
+	@Override
+	public void start() {
+		// TODO Auto-generated method stub
+		
 	}
 }

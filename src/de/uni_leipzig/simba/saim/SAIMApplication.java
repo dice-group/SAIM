@@ -21,11 +21,13 @@ import com.vaadin.ui.Link;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.ConfigUploader;
+import de.uni_leipzig.simba.saim.gui.widget.panel.MetricPanel;
 import de.uni_leipzig.simba.saim.gui.widget.panel.StartPanel;
 import de.uni_leipzig.simba.saim.gui.widget.step.ClassMatchingStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.DevelopMetricStep;
@@ -33,6 +35,7 @@ import de.uni_leipzig.simba.saim.gui.widget.step.EndpointStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.ExecutionStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.MetricStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.PropertyMatchingStep;
+import de.uni_leipzig.simba.saim.gui.widget.window.EndpointWindow;
 
 @SuppressWarnings("serial")
 public class SAIMApplication extends Application
@@ -44,6 +47,9 @@ public class SAIMApplication extends Application
 //	private GridLayout gridLayout;
 	private Wizard wizard;
 	Window sub;
+	
+	Panel content;
+	
 	static final Logger logger = LoggerFactory.getLogger(SAIMApplication.class);
 	public static Application getInstance() {return application;}
 	
@@ -56,20 +62,21 @@ public class SAIMApplication extends Application
 		mainLayout = buildMainLayout();
 		mainWindow.setContent(mainLayout);
 		mainWindow.addComponent(buildMainMenu());
-
-		mainLayout.addComponent(new StartPanel());
+		content = new MetricPanel();
+		mainLayout.addComponent(content);
 		wizard = new Wizard();
 
 //		wizardDevelopment();
-		wizardFull();
+//		wizardFull();
 
-		mainLayout.addComponent(wizard);
+//		mainLayout.addComponent(wizard);
+		
 		setTheme("saim"); //$NON-NLS-1$
 	}
 	
-	protected void wizardDevelopment()
-	{
-		wizard.addStep(new EndpointStep());
+//	protected void wizardDevelopment()
+//	{
+//		wizard.addStep(new EndpointStep());
 //		HashMap<String,KBInfo> endpoints = DefaultEndpointLoader.getDefaultEndpoints();
 //		KBInfo info_s = endpoints.get("lgd.aksw - Drugbank");
 //		KBInfo info_t = endpoints.get("lgd.aksw - Sider");
@@ -79,13 +86,15 @@ public class SAIMApplication extends Application
 //		info_t.type = "SPARQL";
 //		Configuration.getInstance().setSourceEndpoint(info_s);
 //		Configuration.getInstance().setTargetEndpoint(info_t);
-
-		wizard.addStep(new ClassMatchingStep());
+//
+//		wizard.addStep(new ClassMatchingStep());
 //		wizard.addStep(new MetricStep());
 //		wizard.addStep(new ActiveLearningStep());
-		wizard.addStep(new DevelopMetricStep());
-	}
-	
+//		wizard.addStep(new DevelopMetricStep());
+//	}
+	/**
+	 * @deprecated
+	 */
 	protected void wizardFull()
 	{
 		wizard.addStep(new EndpointStep());		
@@ -109,11 +118,24 @@ public class SAIMApplication extends Application
 		fileMenu.addItem(Messages.getString("importlimes"), null, importLIMESCommand).setEnabled(true);		 //$NON-NLS-1$
 		fileMenu.addItem(Messages.getString("exportlimes"), null, exportLIMESCommand).setEnabled(true); //$NON-NLS-1$
 		
-		MenuItem controlMenu= menuBar.addItem(Messages.getString("SAIMApplication.menurestart"), null, new Command() {			 //$NON-NLS-1$
+//		MenuItem controlMenu= menuBar.addItem(Messages.getString("SAIMApplication.menurestart"), null, new Command() {			 //$NON-NLS-1$
+//			@Override
+//			public void menuSelected(MenuItem selectedItem) {
+//				((SAIMApplication)SAIMApplication.getInstance()).returnToBegin();
+//			}
+//		});
+		
+		MenuItem startMenu = menuBar.addItem("Start", null, new Command() {
+
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
-				((SAIMApplication)SAIMApplication.getInstance()).returnToBegin();
+				// TODO Auto-generated method stub
+				EndpointWindow endpointWindow = new EndpointWindow();
+				endpointWindow.setModal(true);
+				endpointWindow.setVisible(true);
+				((SAIMApplication)SAIMApplication.getInstance()).getMainWindow().addWindow(endpointWindow);
 			}
+			
 		});
 		
 		return menuBar;
@@ -217,6 +239,7 @@ public class SAIMApplication extends Application
 	}
 	/**
 	 * Return view to the beginning: showing wizard.
+	 * @deprecated
 	 */
 	public void returnToBegin() {
 		mainWindow.removeAllComponents();
@@ -228,6 +251,11 @@ public class SAIMApplication extends Application
 
 	}
 
+	/**
+	 * @deprecated
+	 * @param oldStep
+	 * @param newStep
+	 */
 	public void setStep(WizardStep oldStep, WizardStep newStep) {
 		List<WizardStep> olderSteps = new LinkedList<WizardStep>();
 		boolean found = false;
@@ -246,7 +274,10 @@ public class SAIMApplication extends Application
 			wizard.removeStep(os);
 		}
 	}
-	
+	/**
+	 * @deprecated
+	 * @param oldStep
+	 */
 	public void removeOlderSteps(WizardStep oldStep) {
 		List<WizardStep> olderSteps = new LinkedList<WizardStep>();
 		boolean found = false;
@@ -262,5 +293,13 @@ public class SAIMApplication extends Application
 		for(WizardStep os : olderSteps) {
 			wizard.removeStep(os);
 		}
+	}
+	
+	public void refresh() {
+//		Panel p = new Panel(Configuration.getInstance().toString());
+		//mainLayout.addComponent(new MetricPanel());
+		mainLayout.removeComponent(content);
+		content = new MetricPanel();		
+		mainLayout.addComponent(content);
 	}
 }

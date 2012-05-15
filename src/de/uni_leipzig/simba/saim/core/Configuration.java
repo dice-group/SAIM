@@ -45,14 +45,39 @@ public class Configuration
 	volatile public PropertyMapping propertyMapping = new PropertyMapping(); 
 
 	public String getMetricExpression() {
-		return metric.toString();
+		if(metric != null)
+			return metric.toString();
+		return null;
 	}
 	
 	public void setMetricExpression(String metricExpression) {
 		logger.info("Setting metric expression to "+metricExpression+" using the source.var "+source.var);
-		metric = MetricParser.parse(metricExpression, source.var.replaceAll("\\?", ""));
+		
+		if(metric != null) {
+			double param1 = 2.0d;
+			double param2 = 2.0d;
+			if(metric.param1 != null)
+				param1 = metric.param1;
+			if(metric.param2 != null)
+				param2 = metric.param2;		
+			metric = MetricParser.parse(metricExpression, source.var.replaceAll("\\?", ""));
+			if(param1 <= 1)
+				metric.param1 = param1;
+			if(param2 <= 1)
+				metric.param2 = param2;
+		} else {
+			//donno
+			metric = MetricParser.parse(metricExpression, source.var.replaceAll("\\?", ""));
+		}
+	
+		logger.info("Setted metric expression to "+this.metric.toString());
+		
 	}
 	public double getAcceptanceThreshold() {
+		if(metric == null || metric.param1==null) {
+			logger.warn("Not able to set threshold");
+			return 0.3d;
+		}
 		return metric.param1;
 	}
 	public void setAcceptanceThreshold(double acceptanceThreshold) {
