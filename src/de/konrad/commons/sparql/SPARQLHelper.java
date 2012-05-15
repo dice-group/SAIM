@@ -356,7 +356,7 @@ public class SPARQLHelper
 		}
 		catch(RuntimeException e)
 		{
-			throw new RuntimeException("Error with query \""+query+"\"",e);
+			throw new RuntimeException("Error with query \""+query+"\" at endpoint \""+endpoint+"\" and graph \""+graph+"\"",e);
 		}
 	}
 

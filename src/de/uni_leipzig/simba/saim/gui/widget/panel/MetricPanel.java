@@ -2,22 +2,17 @@ package de.uni_leipzig.simba.saim.gui.widget.panel;
 
 import java.awt.Color;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vaadin.cytographer.Cytographer;
-
 import org.vaadin.cytographer.GraphProperties;
-
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
@@ -25,15 +20,12 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-
 import csplugins.layout.algorithms.force.ForceDirectedLayout;
 import cytoscape.CyNetwork;
 import cytoscape.Cytoscape;
 import cytoscape.view.CyNetworkView;
 import cytoscape.visual.VisualPropertyType;
-
 import de.konrad.commons.sparql.PrefixHelper;
-import de.konrad.commons.sparql.SPARQLHelper;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.Messages;
@@ -50,7 +42,7 @@ public class MetricPanel extends Panel
 	private static final long	serialVersionUID	= 6766679517868840795L;
 	private static final boolean CACHING = true;
 	Mapping propMapping;
-	VerticalLayout mainLayout = new VerticalLayout();
+	HorizontalLayout mainLayout = new HorizontalLayout();
 	HorizontalLayout layout = new HorizontalLayout();
 	HorizontalLayout buttonLayout = new HorizontalLayout();
 	
@@ -75,14 +67,20 @@ public class MetricPanel extends Panel
 		mainLayout.setSpacing(false);
 		mainLayout.setMargin(false);
 		mainLayout.setWidth("100%");
+		mainLayout.setHeight("100%");
+		
+		final VerticalLayout accordionLayout = new VerticalLayout();
+		accordionLayout.setHeight("100%");
+		mainLayout.addComponent(accordionLayout);
+		for(int i=0;i<5;i++) {accordionLayout.addComponent(new Button());}
+		
 		layout.setSpacing(false);
 		layout.setMargin(false);
 		setContent(mainLayout);
 		layout.setWidth("100%");
 		mainLayout.addComponent(layout);
 //		mainLayout.setComponentAlignment(layout, Alignment.TOP_LEFT);
-		final VerticalLayout accordionLayout = new VerticalLayout();
-		layout.addComponent(accordionLayout);	
+		
 //		layout.setComponentAlignment(accordionLayout, Alignment.TOP_LEFT);
 		final ProgressIndicator progress = new ProgressIndicator();
 		progress.setIndeterminate(false);
@@ -95,19 +93,20 @@ public class MetricPanel extends Panel
 
 		// accordion panel
 		Panel accordionPanel = new Panel();
+		accordionPanel.setHeight("100%");
 		accordionLayout.addComponent(accordionPanel);
 		accordionPanel.setWidth("25em");
 
-		Accordion accordion = new Accordion();		
+		final Accordion accordion = new Accordion();		
+		accordion.setHeight("100%");
+
 		accordionPanel.addComponent(accordion);
 		
 		accordion.addTab(sourceLayout,Messages.getString("MetricPanel.sourceproperties"));		
 		accordion.addTab(targetLayout,Messages.getString("MetricPanel.targetproperties"));
 		accordion.addTab(metricsLayout,Messages.getString("MetricPanel.metrics")); 
 		accordion.addTab(operatorsLayout,Messages.getString("MetricPanel.operators"));	
-		
-
-		
+				
 		// add Cytographer
 		layout.addComponent(getCytographer());
 		
