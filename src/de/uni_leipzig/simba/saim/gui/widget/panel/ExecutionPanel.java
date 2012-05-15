@@ -34,7 +34,7 @@ public class ExecutionPanel extends PerformPanel implements PropertyChangeListen
 	ProgressIndicator progress;
 	private Mapping m = new Mapping();
 	float maxSteps = LimesRunner.MAX_STEPS;
-	Button start;
+//	Button start;
 	//Button showResults;
 //	Button startActiveLearning;
 //	Button startBatchLearning;
@@ -132,7 +132,7 @@ public class ExecutionPanel extends PerformPanel implements PropertyChangeListen
 				InstanceMappingTable iT = new InstanceMappingTable(m, lR.getSourceCache(), lR.getTargetCache(), false);
 				ResultPanel results = new ResultPanel(iT);
 				mainLayout.addComponent(results);
-				mainLayout.removeComponent(start);
+//				mainLayout.removeComponent(start);
 			}
 		};
 		thread.start();

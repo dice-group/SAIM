@@ -35,8 +35,8 @@ public class SerializationWindow extends Window {
 		
 		mainLayout = new VerticalLayout();
 		this.setContent(mainLayout);
-		setWidth("700px"); 
-		setCaption(Messages.getString("downloadresults")); 
+		setWidth("700px");  
+		setCaption(Messages.getString("downloadresults"));  
 		setModal(true);
 		
 		serializerSelect = getSerializerSelect();
@@ -46,7 +46,7 @@ public class SerializationWindow extends Window {
 	
 	private Link getLinkToFile(Mapping m, Serializer serial, String fileEnding) {
 		Configuration config = Configuration.getInstance();
-		String fileName   = ""; 
+		String fileName   = "";  //$NON-NLS-1$
 		fileName += config.getSource().id+"_"+config.getTarget().id+fileEnding; 
 		serial.open(fileName);
 		String predicate = config.getLimesConfiReader().acceptanceRelation;
@@ -59,15 +59,15 @@ public class SerializationWindow extends Window {
 			}
 		}
 		serial.close();
-		return new Link(Messages.getString("downloadlinkspec"),new FileResource(new File(fileName), SAIMApplication.getInstance()));
+		return new Link(Messages.getString("downloadlinkspec"),new FileResource(new File(fileName), SAIMApplication.getInstance())); 
 	}
 	
 	private Select getSerializerSelect() {
-		Select select = new Select("Please select serialization format");
+		Select select = new Select(Messages.getString("SerializationWindow.serializerselectcaption"));
 		serializerNames = new HashMap<String, Serializer>();
-		serializerNames.put("Turtle", SerializerFactory.getSerializer("ttl"));
-		serializerNames.put("N3", SerializerFactory.getSerializer("N3"));
-		serializerNames.put("Tab separated file", SerializerFactory.getSerializer("tab"));
+		serializerNames.put(Messages.getString("SerializationWindow.turtle"), SerializerFactory.getSerializer("ttl")); 
+		serializerNames.put(Messages.getString("SerializationWindow.n3"), SerializerFactory.getSerializer("N3")); 
+		serializerNames.put(Messages.getString("SerializationWindow.tabseparated"), SerializerFactory.getSerializer("tab")); 
 		for(String s : serializerNames.keySet())
 			select.addItem(s);
 		select.addListener(new SerializerSelectListener());
