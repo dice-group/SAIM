@@ -42,7 +42,7 @@ public class MetricPanel extends Panel
 	private static final long	serialVersionUID	= 6766679517868840795L;
 	private static final boolean CACHING = true;
 	Mapping propMapping;
-	HorizontalLayout mainLayout = new HorizontalLayout();
+	VerticalLayout mainLayout = new VerticalLayout();
 	HorizontalLayout layout = new HorizontalLayout();
 	HorizontalLayout buttonLayout = new HorizontalLayout();
 	
@@ -66,18 +66,18 @@ public class MetricPanel extends Panel
 	{
 		mainLayout.setSpacing(false);
 		mainLayout.setMargin(false);
-		mainLayout.setWidth("100%");
-		mainLayout.setHeight("100%");
-		
+//		mainLayout.setWidth("100%");
+//		mainLayout.setHeight("100%");
+//		
 		final VerticalLayout accordionLayout = new VerticalLayout();
-		accordionLayout.setHeight("100%");
-		mainLayout.addComponent(accordionLayout);
-		for(int i=0;i<5;i++) {accordionLayout.addComponent(new Button());}
+//		accordionLayout.setHeight("100%");
+		layout.addComponent(accordionLayout);
+//		for(int i=0;i<5;i++) {accordionLayout.addComponent(new Button());}
 		
 		layout.setSpacing(false);
 		layout.setMargin(false);
 		setContent(mainLayout);
-		layout.setWidth("100%");
+//		layout.setWidth("100%");
 		mainLayout.addComponent(layout);
 //		mainLayout.setComponentAlignment(layout, Alignment.TOP_LEFT);
 		
@@ -175,34 +175,37 @@ public class MetricPanel extends Panel
 			if( config.getSource() != null && config.getSource().properties != null && config.getSource().properties.size()>0 &&
 					config.getTarget() != null && config.getTarget().properties != null && config.getTarget().properties.size()>0) {
 				for(String prop : config.getSource().properties) {
-					String s_abr=PrefixHelper.abbreviate(prop);
-					sourceProps.add(s_abr);
+					if(prop.trim().length()>0) {
+						String s_abr=PrefixHelper.abbreviate(prop);
+						sourceProps.add(s_abr);
+					}
 				}
 				
 				for(String prop : config.getTarget().properties) {
-					String s_abr=PrefixHelper.abbreviate(prop);
-					targetProps.add(s_abr);
+					if(prop.trim().length()>0) {
+						String s_abr=PrefixHelper.abbreviate(prop);
+						targetProps.add(s_abr);
+					}
 				}
-				selfConfigButton.setEnabled(true);
 				selfConfigButton.setEnabled(true);
 			}			
 			return;
 	}
 
 
-	/**
-	 * Little helper function to retrieve classes out of restrictions of the LIMES SPEC. Whereas, a
-	 * class is in a restriction of the format "?var rdf:type <class>".
-	 * @param ep
-	 * @return
-	 */
-	private String getClassOfEndpoint(KBInfo ep) {
-		for(String rest : ep.restrictions) {
-			if(rest.matches(".* rdf:type .*"))
-				return rest.substring(rest.indexOf("rdf:type")+8).replaceAll("<", "").replaceAll(">", "").trim();
-		}
-		return null;
-	}
+//	/**
+//	 * Little helper function to retrieve classes out of restrictions of the LIMES SPEC. Whereas, a
+//	 * class is in a restriction of the format "?var rdf:type <class>".
+//	 * @param ep
+//	 * @return
+//	 */
+//	private String getClassOfEndpoint(KBInfo ep) {
+//		for(String rest : ep.restrictions) {
+//			if(rest.matches(".* rdf:type .*"))
+//				return rest.substring(rest.indexOf("rdf:type")+8).replaceAll("<", "").replaceAll(">", "").trim();
+//		}
+//		return null;
+//	}
 
 	private void showErrorMessage(String message) {
 		layout.setComponentError(new UserError(message));
