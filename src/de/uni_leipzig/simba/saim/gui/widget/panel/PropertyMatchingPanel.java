@@ -7,14 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
-
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.terminal.ClassResource;
@@ -28,7 +25,6 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-
 import de.konrad.commons.sparql.PrefixHelper;
 import de.konrad.commons.sparql.SPARQLHelper;
 import de.uni_leipzig.simba.data.Mapping;
@@ -53,8 +49,9 @@ public class PropertyMatchingPanel extends Panel
 	private List<String> sourceProperties;
 	private List<String> targetProperties;	
 	private final ProgressIndicator progress = new ProgressIndicator();
-	private Label progressLabel = new Label("test");
-
+	private Label progressLabel = new Label(Messages.getString("generatingpropertymatching"));
+	private boolean listenerActive = true;
+	
 	Cache cache = null;
 	
 	Thread propMapper = new Thread()
@@ -150,7 +147,10 @@ public class PropertyMatchingPanel extends Panel
 
 		@Override
 		public void valueChange(ValueChangeEvent event)
-		{			
+		{
+			// TODO: find a better solution that is not succeptible to rare possible timing problems
+			// (user may insert at the same time as insertion from displayPropertyMapping() takes place)
+			if(!listenerActive) {return;}
 			if(row==rows.get(rows.size()-1)) // complete last row -> create new
 			{
 				if(!(((PropertyComboBox)row[0]).getValue()==null||((PropertyComboBox)row[1]).getValue()==null))
@@ -394,6 +394,7 @@ public class PropertyMatchingPanel extends Panel
 		Panel showPropMapping = new Panel("Computed propertyMapping");
 		VerticalLayout vert2 = new VerticalLayout();
 		//String s = "";
+		listenerActive=false;
 		for(String key : map.keySet()) {
 			for(Entry<String, Double> e : map.get(key).entrySet())
 			{
@@ -409,6 +410,7 @@ public class PropertyMatchingPanel extends Panel
 				vert2.addComponent(new Label("Mapped: "+key+" to "+e.getKey()+" :: "+e.getValue()));
 			}
 		}
+		listenerActive=true;
 		showPropMapping.addComponent(vert2);
 		mainLayout.addComponent(showPropMapping);		
 	}
