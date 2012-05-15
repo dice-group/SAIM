@@ -57,10 +57,11 @@ public class MetricPanel extends Panel
 	
 	Cytographer cytographer;
 	CyNetworkView cyNetworkView;
-	final VerticalLayout sourceLayout =  new VerticalLayout();
-	final VerticalLayout targetLayout =  new VerticalLayout();
-	final VerticalLayout metricsLayout =  new VerticalLayout();
-	final VerticalLayout operatorsLayout =  new VerticalLayout();
+	
+	VerticalLayout sourceLayout =  new VerticalLayout();
+	VerticalLayout targetLayout =  new VerticalLayout();
+	VerticalLayout metricsLayout =  new VerticalLayout();
+	VerticalLayout operatorsLayout =  new VerticalLayout();
 
 	public MetricPanel()
 	{
@@ -315,7 +316,7 @@ class AccordionLayoutClickListener implements LayoutClickListener{
 	 */
 	private void addProperty(String s, KBInfo info) {
 		String prop;
-		
+		Logger logger = LoggerFactory.getLogger(AccordionLayoutClickListener.class);
 		if(s.startsWith("http:")) {//do not have a prefix, so we generate one
 			PrefixHelper.generatePrefix(s);
 			prop = PrefixHelper.abbreviate(s);
@@ -323,8 +324,11 @@ class AccordionLayoutClickListener implements LayoutClickListener{
 			prop = s;
 			s = PrefixHelper.expand(s);
 		}
-		if(!info.properties.contains(prop))
+		if(!info.properties.contains(prop)) {
 			info.properties.add(prop);
+			logger.error("adding property "+prop+" again?");
+		}
+			
 //		info.functions.put(prop, "");
 		//show preprocessing window
 		Window sub = new Window("Define property "+prop);
@@ -335,6 +339,6 @@ class AccordionLayoutClickListener implements LayoutClickListener{
 		String base = PrefixHelper.getBase(s);
 		info.prefixes.put(PrefixHelper.getPrefix(base), PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
 	
-		LoggerFactory.getLogger(AccordionLayoutClickListener.class).info(info.var+": adding property: "+prop+" with prefix "+PrefixHelper.getPrefix(base)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
+		logger.info(info.var+": adding property: "+prop+" with prefix "+PrefixHelper.getPrefix(base)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
 	}
 }

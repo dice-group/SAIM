@@ -6,6 +6,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.terminal.FileResource;
@@ -44,10 +47,10 @@ public class SerializationWindow extends Window {
 		mainLayout.addComponent(serializerSelect);
 	}
 	
-	private Link getLinkToFile(Mapping m, Serializer serial, String fileEnding) {
+	private Link getLinkToFile(Mapping m, Serializer serial) {
 		Configuration config = Configuration.getInstance();
-		String fileName   = "";  //$NON-NLS-1$
-		fileName += config.getSource().id+"_"+config.getTarget().id+fileEnding; 
+		String fileName   = "";  
+		fileName += config.getSource().id+"_"+config.getTarget().id+"."+serial.getFileExtension(); 
 		serial.open(fileName);
 		String predicate = config.getLimesConfiReader().acceptanceRelation;
 		// print prefixes
@@ -77,9 +80,11 @@ public class SerializationWindow extends Window {
 	private class SerializerSelectListener implements ValueChangeListener {
 		@Override
 		public void valueChange(ValueChangeEvent event) {
+			Logger logger = LoggerFactory.getLogger(SerializerSelectListener.class);
 			String key = event.getProperty().toString();
+			logger.info("Getting serializer "+key);
 			Serializer serial = serializerNames.get(key);
-			Link l = getLinkToFile(mapping, serial, serial.getName());
+			Link l = getLinkToFile(mapping, serial);
 			mainLayout.addComponent(l);
 		}
 		

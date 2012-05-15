@@ -42,8 +42,6 @@ public class PropertyMatchingPanel extends Panel
 	private final Layout mainLayout;
 	private static final Logger logger = LoggerFactory.getLogger(PropertyMatchingPanel.class);
 	private List<Object[]> rows = new Vector<Object[]>();
-	//	private KBInfo source = Configuration.getInstance().source;
-	//	private KBInfo target = Configuration.getInstance().target;	
 	private ClassResource closeImageResource;
 	private Table table = new Table();
 	private List<String> sourceProperties;
@@ -155,10 +153,6 @@ public class PropertyMatchingPanel extends Panel
 			{
 				if(!(((PropertyComboBox)row[0]).getValue()==null||((PropertyComboBox)row[1]).getValue()==null))
 				{
-					Configuration config = Configuration.getInstance();
-					addProperty(((PropertyComboBox)row[0]).getValue().toString(),config.getSource());
-					addProperty(((PropertyComboBox)row[1]).getValue().toString(),config.getTarget());
-					config.addPropertiesMatch(((PropertyComboBox)row[0]).getValue().toString(), ((PropertyComboBox)row[1]).getValue().toString(), true);
 					Object[] row = createTableRow();
 					table.addItem(row,row);
 				}
@@ -287,16 +281,9 @@ public class PropertyMatchingPanel extends Panel
 			prop = s;
 			s = PrefixHelper.expand(s);
 		}
-
-		info.properties.add(prop);
+		if(!info.properties.contains(prop))
+			info.properties.add(prop);
 		info.functions.put(prop,"lowercase");
-		//		info.functions.put(prop, "");
-		//show preprocessing window
-		//		Window sub = new Window("Define property "+prop);
-		//		sub.setModal(true);
-		//		sub.addComponent(new PreprocessingForm(info, prop));
-		//		SAIMApplication.getInstance().getMainWindow().addWindow(sub);
-
 		String base = PrefixHelper.getBase(s);
 		info.prefixes.put(PrefixHelper.getPrefix(base), PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
 
@@ -413,5 +400,21 @@ public class PropertyMatchingPanel extends Panel
 		listenerActive=true;
 		showPropMapping.addComponent(vert2);
 		mainLayout.addComponent(showPropMapping);		
+	}
+	
+	/**
+	 * Called on next button click.
+	 */
+	public void submit() {
+		Configuration config = Configuration.getInstance();
+		for(Object[] row : rows) {
+			if(((PropertyComboBox)row[0]).getValue() != null && ((PropertyComboBox)row[0]).getValue()!=null &&
+					((PropertyComboBox)row[0]).getValue().toString().length()>0 && 
+					((PropertyComboBox)row[1]).getValue().toString().length()>0) {
+				addProperty(((PropertyComboBox)row[0]).getValue().toString(),config.getSource());
+				addProperty(((PropertyComboBox)row[1]).getValue().toString(),config.getTarget());
+				config.addPropertiesMatch(((PropertyComboBox)row[0]).getValue().toString(), ((PropertyComboBox)row[1]).getValue().toString(), true);
+			}			
+		}		
 	}
 }

@@ -20,6 +20,7 @@ import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
 
 import de.uni_leipzig.simba.cache.HybridCache;
+import de.uni_leipzig.simba.genetics.util.PropertyMapping;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
@@ -161,6 +162,10 @@ public class SelfConfigPanel extends PerformPanel{
 	 */
 	private void showSimpleClassifiers() {
 		Configuration config = Configuration.getInstance();
+		if(classifiers.size()>0) {
+			logger.info("Replacing property mapping.");
+			config.propertyMapping = new PropertyMapping();
+		}
 		for(SimpleClassifier cl : classifiers) {
 			resultSelect.addItem(cl);
 			resultSelect.select(cl);

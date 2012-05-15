@@ -31,12 +31,15 @@ public class PropertyMatchingStep implements WizardStep
 	@Override
 	public boolean onAdvance()
 	{
-		
-		if(sub != null) {
-			SAIMApplication.getInstance().getMainWindow().removeWindow(sub);
-			((SAIMApplication) SAIMApplication.getInstance()).refresh();
-		}
-		return panel.isValid();
+		if(panel.isValid()) {
+			panel.submit();
+			if(sub != null) {
+				SAIMApplication.getInstance().getMainWindow().removeWindow(sub);
+				((SAIMApplication) SAIMApplication.getInstance()).refresh();
+			}
+			return true;
+		}		
+		return false;
 	}
 
 	@Override
