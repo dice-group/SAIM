@@ -28,7 +28,7 @@ import de.uni_leipzig.simba.selfconfig.ComplexClassifier;
 import de.uni_leipzig.simba.selfconfig.MeshBasedSelfConfigurator;
 import de.uni_leipzig.simba.selfconfig.SimpleClassifier;
 /**
- * Displays self configuration panel. Loads data as in Configuration specified and the runs the 
+ * Displays self configuration panel. Loads data as in Configuration specified and runs the 
  * MeshBasedSelfConfigurator.
  * @author Lyko
  *
@@ -106,7 +106,7 @@ public class SelfConfigPanel extends PerformPanel{
 	}
 	
 	/**
-	 * PerformsSelfConfiguration
+	 * Performs SelfConfiguration
 	 */
 	protected void performSelfConfiguration() {
 		mainLayout.addComponent(indicator);
@@ -133,6 +133,7 @@ public class SelfConfigPanel extends PerformPanel{
 				stepPanel.setCaption(Messages.getString("SelfConfigPanel.gotinitialclassifiers")); //$NON-NLS-1$
 				if(classifiers.size()>0) {
 					classifiers = bsc.learnClassifer(classifiers);
+					//@TODO interface to change parameters
 					cc = bsc.getZoomedHillTop(5, 5, classifiers);
 					System.out.println(cc);
 					for(SimpleClassifier co:cc.classifiers) {
@@ -285,6 +286,7 @@ public class SelfConfigPanel extends PerformPanel{
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onClose() {
+		//FIXME save stopping of thread
 		thread.stop();
 		((SAIMApplication) SAIMApplication.getInstance()).refresh();
 		

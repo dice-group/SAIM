@@ -1,27 +1,17 @@
 package de.uni_leipzig.simba.saim.gui.widget.panel;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
-
-import com.vaadin.terminal.FileResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-import de.konrad.commons.sparql.PrefixHelper;
-import de.uni_leipzig.simba.data.Mapping;
-import de.uni_leipzig.simba.io.Serializer;
-import de.uni_leipzig.simba.io.SerializerFactory;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
+import de.uni_leipzig.simba.saim.gui.widget.window.SerializationWindow;
+
 /**Panel to show a Table with computed mappings**/
 public class ResultPanel extends Panel{
 	InstanceMappingTable data;
@@ -51,26 +41,7 @@ public class ResultPanel extends Panel{
 		@Override
 		public void buttonClick(ClickEvent event) {
 			
-			Window download = new Window();
-			download.setWidth("700px"); //$NON-NLS-1$
-			download.setCaption(Messages.getString("downloadresults")); //$NON-NLS-1$
-			Serializer serial = SerializerFactory.getSerializer("N3"); //$NON-NLS-1$
-			String fileName   = ""; //$NON-NLS-1$
-			fileName += config.getSource().id+"_"+config.getTarget().id+".nt"; //$NON-NLS-1$ //$NON-NLS-2$
-			serial.open(fileName);
-			String predicate = config.getLimesConfiReader().acceptanceRelation;
-			// print prefixes
-			System.out.println(config.getLimesConfiReader().prefixes);
-			serial.setPrefixes(config.getLimesConfiReader().prefixes);
-			Mapping m = data.getMapping();
-			for(String uri1 : m.map.keySet()) {
-				for(Entry<String, Double> e : m.map.get(uri1).entrySet()) {
-					serial.printStatement(PrefixHelper.expand(uri1), PrefixHelper.expand(predicate), PrefixHelper.expand(e.getKey()), e.getValue());
-				}
-			}
-			serial.close();
-			download.addComponent(new Link(Messages.getString("downloadresults"),new FileResource(new File(fileName), SAIMApplication.getInstance()))); //$NON-NLS-1$
-			download.setModal(true);
+			Window download = new SerializationWindow(data.getMapping());
 			SAIMApplication.getInstance().getMainWindow().addWindow(download);
 		}
 		
