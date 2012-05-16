@@ -31,6 +31,7 @@ import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.learning.query.PropertyMapper;
 import de.uni_leipzig.simba.saim.Messages;
+import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.PropertyComboBox;
 
@@ -293,7 +294,7 @@ public class PropertyMatchingPanel extends Panel
 	private void getAllProperties() {
 		sourceProperties = new LinkedList<String>();
 		targetProperties = new LinkedList<String>();
-		Configuration config = Configuration.getInstance();
+		Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
 		if(config.isLocal) {
 			logger.info("Local data - using specified properties");
 			for(String prop : config.getSource().properties) {
@@ -371,7 +372,7 @@ public class PropertyMatchingPanel extends Panel
 	 * Method tries to getpropertyMapping
 	 */
 	private Mapping performAutomaticPropertyMapping() {
-		Configuration config = Configuration.getInstance();
+		Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
 		PropertyMapper propMap = new PropertyMapper();
 		return propMap.getPropertyMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().getClassOfendpoint(), config.getTarget().getClassOfendpoint());
 	}
@@ -406,7 +407,7 @@ public class PropertyMatchingPanel extends Panel
 	 * Called on next button click.
 	 */
 	public void submit() {
-		Configuration config = Configuration.getInstance();
+		Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
 		for(Object[] row : rows) {
 			if(((PropertyComboBox)row[0]).getValue() != null && ((PropertyComboBox)row[0]).getValue()!=null &&
 					((PropertyComboBox)row[0]).getValue().toString().length()>0 && 

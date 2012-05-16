@@ -45,6 +45,10 @@ public class LearningPanel extends PerformPanel {
 	LearnerConfigurationBean learnerConfigBean = new LearnerConfigurationBean();
 	
 	public LearningPanel() {
+	
+	}
+	@Override
+	public void attach() {
 		generateLearnerSelect();
 		setContent(mainLayout); 
 		performPropertyMapping();
@@ -55,6 +59,7 @@ public class LearningPanel extends PerformPanel {
 		mainLayout.addComponent(learnerSelect);
 		
 	}
+	
 	/**
 	 * Generate Selection List of Learner.
 	 */
@@ -74,7 +79,7 @@ public class LearningPanel extends PerformPanel {
 	 * @TODO Multithreading.
 	 */
 	private boolean performPropertyMapping() {
-		Configuration config = Configuration.getInstance();
+		Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
 		if(!config.propertyMapping.wasSet()) {
 			PropertyMapper propMapper = new PropertyMapper();
 			String classSource = config.getSource().getClassOfendpoint();
@@ -102,7 +107,7 @@ public class LearningPanel extends PerformPanel {
 	 * To show Property Mapping.
 	 */
 	private void fillpropMappingPanel() {
-		Configuration config = Configuration.getInstance();
+		Configuration config = ((SAIMApplication)getApplication()).getConfig();
 		VerticalLayout vertl = new VerticalLayout();
 		if(config.propertyMapping.wasSet()) {
 			String caption = "Property Mapping:";
@@ -112,6 +117,7 @@ public class LearningPanel extends PerformPanel {
 			String caption = "No Property defined and unable to calculate - using default:";
 			this.propMappingPanel.setCaption(caption);		
 			config.propertyMapping.setDefault(config.getSource(), config.getTarget());
+			System.out.println(	config.propertyMapping);
 			propMappingPanel.setContent(vertl);
 		}
 		Table t = new Table();

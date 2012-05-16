@@ -21,6 +21,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.genetics.core.Metric;
 import de.uni_leipzig.simba.genetics.learner.GeneticActiveLearner;
+import de.uni_leipzig.simba.genetics.util.PropertyMapping;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
@@ -41,6 +42,10 @@ public class ActiveLearningPanel extends MetricLearnPanel
 	public ActiveLearningPanel(LearnerConfigurationBean learnerConfigBean) {
 		super(learnerConfigBean);
 		learn.addListener(new ActiveLearnButtonClickListener(learnLayout));
+	}
+	@Override
+	public void attach() {
+		config = ((SAIMApplication)getApplication()).getConfig();
 		init();
 	}
 
@@ -61,7 +66,10 @@ public class ActiveLearningPanel extends MetricLearnPanel
 		}
 		
 		params.put("preserveFittest",true);
-		params.put("propertyMapping", config.propertyMapping); 	
+		if(config.propertyMapping != null) 
+			params.put("propertyMapping", config.propertyMapping);
+		else
+			params.put("propertyMapping", new PropertyMapping());
 		params.put("granularity", 2); 
 		params.put("config", config.getLimesConfiReader()); 
 		learner = new GeneticActiveLearner();

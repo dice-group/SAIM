@@ -38,6 +38,7 @@ import de.uni_leipzig.simba.saim.gui.widget.form.PreprocessingForm;
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
 public class MetricPanel extends Panel
 {
+	Configuration config;
 	ManualMetricForm manualMetricForm;
 	private static final long	serialVersionUID	= 6766679517868840795L;
 	private static final boolean CACHING = true;
@@ -65,6 +66,12 @@ public class MetricPanel extends Panel
 
 	public MetricPanel()
 	{
+		
+	}
+	@Override
+	public void attach() {
+		if((SAIMApplication)getApplication()!= null)
+			config = ((SAIMApplication)getApplication()).getConfig();
 		mainLayout.setSpacing(false);
 		mainLayout.setMargin(false);
 //		mainLayout.setWidth("100%");
@@ -133,13 +140,14 @@ public class MetricPanel extends Panel
 		metricsLayout.addComponent( new Label(Messages.getString("MetricPanel.0"))); 
 		operatorsLayout.addComponent( new Label(Messages.getString("MetricPanel.8"))); 
 		
-		sourceLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.SOURCE));
-		targetLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.TARGET));
-		metricsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.METRIC));
-		operatorsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.OPERATOR));
+		sourceLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.SOURCE, config));
+		targetLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.TARGET, config));
+		metricsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.METRIC, config));
+		operatorsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.OPERATOR, config));
 		
 		this.checkButtons();
 	}
+	
 	private Cytographer getCytographer(){
 		
 		final int HEIGHT = 450;
@@ -169,10 +177,10 @@ public class MetricPanel extends Panel
 
 	
 	private void getAllProps() {
-		Configuration config = Configuration.getInstance();
+//		Configuration config = Configuration.getInstance();
 //		if(config.isLocal) {
 //			logger.info("Local data - using specified properties");
-	
+			if(config != null)
 			if( config.getSource() != null && config.getSource().properties != null && config.getSource().properties.size()>0 &&
 					config.getTarget() != null && config.getTarget().properties != null && config.getTarget().properties.size()>0) {
 				for(String prop : config.getSource().properties) {
@@ -194,9 +202,9 @@ public class MetricPanel extends Panel
 	}
 
 
-	private void showErrorMessage(String message) {
-		layout.setComponentError(new UserError(message));
-	}
+//	private void showErrorMessage(String message) {
+//		layout.setComponentError(new UserError(message));
+//	}
 
 	/**
 	 * To decide whether we can proceed to the execution panel
@@ -207,8 +215,8 @@ public class MetricPanel extends Panel
 			manualMetricForm.validate();
 		}catch(InvalidValueException e) {}
 		if(manualMetricForm.isValid()) {
-			Configuration.getInstance().setMetricExpression(manualMetricForm.metricTextField.getValue().toString());
-			Configuration.getInstance().setAcceptanceThreshold(Double.parseDouble(manualMetricForm.thresholdTextField.getValue().toString()));
+			config.setMetricExpression(manualMetricForm.metricTextField.getValue().toString());
+			config.setAcceptanceThreshold(Double.parseDouble(manualMetricForm.thresholdTextField.getValue().toString()));
 			return true;
 		} else {
 		//	manualMetricForm.setComponentError();
@@ -236,18 +244,20 @@ public class MetricPanel extends Panel
 	 * Checks whether the Buttons (selfconfig, learning and startMapping) could be activated.
 	 */
 	public void checkButtons() {
-		Configuration config = Configuration.getInstance();
-		if( config.getSource() != null && config.getSource().properties != null && config.getSource().properties.size()>0 &&
-				config.getTarget() != null && config.getTarget().properties != null && config.getTarget().properties.size()>0) {
-			selfConfigButton.setEnabled(true);
-			if(config.getMetricExpression() != null && config.getMetricExpression().length()>0) {
-				learnButton.setEnabled(true);
-				startMapping.setEnabled(true);
+		if((SAIMApplication)getApplication()!=null) {
+			Configuration config = ((SAIMApplication)getApplication()).getConfig();
+			if( config.getSource() != null && config.getSource().properties != null && config.getSource().properties.size()>0 &&
+					config.getTarget() != null && config.getTarget().properties != null && config.getTarget().properties.size()>0) {
+				selfConfigButton.setEnabled(true);
+				if(config.getMetricExpression() != null && config.getMetricExpression().length()>0) {
+					learnButton.setEnabled(true);
+					startMapping.setEnabled(true);
 
-				manualMetricForm.metricTextField.setValue(config.getMetricExpression());
-				manualMetricForm.thresholdTextField.setValue(config.getAcceptanceThreshold());
+					manualMetricForm.metricTextField.setValue(config.getMetricExpression());
+					manualMetricForm.thresholdTextField.setValue(config.getAcceptanceThreshold());
+				}
 			}
-		}
+		}		
 	}
 }
 
@@ -259,11 +269,13 @@ class AccordionLayoutClickListener implements LayoutClickListener{
 	private Cytographer cytographer;
 	private CyNetworkView cyNetworkView;
 	private GraphProperties.Shape shape;
+	Configuration config;
 	
-	public AccordionLayoutClickListener(Cytographer cytographer, CyNetworkView cyNetworkView,GraphProperties.Shape shape){
+	public AccordionLayoutClickListener(Cytographer cytographer, CyNetworkView cyNetworkView,GraphProperties.Shape shape, Configuration config){
 		this.cytographer = cytographer;
 		this.cyNetworkView = cyNetworkView;
 		this.shape = shape;
+		this.config = config;
 	}
 	
 	@Override
@@ -273,15 +285,15 @@ class AccordionLayoutClickListener implements LayoutClickListener{
 			String label = ((Label)event.getClickedComponent()).getValue().toString();
 			switch(shape){
 			case SOURCE :{
-				String pref = Configuration.getInstance().getSource().var.replaceAll("\\?", ""); 
+				String pref = config.getSource().var.replaceAll("\\?", ""); 
 				cytographer.addNode(pref+"."+label, 0, 0, shape); 
-				addProperty(label, Configuration.getInstance().getSource());
+				addProperty(label, config.getSource());
 				break;
 			}
 			case TARGET : {
-				String pref = Configuration.getInstance().getTarget().var.replaceAll("\\?", ""); 
+				String pref = config.getTarget().var.replaceAll("\\?", ""); 
 				cytographer.addNode(pref+"."+label, 0, 0, shape); 
-				addProperty(label, Configuration.getInstance().getTarget());
+				addProperty(label, config.getTarget());
 				break;
 			}
 			default :

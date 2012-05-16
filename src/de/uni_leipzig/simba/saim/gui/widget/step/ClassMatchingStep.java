@@ -18,11 +18,16 @@ import de.konrad.commons.sparql.SPARQLHelper;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.Messages;
+import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.panel.ClassMatchingPanel;
 
 public class ClassMatchingStep implements WizardStep
 {
+	SAIMApplication app;
+	public ClassMatchingStep(SAIMApplication app) {
+		this.app = app;
+	}
 	ClassMatchingPanel panel;
 	@Override
 	public String getCaption() {return Messages.getString("classmatching");}
@@ -30,7 +35,7 @@ public class ClassMatchingStep implements WizardStep
 	@Override
 	public Component getContent()
 	{
-		if(!Configuration.getInstance().isLocal) {
+		if(!app.getConfig().isLocal) {
 			return  panel = new ClassMatchingPanel();
 		} else {
 			return new Panel("No class Matching required.");
@@ -41,7 +46,7 @@ public class ClassMatchingStep implements WizardStep
 	@Override
 	public boolean onAdvance()
 	{
-		Configuration config = Configuration.getInstance();
+		Configuration config = app.getConfig();
 		KBInfo source = config.getSource();
 		KBInfo target = config.getTarget();
 		if( config.isLocal )

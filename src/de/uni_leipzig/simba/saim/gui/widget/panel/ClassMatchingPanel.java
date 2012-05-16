@@ -28,6 +28,7 @@ import com.vaadin.ui.VerticalLayout;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.learning.query.ClassMapper;
 import de.uni_leipzig.simba.saim.Messages;
+import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.Pair;
 import de.uni_leipzig.simba.saim.gui.widget.form.ClassMatchingForm;
@@ -38,7 +39,7 @@ import de.uni_leipzig.simba.saim.util.SortedMapping;
 public class ClassMatchingPanel extends Panel
 {	
 	public static final boolean CACHING	= true;
-	Configuration config = Configuration.getInstance();
+	Configuration config;// = Configuration.getInstance();
 	final ComboBox suggestionComboBox = new ComboBox();
 	public ClassMatchingForm sourceClassForm;
 	public ClassMatchingForm targetClassForm;
@@ -63,8 +64,12 @@ public class ClassMatchingPanel extends Panel
 
 	public ClassMatchingPanel()
 	{
+		
+	}
+	@Override
+	public void attach() {
 		setContent(new VerticalLayout());
-
+		this.config=((SAIMApplication)getApplication()).getConfig();
 		//FormLayout layout = new FormLayout(); // have the label to the right of the combobox and not on top
 		final HorizontalLayout layout = new HorizontalLayout();
 		layout.setSpacing(false);
@@ -106,7 +111,7 @@ public class ClassMatchingPanel extends Panel
 				@Override
 				public void run()
 				{
-					Configuration config = Configuration.getInstance();
+				//	Configuration config = Configuration.getInstance();
 					Refresher refresher = new Refresher();
 					SuggestionsRefreshListener listener = new SuggestionsRefreshListener();
 					refresher.addListener(listener);

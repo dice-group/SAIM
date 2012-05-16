@@ -18,6 +18,7 @@ import de.konrad.commons.sparql.PrefixHelper;
 import de.konrad.commons.sparql.SPARQLHelper;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.io.KBInfo;
+import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 
 public class PropertyMappingGenerator extends Panel {
@@ -74,14 +75,14 @@ public class PropertyMappingGenerator extends Panel {
 	 */
 	private void getAllProps() {
 		//for source
-		KBInfo info = Configuration.getInstance().getSource();
+		KBInfo info = ((SAIMApplication) getApplication()).getConfig().getSource();
 		String className = info.getClassOfendpoint();
 		for(String prop : SPARQLHelper.properties(info.endpoint, info.graph, className)) {
 			String s_abr=PrefixHelper.abbreviate(prop);
 			sourceProps.add(s_abr);
 		}
 		//for target
-		info = Configuration.getInstance().getTarget();
+		info = ((SAIMApplication) getApplication()).getConfig().getTarget();
 		className = info.getClassOfendpoint();
 		for(String prop : SPARQLHelper.properties(info.endpoint, info.graph, className)) {
 			String s_abr=PrefixHelper.abbreviate(prop);
@@ -97,7 +98,7 @@ public class PropertyMappingGenerator extends Panel {
 			String targetProp = targetSelector.getValue().toString();
 			// adding Properties
 			if(sourceProp != null && sourceProp.length()>0 && targetProp != null && targetProp.length()>0 )
-				Configuration.getInstance().addPropertiesMatch(sourceProp, targetProp, true);
+				((SAIMApplication) getApplication()).getConfig().addPropertiesMatch(sourceProp, targetProp, true);
 		}		
 	}
 	

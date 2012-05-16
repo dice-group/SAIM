@@ -49,6 +49,7 @@ public class SelfConfigPanel extends PerformPanel{
 	Select resultSelect = new Select();
 	String generatedMetricexpression = "";
 	Thread thread;
+	Configuration config;
 	
 	/**
 	 * Constructor to may embed Panel in a parent component, e.g. an existing WizardStep Component.
@@ -56,9 +57,14 @@ public class SelfConfigPanel extends PerformPanel{
 	 */
 	public SelfConfigPanel() {//Component parentComponent) {
 		super();
+	}
+	@Override
+	public void attach() {
+		this.config = ((SAIMApplication)getApplication()).getConfig();
 //		this.parentComponent = parentComponent;
 		init();
 	}
+	
 	/**
 	 * Initialize all Panel.
 	 */
@@ -119,11 +125,11 @@ public class SelfConfigPanel extends PerformPanel{
 				indicator.setValue(new Float(1f/steps));
 				indicator.requestRepaint();
 				stepPanel.setCaption(Messages.getString("SelfConfigPanel.sourcecache")); //$NON-NLS-1$
-				HybridCache sourceCache = HybridCache.getData(Configuration.getInstance().getSource());
+				HybridCache sourceCache = HybridCache.getData(config.getSource());
 				indicator.setValue(new Float(2f/steps));
 				indicator.requestRepaint();
 				stepPanel.setCaption(Messages.getString("SelfConfigPanel.targetcache")); //$NON-NLS-1$
-				HybridCache targetCache = HybridCache.getData(Configuration.getInstance().getTarget());
+				HybridCache targetCache = HybridCache.getData(config.getTarget());
 				indicator.setValue(new Float(3f/steps));
 				stepPanel.setCaption(Messages.getString("SelfConfigPanel.performselfconfig")); //$NON-NLS-1$
 				
@@ -146,8 +152,8 @@ public class SelfConfigPanel extends PerformPanel{
 					generatedMetricexpression = generateMetric(cc.classifiers, "");
 					showComplexClassifier();
 					
-					Configuration.getInstance().setMetricExpression(generatedMetricexpression);
-					Configuration.getInstance().setAcceptanceThreshold(getThreshold(cc.classifiers));
+					config.setMetricExpression(generatedMetricexpression);
+					config.setAcceptanceThreshold(getThreshold(cc.classifiers));
 				} else {
 					indicator.setValue(new Float(5f/steps));
 					stepPanel.setCaption(Messages.getString("SelfConfigPanel.nosimpleclassifiers"));
@@ -161,7 +167,7 @@ public class SelfConfigPanel extends PerformPanel{
 	 * Method to show results after initialization.
 	 */
 	private void showSimpleClassifiers() {
-		Configuration config = Configuration.getInstance();
+//		Configuration config = Configuration.getInstance();
 		if(classifiers.size()>0) {
 			logger.info("Replacing property mapping.");
 			config.propertyMapping = new PropertyMapping();
@@ -215,11 +221,11 @@ public class SelfConfigPanel extends PerformPanel{
 		@Override
 		public void buttonClick(ClickEvent event) {			
 			if(cc.classifiers.size()==1) {
-				Configuration.getInstance().setAcceptanceThreshold(cc.classifiers.get(0).threshold);
+				config.setAcceptanceThreshold(cc.classifiers.get(0).threshold);
 			}
 			String metric = generatedMetricexpression;
 		
-			Configuration.getInstance().setMetricExpression(metric);
+			config.setMetricExpression(metric);
 //			Configuration.getInstance().setAcceptanceThreshold(cl.threshold);
 			l.removeAllComponents();
 			l.addComponent(new ExecutionPanel());
@@ -233,8 +239,8 @@ public class SelfConfigPanel extends PerformPanel{
 	 * @return String like: <i>measure(sourceProp,targetProp)|threshold</i>
 	 */
 	private String generateMetric(SimpleClassifier sl) {
-		KBInfo source=Configuration.getInstance().getSource();
-		KBInfo target=Configuration.getInstance().getTarget();
+		KBInfo source=config.getSource();
+		KBInfo target=config.getTarget();
 		String metric = ""; //$NON-NLS-1$
 		
 		metric += sl.measure+"("+source.var.replaceAll("\\?", "")+"."+sl.sourceProperty; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$

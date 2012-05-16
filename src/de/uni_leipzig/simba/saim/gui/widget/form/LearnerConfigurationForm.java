@@ -71,7 +71,7 @@ public class LearnerConfigurationForm extends Form{
 	        	slider.setPropertyDataSource(item.getItemProperty(pid));
 	        	return slider;
 	        }
-	        else if(Messages.getString("LearnerConfigurationForm.8").equals(pid)) { //$NON-NLS-1$
+	        else if("numberOfInqueriesPerRun".equals(pid)) { 
 	        	IntStepper intStepper = new IntStepper();
 	            intStepper.setStepAmount(10);
 	            intStepper.setMaxValue(100);

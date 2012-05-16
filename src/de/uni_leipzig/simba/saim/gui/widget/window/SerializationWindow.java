@@ -49,7 +49,7 @@ public class SerializationWindow extends Window {
 	}
 	
 	private Link getLinkToFile(Mapping m, Serializer serial) {
-		Configuration config = Configuration.getInstance();
+		Configuration config = ((SAIMApplication) getApplication()).getConfig();//Configuration.getInstance();
 		String fileName   = "";  
 		fileName += config.getSource().id+"_"+config.getTarget().id+"."+serial.getFileExtension(); 
 		serial.open(fileName);

@@ -47,66 +47,18 @@ public class ExecutionPanel extends PerformPanel implements PropertyChangeListen
 		
 		
 		super(Messages.getString("ExecutionPanel.executelinkspecification")); //$NON-NLS-1$		
-		Label l;
-		Configuration config = Configuration.getInstance();
-
+//		Label l;
+//		Configuration config = ((SAIMApplication)getApplication()).getConfig();
 		lR = new LimesRunner();
 		lR.addPropertyChangeListener(this);
 		progressLabel = new Label(Messages.getString("ExecutionPanel.initialized")); //$NON-NLS-1$
 		progress = new ProgressIndicator();
-	//	progress.setCaption("Progress");
 		progress.setValue(0);
-//		showResults = new Button(Messages.getString("ExecutionPanel.showResults"));
-//		showResults.setEnabled(false);
-//		showResults.addListener(new ClickListener() {			
-//			@Override
-//			public void buttonClick(ClickEvent event) {
-//				SAIMApplication appl = (SAIMApplication) getApplication();
-//				InstanceMappingTable iT = new InstanceMappingTable(m);
-//				//DetailedInstanceMappingTable iT = new DetailedInstanceMappingTable(m,lR.getSourceCache(),lR.getTargetCache());
-//				appl.showComponent(iT.getTable());
-//			}
-//		});
-//		
-//		mainLayout.addComponent(showPropertyMatching());
-		
-//		start = new Button(Messages.getString("ExecutionPanel.startmapping")); //$NON-NLS-1$
-//		start.addListener(new ClickListener() {			
-//			@Override
-//			public void buttonClick(ClickEvent event) {
-//				runMapping();
-//			}
-//		});
-		
-//		startActiveLearning = new Button(Messages.getString("ExecutionPanel.startactivelearning")); //$NON-NLS-1$
-//		startActiveLearning.addListener(new ClickListener() {			
-//			@Override
-//			public void buttonClick(ClickEvent event) {
-//				SAIMApplication appl = (SAIMApplication) getApplication();
-//				appl.showComponent(new ActiveLearningPanel());
-//			}
-//		});
-//		startBatchLearning = new Button(Messages.getString("ExecutionPanel.startbatchlearning")); //$NON-NLS-1$
-//		startBatchLearning.addListener(new ClickListener() {			
-//			@Override
-//			public void buttonClick(ClickEvent event) {
-//				SAIMApplication appl = (SAIMApplication) getApplication();
-//				appl.showComponent(new BatchLearningPanel());
-//			}
-//		});
-//		startSelfConfig = new Button(Messages.getString("ExecutionPanel.startselfconfiguration")); //$NON-NLS-1$
-//		
-//		startSelfConfig.addListener(new MetricPanelListeners.SelfConfigClickListener(mainLayout));
-//		
-//		
+
 		setWidth("100%"); //$NON-NLS-1$
 		this.setContent(mainLayout);
 		mainLayout.addComponent(progressLabel);
 		mainLayout.addComponent(progress);
-//		mainLayout.addComponent(start);
-//		mainLayout.addComponent(startActiveLearning);
-//		mainLayout.addComponent(startBatchLearning);
-//		mainLayout.addComponent(startSelfConfig);
 	}	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
@@ -126,7 +78,7 @@ public class ExecutionPanel extends PerformPanel implements PropertyChangeListen
 		thread = new Thread() {
 			@Override
 			public void run() {
-				m = lR.runConfig(Configuration.getInstance());	
+				m = lR.runConfig(((SAIMApplication)getApplication()).getConfig());	
 				progress.setValue(1f);
 				progressLabel.setValue(Messages.getString("ExecutionPanel.mappingperformed")); //$NON-NLS-1$
 				InstanceMappingTable iT = new InstanceMappingTable(m, lR.getSourceCache(), lR.getTargetCache(), false);

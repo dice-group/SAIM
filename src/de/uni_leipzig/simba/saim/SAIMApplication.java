@@ -44,10 +44,9 @@ public class SAIMApplication extends Application
 	private static SAIMApplication application = null; 
 	private final Window mainWindow;
 	private Layout mainLayout;
-//	private GridLayout gridLayout;
 	private Wizard wizard;
 	Window sub;
-	
+	Configuration config = new Configuration();
 	Panel content;
 	
 	static final Logger logger = LoggerFactory.getLogger(SAIMApplication.class);
@@ -55,55 +54,18 @@ public class SAIMApplication extends Application
 	
 	public SAIMApplication()
 	{		
-//		BasicConfigurator.configure();
-		
 		application=this;
+		
 		mainWindow = new Window(Messages.getString("title")); //$NON-NLS-1$
 		mainLayout = buildMainLayout();
 		mainWindow.setContent(mainLayout);
 		mainWindow.addComponent(buildMainMenu());
 		content = new MetricPanel();
 		mainLayout.addComponent(content);
-		wizard = new Wizard();
-
-//		wizardDevelopment();
-//		wizardFull();
-
-//		mainLayout.addComponent(wizard);
-		
-		setTheme("saim"); //$NON-NLS-1$
+		wizard = new Wizard();	
+		setTheme("saim"); 
 	}
-	
-//	protected void wizardDevelopment()
-//	{
-//		wizard.addStep(new EndpointStep());
-//		HashMap<String,KBInfo> endpoints = DefaultEndpointLoader.getDefaultEndpoints();
-//		KBInfo info_s = endpoints.get("lgd.aksw - Drugbank");
-//		KBInfo info_t = endpoints.get("lgd.aksw - Sider");
-//		info_s.var = "?src";
-//		info_t.var = "?dest";
-//		info_s.type = "SPARQL";
-//		info_t.type = "SPARQL";
-//		Configuration.getInstance().setSourceEndpoint(info_s);
-//		Configuration.getInstance().setTargetEndpoint(info_t);
-//
-//		wizard.addStep(new ClassMatchingStep());
-//		wizard.addStep(new MetricStep());
-//		wizard.addStep(new ActiveLearningStep());
-//		wizard.addStep(new DevelopMetricStep());
-//	}
-	/**
-	 * @deprecated
-	 */
-	protected void wizardFull()
-	{
-		wizard.addStep(new EndpointStep());		
-		wizard.addStep(new ClassMatchingStep());
-		wizard.addStep(new PropertyMatchingStep());
-		wizard.addStep(new MetricStep());
-//		wizard.addStep(new ActiveLearningStep());
-		wizard.addStep(new ExecutionStep());
-	}
+
 
 	protected MenuBar buildMainMenu()
 	{
@@ -118,25 +80,7 @@ public class SAIMApplication extends Application
 		fileMenu.addItem(Messages.getString("importlimes"), null, importLIMESCommand).setEnabled(true);		 //$NON-NLS-1$
 		fileMenu.addItem(Messages.getString("exportlimes"), null, exportLIMESCommand).setEnabled(true); //$NON-NLS-1$
 		
-//		MenuItem controlMenu= menuBar.addItem(Messages.getString("SAIMApplication.menurestart"), null, new Command() {			 //$NON-NLS-1$
-//			@Override
-//			public void menuSelected(MenuItem selectedItem) {
-//				((SAIMApplication)SAIMApplication.getInstance()).returnToBegin();
-//			}
-//		});
-		
-		MenuItem startMenu = menuBar.addItem("Start", null, new Command() {
-
-			@Override
-			public void menuSelected(MenuItem selectedItem) {
-				// TODO Auto-generated method stub
-				EndpointWindow endpointWindow = new EndpointWindow();
-				endpointWindow.setModal(true);
-				endpointWindow.setVisible(true);
-				((SAIMApplication)SAIMApplication.getInstance()).getMainWindow().addWindow(endpointWindow);
-			}
-			
-		});
+		MenuItem startMenu = menuBar.addItem(Messages.getString("startnewconfig"), null, new StartCommand(this));
 		
 		return menuBar;
 	}
@@ -144,56 +88,14 @@ public class SAIMApplication extends Application
 	protected Layout buildMainLayout() {
 		VerticalLayout layout = new VerticalLayout();
 		layout.setSpacing(true);
-		
-		// common part: create layout
-//		mainLayout = new AbsoluteLayout();
-//		mainLayout.setWidth("100%");
-//		mainLayout.setHeight("100%");
-//		mainLayout.setMargin(false);
-//
-//		// gridLayout
-//		gridLayout = new GridLayout();
-//		gridLayout.setImmediate(false);
-//		gridLayout.setWidth("100%");
-//		gridLayout.setHeight("100%");
-//		gridLayout.setMargin(false);		
-//		gridLayout.setRows(3);
-//
-//		mainLayout.addComponent(gridLayout);
-//		// filling Layouts
-//		//		Label label = new Label("SAIM user interface");
-//		//		Label label2 = new Label("GridPos(0, 2)");
-//		//		gridLayout.addComponent(label, 0, 0);
-//		//		gridLayout.addComponent(label2, 0, 2);
-//
 		return layout;
 	}
 
 	@Override
 	public void init() {		
-		//addButtons();				
 		setMainWindow(mainWindow);		
 	}
 
-//	public void addButtons() {
-//		Button openEndpointDialoge = new Button("Configure endpoints");
-//		openEndpointDialoge.addListener(new ClickListener() {			
-//			@Override
-//			public void buttonClick(ClickEvent event) {
-//
-//				VerticalLayout vert = new VerticalLayout();
-//
-//				gridLayout.removeComponent(0,  2);
-//				gridLayout.addComponent(vert, 0, 2);
-//				vert.addComponent(new EndpointPanel());
-//			}
-//		});
-//
-//
-//		HorizontalLayout hor = new HorizontalLayout();
-//		hor.addComponent(openEndpointDialoge);
-//		gridLayout.addComponent(hor, 0, 1);
-//	}
 	MenuBar.Command importLIMESCommand = new MenuBar.Command() {
 	    public void menuSelected(MenuItem selectedItem) {
 	    	sub = new Window(Messages.getString("limesupload")); //$NON-NLS-1$
@@ -219,15 +121,22 @@ public class SAIMApplication extends Application
 	    	sub = new Window(Messages.getString("limesdownload")); //$NON-NLS-1$
 	    	sub.setWidth("700px"); //$NON-NLS-1$
 	    	sub.setModal(true);
-	    	Configuration.getInstance().saveToXML("linkspec.xml"); //$NON-NLS-1$
+	    	config.saveToXML("linkspec.xml"); //$NON-NLS-1$
 	    	
 	    	sub.addComponent(new Link(Messages.getString("SAIMApplication.menudownloadlinkspec"),new FileResource(new File("linkspec.xml"),SAIMApplication.this))); //$NON-NLS-1$ //$NON-NLS-2$
 	    	getMainWindow().addWindow(sub);
 	    }  
 	};
+	public Configuration getConfig() {
+		if(config == null)
+			config = new Configuration();
+		return config;
+	}
+
 	/**
 	 * Show a component instead of the wizard. Finishes the Wizard.
 	 * @param c
+	 * @deprecated
 	 */
 	public void showComponent(Component c) {
 		mainWindow.removeWindow(sub);
@@ -235,7 +144,6 @@ public class SAIMApplication extends Application
 		mainWindow.removeAllComponents();
 		mainWindow.addComponent(buildMainMenu());
 		mainWindow.addComponent(c);
-//		mainWindow.addComponent(new ExecutionPanel());
 	}
 	/**
 	 * Return view to the beginning: showing wizard.
@@ -295,11 +203,30 @@ public class SAIMApplication extends Application
 		}
 	}
 	
+	/**
+	 * Method is called if any action was taken in a subwindow that needs the main content to update.
+	 */
 	public void refresh() {
-//		Panel p = new Panel(Configuration.getInstance().toString());
-		//mainLayout.addComponent(new MetricPanel());
 		mainLayout.removeComponent(content);
-		content = new MetricPanel();		
+		//FIXME call refresh() method instead of constructing completely new?
+		content = new MetricPanel();
 		mainLayout.addComponent(content);
+	}
+	
+	public class StartCommand implements Command {
+
+		SAIMApplication app;
+		public StartCommand(SAIMApplication app) {
+			this.app=app;
+		}
+		
+		@Override
+		public void menuSelected(MenuItem selectedItem) {
+			EndpointWindow endpointWindow = new EndpointWindow(app);
+			endpointWindow.setModal(true);
+			endpointWindow.setVisible(true);
+			app.getMainWindow().addWindow(endpointWindow);
+		}
+		
 	}
 }

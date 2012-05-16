@@ -77,7 +77,8 @@ public class PrefixHelperTest
 	
 	@Test
 	public void testOWL() {
-		String sameAsRelation = Configuration.getInstance().sameAsRelation;
+		Configuration config = new Configuration();
+		String sameAsRelation = config.sameAsRelation;
 		String base = PrefixHelper.getBase(sameAsRelation);
 		if(base.endsWith(":")) {
 			base = base.substring(0,base.length()-1);

@@ -30,7 +30,7 @@ import de.uni_leipzig.simba.saim.gui.widget.panel.ActiveLearningPanel.ActiveLear
  */
 public class MetricLearnPanel extends  PerformPanel{
 	public static Logger logger = Logger.getLogger("LIMES");
-	protected Configuration config = Configuration.getInstance();
+	protected Configuration config;// = Configuration.getInstance();
 	public LinkSpecificationLearner learner;
 	protected VerticalLayout layout;
 	protected Button learn;
@@ -63,6 +63,10 @@ public class MetricLearnPanel extends  PerformPanel{
 		learnLayout.setWidth("100%");
 		layout.addComponent(learnLayout);
 	}
+	@Override
+	public void attach() {
+		config = ((SAIMApplication)getApplication()).getConfig();
+	}
 	
 	public MetricLearnPanel(LearnerConfigurationBean learnerConfigBean) {
 		this();
@@ -91,8 +95,8 @@ public class MetricLearnPanel extends  PerformPanel{
 				Metric metric = learner.terminate();				
 				label.setCaption("Best solution:");
 				label.setValue(metric.expression+" with threshold "+metric.threshold);
-				Configuration.getInstance().setMetricExpression(metric.expression);
-				Configuration.getInstance().setAcceptanceThreshold(metric.threshold);
+				config.setMetricExpression(metric.expression);
+				config.setAcceptanceThreshold(metric.threshold);
 				((SAIMApplication) SAIMApplication.getInstance()).refresh();
 				l.addComponent(label);
 			}

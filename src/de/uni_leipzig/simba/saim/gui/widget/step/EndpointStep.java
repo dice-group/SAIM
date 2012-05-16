@@ -8,10 +8,15 @@ import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.panel.EndpointPanel;
 import de.uni_leipzig.simba.saim.Messages;
+import de.uni_leipzig.simba.saim.SAIMApplication;
 public class EndpointStep implements WizardStep
 {
 	EndpointPanel panel;
-
+	SAIMApplication app;
+	public EndpointStep(SAIMApplication app) {
+		this.app = app;
+	}
+	
 	@Override
 	public String getCaption() {return Messages.getString("selectsparqlendpoints");}
 
@@ -24,7 +29,7 @@ public class EndpointStep implements WizardStep
 	@Override
 	public boolean onAdvance()
 	{
-		Configuration config = Configuration.getInstance();
+		Configuration config = app.getConfig();
 		if(config.isLocal)
 			return true;
 		else

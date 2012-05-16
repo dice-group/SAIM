@@ -26,7 +26,7 @@ public class Configuration
 {
 	private static Logger logger = Logger.getLogger("SAIM");
 	public Output metric = null; 
-	private static Configuration instance = new Configuration();	
+//	private static Configuration instance = new Configuration();	
 	private PropertyChangeSupport changes = new PropertyChangeSupport( this ); 
 	public static final String SETTING_CONFIG = "setting from xml";
 	private String id = null;
@@ -97,11 +97,11 @@ public class Configuration
 		metric.param2 = verificationThreshold;
 	}
 
-	Configuration() {}
+	public Configuration() {}
 	public void store() {}
 
 	/** Implements Singleton pattern.*/
-	public static Configuration getInstance() {return instance;}
+//	public static Configuration getInstance() {return instance;}
 
 	public void setSourceEndpoint(KBInfo source) {	this.source = source;
 	if(source.var == null)

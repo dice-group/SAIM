@@ -7,6 +7,7 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
+import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.gui.widget.panel.PerformPanel;
 import de.uni_leipzig.simba.saim.gui.widget.step.ClassMatchingStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.EndpointStep;
@@ -20,27 +21,28 @@ public class EndpointWindow extends Window{
 	
 	Layout mainLayout;
 	Wizard wizard;
+	SAIMApplication app;
 	
-	
-	public EndpointWindow() {
-		init();
+	public EndpointWindow(SAIMApplication app) {
+		
+		this.app = app;
 		this.setSizeFull();
+		wizard = new Wizard();
+		wizardFull();
 		this.addListener(new EndpointWindowCloseListener());
+		init();
 	}
 	
 	private void init() {
 		mainLayout = new VerticalLayout();
 		this.addComponent(mainLayout);
-		wizard = new Wizard();
-		wizardFull();
-		
 		mainLayout.addComponent(wizard);
 		setTheme("saim"); 
 	}
 	
 	private void wizardFull() {
-		wizard.addStep(new EndpointStep());		
-		wizard.addStep(new ClassMatchingStep());
+		wizard.addStep(new EndpointStep(app));		
+		wizard.addStep(new ClassMatchingStep(app));
 		wizard.addStep(new PropertyMatchingStep(this));
 	}
 	

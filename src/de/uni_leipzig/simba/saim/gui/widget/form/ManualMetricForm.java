@@ -14,6 +14,7 @@ import com.vaadin.ui.TextField;
 
 import de.uni_leipzig.simba.controller.Parser;
 import de.uni_leipzig.simba.genetics.util.Pair;
+import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 
 public class ManualMetricForm extends Form{
@@ -54,7 +55,7 @@ public class ManualMetricForm extends Form{
 				// get and store values
 				String metric = metricTextField.getValue().toString();
 				Double threshold = Double.parseDouble(thresholdTextField.getValue().toString());
-				Configuration config = Configuration.getInstance();
+				Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
 				config.setMetricExpression(metric);
 				config.setAcceptanceThreshold(threshold);
 //				config.setDefaultNameSpaces();
@@ -103,7 +104,7 @@ public class ManualMetricForm extends Form{
 	/**Recursive function using LIMES Parser to test whether all properties of the metric expression are set.*/
 	public boolean testPropertiesAreSet(String expr, double threshold) {
 		logger.info("testing if properties are set...");
-		Configuration config = Configuration.getInstance();
+		Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
 		Parser parser = new Parser(expr, threshold);
 		if(parser.isAtomic()) {
 			if(config.isPropertyDefined(parser.getTerm1())) {
@@ -127,23 +128,25 @@ public class ManualMetricForm extends Form{
 	}
 	
 	public void setDefaultValues() {
-		Configuration config = Configuration.getInstance();
-		if(config.getMetricExpression() == null) {
-			if (config.propertyMapping == null || config.propertyMapping.stringPropPairs.size() == 0) {
-				return;
+		if((SAIMApplication)getApplication() != null) {
+			Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
+			if(config.getMetricExpression() == null) {
+				if (config.propertyMapping == null || config.propertyMapping.stringPropPairs.size() == 0) {
+					return;
+				} else {
+					Pair<String> propPair = config.propertyMapping.stringPropPairs.get(0);
+					String metric = "trigram(";
+					metric += config.getSource().var.replaceAll("\\?", "")+"."+propPair.a;
+					metric +=",";
+					metric += config.getTarget().var.replaceAll("\\?", "")+"."+propPair.b;
+					metric += ")";
+					metricTextField.setValue(metric);
+					thresholdTextField.setValue("0.5d");
+				}			
 			} else {
-				Pair<String> propPair = config.propertyMapping.stringPropPairs.get(0);
-				String metric = "trigram(";
-				metric += config.getSource().var.replaceAll("\\?", "")+"."+propPair.a;
-				metric +=",";
-				metric += config.getTarget().var.replaceAll("\\?", "")+"."+propPair.b;
-				metric += ")";
-				metricTextField.setValue(metric);
-				thresholdTextField.setValue("0.5d");
-			}			
-		} else {
-			metricTextField.setValue(config.getMetricExpression());
-			thresholdTextField.setValue(config.getAcceptanceThreshold());
+				metricTextField.setValue(config.getMetricExpression());
+				thresholdTextField.setValue(config.getAcceptanceThreshold());
+			}
 		}		
 	}
 }

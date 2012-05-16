@@ -17,11 +17,16 @@ public class ResultPanel extends Panel{
 	InstanceMappingTable data;
 	VerticalLayout layout;
 	Button downloadResults;
-	Configuration config = Configuration.getInstance();
+	Configuration config;// = Configuration.getInstance();
 	
 	public ResultPanel(InstanceMappingTable iT) {
 		super(Messages.getString("results")); //$NON-NLS-1$
 		this.data = iT;
+	}
+	
+	@Override
+	public void attach() {
+		config = ((SAIMApplication)getApplication()).getConfig();
 		init();
 	}
 	

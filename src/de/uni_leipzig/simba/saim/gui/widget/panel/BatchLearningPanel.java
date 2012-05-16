@@ -11,6 +11,7 @@ import com.vaadin.ui.Button.ClickEvent;
 
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.genetics.learner.GeneticBatchLearner;
+import de.uni_leipzig.simba.genetics.util.PropertyMapping;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
 import de.uni_leipzig.simba.saim.gui.widget.form.LearnerConfigurationBean;
@@ -18,15 +19,19 @@ import de.uni_leipzig.simba.saim.gui.widget.form.LearnerConfigurationBean;
 public class BatchLearningPanel extends MetricLearnPanel {
 	public BatchLearningPanel() {
 		super();
+	}
+	
+	public void attach() {
 		learn.addListener(new BatchLearnButtonClickListener(learnLayout));
+		config = ((SAIMApplication)getApplication()).getConfig();
 		init();
 	}
 	
 	public BatchLearningPanel(LearnerConfigurationBean learnerConfigBean) {
 		super(learnerConfigBean);
 		learn.addListener(new BatchLearnButtonClickListener(learnLayout));
-		init();
 	}
+
 
 	private void init() {
 		if(learner != null) {
@@ -43,7 +48,11 @@ public class BatchLearningPanel extends MetricLearnPanel {
 		// configure
 		
 		params.put("preserveFittest",true);
-		params.put("propertyMapping", config.propertyMapping);
+		if(config.propertyMapping!=null)
+			params.put("propertyMapping", config.propertyMapping);
+		else {
+			params.put("propertyMapping", new PropertyMapping());
+		}
 		params.put("granularity", 2);
 		params.put("config", config.getLimesConfiReader());
 		learner = new GeneticBatchLearner();

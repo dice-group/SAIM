@@ -8,6 +8,7 @@ import com.vaadin.ui.VerticalLayout;
 
 import de.uni_leipzig.simba.data.Instance;
 import de.uni_leipzig.simba.io.KBInfo;
+import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 /**
  * Panel to display information available for two instances.
@@ -28,8 +29,8 @@ public class InstanceInfoPanel extends Panel {
 		this.setContent(mainLayout);
 		
 
-		KBInfo source = Configuration.getInstance().getSource();
-		KBInfo target = Configuration.getInstance().getTarget();
+		KBInfo source = ((SAIMApplication)getApplication()).getConfig().getSource();
+		KBInfo target = ((SAIMApplication)getApplication()).getConfig().getTarget();
 		
 		VerticalLayout vl1 = new VerticalLayout();
 		VerticalLayout vl2 = new VerticalLayout();

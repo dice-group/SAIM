@@ -51,7 +51,7 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver{
 		executeFileButton.addListener(new Button.ClickListener() {			
 			@Override
 			public void buttonClick(ClickEvent event) {
-				Configuration config = Configuration.getInstance();
+				Configuration config = ((SAIMApplication) getApplication()).getConfig();//Configuration.getInstance();
 				config.setFromConfigReader(cR);
 				file.delete();
 				SAIMApplication appl = (SAIMApplication) getApplication();
@@ -123,7 +123,7 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver{
 		runExampleButton.addListener(new Button.ClickListener() {			
 			@Override
 			public void buttonClick(ClickEvent event) {
-				Configuration config = Configuration.getInstance();
+				Configuration config = ((SAIMApplication) getApplication()).getConfig();//Configuration.getInstance();
 				ConfigReader cR = new ConfigReader();
 				InputStream inStream;
 				inStream = getClass().getClassLoader().getResourceAsStream(""+localExamplesSelect.getValue());
