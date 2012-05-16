@@ -14,6 +14,7 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
@@ -27,9 +28,11 @@ import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.PropertyMappingGenerator;
 import de.uni_leipzig.simba.saim.gui.widget.Listener.MetricPanelListeners;
+import de.uni_leipzig.simba.saim.gui.widget.form.LearnerConfigurationBean;
+import de.uni_leipzig.simba.saim.gui.widget.form.LearnerConfigurationForm;
 import de.uni_leipzig.simba.saim.gui.widget.window.EndpointWindow;
 /**
- * Need to configure the learner!
+ * Panel for Learner Configuration.
  * @author Lyko
  *
  */
@@ -38,19 +41,23 @@ public class LearningPanel extends PerformPanel {
 	PerformPanel learnerPanel = null;
 	Select learnerSelect;
 	Panel propMappingPanel;	
+	LearnerConfigurationForm configForm;
+	LearnerConfigurationBean learnerConfigBean = new LearnerConfigurationBean();
 	
 	public LearningPanel() {
-
 		generateLearnerSelect();
-		setContent(mainLayout);
+		setContent(mainLayout); 
 		performPropertyMapping();
 		propMappingPanel = new Panel();
 		fillpropMappingPanel();
+		mainLayout.addComponent(configForm = new LearnerConfigurationForm(learnerConfigBean));
 		mainLayout.addComponent(propMappingPanel);
 		mainLayout.addComponent(learnerSelect);
 		
 	}
-	
+	/**
+	 * Generate Selection List of Learner.
+	 */
 	private void generateLearnerSelect() {
 		learnerSelect = new Select(Messages.getString("LearningPanel.learnerselect")); //$NON-NLS-1$
 		learnerSelect.addItem(Messages.getString("LearningPanel.gpbatchlearner")); //$NON-NLS-1$
@@ -61,6 +68,11 @@ public class LearningPanel extends PerformPanel {
 		learnerSelect.setImmediate(true);
 	}
 	
+	/**
+	 * If no PropertyMapping was set. Try to calculate.
+	 * @return true if we can calculate.
+	 * @TODO Multithreading.
+	 */
 	private boolean performPropertyMapping() {
 		Configuration config = Configuration.getInstance();
 		if(!config.propertyMapping.wasSet()) {
@@ -83,15 +95,17 @@ public class LearningPanel extends PerformPanel {
 			}
 		} else {
 			return true;
-		}
-					
+		}					
 	}
 	
+	/**
+	 * To show Property Mapping.
+	 */
 	private void fillpropMappingPanel() {
 		Configuration config = Configuration.getInstance();
 		VerticalLayout vertl = new VerticalLayout();
 		if(config.propertyMapping.wasSet()) {
-			String caption = "Have Property Mapping:";
+			String caption = "Property Mapping:";
 			this.propMappingPanel.setCaption(caption);			
 			propMappingPanel.setContent(vertl);
 		} else {
@@ -100,45 +114,36 @@ public class LearningPanel extends PerformPanel {
 			config.propertyMapping.setDefault(config.getSource(), config.getTarget());
 			propMappingPanel.setContent(vertl);
 		}
+		Table t = new Table();
+		t.addContainerProperty("Source property", String.class, "");
+		t.addContainerProperty("Target property", String.class, "");
+		t.addContainerProperty("Property Types", String.class, "");
+		int count = 0;
 		for(Pair<String> pair : config.propertyMapping.stringPropPairs) {
-			Panel p = new Panel( pair.a + " - "+pair.b+": String");
-			vertl.addComponent(p);
+			t.addItem(new Object[]{pair.a,pair.b,"String"},new Integer(count));
+			count++;
 		}
 		for(Pair<String> pair : config.propertyMapping.numberPropPairs) {
-			Panel p = new Panel( pair.a + " - "+pair.b+": Number");
-			vertl.addComponent(p);
+			t.addItem(new Object[]{pair.a,pair.b,"Number"}, new Integer(count));
+			count++;
 		}
-		
-	
-//		if(config.size()>0) {
-//			//propMappingPanel.add
-//			final Button usePropMapping = new Button("Use Mapping");
-//			usePropMapping.addListener(new Button.ClickListener() {				
-//				@Override
-//				public void buttonClick(ClickEvent event) {
-//					for(String s : propertyMapping.map.keySet()) {
-//						for(Entry<String, Double> e : propertyMapping.map.get(s).entrySet()) {
-//							Configuration.getInstance().addPropertiesMatch(s, e.getKey(), true);
-//						}
-//					}
-//					usePropMapping.setEnabled(false);
-//				}
-//			});
-//			vertl.addComponent(usePropMapping);
-//		} else {
-//			vertl.addComponent(new Label("No suggestions available"));
-//		}
+		t.setPageLength(Math.min(count, 5));
+		vertl.addComponent(t);
 	}
 	
-	
+	/**
+	 * Reacts on selection of a learner.
+	 * @author Lyko
+	 *
+	 */
 	public class LearnerSelectListener implements ValueChangeListener {
 		@Override
 		public void valueChange(ValueChangeEvent event) {
 			if(event.getProperty().toString().equals(Messages.getString("LearningPanel.gpbatchlearner"))) {
-				learnerPanel = new BatchLearningPanel();
+				learnerPanel = new BatchLearningPanel(learnerConfigBean);
 			}
 			if(event.getProperty().toString().equals(Messages.getString("LearningPanel.gpactivelearner"))) {
-				learnerPanel = new ActiveLearningPanel();
+				learnerPanel = new ActiveLearningPanel(learnerConfigBean);
 			}
 			mainLayout.removeAllComponents();
 			mainLayout.addComponent(learnerPanel);
@@ -149,15 +154,14 @@ public class LearningPanel extends PerformPanel {
 
 	@Override
 	public void onClose() {
-//		((SAIMApplication) SAIMApplication.getInstance()).refresh();
-//		if(learnerPanel!=null) {
-//			learnerPanel.onClose();
-//		}
+		((SAIMApplication) SAIMApplication.getInstance()).refresh();
+		if(learnerPanel!=null) {
+			learnerPanel.onClose();
+		}
 	}
 
 	@Override
 	public void start() {
-		// TODO Auto-generated method stub
 		generateLearnerSelect();
 	}
 	

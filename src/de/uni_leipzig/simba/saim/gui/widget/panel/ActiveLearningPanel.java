@@ -25,17 +25,25 @@ import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
+import de.uni_leipzig.simba.saim.gui.widget.form.LearnerConfigurationBean;
 
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
 @SuppressWarnings("serial")
 public class ActiveLearningPanel extends MetricLearnPanel
 {	
-	public ActiveLearningPanel() {
-		super();
+	
+//	public ActiveLearningPanel() {
+//		super();
+//		learn.addListener(new ActiveLearnButtonClickListener(learnLayout));
+//		init();
+//	}
+	
+	public ActiveLearningPanel(LearnerConfigurationBean learnerConfigBean) {
+		super(learnerConfigBean);
 		learn.addListener(new ActiveLearnButtonClickListener(learnLayout));
 		init();
 	}
-	
+
 	/**
 	 * Initialize the specific learner.
 	 */
@@ -44,18 +52,21 @@ public class ActiveLearningPanel extends MetricLearnPanel
 		if(learner != null) {
 			learner.getFitnessFunction().destroy();
 		}
-		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("populationSize", 20); //$NON-NLS-1$
-		param.put("generations", 50); //$NON-NLS-1$
-		param.put("mutationRate", 0.5f); //$NON-NLS-1$
-		param.put("preserveFittest",true); //$NON-NLS-1$
-		param.put("propertyMapping", config.propertyMapping); //$NON-NLS-1$
-		param.put("trainingDataSize", 10); //$NON-NLS-1$
-		param.put("granularity", 2); //$NON-NLS-1$
-		param.put("config", config.getLimesConfiReader()); //$NON-NLS-1$
+		if(params == null) {
+			 params = new HashMap<String, Object>();
+			 params.put("populationSize", 20);
+			 params.put("generations", 50);
+			 params.put("mutationRate", 0.5f);
+			 params.put("trainingDataSize", 10);
+		}
+		
+		params.put("preserveFittest",true);
+		params.put("propertyMapping", config.propertyMapping); 	
+		params.put("granularity", 2); 
+		params.put("config", config.getLimesConfiReader()); 
 		learner = new GeneticActiveLearner();
 		try {
-			learner.init(config.getSource(), config.getTarget(), param);
+			learner.init(config.getSource(), config.getTarget(), params);
 		} catch (InvalidConfigurationException e) {
 			layout.setComponentError(new UserError(e.getMessage()));
 			e.printStackTrace();

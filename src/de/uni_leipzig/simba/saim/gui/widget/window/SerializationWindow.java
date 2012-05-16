@@ -13,6 +13,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.terminal.FileResource;
 import com.vaadin.ui.Link;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -29,7 +30,7 @@ public class SerializationWindow extends Window {
 	
 	VerticalLayout mainLayout;
 	HashMap<String, Serializer> serializerNames;
-	Select serializerSelect;
+	NativeSelect serializerSelect;
 	Mapping mapping;
 	
 	public SerializationWindow(Mapping m) {
@@ -65,15 +66,18 @@ public class SerializationWindow extends Window {
 		return new Link(Messages.getString("downloadlinkspec"),new FileResource(new File(fileName), SAIMApplication.getInstance())); 
 	}
 	
-	private Select getSerializerSelect() {
-		Select select = new Select(Messages.getString("SerializationWindow.serializerselectcaption"));
+	private NativeSelect getSerializerSelect() {
+		NativeSelect select = new NativeSelect(Messages.getString("SerializationWindow.serializerselectcaption"));
 		serializerNames = new HashMap<String, Serializer>();
 		serializerNames.put(Messages.getString("SerializationWindow.turtle"), SerializerFactory.getSerializer("ttl")); 
 		serializerNames.put(Messages.getString("SerializationWindow.n3"), SerializerFactory.getSerializer("N3")); 
 		serializerNames.put(Messages.getString("SerializationWindow.tabseparated"), SerializerFactory.getSerializer("tab")); 
 		for(String s : serializerNames.keySet())
 			select.addItem(s);
+		select.select(Messages.getString("SerializationWindow.n3"));
 		select.addListener(new SerializerSelectListener());
+		select.setNullSelectionAllowed(false);
+		
 		return select;
 	}
 	

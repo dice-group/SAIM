@@ -29,7 +29,7 @@ public class ResultPanel extends Panel{
 		layout = new VerticalLayout();
 		layout.setWidth("100%");
 		this.setContent(layout);
-		downloadResults = new Button(Messages.getString(Messages.getString("save"))); //$NON-NLS-1$
+		downloadResults = new Button(Messages.getString("save"));
 		downloadResults.addListener(new DownLoadButtonClickListener());		
 		layout.addComponent(data.getTable());
 		layout.addComponent(downloadResults);

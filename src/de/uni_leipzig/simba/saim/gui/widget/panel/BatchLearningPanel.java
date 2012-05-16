@@ -13,6 +13,7 @@ import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.genetics.learner.GeneticBatchLearner;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
+import de.uni_leipzig.simba.saim.gui.widget.form.LearnerConfigurationBean;
 
 public class BatchLearningPanel extends MetricLearnPanel {
 	public BatchLearningPanel() {
@@ -21,23 +22,33 @@ public class BatchLearningPanel extends MetricLearnPanel {
 		init();
 	}
 	
+	public BatchLearningPanel(LearnerConfigurationBean learnerConfigBean) {
+		super(learnerConfigBean);
+		learn.addListener(new BatchLearnButtonClickListener(learnLayout));
+		init();
+	}
+
 	private void init() {
 		if(learner != null) {
 			learner.getFitnessFunction().destroy();
 		}
+		if(params == null) {
+			 HashMap<String, Object> params = new HashMap<String, Object>();
+			 params = new HashMap<String, Object>();
+			 params.put("populationSize", 20);
+			 params.put("generations", 50);
+			 params.put("mutationRate", 0.5f);
+			 params.put("trainingDataSize", 10);
+		}
 		// configure
-		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("populationSize", 50);
-		param.put("generations", 50);
-		param.put("mutationRate", 0.5f);
-		param.put("preserveFittest",true);
-		param.put("propertyMapping", config.propertyMapping);
-		param.put("trainingDataSize", 20);
-		param.put("granularity", 2);
-		param.put("config", config.getLimesConfiReader());
+		
+		params.put("preserveFittest",true);
+		params.put("propertyMapping", config.propertyMapping);
+		params.put("granularity", 2);
+		params.put("config", config.getLimesConfiReader());
 		learner = new GeneticBatchLearner();
 		try {
-			learner.init(config.getSource(), config.getTarget(), param);
+			learner.init(config.getSource(), config.getTarget(), params);
 		} catch (InvalidConfigurationException e) {
 			layout.setComponentError(new UserError(e.getMessage()));
 			e.printStackTrace();

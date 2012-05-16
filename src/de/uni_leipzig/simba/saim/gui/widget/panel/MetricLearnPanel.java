@@ -1,5 +1,6 @@
 package de.uni_leipzig.simba.saim.gui.widget.panel;
 
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.apache.log4j.Level;
@@ -20,6 +21,7 @@ import de.uni_leipzig.simba.genetics.learner.LinkSpecificationLearner;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
+import de.uni_leipzig.simba.saim.gui.widget.form.LearnerConfigurationBean;
 import de.uni_leipzig.simba.saim.gui.widget.panel.ActiveLearningPanel.ActiveLearnButtonClickListener;
 /**
  * Panel used for metric genetic learner.
@@ -36,6 +38,7 @@ public class MetricLearnPanel extends  PerformPanel{
 	//DetailedInstanceMappingTable iMapTable = null;
 	public InstanceMappingTable iMapTable = null;
 	protected Layout learnLayout;
+	protected HashMap<String, Object> params;
 	
 	public MetricLearnPanel() {
 		logger.setLevel(Level.WARN);
@@ -61,6 +64,11 @@ public class MetricLearnPanel extends  PerformPanel{
 		layout.addComponent(learnLayout);
 	}
 	
+	public MetricLearnPanel(LearnerConfigurationBean learnerConfigBean) {
+		this();
+		params = learnerConfigBean.createParams();
+	}
+
 	public class TerminateButtonClickListener implements Button.ClickListener {
 		Layout l;
 		Label label = new Label();
