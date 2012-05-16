@@ -15,7 +15,7 @@ import de.uni_leipzig.simba.saim.SAIMApplication;
 /**
  * Step to decide upon next step: learn or manual configure link specifications.
  * @author Lyko
- *
+ * @deprecated
  */
 public class DevelopMetricStep implements WizardStep {
 

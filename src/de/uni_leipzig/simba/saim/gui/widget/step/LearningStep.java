@@ -7,7 +7,11 @@ import com.vaadin.ui.Panel;
 
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.gui.widget.panel.LearningPanel;
-
+/**
+ * @deprecated
+ * @author Lyko
+ *
+ */
 public class LearningStep implements WizardStep {
 
 	Panel content = new LearningPanel();

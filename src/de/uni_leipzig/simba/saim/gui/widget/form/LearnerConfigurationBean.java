@@ -56,6 +56,10 @@ public class LearnerConfigurationBean {
 		return "BEAN: gens="+generations+" pop="+population+" mutationRate="+mutationRate+" inquieries="+numberOfInqueriesPerRun;
 	}
 
+	/**
+	 * Generate params HashMap used by leraner.
+	 * @return
+	 */
 	public HashMap<String, Object> createParams() {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 	    params.put("populationSize", getPopulation());

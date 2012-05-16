@@ -194,20 +194,6 @@ public class MetricPanel extends Panel
 	}
 
 
-//	/**
-//	 * Little helper function to retrieve classes out of restrictions of the LIMES SPEC. Whereas, a
-//	 * class is in a restriction of the format "?var rdf:type <class>".
-//	 * @param ep
-//	 * @return
-//	 */
-//	private String getClassOfEndpoint(KBInfo ep) {
-//		for(String rest : ep.restrictions) {
-//			if(rest.matches(".* rdf:type .*"))
-//				return rest.substring(rest.indexOf("rdf:type")+8).replaceAll("<", "").replaceAll(">", "").trim();
-//		}
-//		return null;
-//	}
-
 	private void showErrorMessage(String message) {
 		layout.setComponentError(new UserError(message));
 	}

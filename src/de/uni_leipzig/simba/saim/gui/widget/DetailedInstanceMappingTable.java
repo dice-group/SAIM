@@ -12,7 +12,10 @@ import de.uni_leipzig.simba.cache.HybridCache;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.core.InstanceMatch;
-
+/**
+ * @deprecated
+ *
+ */
 public class DetailedInstanceMappingTable implements Serializable 
 {
 	private static final long serialVersionUID	= 4443146911119590775L;
