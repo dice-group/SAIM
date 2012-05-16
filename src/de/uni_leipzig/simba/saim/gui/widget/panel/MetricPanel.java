@@ -94,19 +94,19 @@ public class MetricPanel extends Panel
 
 		// accordion panel
 		Panel accordionPanel = new Panel();
-		accordionPanel.setHeight("100%");
+		accordionPanel.setHeight("100%"); //$NON-NLS-1$
 		accordionLayout.addComponent(accordionPanel);
-		accordionPanel.setWidth("25em");
+		accordionPanel.setWidth("25em"); //$NON-NLS-1$
 
 		final Accordion accordion = new Accordion();		
-		accordion.setHeight("100%");
+		accordion.setHeight("100%"); //$NON-NLS-1$
 
 		accordionPanel.addComponent(accordion);
 		
-		accordion.addTab(sourceLayout,Messages.getString("MetricPanel.sourceproperties"));		
-		accordion.addTab(targetLayout,Messages.getString("MetricPanel.targetproperties"));
-		accordion.addTab(metricsLayout,Messages.getString("MetricPanel.metrics")); 
-		accordion.addTab(operatorsLayout,Messages.getString("MetricPanel.operators"));	
+		accordion.addTab(sourceLayout,Messages.getString("MetricPanel.sourceproperties"));		 //$NON-NLS-1$
+		accordion.addTab(targetLayout,Messages.getString("MetricPanel.targetproperties")); //$NON-NLS-1$
+		accordion.addTab(metricsLayout,Messages.getString("MetricPanel.metrics"));  //$NON-NLS-1$
+		accordion.addTab(operatorsLayout,Messages.getString("MetricPanel.operators"));	 //$NON-NLS-1$
 				
 		// add Cytographer
 		layout.addComponent(getCytographer());
@@ -130,8 +130,8 @@ public class MetricPanel extends Panel
 				progress.setEnabled(false);
 			}
 		}.start();
-		metricsLayout.addComponent( new Label("a metric"));
-		operatorsLayout.addComponent( new Label("an operator"));
+		metricsLayout.addComponent( new Label(Messages.getString("MetricPanel.0"))); 
+		operatorsLayout.addComponent( new Label(Messages.getString("MetricPanel.8"))); 
 		
 		sourceLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.SOURCE));
 		targetLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.TARGET));
@@ -160,7 +160,7 @@ public class MetricPanel extends Panel
 		cytographer = new Cytographer(cyNetwork, cyNetworkView, name, WIDTH, HEIGHT,SAIMApplication.getInstance().getMainWindow());
 		cytographer.setImmediate(true);
 		cytographer.setWidth(WIDTH + "px");
-		cytographer.setHeight(HEIGHT + "px");
+		cytographer.setHeight(HEIGHT + "px"); 
 		cytographer.setTextVisible(true);		
 		cytographer.setNodeSize(NODESIZE, true);	
 		
@@ -231,13 +231,13 @@ public class MetricPanel extends Panel
 	}
 	
 	public Layout getButtonLayout() {
-		selfConfigButton = new Button("Start SelfConfiguration");
+		selfConfigButton = new Button(Messages.getString("MetricPanel.startselfconfigbutton"));
 		selfConfigButton.setEnabled(false);
 		selfConfigButton.addListener(new MetricPanelListeners.SelfConfigClickListener());
-		this.learnButton = new Button("Learn Metric");
+		this.learnButton = new Button(Messages.getString("MetricPanel.learnmetricbutton"));
 		learnButton.setEnabled(false);
 		learnButton.addListener(new MetricPanelListeners.LearnClickListener());
-		this.startMapping = new Button("Start Mapping process");
+		this.startMapping = new Button(Messages.getString("MetricPanel.startmappingbutton"));
 		startMapping.setEnabled(false);
 		startMapping.addListener(new MetricPanelListeners.StartMappingListener());
 		buttonLayout.addComponent(selfConfigButton);
@@ -283,18 +283,18 @@ class AccordionLayoutClickListener implements LayoutClickListener{
 	@Override
 	public void layoutClick(LayoutClickEvent event) {
 		// its left button
-		if(event.getButtonName().equalsIgnoreCase("left") && event.getClickedComponent() instanceof Label ){
+		if(event.getButtonName().equalsIgnoreCase("left") && event.getClickedComponent() instanceof Label ){ 
 			String label = ((Label)event.getClickedComponent()).getValue().toString();
 			switch(shape){
 			case SOURCE :{
-				String pref = Configuration.getInstance().getSource().var.replaceAll("\\?", "");
-				cytographer.addNode(pref+"."+label, 0, 0, shape);
+				String pref = Configuration.getInstance().getSource().var.replaceAll("\\?", ""); 
+				cytographer.addNode(pref+"."+label, 0, 0, shape); 
 				addProperty(label, Configuration.getInstance().getSource());
 				break;
 			}
 			case TARGET : {
-				String pref = Configuration.getInstance().getTarget().var.replaceAll("\\?", "");
-				cytographer.addNode(pref+"."+label, 0, 0, shape);
+				String pref = Configuration.getInstance().getTarget().var.replaceAll("\\?", ""); 
+				cytographer.addNode(pref+"."+label, 0, 0, shape); 
 				addProperty(label, Configuration.getInstance().getTarget());
 				break;
 			}
@@ -326,12 +326,10 @@ class AccordionLayoutClickListener implements LayoutClickListener{
 		}
 		if(!info.properties.contains(prop)) {
 			info.properties.add(prop);
-			logger.error("adding property "+prop+" again?");
+			logger.error("adding property "+prop+" again?"); 
 		}
-			
-//		info.functions.put(prop, "");
-		//show preprocessing window
-		Window sub = new Window("Define property "+prop);
+
+		Window sub = new Window(Messages.getString("MetricPanel.definepreprocessingsubwindowname")+prop);
 		sub.setModal(true);
 		sub.addComponent(new PreprocessingForm(info, prop));
 		SAIMApplication.getInstance().getMainWindow().addWindow(sub);
@@ -339,6 +337,6 @@ class AccordionLayoutClickListener implements LayoutClickListener{
 		String base = PrefixHelper.getBase(s);
 		info.prefixes.put(PrefixHelper.getPrefix(base), PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
 	
-		logger.info(info.var+": adding property: "+prop+" with prefix "+PrefixHelper.getPrefix(base)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
+		logger.info(info.var+": adding property: "+prop+" with prefix "+PrefixHelper.getPrefix(base)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefix(base))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 }
