@@ -20,19 +20,19 @@ import cytoscape.visual.VisualPropertyType;
 public class PaintController {
 
 	private static final int MARGIN = 20;
+
 	private Set<Integer> paintedNodes = new HashSet<Integer>();	
-	
+	/**
+	 */
 	private Object getNodeAppearance (VisualPropertyType vpt){
 		return Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().get(vpt);
 	}
+	/**
+	 */
 	private Object getEdgeAppearance (VisualPropertyType vpt){
 		return Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().get(vpt);
 	}
 	/**
-	 * 
-	 * @param paintTarget
-	 * @param graphProperties
-	 * @throws PaintException
 	 */
 	public void repaintGraph(final PaintTarget paintTarget, final GraphProperties graphProperties) throws PaintException {
 		
@@ -63,8 +63,7 @@ public class PaintController {
 		final Color nsc = Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().getDefaultNodeSelectionColor();
 		final Color esc = Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().getDefaultEdgeSelectionColor();
 		final double efo = (double) Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().get(VisualPropertyType.EDGE_LABEL_OPACITY);
-		
-		
+				
 		paintTarget.addAttribute("ec", getRGB(ec));
 		paintTarget.addAttribute("elw", elw.intValue());
 		paintTarget.addAttribute("nbc", getRGB(nbc));
@@ -75,14 +74,11 @@ public class PaintController {
 		paintTarget.addAttribute("efs", efs.intValue());
 		paintTarget.addAttribute("nfs", nfs.intValue());
 		paintTarget.addAttribute("eda", dashArray);
-		paintTarget.addAttribute("ns", ns.intValue());
-		
+		paintTarget.addAttribute("ns", ns.intValue());		
 		paintTarget.addAttribute("bc", getRGB(bc));
 		paintTarget.addAttribute("nsc", getRGB(nsc));
 		paintTarget.addAttribute("esc", getRGB(esc));
-		paintTarget.addAttribute("efo", efo);
-		
-		
+		paintTarget.addAttribute("efo", efo);		
 				
 		paintedNodes = new HashSet<Integer>();
 		for (final int ei : graphProperties.getEdges()) {
@@ -227,22 +223,4 @@ public class PaintController {
 	public void setZoom(final PaintTarget target, final GraphProperties graphProperties) throws PaintException {
 		target.addAttribute("zoom", graphProperties.getZoomFactor());
 	}
-//	public void updateNode(final PaintTarget target, final GraphProperties graphProperties, final String nodeId) throws PaintException {
-//	final VisualMappingManager vizmapper = Cytoscape.getVisualMappingManager();
-//	final VisualStyle vs = vizmapper.getVisualStyle();
-//	final CyNode node = Cytoscape.getCyNode(nodeId);
-//	final NodeAppearance n1a = vs.getNodeAppearanceCalculator().calculateNodeAppearance(node, graphProperties.getCyNetwork());
-//
-//	target.addAttribute("node", nodeId);
-//	target.addAttribute("_n1bc", getRGB((Color) n1a.get(VisualPropertyType.NODE_BORDER_COLOR)));
-//	target.addAttribute("_n1fc", getRGB((Color) n1a.get(VisualPropertyType.NODE_FILL_COLOR)));
-//	target.addAttribute("_n1bw", ((Number) n1a.get(VisualPropertyType.NODE_LINE_WIDTH)).intValue());
-//	target.addAttribute("_n1s", ((Number) n1a.get(VisualPropertyType.NODE_SIZE)).intValue());
-//}	
-//	public void paintVisualStyle(final PaintTarget target, final GraphProperties graphProperties) throws PaintException {
-//	// TODO
-//}
-//public void paintOptimizedStyles(final PaintTarget target, final GraphProperties graphProperties) throws PaintException {
-//    // TODO
-//}
 }

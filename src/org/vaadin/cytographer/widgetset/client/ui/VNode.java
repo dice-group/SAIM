@@ -23,16 +23,19 @@ import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.Command;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.VConsole;
 
 public class VNode extends Group 
 implements ContextListener, MouseDownHandler, MouseUpHandler, MouseMoveHandler, ClickHandler {
 
 	protected final VCytographer cytographer;
-	private Map<String, Command> commandMap;
+	protected Map<String, Command> commandMap;
 
 	private final VGraph graph;
 	private float x, y;
@@ -94,8 +97,10 @@ implements ContextListener, MouseDownHandler, MouseUpHandler, MouseMoveHandler, 
 			return new VSource(cytographer, graph, VSource.getShape(x,y, style.getNodeSize()), nodeName,nodeID, style);
 		else if(shape.equals("TARGET"))
 			return new VTarget(cytographer, graph, VTarget.getShape(x,y, style.getNodeSize()), nodeName,nodeID, style);
+		else if(shape.equals("OUTPUT"))
+			return new VOutput(cytographer, graph, VOutput.getShape(x,y, style.getNodeSize()), nodeName,nodeID, style);
 
-		else  throw new IllegalStateException("Shape creation failed since shape not found,use:SOURCE,TARGET,METRIC or OPERATOR.");
+		else  throw new IllegalStateException("Shape creation failed since shape not found,use:SOURCE,TARGET,METRIC, OUTPUT or OPERATOR.");
 	}
 
 	protected static void setStyleToVNode(VNode vNode,final VVisualStyle style){
@@ -210,14 +215,25 @@ implements ContextListener, MouseDownHandler, MouseUpHandler, MouseMoveHandler, 
 
 	@Override
 	public void onClick(final ClickEvent event) {
-		if (cytographer.isOnLink())
+		if (cytographer.isOnLink()){
 			cytographer.constructLinkTo(this);
+		}
 		 else {
 			graph.setNodeSelected((VNode) event.getSource(), !graph.getSelectedShapes().contains(event.getSource()));
 			cytographer.nodeOrEdgeSelectionChanged();
 		}
 	}
-
+	@Override
+	public void onMouseDown(final MouseDownEvent event) {
+		
+		if (event.getNativeEvent().getButton() == NativeEvent.BUTTON_RIGHT) {
+			final VContextMenu menu = new VContextMenu(VNode.this);
+			menu.showMenu(event.getClientX(), event.getClientY());
+			cytographer.setCurrentMenu(menu);
+		} else 
+			graph.setMovedShape(this);
+		event.stopPropagation();
+	}
 	@Override
 	public void onMouseMove(final MouseMoveEvent event) {
 	}
@@ -228,18 +244,6 @@ implements ContextListener, MouseDownHandler, MouseUpHandler, MouseMoveHandler, 
 		// update position of node
 		cytographer.onNodeMouseUp(new String[]{getID().toString(), String.valueOf(getX()), String.valueOf(getY())});
 	}
-
-	@Override
-	public void onMouseDown(final MouseDownEvent event) {
-		if (event.getNativeEvent().getButton() == NativeEvent.BUTTON_RIGHT) {
-			final VContextMenu menu = new VContextMenu(VNode.this);
-			menu.showMenu(event.getClientX(), event.getClientY());
-			cytographer.setCurrentMenu(menu);
-		} else 
-			graph.setMovedShape(this);
-		event.stopPropagation();
-	}
-
 	@Override
 	public void initCommands(final VContextMenu menu) {
 		commandMap = new HashMap<String, Command>();

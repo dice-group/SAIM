@@ -8,6 +8,7 @@ import org.vaadin.gwtgraphics.client.shape.Text;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.VConsole;
 
 public class VEdge extends Line implements ClickHandler {
 
@@ -70,10 +71,6 @@ public class VEdge extends Line implements ClickHandler {
 	}
 	// static method to make an edge
 	public static VEdge createAnEdge(final UIDL child, final VCytographer cytographer, final VGraph graph, final String name, final VNode node1, final VNode node2, final VVisualStyle style) {
-		
-//		String str = "";
-//		if (name.indexOf("(") != -1 && name.indexOf(")") != -1)
-//			str = name.substring(name.indexOf("(") + 1, name.indexOf(")"));
 		
 		final Text text = new Text((int) (node1.getX() + node2.getX()) / 2, (int) (node1.getY() + node2.getY()) / 2, name);
 		text.setFontSize(style.getEdgeFontSize());

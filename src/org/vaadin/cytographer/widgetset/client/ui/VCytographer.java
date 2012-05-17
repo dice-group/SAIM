@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.VConsole;
 
 public class VCytographer extends Composite implements 
 Paintable, ClickHandler,MouseDownHandler, MouseUpHandler, 
@@ -276,7 +277,7 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 		final String[] nodes = new String[graph.getSelectedShapes().size()];
 		int i = 0;
 		for (final VEdge vedge : graph.getSelectedEdges()) {
-			edges[i] = vedge.toString();
+			edges[i] = vedge.getName();
 			++i;
 		}
 		i = 0;
@@ -284,16 +285,16 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 			nodes[i] = vnode.toString();
 			++i;
 		}
-		applicationConnection.updateVariable(paintableId, "selectedEdges", edges, false);
-		applicationConnection.updateVariable(paintableId, "selectedNodes", nodes, true);
+		
+		applicationConnection.updateVariable(paintableId, "selectedEdges", edges, false);		
+		applicationConnection.updateVariable(paintableId, "selectedNodes", nodes, true);		
 	}
 	
 	public void doubleClick(String[] values) {
 		applicationConnection.updateVariable(paintableId, "doubleClick", values, true);		
 	}
 
-	public void onNodeMouseUp(String[] values){
-		
+	public void onNodeMouseUp(String[] values){		
 		applicationConnection.updateVariable(paintableId, "onNodeMouseUp", values, true);				
 	}
 	@Override
@@ -390,25 +391,17 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 
 	public void constructLinkTo(final VNode node2) {		
 		final String name = linkNode.getID() + "_to_" + node2.getID() + "_" + new Random().nextInt(1000);
-		final VEdge edge = VEdge.createAnEdge(null, this, graph, name, linkNode, node2, style);
-		
 		applicationConnection.updateVariable(paintableId, "edgeCreated", new String[] { linkNode.getID().toString(), node2.getID().toString(), name }, true);
-		
-		graph.addEdge(edge);
 	}
 
 	public boolean isOnLink() {
+		//VConsole.log("isOnLink: " + onLink );
 		return onLink;
 	}
 
 	public void deleteSelectedItems() {
-		for (final VEdge edge : graph.getSelectedEdges()) 
-			deleteEdge(edge, true);
-		
-		for (final VNode node : graph.getSelectedShapes()) 
-			deleteNode(node, true);
-		
-		// client.sendPendingVariableChanges();
+		for (final VEdge edge : graph.getSelectedEdges())    deleteEdge(edge, true);
+		for (final VNode node : graph.getSelectedShapes())    deleteNode(node, true);
 	}
 
 	public void deleteNode(final VNode node, final boolean immediate) {

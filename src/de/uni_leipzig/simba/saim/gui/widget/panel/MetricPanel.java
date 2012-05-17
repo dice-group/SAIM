@@ -1,8 +1,14 @@
 package de.uni_leipzig.simba.saim.gui.widget.panel;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vaadin.cytographer.Cytographer;
@@ -31,6 +37,12 @@ import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
+import de.uni_leipzig.simba.saim.core.metric.Measure;
+import de.uni_leipzig.simba.saim.core.metric.MetricParser;
+import de.uni_leipzig.simba.saim.core.metric.Node;
+import de.uni_leipzig.simba.saim.core.metric.Operator;
+import de.uni_leipzig.simba.saim.core.metric.Output;
+import de.uni_leipzig.simba.saim.core.metric.Property;
 import de.uni_leipzig.simba.saim.gui.widget.Listener.MetricPanelListeners;
 import de.uni_leipzig.simba.saim.gui.widget.form.ManualMetricForm;
 import de.uni_leipzig.simba.saim.gui.widget.form.PreprocessingForm;
@@ -137,8 +149,12 @@ public class MetricPanel extends Panel
 				progress.setEnabled(false);
 			}
 		}.start();
-		metricsLayout.addComponent( new Label(Messages.getString("MetricPanel.0"))); 
-		operatorsLayout.addComponent( new Label(Messages.getString("MetricPanel.8"))); 
+//		metricsLayout.addComponent( new Label(Messages.getString("MetricPanel.0"))); 
+//		operatorsLayout.addComponent( new Label(Messages.getString("MetricPanel.8"))); 		
+		for(String label : Measure.identifiers)
+			metricsLayout.addComponent( new Label(label)); 
+		for(String label : Operator.identifiers)
+			operatorsLayout.addComponent( new Label(label)); 	
 		
 		sourceLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.SOURCE, config));
 		targetLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.TARGET, config));
@@ -165,16 +181,97 @@ public class MetricPanel extends Panel
 		CyNetwork cyNetwork = Cytoscape.createNetwork(name, false);		
 		cyNetworkView = Cytoscape.createNetworkView(cyNetwork);
 
-		cytographer = new Cytographer(cyNetwork, cyNetworkView, name, WIDTH, HEIGHT,SAIMApplication.getInstance().getMainWindow());
+		Window window = SAIMApplication.getInstance().getMainWindow();
+		cytographer = new Cytographer(cyNetwork, cyNetworkView, name, WIDTH, HEIGHT,window);
 		cytographer.setImmediate(true);
 		cytographer.setWidth(WIDTH + "px");
 		cytographer.setHeight(HEIGHT + "px"); 
 		cytographer.setTextVisible(true);		
 		cytographer.setNodeSize(NODESIZE, true);	
 		
+		String metricExpression = config.getMetricExpression();
+		//metricExpression = "AND(levenshtein(x.rdfs:label,y.rdfs:label)|0.1,levenshtein(x.dbp:name,y.dbp:name)|1.0)";
+		if( metricExpression != null){
+	
+			makeMetric( MetricParser.parse(metricExpression,"x"));
+			cyNetworkView.applyLayout(new ForceDirectedLayout());		
+			cytographer.repaintGraph();
+		}else{
+			cytographer.addNode("Metric", WIDTH/2, HEIGHT/2, GraphProperties.Shape.OUTPUT);
+			cytographer.repaintGraph();
+		}
 		return cytographer;		
 	}
 
+	private Map<Integer,Node> blacklist = new HashMap<Integer,Node>();
+	/**
+	 * @param o the Output node
+	 */
+	private void makeMetric(Node output){
+		Stack<Node> cNodes = new Stack<Node>();
+		cNodes.push(output);
+		
+		while(!cNodes.isEmpty()){
+			Integer nID = null;
+			Node n = cNodes.pop();
+			if(!blacklist.containsValue(n)){
+				nID = addNode(n);
+				blacklist.put(nID, n);
+			}else{
+				for(Integer id : blacklist.keySet()){
+					if(blacklist.get(id).equals(n)){
+						nID=id;
+						break;						
+					}
+				}
+			}
+			
+			cNodes.addAll(n.getChilds());
+			for(Node c : n.getChilds()){
+				Integer cID = null; 
+				if(!blacklist.containsValue(c)){
+					cID = addNode(c);
+					blacklist.put(cID, c);
+				}else{
+					for(Integer id : blacklist.keySet()){
+						if(blacklist.get(id).equals(c)){
+							cID=id;
+							break;						
+						}
+					}
+				}				
+				addEdge(nID,cID);			
+			}
+		}
+	}
+	private int addNode(Node n){
+		Integer id = null;
+		// make node
+		if(n instanceof Output){
+			id= cytographer.addNode("Out", 0, 0, GraphProperties.Shape.OUTPUT);
+		
+		}else if(n instanceof Operator){
+			id= cytographer.addNode(((Operator)n).id, 0, 0, GraphProperties.Shape.OPERATOR);
+			List<Object> l = new ArrayList<Object>();
+			l.add(((Operator)n).param1);
+			l.add(((Operator)n).param2);		
+			cytographer.setNodeMetadata(id+"", l);
+			
+		}else if(n instanceof Property){
+			if(((Property)n).getOrigin().equals(Property.Origin.TARGET)){
+				id=cytographer.addNode(((Property)n).id, 0, 0, GraphProperties.Shape.TARGET);
+			}else{
+				id=cytographer.addNode(((Property)n).id, 0, 0, GraphProperties.Shape.SOURCE);
+			}
+			
+		}else if(n instanceof Measure){
+			id=cytographer.addNode(((Measure)n).id, 0, 0, GraphProperties.Shape.METRIC);
+		}
+		return id;
+	}
+	private void addEdge(int nID,int cID){
+		cytographer.createAnEdge(nID, cID, new String(nID+"_to_"+cID));		
+	}
 	
 	private void getAllProps() {
 //		Configuration config = Configuration.getInstance();
@@ -283,25 +380,28 @@ class AccordionLayoutClickListener implements LayoutClickListener{
 		// its left button
 		if(event.getButtonName().equalsIgnoreCase("left") && event.getClickedComponent() instanceof Label ){ 
 			String label = ((Label)event.getClickedComponent()).getValue().toString();
+			int x = (int)cytographer.getWidth()/2;
+			int y = (int)cytographer.getHeight()/2;
+			
 			switch(shape){
 			case SOURCE :{
 				String pref = config.getSource().var.replaceAll("\\?", ""); 
-				cytographer.addNode(pref+"."+label, 0, 0, shape); 
+				cytographer.addNode(pref+"."+label, x,y, shape); 
 				addProperty(label, config.getSource());
 				break;
 			}
 			case TARGET : {
 				String pref = config.getTarget().var.replaceAll("\\?", ""); 
-				cytographer.addNode(pref+"."+label, 0, 0, shape); 
+				cytographer.addNode(pref+"."+label, x,y, shape); 
 				addProperty(label, config.getTarget());
 				break;
 			}
 			default :
-					cytographer.addNode(label, 0, 0, shape);
+					cytographer.addNode(label, x,y, shape);
 			}
 
-			cyNetworkView.applyLayout(new ForceDirectedLayout());		
-			cytographer.fitToView();
+			//cyNetworkView.applyLayout(new ForceDirectedLayout());		
+			//cytographer.fitToView();
 			// repaint
 			cytographer.repaintGraph();
 		}

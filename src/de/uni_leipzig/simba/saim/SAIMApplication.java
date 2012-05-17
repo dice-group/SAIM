@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
+import lombok.Getter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +44,7 @@ public class SAIMApplication extends Application
 {
 	private static final long	serialVersionUID	= -7665596682464881860L;
 	private static SAIMApplication application = null; 
-	private final Window mainWindow;
+	@Getter private final Window mainWindow;
 	private Layout mainLayout;
 	private Wizard wizard;
 	Window sub;

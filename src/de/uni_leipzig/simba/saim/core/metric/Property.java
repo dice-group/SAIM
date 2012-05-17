@@ -3,6 +3,8 @@ package de.uni_leipzig.simba.saim.core.metric;
 import java.util.Collections;
 import java.util.Set;
 
+import lombok.Getter;
+
 /** A similarity measure.*/
 public class Property extends Node
 {
@@ -11,7 +13,7 @@ public class Property extends Node
 	public byte getMaxChilds() {return 0;}
 	public enum Origin {SOURCE,TARGET};
 	//protected final String id;
-	protected final Origin origin;
+	@Getter protected final Origin origin;
 	@Override public Set<Class<? extends Node>> validChildClasses() {return Collections.emptySet();}
 	// properties are leaves on the tree 	
 	@Override public boolean acceptsChild(Node n)	{return false;}

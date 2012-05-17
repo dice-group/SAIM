@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 
@@ -22,6 +23,8 @@ import org.apache.log4j.Logger;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.ui.Window;
+import com.vaadin.ui.Window.Notification;
 
 import cytoscape.CyEdge;
 import cytoscape.CyNetwork;
@@ -29,6 +32,12 @@ import cytoscape.CyNode;
 import cytoscape.Cytoscape;
 import cytoscape.data.Semantics;
 import cytoscape.view.CyNetworkView;
+import de.uni_leipzig.simba.saim.core.metric.Measure;
+
+import de.uni_leipzig.simba.saim.core.metric.Operator;
+import de.uni_leipzig.simba.saim.core.metric.Output;
+import de.uni_leipzig.simba.saim.core.metric.Property;
+import de.uni_leipzig.simba.saim.core.metric.Property.Origin;
 
 
 public class GraphProperties {
@@ -39,7 +48,7 @@ public class GraphProperties {
 	private Random rand = new Random();
 	
 	@Getter private final String title;
-
+	@Setter private  Window mainWindow = null;
 	@Getter @Setter private CyNetwork cyNetwork;
 	@Getter @Setter private CyNetworkView cyNetworkView;
 
@@ -50,10 +59,11 @@ public class GraphProperties {
 	private final Map<String, List<Object>> nodeMetadata = new HashMap<>();
 	
 	public enum Shape {
-		SOURCE,TARGET, METRIC, OPERATOR
+		SOURCE,TARGET, METRIC, OPERATOR,OUTPUT
 	}
 	private Map<Integer, Shape> shapes = new HashMap<Integer, Shape>();
-
+	/** key = 0 for Output node*/
+	@Getter private Map<Integer, de.uni_leipzig.simba.saim.core.metric.Node> nodeMap = new HashMap<Integer,de.uni_leipzig.simba.saim.core.metric.Node>();
 	@Getter private final Set<String> selectedNodes = new HashSet<>();
 	@Getter private final Set<String> selectedEdges = new HashSet<>();
 
@@ -70,6 +80,7 @@ public class GraphProperties {
 	@Getter @Setter private boolean textsVisible = false;
 	@Getter @Setter private boolean styleOptimization = false;
 
+
 	public GraphProperties(final CyNetwork network, final CyNetworkView finalView, final String p_title) {
 		cyNetwork = network;
 		cyNetworkView = finalView;
@@ -80,7 +91,14 @@ public class GraphProperties {
 		contructNodeToEdgesMap();
 	}
 	public void setNodeMetadata(String node, List<Object> data){
-		nodeMetadata.put(node, data);	
+
+		if(data.size()>=2){		
+			nodeMap.get(Integer.valueOf(node)).param1=Double.valueOf(data.get(0).toString()).doubleValue();
+			nodeMap.get(Integer.valueOf(node)).param2=Double.valueOf(data.get(1).toString()).doubleValue();
+			nodeMetadata.put(node, data);	
+		}else{
+			logger.error("parameter list size is smaller than 2");
+		}
 	}
 	public List<Object> getNodeMetadata(String node){
 		List<Object> value =  nodeMetadata.get(node);
@@ -167,33 +185,47 @@ public class GraphProperties {
 		return container;
 	}
 
-	public int  addANewNode(final String name, final int x, final int y, Shape shape) {
-	
-		// search for a free node	
-		CyNode node = null;
-		int random = -1;
-		do{
-			random = rand.nextInt(999999999);
-			node = Cytoscape.getCyNode(random+"") ;
-		}while(node != null);
+	public int addANewNode(final String name, final int x, final int y, Shape shape) {	
 		
-		node = Cytoscape.getCyNode(random+"", true);		
-		node.setIdentifier(node.getRootGraphIndex()+"");
+		de.uni_leipzig.simba.saim.core.metric.Node n = null;		
+		switch(shape){
+		case SOURCE:    n = new Property(name,Origin.SOURCE); break;
+		case TARGET:    n = new Property(name,Origin.TARGET); break;
+		case METRIC:    n = new Measure(name); break;
+		case OPERATOR : n = new Operator(name); break;
+		case OUTPUT :   n = new Output(); break;
+		default: break;
+		}
 		
-		nodeNames.put(node.getRootGraphIndex(), name);			
-		node = cyNetwork.addNode(node);	
-		
-		cyNetworkView.addNodeView(node.getRootGraphIndex()).setXPosition(x);
-		cyNetworkView.addNodeView(node.getRootGraphIndex()).setYPosition(y);
-		
-		nodes.add(node.getRootGraphIndex());		
-		shapes.put(node.getRootGraphIndex(), shape);
-		
-		return node.getRootGraphIndex();
+		Integer id = null;
+		if(n != null){
+			// search for a free node	
+			CyNode node = null;
+			String tmpname = "";
+			do{
+				tmpname = rand.nextInt(999999999)+"#####";
+				node = Cytoscape.getCyNode(tmpname) ;
+			}while(node != null);
+			
+			node = Cytoscape.getCyNode(tmpname, true);		
+			id = node.getRootGraphIndex();
+			node.setIdentifier(id+"");
+			
+			nodeNames.put(id, name);			
+			node = cyNetwork.addNode(node);	
+			
+			cyNetworkView.addNodeView(id).setXPosition(x);
+			cyNetworkView.addNodeView(id).setYPosition(y);
+			
+			nodes.add(id);		
+			shapes.put(id, shape);
+			
+			nodeMap.put(id, n);
+		}
+		return id; 
 	}
 	
-	public  Shape getShapes(final String id){
-		
+	public  Shape getShapes(final String id){		
 		return shapes.get(Cytoscape.getCyNode(id, false).getRootGraphIndex());
 	}
 
@@ -214,30 +246,19 @@ public class GraphProperties {
 			selectedNodes.remove(node.getIdentifier());
 			nodes.remove(Integer.valueOf(node.getRootGraphIndex()));
 			shapes.remove(Integer.valueOf(node.getRootGraphIndex()));
-			nodeMetadata.remove(id);			
+			nodeMetadata.remove(id);		
+			
+			de.uni_leipzig.simba.saim.core.metric.Node n=nodeMap.get(node.getRootGraphIndex());
+			for(Entry<Integer, de.uni_leipzig.simba.saim.core.metric.Node> e : nodeMap.entrySet()){
+				if(e.getValue().getChilds().contains(n))
+					e.getValue().removeChild(n);					
+			}
+			while(n.getChilds().size()>0)
+				 n.removeChild(n.getChilds().get(0));
+			nodeMap.remove(node.getRootGraphIndex());
 		} else 
 			throw new IllegalStateException("Node not found " + id);
 	}
-
-	public void createAnEdge(int nodeIdA, int nodeIdB, String attribute) {
-		
-		final CyNode node1 = Cytoscape.getCyNode(nodeIdA+"", false);
-		final CyNode node2 = Cytoscape.getCyNode(nodeIdB+"", false);
-		
-		if (node1 != null && node2 != null) {
-			final CyEdge edge = Cytoscape.getCyEdge(node1, node2, Semantics.INTERACTION, attribute, true);
-			edge.setIdentifier(attribute);
-			cyNetwork.addEdge(edge);
-			cyNetworkView.addEdgeView(edge.getRootGraphIndex());
-			edges.add(edge.getRootGraphIndex());
-			edgeMap.put(attribute, edge);
-			addEdgeIntoMap(node1, edge);
-			addEdgeIntoMap(node2, edge);
-		} else {
-			throw new IllegalStateException("Edge creation failed since node not found");
-		}
-	}
-
 	public void removeEdge(final String id) {
 		final Edge edge = edgeMap.remove(id);
 		edges.remove(Integer.valueOf(edge.getRootGraphIndex()));
@@ -247,8 +268,52 @@ public class GraphProperties {
 		removeEdgeFromTheMap(edge, edge.getTarget());
 		cyNetworkView.removeEdgeView(edge.getRootGraphIndex());
 		cyNetwork.removeEdge(edge.getRootGraphIndex(), true);
+		//
+		de.uni_leipzig.simba.saim.core.metric.Node nodeA = nodeMap.get(edge.getSource().getRootGraphIndex());
+		de.uni_leipzig.simba.saim.core.metric.Node nodeB = nodeMap.get( edge.getTarget().getRootGraphIndex());
+		if(nodeA.getChilds().contains(nodeB))
+			nodeA.removeChild(nodeB);
+		else 
+			nodeB.removeChild(nodeA);
+		
 	}
+	public void createAnEdge(int nodeIdA, int nodeIdB, String attribute) {
 
+		if(nodeIdA == nodeIdB)
+			return ;
+
+		de.uni_leipzig.simba.saim.core.metric.Node nodeA = nodeMap.get(nodeIdA);
+		de.uni_leipzig.simba.saim.core.metric.Node nodeB = nodeMap.get(nodeIdB);
+
+		if(nodeB.validParentOf(nodeA) && (nodeB.acceptsChild(nodeA))){
+			// makes undirected
+			de.uni_leipzig.simba.saim.core.metric.Node tmp = nodeA;
+			nodeA = nodeB;
+			nodeB = tmp;			
+		}
+		if(nodeA.validParentOf(nodeB) && (nodeA.acceptsChild(nodeB))){		
+			nodeA.addChild(nodeB);	
+
+			final CyNode node1 = Cytoscape.getCyNode(nodeIdA+"", false);
+			final CyNode node2 = Cytoscape.getCyNode(nodeIdB+"", false);
+
+			if (node1 != null && node2 != null) {
+				final CyEdge edge = Cytoscape.getCyEdge(node1, node2, Semantics.INTERACTION, attribute, true);
+				edge.setIdentifier(attribute);
+				cyNetwork.addEdge(edge);
+				cyNetworkView.addEdgeView(edge.getRootGraphIndex());
+				edges.add(edge.getRootGraphIndex());
+				edgeMap.put(attribute, edge);
+				addEdgeIntoMap(node1, edge);
+				addEdgeIntoMap(node2, edge);
+				
+			} else {
+				throw new IllegalStateException("Edge creation failed since node not found");
+			}
+		}else{
+			mainWindow.showNotification("Edge not allowed.", Notification.TYPE_WARNING_MESSAGE);
+		}
+	}
 	private void removeEdgeFromTheMap(final Edge edge, final Node node) {
 		if (node != null) {
 			final List<Edge> edgs = nodeToEdgesMap.get(node);

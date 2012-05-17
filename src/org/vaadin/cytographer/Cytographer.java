@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
 import com.vaadin.data.Container;
+import com.vaadin.data.validator.DoubleValidator;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.ui.AbstractComponent;
@@ -16,11 +14,14 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
+import com.vaadin.ui.Window.Notification;
 
 import org.vaadin.cytographer.widgetset.client.ui.VCytographer;
 
 import cytoscape.CyNetwork;
 import cytoscape.view.CyNetworkView;
+import de.uni_leipzig.simba.saim.core.metric.Node;
+import de.uni_leipzig.simba.saim.core.metric.Output;
 
 /**
  * Server side component for the VCytographer widget.
@@ -33,10 +34,19 @@ public class Cytographer extends AbstractComponent {
 		REPAINT, SET_NODE_SIZE, SET_VISUAL_STYLE, SET_TEXT_VISIBILITY, SET_OPTIMIZED_STYLES, SET_ZOOM, REFRESH //,UPDATE_NODE
 	}
 	private GraphOperation currentOperation = GraphOperation.REPAINT;
-	
+		
 	private final GraphProperties graphProperties;
 	private final PaintController paintController = new PaintController();
 	private Window mainWindow;
+	/**
+	 * Gets the metrics output node / root node
+	 */
+	public Node getMetric(){
+		for(Node n : graphProperties.getNodeMap().values()){
+			if(n instanceof Output)
+				return n;
+		}return null;
+	}
 	/**
 	 * 
 	 */
@@ -46,15 +56,16 @@ public class Cytographer extends AbstractComponent {
 		graphProperties.setWidth(width);
 		graphProperties.setHeight(height);
 		this.mainWindow = mainWindow;
+		graphProperties.setMainWindow(mainWindow);		
 	}
 
 	public int  addNode(String name, int x, int y, GraphProperties.Shape shape){
 		return graphProperties.addANewNode(name, x, y,shape);
 	}
-	public void createAnEdge(int nodeA, int nodeB, String attribute) {
-		graphProperties.createAnEdge(nodeA, nodeB, attribute);
+	public void createAnEdge(int nodeAid, int nodeBid, String attribute) {
+		graphProperties.createAnEdge(nodeAid, nodeBid, attribute);
 	}
-	 
+
 	@Override
 	public void paintContent(final PaintTarget target) throws PaintException {
 		super.paintContent(target);	
@@ -85,8 +96,6 @@ public class Cytographer extends AbstractComponent {
 	}
 	/**
 	 * Receive and handle events and other variable changes from the client.
-	 * 
-	 * {@inheritDoc}
 	 */
 	@Override
 	public void changeVariables(final Object source, final Map<String, Object> variables) {
@@ -118,6 +127,7 @@ public class Cytographer extends AbstractComponent {
 		if (variables.containsKey("edgeCreated")) {
 			String[] args = (String[]) variables.get("edgeCreated");
 			graphProperties.createAnEdge(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2]);
+			repaintGraph();
 		}
 		if (variables.containsKey("removedEdge")) {
 			graphProperties.removeEdge((String) variables.get("removedEdge"));
@@ -129,19 +139,49 @@ public class Cytographer extends AbstractComponent {
 			
 			final TextField t = new TextField("option",args[3]);
 			final TextField tt = new TextField("option",args[4]);
-			mywindow.addComponent(tt);
 			mywindow.addComponent(t);
-			
+			mywindow.addComponent(tt);
+			t.addValidator(new DoubleValidator("A Threshold must be a value between 1 and 0.") {
+				private static final long serialVersionUID = -5585916227598767457L;
+				@Override
+			    protected boolean isValidString(String value) {
+			        try {
+			            double d = Double.parseDouble(value);
+			            return d>=0 && d <=1;
+			        } catch (Exception e) {
+			            return false;
+			        }
+			    }
+			});
+			tt.addValidator(new DoubleValidator("A Threshold must be a value between 1 and 0.") {
+				private static final long serialVersionUID = 2933399368578994985L;
+				@Override
+			    protected boolean isValidString(String value) {
+			        try {
+			            double d = Double.parseDouble(value);
+			            return d>=0 && d <=1;
+			        } catch (Exception e) {
+			            return false;
+			        }
+			    }
+			});
+			t.setMaxLength(4);
+			tt.setMaxLength(4);
+			t.setImmediate(true);
+			tt.setImmediate(true);
 			mywindow.addListener(new CloseListener(){
 				private static final long serialVersionUID = -165177940359643613L;
 				@Override public void windowClose(CloseEvent e) {
-					
-					List<Object> value = new ArrayList<>();
-					value.add(t.getValue());
-					value.add(tt.getValue());
-					
-					graphProperties.setNodeMetadata( args[0], value);
-					repaintGraph();
+					if(t.isValid() && tt.isValid()){
+						List<Object> value = new ArrayList<>();
+						value.add(t.getValue());
+						value.add(tt.getValue());
+						
+						graphProperties.setNodeMetadata( args[0], value);
+						repaintGraph();
+					}else{
+						mainWindow.showNotification("A Threshold must be a value between 1 and 0.", Notification.TYPE_WARNING_MESSAGE);
+					}
 				}
 			});
 			mywindow.setResizable(false);
@@ -149,8 +189,10 @@ public class Cytographer extends AbstractComponent {
 			mywindow.setHeight("180px");
 			mywindow.setWidth("200px");			 
 			mywindow.setPositionX(Math.round(Float.valueOf(args[1])));
-			mywindow.setPositionY(Math.round(Float.valueOf(args[2])));			
+			mywindow.setPositionY(Math.round(Float.valueOf(args[2])));	
+
 			mainWindow.addWindow(mywindow);
+			
 		}
 		if (variables.containsKey("onNodeMouseUp")) {
 			final String[] args = (String[]) variables.get("onNodeMouseUp");
@@ -173,6 +215,11 @@ public class Cytographer extends AbstractComponent {
 		currentOperation = GraphOperation.SET_TEXT_VISIBILITY;
 		graphProperties.setTextsVisible(b);
 		requestRepaint();
+	}
+	
+	public void setNodeMetadata(String nodeID, List<Object> value){
+		graphProperties.setNodeMetadata( nodeID, value);
+		repaintGraph();
 	}
 
 	/**

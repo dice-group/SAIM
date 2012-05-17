@@ -48,7 +48,7 @@ public class VGraph extends VectorObject {
 
 	public void refreshGraphFromUIDL(final UIDL uidl) {
 		
-		VConsole.log("VGraph.refreshGraphFromUIDL() ...");
+		//VConsole.log("VGraph.refreshGraphFromUIDL() ...");
 		
 		for (int i = 0; i < uidl.getChildCount(); i++) {
 			final UIDL child = uidl.getChildUIDL(i);
@@ -79,7 +79,7 @@ public class VGraph extends VectorObject {
 
 	public void parseGraphFromUIDL(final UIDL uidl, final VVisualStyle style) {
 		
-		VConsole.log("VGraph.parseGraphFromUIDL() ...");
+		//VConsole.log("VGraph.parseGraphFromUIDL() ...");
 		
 		edges = new HashMap<String, VEdge>();
 		nodes = new HashMap<String, VNode>();
@@ -151,7 +151,7 @@ public class VGraph extends VectorObject {
 
 	public void paintGraph(final Shape... updatedShapes) {
 		
-		VConsole.log("VGraph.paintGraph() ...");
+		//VConsole.log("VGraph.paintGraph() ...");
 		
 		if (updatedShapes == null || updatedShapes.length == 0) {
 			vFocusDrawingArea.clear();
@@ -205,7 +205,7 @@ public class VGraph extends VectorObject {
 	}
 	public void moveGraph(final float x, final float y) {
 		
-		VConsole.log("VGraph.moveGraph() ...");
+		//VConsole.log("VGraph.moveGraph() ...");
 		
 		for (final VNode vnode : getPaintedShapes()) {
 			vnode.moveNode(vnode.getX()-x,vnode.getY()- y);
@@ -298,23 +298,30 @@ public class VGraph extends VectorObject {
 	}
 
 	public void setEdgeSelected(final VEdge edge, final boolean selected) {
-		if (selected) {
-			edge.setStrokeColor(vVisualStyle.getEdgeSelectionColor());
-			getSelectedEdges().add(edge);
-		} else {
-			edge.setStrokeColor(edge.getOrginalStrokeColor());
-			getSelectedEdges().remove(edge);
+		if(edge != null){
+			if (selected) {
+//				if(!getSelectedEdges().isEmpty()){
+//					for(VEdge e:getSelectedEdges()){
+//						e.setStrokeColor(e.getOrginalStrokeColor());
+//					}
+//					getSelectedEdges().clear();
+//				}				
+				edge.setStrokeColor(vVisualStyle.getEdgeSelectionColor());
+				getSelectedEdges().add(edge);				
+			} else {
+				edge.setStrokeColor(edge.getOrginalStrokeColor());
+				getSelectedEdges().remove(edge);
+			}
 		}
 	}
 
 	public void setNodeSelected(final VNode node, final boolean selected) {
-		if (selected) {
-			VConsole.log("VGraph.setNodeSelected() add ...");
-			getSelectedShapes().add(node);
-		} else {
-			VConsole.log("VGraph.setNodeSelected() remove ...");
-			getSelectedShapes().remove(node);
-		}
+//		if (selected) {			
+//			getSelectedShapes().clear();
+//			getSelectedShapes().add(node);
+//		} else {
+//			getSelectedShapes().remove(node);
+//		}
 	}
 
 	public void setMovedShape(final VNode vNode) {
@@ -356,7 +363,7 @@ public class VGraph extends VectorObject {
 
 	public void removeNode(final VNode node) {
 		
-		VConsole.log("VGraph.removeNode");	
+		//VConsole.log("VGraph.removeNode");	
 		
 		vFocusDrawingArea.remove(node);
 		paintedShapes.remove(node);
