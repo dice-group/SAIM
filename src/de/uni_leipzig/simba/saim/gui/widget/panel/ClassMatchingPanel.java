@@ -38,6 +38,7 @@ import de.uni_leipzig.simba.saim.util.SortedMapping;
 @SuppressWarnings("serial")
 public class ClassMatchingPanel extends Panel
 {	
+	private final Messages messages;
 	public static final boolean CACHING	= true;
 	Configuration config;// = Configuration.getInstance();
 	final ComboBox suggestionComboBox = new ComboBox();
@@ -59,13 +60,10 @@ public class ClassMatchingPanel extends Panel
 	{
 		ContextHelp contextHelp = new ContextHelp();
 		getContent().addComponent(contextHelp);
-		contextHelp.addHelpForComponent(suggestionComboBox, Messages.getString("classpairsfromlimes")); //$NON-NLS-1$
+		contextHelp.addHelpForComponent(suggestionComboBox, messages.getString("classpairsfromlimes")); //$NON-NLS-1$
 	}
 
-	public ClassMatchingPanel()
-	{
-		
-	}
+	public ClassMatchingPanel(final Messages messages) {this.messages=messages;}
 	@Override
 	public void attach() {
 		setContent(new VerticalLayout());
@@ -76,7 +74,7 @@ public class ClassMatchingPanel extends Panel
 		layout.setWidth("100%");		 //$NON-NLS-1$
 		final ProgressIndicator progress = new ProgressIndicator();
 		progress.setSizeUndefined();
-		final Label suggestionLabel = new Label(Messages.getString("suggestions"));		 //$NON-NLS-1$
+		final Label suggestionLabel = new Label(messages.getString("suggestions"));		 //$NON-NLS-1$
 		suggestionLabel.setSizeUndefined();		
 		layout.addComponent(suggestionLabel);
 		layout.addComponent(progress);
@@ -152,7 +150,7 @@ public class ClassMatchingPanel extends Panel
 					}
 					if(classMatching.map.size()==0)
 					{
-						suggestionLabel.setCaption(Messages.getString("ClassMatchingPanel.nosuggestionsfound"));
+						suggestionLabel.setCaption(messages.getString("ClassMatchingPanel.nosuggestionsfound"));
 					}
 					else
 					{
@@ -204,8 +202,8 @@ public class ClassMatchingPanel extends Panel
 					listener.running=false;					
 				}
 			}.start();
-			sourceClassForm = new ClassMatchingForm(Messages.getString("ClassMatchingPanel.sourceclass"), config.getSource());
-			targetClassForm = new ClassMatchingForm(Messages.getString("ClassMatchingPanel.targetclass"), config.getTarget());
+			sourceClassForm = new ClassMatchingForm(messages.getString("ClassMatchingPanel.sourceclass"), config.getSource());
+			targetClassForm = new ClassMatchingForm(messages.getString("ClassMatchingPanel.targetclass"), config.getTarget());
 
 			HorizontalLayout hori = new HorizontalLayout();
 			hori.setWidth("100%"); //$NON-NLS-1$

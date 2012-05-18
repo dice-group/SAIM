@@ -11,19 +11,23 @@ import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 public class EndpointStep implements WizardStep
 {
+	private final Messages messages;		
+	
 	EndpointPanel panel;
 	SAIMApplication app;
-	public EndpointStep(SAIMApplication app) {
+	public EndpointStep(SAIMApplication app)
+	{
 		this.app = app;
+		this.messages=app.messages;
 	}
 	
 	@Override
-	public String getCaption() {return Messages.getString("selectsparqlendpoints");}
+	public String getCaption() {return messages.getString("selectsparqlendpoints");}
 
 	@Override
 	public Component getContent()
 	{
-		return panel = new EndpointPanel();
+		return panel = new EndpointPanel(messages);
 	}
 
 	@Override

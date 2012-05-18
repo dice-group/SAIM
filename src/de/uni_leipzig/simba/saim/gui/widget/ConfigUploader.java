@@ -10,33 +10,37 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FailedEvent;
 import com.vaadin.ui.Upload.SucceededEvent;
-
 import de.uni_leipzig.simba.io.ConfigReader;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
-import de.uni_leipzig.simba.saim.gui.widget.panel.ExecutionPanel;
 
 @SuppressWarnings("serial")
 public class ConfigUploader extends CustomComponent 
-implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver{
-
+implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver
+{
+	//private final Messages messages;
 	public static final String UPLOAD_FOLDER = "C:/tmp/uploads/";
-	private Panel root;
+	private final Panel root;
 	private File file;
-	private ConfigReader cR = new ConfigReader();
-	private Button executeFileButton = new Button(Messages.getString("executefile"));
-	private NativeSelect localExamplesSelect = new NativeSelect(Messages.getString("localexamples"));
-	private Button runExampleButton = new Button(Messages.getString("runexample"));
+	private final ConfigReader cR = new ConfigReader();
+	private final Button executeFileButton;
+	private final NativeSelect localExamplesSelect;
+	private final Button runExampleButton;
 	private static final String DEFAULT_LIMES_XML = "examples/dbpedia-linkedmdb.xml";
 
-	public ConfigUploader() {
+	public ConfigUploader(Messages messages)
+	{
+		//this.messages=messages;
+		executeFileButton = new Button(messages.getString("executefile"));
+		localExamplesSelect = new NativeSelect(messages.getString("localexamples"));
+		runExampleButton = new Button(messages.getString("runexample"));
+
 		root = new Panel("limesupload");
 		root.setWidth("100%");
 		setCompositionRoot(root);
@@ -109,7 +113,7 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver{
 			return null;
 	}
 
-	
+
 	/** Method to add components to run local examples: for testing e.g. learner or execution.*/
 	private void buildLocalExamplesSelection() {
 		HorizontalLayout subLayout = new HorizontalLayout();

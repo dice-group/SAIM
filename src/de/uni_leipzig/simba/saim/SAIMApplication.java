@@ -3,15 +3,11 @@ package de.uni_leipzig.simba.saim;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
-
 import lombok.Getter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.vaadin.teemu.wizards.Wizard;
 import org.vaadin.teemu.wizards.WizardStep;
-
 import com.vaadin.Application;
 import com.vaadin.terminal.FileResource;
 import com.vaadin.ui.Button;
@@ -26,22 +22,16 @@ import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.ConfigUploader;
 import de.uni_leipzig.simba.saim.gui.widget.panel.MetricPanel;
 import de.uni_leipzig.simba.saim.gui.widget.panel.StartPanel;
-import de.uni_leipzig.simba.saim.gui.widget.step.ClassMatchingStep;
-import de.uni_leipzig.simba.saim.gui.widget.step.DevelopMetricStep;
-import de.uni_leipzig.simba.saim.gui.widget.step.EndpointStep;
-import de.uni_leipzig.simba.saim.gui.widget.step.ExecutionStep;
-import de.uni_leipzig.simba.saim.gui.widget.step.MetricStep;
-import de.uni_leipzig.simba.saim.gui.widget.step.PropertyMatchingStep;
 import de.uni_leipzig.simba.saim.gui.widget.window.EndpointWindow;
 
 @SuppressWarnings("serial")
 public class SAIMApplication extends Application
 {
+	public final Messages messages = new Messages();
 	private static final long	serialVersionUID	= -7665596682464881860L;
 	private static SAIMApplication application = null; 
 	@Getter private final Window mainWindow;
@@ -57,12 +47,11 @@ public class SAIMApplication extends Application
 	public SAIMApplication()
 	{		
 		application=this;
-		
-		mainWindow = new Window(Messages.getString("title")); //$NON-NLS-1$
+		mainWindow = new Window(messages.getString("title")); //$NON-NLS-1$
 		mainLayout = buildMainLayout();
 		mainWindow.setContent(mainLayout);
 		mainWindow.addComponent(buildMainMenu());
-		content = new MetricPanel();
+		content = new MetricPanel(messages);
 		mainLayout.addComponent(content);
 		wizard = new Wizard();	
 		setTheme("saim"); 
@@ -75,14 +64,14 @@ public class SAIMApplication extends Application
 		menuBar.setWidth("100%"); //$NON-NLS-1$
 		//menuBar.setStyleName("margin1em");
 		
-		MenuItem fileMenu = menuBar.addItem(Messages.getString("file"), null, null); //$NON-NLS-1$
-		fileMenu.addItem(Messages.getString("open"), null, null).setEnabled(false); //$NON-NLS-1$
-		fileMenu.addItem(Messages.getString("save"), null, null).setEnabled(false); //$NON-NLS-1$
+		MenuItem fileMenu = menuBar.addItem(messages.getString("file"), null, null); //$NON-NLS-1$
+		fileMenu.addItem(messages.getString("open"), null, null).setEnabled(false); //$NON-NLS-1$
+		fileMenu.addItem(messages.getString("save"), null, null).setEnabled(false); //$NON-NLS-1$
 		
-		fileMenu.addItem(Messages.getString("importlimes"), null, importLIMESCommand).setEnabled(true);		 //$NON-NLS-1$
-		fileMenu.addItem(Messages.getString("exportlimes"), null, exportLIMESCommand).setEnabled(true); //$NON-NLS-1$
+		fileMenu.addItem(messages.getString("importlimes"), null, importLIMESCommand).setEnabled(true);		 //$NON-NLS-1$
+		fileMenu.addItem(messages.getString("exportlimes"), null, exportLIMESCommand).setEnabled(true); //$NON-NLS-1$
 		
-		MenuItem startMenu = menuBar.addItem(Messages.getString("startnewconfig"), null, new StartCommand(this));
+		MenuItem startMenu = menuBar.addItem(messages.getString("startnewconfig"), null, new StartCommand(this));
 		
 		return menuBar;
 	}
@@ -100,10 +89,10 @@ public class SAIMApplication extends Application
 
 	MenuBar.Command importLIMESCommand = new MenuBar.Command() {
 	    public void menuSelected(MenuItem selectedItem) {
-	    	sub = new Window(Messages.getString("limesupload")); //$NON-NLS-1$
+	    	sub = new Window(messages.getString("limesupload")); //$NON-NLS-1$
 	    	sub.setWidth("700px"); //$NON-NLS-1$
 	    	sub.setModal(true);
-	    	final ConfigUploader upload = new ConfigUploader();
+	    	final ConfigUploader upload = new ConfigUploader(messages);
 	    	sub.addComponent(upload);
 	    	Button ok = new Button("ok"); //$NON-NLS-1$
 	    	sub.addComponent(ok);
@@ -120,12 +109,12 @@ public class SAIMApplication extends Application
 	
 	MenuBar.Command exportLIMESCommand = new MenuBar.Command() {
 	    public void menuSelected(MenuItem selectedItem) {
-	    	sub = new Window(Messages.getString("limesdownload")); //$NON-NLS-1$
+	    	sub = new Window(messages.getString("limesdownload")); //$NON-NLS-1$
 	    	sub.setWidth("700px"); //$NON-NLS-1$
 	    	sub.setModal(true);
 	    	config.saveToXML("linkspec.xml"); //$NON-NLS-1$
 	    	
-	    	sub.addComponent(new Link(Messages.getString("SAIMApplication.menudownloadlinkspec"),new FileResource(new File("linkspec.xml"),SAIMApplication.this))); //$NON-NLS-1$ //$NON-NLS-2$
+	    	sub.addComponent(new Link(messages.getString("SAIMApplication.menudownloadlinkspec"),new FileResource(new File("linkspec.xml"),SAIMApplication.this))); //$NON-NLS-1$ //$NON-NLS-2$
 	    	getMainWindow().addWindow(sub);
 	    }  
 	};
@@ -211,7 +200,7 @@ public class SAIMApplication extends Application
 	public void refresh() {
 		mainLayout.removeComponent(content);
 		//FIXME call refresh() method instead of constructing completely new?
-		content = new MetricPanel();
+		content = new MetricPanel(messages);
 		mainLayout.addComponent(content);
 	}
 	

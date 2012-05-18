@@ -17,14 +17,14 @@ import de.uni_leipzig.simba.saim.gui.widget.step.PropertyMatchingStep;
  * @author Lyko
  *
  */
-public class EndpointWindow extends Window{
-	
+public class EndpointWindow extends Window
+{	
 	Layout mainLayout;
 	Wizard wizard;
 	SAIMApplication app;
 	
-	public EndpointWindow(SAIMApplication app) {
-		
+	public EndpointWindow(SAIMApplication app)
+	{
 		this.app = app;
 		this.setSizeFull();
 		wizard = new Wizard();
@@ -33,19 +33,20 @@ public class EndpointWindow extends Window{
 		init();
 	}
 	
-	private void init() {
+	private void init()
+	{
 		mainLayout = new VerticalLayout();
 		this.addComponent(mainLayout);
 		mainLayout.addComponent(wizard);
 		setTheme("saim"); 
 	}
 	
-	private void wizardFull() {
+	private void wizardFull()
+	{
 		wizard.addStep(new EndpointStep(app));		
 		wizard.addStep(new ClassMatchingStep(app));
-		wizard.addStep(new PropertyMatchingStep(this));
+		wizard.addStep(new PropertyMatchingStep(this,app.messages));
 	}
-	
 	
 	public class EndpointWindowCloseListener implements CloseListener {
 		@Override
@@ -57,6 +58,5 @@ public class EndpointWindow extends Window{
 //				}
 //			}
 		}
-		
 	}
 }

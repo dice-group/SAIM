@@ -39,6 +39,7 @@ import de.uni_leipzig.simba.saim.gui.widget.PropertyComboBox;
 @SuppressWarnings("serial")
 public class PropertyMatchingPanel extends Panel
 {		
+	private final Messages messages;
 	private static final boolean CACHING = true;
 	private final Layout mainLayout;
 	private static final Logger logger = LoggerFactory.getLogger(PropertyMatchingPanel.class);
@@ -48,11 +49,31 @@ public class PropertyMatchingPanel extends Panel
 	private List<String> sourceProperties;
 	private List<String> targetProperties;	
 	private final ProgressIndicator progress = new ProgressIndicator();
-	private Label progressLabel = new Label(Messages.getString("generatingpropertymatching"));
+	private Label progressLabel;
 	private boolean listenerActive = true;
-	
+
+	public PropertyMatchingPanel(final Messages messages)
+	{
+		this.messages=messages;
+		progressLabel = new Label(messages.getString("generatingpropertymatching"));	
+		mainLayout = new VerticalLayout();
+
+		setContent(mainLayout);
+		getContent().setWidth("100%");
+		/* Create the table with a caption. */
+
+		//	setupContextHelp();
+		Layout progressLayout = new HorizontalLayout();
+		mainLayout.addComponent(progressLayout);
+		progress.setIndeterminate(true);
+		progressLayout.addComponent(progressLabel);
+		progressLayout.addComponent(progress);
+		propMapper.start();
+		System.out.println("thread started");
+	}
+
 	Cache cache = null;
-	
+
 	Thread propMapper = new Thread()
 	{
 		@Override
@@ -61,8 +82,8 @@ public class PropertyMatchingPanel extends Panel
 			progress.setVisible(true);
 			progressLabel.setVisible(true);
 			Map<String,HashMap<String,Double>> map = performAutomaticPropertyMapping().map;
-//			try{Thread.sleep(4000);} catch (InterruptedException e) {e.printStackTrace();}
-//			Map<String,HashMap<String,Double>> map = mockPropertyMap();
+			//			try{Thread.sleep(4000);} catch (InterruptedException e) {e.printStackTrace();}
+			//			Map<String,HashMap<String,Double>> map = mockPropertyMap();
 			displayPropertyMapping(map);
 			progress.setVisible(false);
 			progressLabel.setVisible(false);
@@ -114,24 +135,6 @@ public class PropertyMatchingPanel extends Panel
 	private List<String> mockAllPropertiesFromKBInfo(KBInfo kb)
 	{
 		return Arrays.asList(new String[] {"rdfs:label","rdfs:schmabel"});
-	}
-
-	public PropertyMatchingPanel()
-	{
-		mainLayout = new VerticalLayout();
-
-		setContent(mainLayout);
-		getContent().setWidth("100%");
-		/* Create the table with a caption. */
-
-		//	setupContextHelp();
-		Layout progressLayout = new HorizontalLayout();
-		mainLayout.addComponent(progressLayout);
-		progress.setIndeterminate(true);
-		progressLayout.addComponent(progressLabel);
-		progressLayout.addComponent(progress);
-		propMapper.start();
-		System.out.println("thread started");
 	}
 
 	private class RowChangeListener implements ValueChangeListener
@@ -236,8 +239,8 @@ public class PropertyMatchingPanel extends Panel
 		closeImageResource = new ClassResource("img/no_crystal_clear_16.png",getApplication());		
 		/* Define the names and data types of columns.
 		 * The "default value" parameter is meaningless here. */		
-		table.addContainerProperty(Messages.getString("sourceproperty"), PropertyComboBox.class,  null);
-		table.addContainerProperty(Messages.getString("targetproperty"), PropertyComboBox.class,  null);
+		table.addContainerProperty(messages.getString("sourceproperty"), PropertyComboBox.class,  null);
+		table.addContainerProperty(messages.getString("targetproperty"), PropertyComboBox.class,  null);
 		table.addContainerProperty("", Button.class,  null);
 		//table.setColumnWidth("",48);
 
@@ -376,7 +379,7 @@ public class PropertyMatchingPanel extends Panel
 		PropertyMapper propMap = new PropertyMapper();
 		return propMap.getPropertyMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().getClassOfendpoint(), config.getTarget().getClassOfendpoint());
 	}
-			
+
 	private void displayPropertyMapping(Map<String, HashMap<String, Double>> map)
 	{
 		Panel showPropMapping = new Panel("Computed propertyMapping");
@@ -402,7 +405,7 @@ public class PropertyMatchingPanel extends Panel
 		showPropMapping.addComponent(vert2);
 		mainLayout.addComponent(showPropMapping);		
 	}
-	
+
 	/**
 	 * Called on next button click.
 	 */

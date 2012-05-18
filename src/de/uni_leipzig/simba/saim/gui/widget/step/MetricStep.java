@@ -16,15 +16,17 @@ import de.uni_leipzig.simba.saim.gui.widget.panel.MetricPanel;
  */
 public class MetricStep implements WizardStep, Serializable
 {
-
+	private final Messages messages;	
+	public MetricStep(final Messages messages) {this.messages=messages;}
+	
 	MetricPanel metricPanel;
 	@Override
-	public String getCaption() {return Messages.getString("configuremetric");}
+	public String getCaption() {return messages.getString("configuremetric");}
 
 	@Override
 	public Component getContent()
 	{
-		return metricPanel = new MetricPanel();
+		return metricPanel = new MetricPanel(messages);
 	}
 
 	@Override

@@ -26,21 +26,23 @@ import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 
-public class SerializationWindow extends Window {
-	
+public class SerializationWindow extends Window
+{
+	private final Messages messages;
 	VerticalLayout mainLayout;
 	HashMap<String, Serializer> serializerNames;
 	NativeSelect serializerSelect;
 	Mapping mapping;
 	
-	public SerializationWindow(Mapping m) {
+	public SerializationWindow(Mapping m,final Messages messages)
+	{
 		super();
-		mapping = m;
-		
+		this.messages=messages;
+		mapping = m;		
 		mainLayout = new VerticalLayout();
 		this.setContent(mainLayout);
 		setWidth("700px");  
-		setCaption(Messages.getString("downloadresults"));  
+		setCaption(messages.getString("downloadresults"));  
 		setModal(true);
 		
 		serializerSelect = getSerializerSelect();
@@ -63,18 +65,18 @@ public class SerializationWindow extends Window {
 			}
 		}
 		serial.close();
-		return new Link(Messages.getString("downloadlinkspec"),new FileResource(new File(fileName), SAIMApplication.getInstance())); 
+		return new Link(messages.getString("downloadlinkspec"),new FileResource(new File(fileName), SAIMApplication.getInstance())); 
 	}
 	
 	private NativeSelect getSerializerSelect() {
-		NativeSelect select = new NativeSelect(Messages.getString("SerializationWindow.serializerselectcaption"));
+		NativeSelect select = new NativeSelect(messages.getString("SerializationWindow.serializerselectcaption"));
 		serializerNames = new HashMap<String, Serializer>();
-		serializerNames.put(Messages.getString("SerializationWindow.turtle"), SerializerFactory.getSerializer("ttl")); 
-		serializerNames.put(Messages.getString("SerializationWindow.n3"), SerializerFactory.getSerializer("N3")); 
-		serializerNames.put(Messages.getString("SerializationWindow.tabseparated"), SerializerFactory.getSerializer("tab")); 
+		serializerNames.put(messages.getString("SerializationWindow.turtle"), SerializerFactory.getSerializer("ttl")); 
+		serializerNames.put(messages.getString("SerializationWindow.n3"), SerializerFactory.getSerializer("N3")); 
+		serializerNames.put(messages.getString("SerializationWindow.tabseparated"), SerializerFactory.getSerializer("tab")); 
 		for(String s : serializerNames.keySet())
 			select.addItem(s);
-		select.select(Messages.getString("SerializationWindow.n3"));
+		select.select(messages.getString("SerializationWindow.n3"));
 		select.addListener(new SerializerSelectListener());
 		select.setNullSelectionAllowed(false);
 		

@@ -1,30 +1,16 @@
 package de.uni_leipzig.simba.saim.gui.widget.panel;
 
 import java.util.HashMap;
-import java.util.Iterator;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.jgap.InvalidConfigurationException;
-
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Layout;
-import com.vaadin.ui.Panel;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
-
+import com.vaadin.ui.Layout;
 import de.uni_leipzig.simba.data.Mapping;
-import de.uni_leipzig.simba.genetics.core.Metric;
 import de.uni_leipzig.simba.genetics.learner.GeneticActiveLearner;
 import de.uni_leipzig.simba.genetics.util.PropertyMapping;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
-import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
 import de.uni_leipzig.simba.saim.gui.widget.form.LearnerConfigurationBean;
 
@@ -32,15 +18,17 @@ import de.uni_leipzig.simba.saim.gui.widget.form.LearnerConfigurationBean;
 @SuppressWarnings("serial")
 public class ActiveLearningPanel extends MetricLearnPanel
 {	
-	
-//	public ActiveLearningPanel() {
-//		super();
-//		learn.addListener(new ActiveLearnButtonClickListener(learnLayout));
-//		init();
-//	}
-	
-	public ActiveLearningPanel(LearnerConfigurationBean learnerConfigBean) {
+	private final Messages messages;
+	//	public ActiveLearningPanel() {
+	//		super();
+	//		learn.addListener(new ActiveLearnButtonClickListener(learnLayout));
+	//		init();
+	//	}
+
+	public ActiveLearningPanel(LearnerConfigurationBean learnerConfigBean,final Messages messages)
+	{
 		super(learnerConfigBean);
+		this.messages=messages;
 		learn.addListener(new ActiveLearnButtonClickListener(learnLayout));
 	}
 	@Override
@@ -58,13 +46,13 @@ public class ActiveLearningPanel extends MetricLearnPanel
 			learner.getFitnessFunction().destroy();
 		}
 		if(params == null) {
-			 params = new HashMap<String, Object>();
-			 params.put("populationSize", 20);
-			 params.put("generations", 50);
-			 params.put("mutationRate", 0.5f);
-			 params.put("trainingDataSize", 10);
+			params = new HashMap<String, Object>();
+			params.put("populationSize", 20);
+			params.put("generations", 50);
+			params.put("mutationRate", 0.5f);
+			params.put("trainingDataSize", 10);
 		}
-		
+
 		params.put("preserveFittest",true);
 		if(config.propertyMapping != null) 
 			params.put("propertyMapping", config.propertyMapping);
@@ -80,7 +68,8 @@ public class ActiveLearningPanel extends MetricLearnPanel
 			e.printStackTrace();
 		}
 		Mapping map = learner.learn(new Mapping());
-		iMapTable = new InstanceMappingTable(map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache(), true);
+		iMapTable = new InstanceMappingTable
+				(map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache(), true,messages);
 		if (map.size()>0)
 		{
 			learnLayout.removeAllComponents();
@@ -90,7 +79,7 @@ public class ActiveLearningPanel extends MetricLearnPanel
 			learnLayout.addComponent(iMapTable.getTable());
 		}
 	}
-	
+
 	/** Listener for learn buttton @author Lyko */
 	public class ActiveLearnButtonClickListener implements Button.ClickListener
 	{
@@ -111,12 +100,12 @@ public class ActiveLearningPanel extends MetricLearnPanel
 				logger.info("Starting round"); //$NON-NLS-1$
 				map = iMapTable.tabletoMapping();
 				if(map.size()==0)
-					SAIMApplication.getInstance().getMainWindow().showNotification(Messages.getString("ActiveLearningPanel.learningwithoutnotification")); //$NON-NLS-1$
+					SAIMApplication.getInstance().getMainWindow().showNotification(messages.getString("ActiveLearningPanel.learningwithoutnotification")); //$NON-NLS-1$
 				map = learner.learn(map);
 			}
-			
+
 			//iMapTable = new DetailedInstanceMappingTable(map,learner.getFitnessFunction().getSourceCache(),learner.getFitnessFunction().getTargetCache());
-			iMapTable = new InstanceMappingTable(map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache(), true);
+			iMapTable = new InstanceMappingTable(map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache(), true,messages);
 
 			l.removeAllComponents();
 			l.addComponent(iMapTable.getTable());

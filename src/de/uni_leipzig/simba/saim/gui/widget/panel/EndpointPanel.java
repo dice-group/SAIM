@@ -13,14 +13,14 @@ import de.uni_leipzig.simba.saim.gui.widget.form.KBInfoForm;
 import de.uni_leipzig.simba.saim.Messages;
 public class EndpointPanel extends Panel implements PropertyChangeListener
 {
-
+	private final Messages messages;
 	public KBInfoForm kbISource;
 	public KBInfoForm kbITarget;
 	Configuration config;
-	
-	public EndpointPanel()
-	{
 
+	public EndpointPanel(final Messages messages)
+	{
+		this.messages = messages;
 	}
 
 	@Override
@@ -29,17 +29,17 @@ public class EndpointPanel extends Panel implements PropertyChangeListener
 		HorizontalLayout layout = new HorizontalLayout();
 		layout.setSpacing(true);
 		this.setContent(layout);
-		
+
 		config.addPropertyChangeListener(this);
-		kbISource = new KBInfoForm(Messages.getString("EndpointPanel.configuresourceendpoint"), config.getSource()); //$NON-NLS-1$
-		kbITarget = new KBInfoForm(Messages.getString("EndpointPanel.configuretargetendpoint"), config.getTarget()); //$NON-NLS-1$
+		kbISource = new KBInfoForm(messages.getString("EndpointPanel.configuresourceendpoint"), config.getSource(),messages); //$NON-NLS-1$
+		kbITarget = new KBInfoForm(messages.getString("EndpointPanel.configuretargetendpoint"), config.getTarget(),messages); //$NON-NLS-1$
 		this.addComponent(kbISource);
 		this.addComponent(kbITarget);
 	}
-	
+
 	public void close()
 	{
-		
+
 		kbISource.close();
 		kbITarget.close();
 	}

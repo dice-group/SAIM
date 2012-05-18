@@ -13,14 +13,18 @@ import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
 import de.uni_leipzig.simba.saim.gui.widget.window.SerializationWindow;
 
 /**Panel to show a Table with computed mappings**/
-public class ResultPanel extends Panel{
+public class ResultPanel extends Panel
+{
+	private final Messages messages;
 	InstanceMappingTable data;
 	VerticalLayout layout;
 	Button downloadResults;
 	Configuration config;// = Configuration.getInstance();
 	
-	public ResultPanel(InstanceMappingTable iT) {
-		super(Messages.getString("results")); //$NON-NLS-1$
+	public ResultPanel(final InstanceMappingTable iT,final Messages messages)
+	{
+		super(messages.getString("results")); //$NON-NLS-1$
+		this.messages=messages;
 		this.data = iT;
 	}
 	
@@ -34,21 +38,20 @@ public class ResultPanel extends Panel{
 		layout = new VerticalLayout();
 		layout.setWidth("100%");
 		this.setContent(layout);
-		downloadResults = new Button(Messages.getString("save"));
+		downloadResults = new Button(messages.getString("save"));
 		downloadResults.addListener(new DownLoadButtonClickListener());		
 		layout.addComponent(data.getTable());
 		layout.addComponent(downloadResults);
 	}
 	
-	
 	/**ClickListener for the Button to download results**/	
-	class DownLoadButtonClickListener implements Button.ClickListener {
+	class DownLoadButtonClickListener implements Button.ClickListener
+	{
 		@Override
 		public void buttonClick(ClickEvent event) {
 			
-			Window download = new SerializationWindow(data.getMapping());
+			Window download = new SerializationWindow(data.getMapping(),messages);
 			SAIMApplication.getInstance().getMainWindow().addWindow(download);
 		}
-		
 	}
 }

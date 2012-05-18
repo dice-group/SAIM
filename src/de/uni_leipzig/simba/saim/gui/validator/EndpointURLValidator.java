@@ -1,25 +1,32 @@
 package de.uni_leipzig.simba.saim.gui.validator;
 
 import java.util.HashMap;
-import de.uni_leipzig.simba.saim.Messages;
 import java.util.Map;
 
 import com.vaadin.data.Validator;
 import com.vaadin.ui.Component;
 
+import de.uni_leipzig.simba.saim.Messages;
+import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.EndpointTester;
 import de.uni_leipzig.simba.saim.core.EndpointTester.EndpointStatus;
 
 /** Validates the string format (starts with "http") and sends a sample sparql query to the endpoint.*/
 public class EndpointURLValidator implements Validator
 {
+	private final Messages messages;		
+
 	private static final long	serialVersionUID	= -5470766225738299746L;
 	protected static Map<String,EndpointStatus> validateCache = new HashMap<>();
 	final Component component;
 
-	public EndpointURLValidator() {	component = null;}
-	public EndpointURLValidator(Component component) {this.component = component;}
-	
+	public EndpointURLValidator() {this(null,null);}
+	public EndpointURLValidator(Component component,final Messages messages)
+	{
+		this.component = component;
+		this.messages = messages;
+	}
+
 	private EndpointTester tester = new EndpointTester(); 
 
 	//	protected validationColor()
@@ -32,15 +39,15 @@ public class EndpointURLValidator implements Validator
 	{
 		tester.shutdownNow();
 	}
-	
+
 	@Override
 	public void validate(Object value) throws InvalidValueException
 	{
-		if(!(value instanceof String)) {throw new InvalidValueException(Messages.getString("endpointurlnotastring"));}
+		if(!(value instanceof String)) {throw new InvalidValueException(messages.getString("endpointurlnotastring"));}
 		String s = (String)value;
 		if(s.contains(".csv"))
 			return;
-		if(!(s.startsWith("http://"))) {throw new InvalidValueException(Messages.getString("endpointurldoesnotstartwithhttp"));}
+		if(!(s.startsWith("http://"))) {throw new InvalidValueException(messages.getString("endpointurldoesnotstartwithhttp"));}
 
 		else
 		{
@@ -65,7 +72,7 @@ public class EndpointURLValidator implements Validator
 				component.removeStyleName("valid");
 				component.setStyleName("invalid");
 			}
-			throw new InvalidValueException(Messages.getString("endpointstatus")+status.toString());
+			throw new InvalidValueException(messages.getString("endpointstatus")+status.toString());
 		}
 	}			
 	@Override

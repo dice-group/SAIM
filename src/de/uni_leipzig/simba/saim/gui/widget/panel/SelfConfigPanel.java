@@ -36,6 +36,7 @@ import de.uni_leipzig.simba.selfconfig.SimpleClassifier;
  */
 public class SelfConfigPanel extends PerformPanel{
 	private static final Logger logger = LoggerFactory.getLogger(SelfConfigPanel.class);
+	private final Messages messages;
 //	private Component parentComponent;
 	private Layout mainLayout;
 	MeshBasedSelfConfigurator bsc;
@@ -55,9 +56,8 @@ public class SelfConfigPanel extends PerformPanel{
 	 * Constructor to may embed Panel in a parent component, e.g. an existing WizardStep Component.
 	 * @param parentComponent
 	 */
-	public SelfConfigPanel() {//Component parentComponent) {
-		super();
-	}
+	public SelfConfigPanel(final Messages messages) {this.messages=messages;}
+	
 	@Override
 	public void attach() {
 		this.config = ((SAIMApplication)getApplication()).getConfig();
@@ -69,10 +69,10 @@ public class SelfConfigPanel extends PerformPanel{
 	 * Initialize all Panel.
 	 */
 	private void init() {
-		this.setCaption(Messages.getString("SelfConfigPanel.caption")); //$NON-NLS-1$
+		this.setCaption(messages.getString("SelfConfigPanel.caption")); //$NON-NLS-1$
 		mainLayout = new VerticalLayout();
 		this.setContent(mainLayout);
-		Label descriptor = new Label(Messages.getString("SelfConfigPanel.description")); //$NON-NLS-1$
+		Label descriptor = new Label(messages.getString("SelfConfigPanel.description")); //$NON-NLS-1$
 		mainLayout.addComponent(descriptor);
 		Refresher refresher = new Refresher();
 		SelfConfigRefreshListener listener = new SelfConfigRefreshListener();
@@ -80,15 +80,15 @@ public class SelfConfigPanel extends PerformPanel{
 		addComponent(refresher);
 
 		
-		indicator.setCaption(Messages.getString("SelfConfigPanel.progress")); //$NON-NLS-1$
+		indicator.setCaption(messages.getString("SelfConfigPanel.progress")); //$NON-NLS-1$
 		mainLayout.addComponent(indicator);
 		indicator.setImmediate(true);
 
 		
-		stepPanel.setCaption(Messages.getString("SelfConfigPanel.panelcaption")); //$NON-NLS-1$
+		stepPanel.setCaption(messages.getString("SelfConfigPanel.panelcaption")); //$NON-NLS-1$
 		mainLayout.addComponent(stepPanel);
 
-		resultSelect.setCaption(Messages.getString("SelfConfigPanel.classifierlistcaption")); //$NON-NLS-1$
+		resultSelect.setCaption(messages.getString("SelfConfigPanel.classifierlistcaption")); //$NON-NLS-1$
 		resultSelect.setNullSelectionAllowed(false);
 		
 
@@ -101,9 +101,9 @@ public class SelfConfigPanel extends PerformPanel{
 		resultLayout.addComponent(resultSelect);
 		resultLayout.addComponent(buttonLayout);
 		resultPanel.setContent(resultLayout);		
-//		nextRound = new Button(Messages.getString("SelfConfigPanel.nextroundbutton")); //$NON-NLS-1$
+//		nextRound = new Button(messages.getString("SelfConfigPanel.nextroundbutton")); //$NON-NLS-1$
 //		nextRound.addListener(new NextRoundButtonClickListener());
-//		generateMetric = new Button(Messages.getString("SelfConfigPanel.generatemetricbutton")); //$NON-NLS-1$
+//		generateMetric = new Button(messages.getString("SelfConfigPanel.generatemetricbutton")); //$NON-NLS-1$
 //		generateMetric.addListener(new GenerateMetricButtonClickListener(mainLayout));
 //		generateMetric.setEnabled(false);
 //		buttonLayout.addComponent(nextRound);
@@ -124,20 +124,20 @@ public class SelfConfigPanel extends PerformPanel{
 				float steps = 5f;
 				indicator.setValue(new Float(1f/steps));
 				indicator.requestRepaint();
-				stepPanel.setCaption(Messages.getString("SelfConfigPanel.sourcecache")); //$NON-NLS-1$
+				stepPanel.setCaption(messages.getString("SelfConfigPanel.sourcecache")); //$NON-NLS-1$
 				HybridCache sourceCache = HybridCache.getData(config.getSource());
 				indicator.setValue(new Float(2f/steps));
 				indicator.requestRepaint();
-				stepPanel.setCaption(Messages.getString("SelfConfigPanel.targetcache")); //$NON-NLS-1$
+				stepPanel.setCaption(messages.getString("SelfConfigPanel.targetcache")); //$NON-NLS-1$
 				HybridCache targetCache = HybridCache.getData(config.getTarget());
 				indicator.setValue(new Float(3f/steps));
-				stepPanel.setCaption(Messages.getString("SelfConfigPanel.performselfconfig")); //$NON-NLS-1$
+				stepPanel.setCaption(messages.getString("SelfConfigPanel.performselfconfig")); //$NON-NLS-1$
 				
 				bsc = new MeshBasedSelfConfigurator(sourceCache, targetCache, 0.6, 0.5);
 				classifiers = bsc.getBestInitialClassifiers();
 				showSimpleClassifiers();
 				indicator.setValue(new Float(4f/steps));
-				stepPanel.setCaption(Messages.getString("SelfConfigPanel.gotinitialclassifiers")); //$NON-NLS-1$
+				stepPanel.setCaption(messages.getString("SelfConfigPanel.gotinitialclassifiers")); //$NON-NLS-1$
 				if(classifiers.size()>0) {
 					classifiers = bsc.learnClassifer(classifiers);
 					//@TODO interface to change parameters
@@ -148,7 +148,7 @@ public class SelfConfigPanel extends PerformPanel{
 					}
 //					classifiers = cc.classifiers;
 					indicator.setValue(new Float(5f/steps));
-					stepPanel.setCaption(Messages.getString("SelfConfigPanel.complexclassifiercaption")); //$NON-NLS-1$
+					stepPanel.setCaption(messages.getString("SelfConfigPanel.complexclassifiercaption")); //$NON-NLS-1$
 					generatedMetricexpression = generateMetric(cc.classifiers, "");
 					showComplexClassifier();
 					
@@ -156,7 +156,7 @@ public class SelfConfigPanel extends PerformPanel{
 					config.setAcceptanceThreshold(getThreshold(cc.classifiers));
 				} else {
 					indicator.setValue(new Float(5f/steps));
-					stepPanel.setCaption(Messages.getString("SelfConfigPanel.nosimpleclassifiers"));
+					stepPanel.setCaption(messages.getString("SelfConfigPanel.nosimpleclassifiers"));
 				}
 			}
 		};
@@ -228,7 +228,7 @@ public class SelfConfigPanel extends PerformPanel{
 			config.setMetricExpression(metric);
 //			Configuration.getInstance().setAcceptanceThreshold(cl.threshold);
 			l.removeAllComponents();
-			l.addComponent(new ExecutionPanel());
+			l.addComponent(new ExecutionPanel(messages));
 		}
 	}
 	

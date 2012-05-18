@@ -19,7 +19,7 @@ public class PropertyComboBox extends NativeSelect
 		//this.setWidth("100%");
 //		addItem("test");
 //		setNullSelectionItemId("test");	//if this should fail autoboxing could be the source of the error 
-//		setItemCaption("test", Messages.getString("property"));
+//		setItemCaption("test", messages.getString("property"));
 //		this.setValue("test");
 		for(String property: properties) {this.addItem(property);}
 		System.out.println(properties);
@@ -28,7 +28,7 @@ public class PropertyComboBox extends NativeSelect
 
 		this.setNewItemsAllowed(false);
 		
-		//this.setInputPrompt(Messages.getString("property"));
+		//this.setInputPrompt(messages.getString("property"));
 		//this.setReadOnly(true);
 //
 //		this.setNullSelectionAllowed(false);

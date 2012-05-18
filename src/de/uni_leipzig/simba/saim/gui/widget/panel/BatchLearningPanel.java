@@ -12,13 +12,19 @@ import com.vaadin.ui.Button.ClickEvent;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.genetics.learner.GeneticBatchLearner;
 import de.uni_leipzig.simba.genetics.util.PropertyMapping;
+import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
 import de.uni_leipzig.simba.saim.gui.widget.form.LearnerConfigurationBean;
 
-public class BatchLearningPanel extends MetricLearnPanel {
-	public BatchLearningPanel() {
+public class BatchLearningPanel extends MetricLearnPanel
+{
+	private final Messages messages;
+	
+	public BatchLearningPanel(final Messages messages)
+	{
 		super();
+		this.messages=messages;
 	}
 	
 	public void attach() {
@@ -27,9 +33,11 @@ public class BatchLearningPanel extends MetricLearnPanel {
 		init();
 	}
 	
-	public BatchLearningPanel(LearnerConfigurationBean learnerConfigBean) {
+	public BatchLearningPanel(LearnerConfigurationBean learnerConfigBean,final Messages messages)
+	{
 		super(learnerConfigBean);
 		learn.addListener(new BatchLearnButtonClickListener(learnLayout));
+		this.messages=messages;
 	}
 
 
@@ -63,7 +71,7 @@ public class BatchLearningPanel extends MetricLearnPanel {
 			e.printStackTrace();
 		}
 		Mapping map = learner.learn(new Mapping());
-		iMapTable = new InstanceMappingTable(map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache(), true);
+		iMapTable = new InstanceMappingTable(map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache(), true,messages);
 		if (map.size()>0)
 		{
 			learnLayout.removeAllComponents();
@@ -97,7 +105,7 @@ public class BatchLearningPanel extends MetricLearnPanel {
 			}
 			
 			//iMapTable = new DetailedInstanceMappingTable(map,learner.getFitnessFunction().getSourceCache(),learner.getFitnessFunction().getTargetCache());
-			iMapTable = new InstanceMappingTable(map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache(), true);
+			iMapTable = new InstanceMappingTable(map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache(), true,messages);
 			l.removeAllComponents();
 			l.addComponent(iMapTable.getTable());
 			l.removeAllComponents();

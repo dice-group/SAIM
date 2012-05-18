@@ -36,17 +36,18 @@ import de.uni_leipzig.simba.saim.gui.widget.window.EndpointWindow;
  * @author Lyko
  *
  */
-public class LearningPanel extends PerformPanel {	
-	Layout mainLayout = new VerticalLayout();
-	PerformPanel learnerPanel = null;
-	Select learnerSelect;
-	Panel propMappingPanel;	
-	LearnerConfigurationForm configForm;
-	LearnerConfigurationBean learnerConfigBean = new LearnerConfigurationBean();
+public class LearningPanel extends PerformPanel
+{
+	private final Messages messages;
+	private final Layout mainLayout = new VerticalLayout();
+	private PerformPanel learnerPanel = null;
+	private Select learnerSelect;
+	private Panel propMappingPanel;	
+	private LearnerConfigurationForm configForm;
+	private LearnerConfigurationBean learnerConfigBean = new LearnerConfigurationBean();
 	
-	public LearningPanel() {
+	public LearningPanel(final Messages messages) {this.messages=messages;}
 	
-	}
 	@Override
 	public void attach() {
 		generateLearnerSelect();
@@ -54,7 +55,7 @@ public class LearningPanel extends PerformPanel {
 		performPropertyMapping();
 		propMappingPanel = new Panel();
 		fillpropMappingPanel();
-		mainLayout.addComponent(configForm = new LearnerConfigurationForm(learnerConfigBean));
+		mainLayout.addComponent(configForm = new LearnerConfigurationForm(learnerConfigBean,messages));
 		mainLayout.addComponent(propMappingPanel);
 		mainLayout.addComponent(learnerSelect);
 		
@@ -64,11 +65,11 @@ public class LearningPanel extends PerformPanel {
 	 * Generate Selection List of Learner.
 	 */
 	private void generateLearnerSelect() {
-		learnerSelect = new Select(Messages.getString("LearningPanel.learnerselect")); //$NON-NLS-1$
-		learnerSelect.addItem(Messages.getString("LearningPanel.gpbatchlearner")); //$NON-NLS-1$
-		learnerSelect.addItem(Messages.getString("LearningPanel.gpactivelearner")); //$NON-NLS-1$
+		learnerSelect = new Select(messages.getString("LearningPanel.learnerselect")); //$NON-NLS-1$
+		learnerSelect.addItem(messages.getString("LearningPanel.gpbatchlearner")); //$NON-NLS-1$
+		learnerSelect.addItem(messages.getString("LearningPanel.gpactivelearner")); //$NON-NLS-1$
 		learnerSelect.setNullSelectionAllowed(false);
-		learnerSelect.addListener(new LearnerSelectListener());
+		learnerSelect.addListener(new LearnerSelectListener(messages));
 		learnerSelect.setEnabled(true);
 		learnerSelect.setImmediate(true);
 	}
@@ -142,14 +143,18 @@ public class LearningPanel extends PerformPanel {
 	 * @author Lyko
 	 *
 	 */
-	public class LearnerSelectListener implements ValueChangeListener {
+	public class LearnerSelectListener implements ValueChangeListener
+	{
+		private final Messages messages;
+		public LearnerSelectListener(final Messages messages) {this.messages=messages;}
+
 		@Override
 		public void valueChange(ValueChangeEvent event) {
-			if(event.getProperty().toString().equals(Messages.getString("LearningPanel.gpbatchlearner"))) {
-				learnerPanel = new BatchLearningPanel(learnerConfigBean);
+			if(event.getProperty().toString().equals(messages.getString("LearningPanel.gpbatchlearner"))) {
+				learnerPanel = new BatchLearningPanel(learnerConfigBean,messages);
 			}
-			if(event.getProperty().toString().equals(Messages.getString("LearningPanel.gpactivelearner"))) {
-				learnerPanel = new ActiveLearningPanel(learnerConfigBean);
+			if(event.getProperty().toString().equals(messages.getString("LearningPanel.gpactivelearner"))) {
+				learnerPanel = new ActiveLearningPanel(learnerConfigBean,messages);
 			}
 			mainLayout.removeAllComponents();
 			mainLayout.addComponent(learnerPanel);

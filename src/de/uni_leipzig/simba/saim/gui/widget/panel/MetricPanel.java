@@ -48,6 +48,7 @@ import de.uni_leipzig.simba.saim.gui.widget.form.PreprocessingForm;
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
 public class MetricPanel extends Panel
 {
+	private final Messages messages;
 	Configuration config;
 	ManualMetricForm manualMetricForm;
 	private static final long	serialVersionUID	= 6766679517868840795L;
@@ -74,10 +75,7 @@ public class MetricPanel extends Panel
 	VerticalLayout metricsLayout =  new VerticalLayout();
 	VerticalLayout operatorsLayout =  new VerticalLayout();
 
-	public MetricPanel()
-	{
-		
-	}
+	public MetricPanel(final Messages messages) {	this.messages = messages;}
 	@Override
 	public void attach() {
 		if((SAIMApplication)getApplication()!= null)
@@ -120,10 +118,10 @@ public class MetricPanel extends Panel
 
 		accordionPanel.addComponent(accordion);
 		
-		accordion.addTab(sourceLayout,Messages.getString("MetricPanel.sourceproperties"));		 //$NON-NLS-1$
-		accordion.addTab(targetLayout,Messages.getString("MetricPanel.targetproperties")); //$NON-NLS-1$
-		accordion.addTab(metricsLayout,Messages.getString("MetricPanel.metrics"));  //$NON-NLS-1$
-		accordion.addTab(operatorsLayout,Messages.getString("MetricPanel.operators"));	 //$NON-NLS-1$
+		accordion.addTab(sourceLayout,messages.getString("MetricPanel.sourceproperties"));		 //$NON-NLS-1$
+		accordion.addTab(targetLayout,messages.getString("MetricPanel.targetproperties")); //$NON-NLS-1$
+		accordion.addTab(metricsLayout,messages.getString("MetricPanel.metrics"));  //$NON-NLS-1$
+		accordion.addTab(operatorsLayout,messages.getString("MetricPanel.operators"));	 //$NON-NLS-1$
 				
 		// add Cytographer
 		layout.addComponent(getCytographer());
@@ -147,17 +145,17 @@ public class MetricPanel extends Panel
 				progress.setEnabled(false);
 			}
 		}.start();
-//		metricsLayout.addComponent( new Label(Messages.getString("MetricPanel.0"))); 
-//		operatorsLayout.addComponent( new Label(Messages.getString("MetricPanel.8"))); 		
+//		metricsLayout.addComponent( new Label(messages.getString("MetricPanel.0"))); 
+//		operatorsLayout.addComponent( new Label(messages.getString("MetricPanel.8"))); 		
 		for(String label : Measure.identifiers)
 			metricsLayout.addComponent( new Label(label)); 
 		for(String label : Operator.identifiers)
 			operatorsLayout.addComponent( new Label(label)); 	
 		
-		sourceLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.SOURCE, config));
-		targetLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.TARGET, config));
-		metricsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.METRIC, config));
-		operatorsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.OPERATOR, config));
+		sourceLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.SOURCE, config,messages));
+		targetLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.TARGET, config,messages));
+		metricsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.METRIC, config,messages));
+		operatorsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.OPERATOR, config,messages));
 		
 		this.checkButtons();
 	}
@@ -321,15 +319,15 @@ public class MetricPanel extends Panel
 	}
 	
 	public Layout getButtonLayout() {
-		selfConfigButton = new Button(Messages.getString("MetricPanel.startselfconfigbutton"));
+		selfConfigButton = new Button(messages.getString("MetricPanel.startselfconfigbutton"));
 		selfConfigButton.setEnabled(false);
-		selfConfigButton.addListener(new MetricPanelListeners.SelfConfigClickListener());
-		this.learnButton = new Button(Messages.getString("MetricPanel.learnmetricbutton"));
+		selfConfigButton.addListener(new MetricPanelListeners.SelfConfigClickListener(messages));
+		this.learnButton = new Button(messages.getString("MetricPanel.learnmetricbutton"));
 		learnButton.setEnabled(false);
-		learnButton.addListener(new MetricPanelListeners.LearnClickListener());
-		this.startMapping = new Button(Messages.getString("MetricPanel.startmappingbutton"));
+		learnButton.addListener(new MetricPanelListeners.LearnClickListener(messages));
+		this.startMapping = new Button(messages.getString("MetricPanel.startmappingbutton"));
 		startMapping.setEnabled(false);
-		startMapping.addListener(new MetricPanelListeners.StartMappingListener());
+		startMapping.addListener(new MetricPanelListeners.StartMappingListener(messages));
 		buttonLayout.addComponent(selfConfigButton);
 		buttonLayout.addComponent(learnButton);
 		buttonLayout.addComponent(startMapping);
@@ -359,19 +357,22 @@ public class MetricPanel extends Panel
 
 
 /**Listener to react on clicks in the accordion panel.*/
-class AccordionLayoutClickListener implements LayoutClickListener{
-
+class AccordionLayoutClickListener implements LayoutClickListener
+{
 	private static final long serialVersionUID = -3498649095113131161L;
 	private Cytographer cytographer;
 	private CyNetworkView cyNetworkView;
 	private GraphProperties.Shape shape;
-	Configuration config;
+	private Configuration config;
+	private final Messages messages;
 	
-	public AccordionLayoutClickListener(Cytographer cytographer, CyNetworkView cyNetworkView,GraphProperties.Shape shape, Configuration config){
+	public AccordionLayoutClickListener(Cytographer cytographer, CyNetworkView cyNetworkView,GraphProperties.Shape shape, Configuration config,final Messages messages)
+	{
 		this.cytographer = cytographer;
 		this.cyNetworkView = cyNetworkView;
 		this.shape = shape;
 		this.config = config;
+		this.messages=messages;
 	}
 	
 	@Override
@@ -426,7 +427,7 @@ class AccordionLayoutClickListener implements LayoutClickListener{
 			logger.error("adding property "+prop+" again?"); 
 		}
 
-		Window sub = new Window(Messages.getString("MetricPanel.definepreprocessingsubwindowname")+prop);
+		Window sub = new Window(messages.getString("MetricPanel.definepreprocessingsubwindowname")+prop);
 		sub.setModal(true);
 		sub.addComponent(new PreprocessingForm(info, prop));
 		SAIMApplication.getInstance().getMainWindow().addWindow(sub);

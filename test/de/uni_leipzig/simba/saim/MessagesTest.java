@@ -6,11 +6,11 @@ import org.junit.Test;
 
 public class MessagesTest
 {
-
+	//TODO: make test work for other default locales too
 	@Test
 	public void testGetString()
 	{
-		System.out.println(Messages.getString("ClassMatchingPanel.nosuggestionsfound"));
+		assertTrue(new Messages().getString("ClassMatchingPanel.nosuggestionsfound").equals("Keine Vorschläge gefunden"));
 	}
 
 }

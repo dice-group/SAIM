@@ -17,6 +17,7 @@ import com.vaadin.ui.TextField;
 
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.Messages;
+import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.DefaultEndpointLoader;
 import de.uni_leipzig.simba.saim.core.Endpoints;
 import de.uni_leipzig.simba.saim.gui.validator.EndpointURLValidator;
@@ -29,18 +30,20 @@ import de.uni_leipzig.simba.saim.gui.validator.PageSizeValidator;
 @SuppressWarnings("serial")
 public class KBInfoForm extends Form
 {
+	private final Messages messages;
+	
 	protected final static String		WIDTH			= "35em";									//$NON-NLS-1$
-	protected final ComboBox			presetComboBox	= new ComboBox(Messages.getString("preset"));		//$NON-NLS-1$
-	protected final ComboBox			url				= new ComboBox(Messages.getString("endpointurl")); //$NON-NLS-1$
-	protected final TextField			id				= new TextField(Messages.getString("idnamespace")); //$NON-NLS-1$
-	protected final TextField			graph			= new TextField(Messages.getString("graph"));		//$NON-NLS-1$
-	protected final TextField			pageSize		= new TextField("Page size", "-1");				//$NON-NLS-1$ //$NON-NLS-2$
-	protected final TextField			textFields[]	= { graph, id, pageSize };
-	protected final Button				next			= new Button(Messages.getString("ok"));			//$NON-NLS-1$
-	protected final Component			components[]	= { url, graph,pageSize, next};
+	protected final ComboBox			presetComboBox;
+	protected final ComboBox			url;
+	protected final TextField			id;
+	protected final TextField			graph;
+	protected final TextField			pageSize;	
+	protected final TextField			textFields[];
+	protected final Button				next;		
+	protected final Component			components[];
 	KBInfo								kbInfo;
 
-	final EndpointURLValidator validator = new EndpointURLValidator(url);
+	final EndpointURLValidator validator;
 
 	/** the knowledge base presets */
 	protected final Map<String, KBInfo>	presetToKB		= new HashMap<>();
@@ -50,29 +53,7 @@ public class KBInfoForm extends Form
 		validator.close();
 	}
 
-	public KBInfoForm(String title)
-	{
-		this.setImmediate(true);
-		this.setCaption(title);
-		this.setWidth(WIDTH);
-		addFormFields();
-
-		// Have a button bar in the footer.
-		HorizontalLayout buttonBar = new HorizontalLayout();
-		// buttonBar.setHeight("25px");
-		getFooter().addComponent(buttonBar);
-		// Add an Ok (commit), Reset (discard), and Cancel buttons
-		setValidationVisible(true);
-		buttonBar.addComponent(new Button(
-				Messages.getString("reset"), this, "reset")); //$NON-NLS-1$ //$NON-NLS-2$
-		getLayout().setMargin(true);
-		for (TextField field : textFields)
-		{
-			field.setWidth("100%"); //$NON-NLS-1$
-		}
-
-		setupContextHelp();
-	}
+	
 
 	/**
 	 * Constructor to set default values of the fields.
@@ -80,9 +61,18 @@ public class KBInfoForm extends Form
 	 * @param title
 	 * @param defaultValues
 	 */
-	public KBInfoForm(String title, KBInfo defaultValues)
+	public KBInfoForm(String title, KBInfo defaultValues,final Messages messages)
 	{
-		this(title);
+		this.messages=messages;
+		presetComboBox	= new ComboBox(messages.getString("preset"));		//$NON-NLS-1$
+		url				= new ComboBox(messages.getString("endpointurl")); //$NON-NLS-1$
+		id				= new TextField(messages.getString("idnamespace")); //$NON-NLS-1$
+		graph			= new TextField(messages.getString("graph"));		//$NON-NLS-1$
+		pageSize		= new TextField("Page size", "-1");				//$NON-NLS-1$ //$NON-NLS-2$
+		textFields	= new TextField[] { graph, id, pageSize };		
+		next			= new Button(messages.getString("ok"));			//$NON-NLS-1$
+		components	= new Component[] { url, graph,pageSize, next};
+		validator = new EndpointURLValidator(url,messages);
 		if (defaultValues != null)
 		{
 			kbInfo = defaultValues;
@@ -137,13 +127,13 @@ public class KBInfoForm extends Form
 	{
 		setDefaultEndpoints();
 		presets();
-		addField(Messages.getString("presets"), presetComboBox); //$NON-NLS-1$
+		addField(messages.getString("presets"), presetComboBox); //$NON-NLS-1$
 
-		addField(Messages.getString("endpointurl"), url); //$NON-NLS-1$
+		addField(messages.getString("endpointurl"), url); //$NON-NLS-1$
 
 		url.addValidator(validator);
 		url.setRequired(true);
-		url.setRequiredError(Messages.getString("endpointurlmaynotbeempty")); //$NON-NLS-1$
+		url.setRequiredError(messages.getString("endpointurlmaynotbeempty")); //$NON-NLS-1$
 		url.setWidth("100%"); //$NON-NLS-1$
 		url.setReadOnly(false);
 		url.setImmediate(true);
@@ -183,10 +173,10 @@ public class KBInfoForm extends Form
 				}
 			}
 		});
-		addField(Messages.getString("idnamespace"), id); //$NON-NLS-1$
-		addField(Messages.getString("graph"), graph); //$NON-NLS-1$
-		addField(Messages.getString("pagesize"), pageSize); //$NON-NLS-1$
-		pageSize.addValidator(new PageSizeValidator(Messages
+		addField(messages.getString("idnamespace"), id); //$NON-NLS-1$
+		addField(messages.getString("graph"), graph); //$NON-NLS-1$
+		addField(messages.getString("pagesize"), pageSize); //$NON-NLS-1$
+		pageSize.addValidator(new PageSizeValidator(messages
 				.getString("pagesizeneedstobeaninteger"))); //$NON-NLS-1$
 	}
 
@@ -195,13 +185,13 @@ public class KBInfoForm extends Form
 		ContextHelp contextHelp = new ContextHelp();
 		getLayout().addComponent(contextHelp);
 		contextHelp.addHelpForComponent(url,
-				Messages.getString("contexthelp.endpointurl")); //$NON-NLS-1$
+				messages.getString("contexthelp.endpointurl")); //$NON-NLS-1$
 		contextHelp.addHelpForComponent(id,
-				Messages.getString("contexthelp.idnamespace")); //$NON-NLS-1$
+				messages.getString("contexthelp.idnamespace")); //$NON-NLS-1$
 		contextHelp.addHelpForComponent(graph,
-				Messages.getString("contexthelp.graph")); //$NON-NLS-1$				
+				messages.getString("contexthelp.graph")); //$NON-NLS-1$				
 		contextHelp.addHelpForComponent(pageSize,
-				Messages.getString("contexthelp.pagesize")); //$NON-NLS-1$
+				messages.getString("contexthelp.pagesize")); //$NON-NLS-1$
 		// contextHelp.setFollowFocus(true);
 	}
 
