@@ -3,6 +3,7 @@ package de.uni_leipzig.simba.saim.gui.widget.step;
 import org.vaadin.teemu.wizards.WizardStep;
 
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
 
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.core.Configuration;
@@ -19,6 +20,7 @@ public class EndpointStep implements WizardStep
 	{
 		this.app = app;
 		this.messages=app.messages;
+		panel = new EndpointPanel(messages);
 	}
 	
 	@Override
@@ -27,7 +29,9 @@ public class EndpointStep implements WizardStep
 	@Override
 	public Component getContent()
 	{
-		return panel = new EndpointPanel(messages);
+		panel.addComponent(new Label("Test"));
+		panel.requestRepaintAll();
+		return panel; // = new EndpointPanel(messages);
 	}
 
 	@Override

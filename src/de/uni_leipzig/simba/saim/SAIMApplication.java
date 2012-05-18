@@ -124,76 +124,76 @@ public class SAIMApplication extends Application
 		return config;
 	}
 
-	/**
-	 * Show a component instead of the wizard. Finishes the Wizard.
-	 * @param c
-	 * @deprecated
-	 */
-	public void showComponent(Component c) {
-		mainWindow.removeWindow(sub);
-		wizard.finish();
-		mainWindow.removeAllComponents();
-		mainWindow.addComponent(buildMainMenu());
-		mainWindow.addComponent(c);
-	}
-	/**
-	 * Return view to the beginning: showing wizard.
-	 * @deprecated
-	 */
-	public void returnToBegin() {
-		mainWindow.removeAllComponents();
-		mainWindow.addComponent(buildMainMenu());
-
-		
-		mainLayout.addComponent(new StartPanel());
-		mainLayout.addComponent(wizard);
-
-	}
-
-	/**
-	 * @deprecated
-	 * @param oldStep
-	 * @param newStep
-	 */
-	public void setStep(WizardStep oldStep, WizardStep newStep) {
-		List<WizardStep> olderSteps = new LinkedList<WizardStep>();
-		boolean found = false;
-		for(WizardStep s:wizard.getSteps()) {
-			if(s == oldStep) {
-				found = true;
-				continue;
-			}
-			if(found) {
-				olderSteps.add(s);
-			}			
-		}
-		wizard.addStep(newStep);
-		wizard.activateStep(newStep);
-		for(WizardStep os : olderSteps) {
-			wizard.removeStep(os);
-		}
-	}
-	/**
-	 * @deprecated
-	 * @param oldStep
-	 */
-	public void removeOlderSteps(WizardStep oldStep) {
-		List<WizardStep> olderSteps = new LinkedList<WizardStep>();
-		boolean found = false;
-		for(WizardStep s:wizard.getSteps()) {
-			if(s == oldStep) {
-				found = true;
-				continue;
-			}
-			if(found) {
-				olderSteps.add(s);
-			}			
-		}
-		for(WizardStep os : olderSteps) {
-			wizard.removeStep(os);
-		}
-	}
-	
+//	/**
+//	 * Show a component instead of the wizard. Finishes the Wizard.
+//	 * @param c
+//	 * @deprecated
+//	 */
+//	public void showComponent(Component c) {
+//		mainWindow.removeWindow(sub);
+//		wizard.finish();
+//		mainWindow.removeAllComponents();
+//		mainWindow.addComponent(buildMainMenu());
+//		mainWindow.addComponent(c);
+//	}
+//	/**
+//	 * Return view to the beginning: showing wizard.
+//	 * @deprecated
+//	 */
+//	public void returnToBegin() {
+//		mainWindow.removeAllComponents();
+//		mainWindow.addComponent(buildMainMenu());
+//
+//		
+//		mainLayout.addComponent(new StartPanel());
+//		mainLayout.addComponent(wizard);
+//
+//	}
+//
+//	/**
+//	 * @deprecated
+//	 * @param oldStep
+//	 * @param newStep
+//	 */
+//	public void setStep(WizardStep oldStep, WizardStep newStep) {
+//		List<WizardStep> olderSteps = new LinkedList<WizardStep>();
+//		boolean found = false;
+//		for(WizardStep s:wizard.getSteps()) {
+//			if(s == oldStep) {
+//				found = true;
+//				continue;
+//			}
+//			if(found) {
+//				olderSteps.add(s);
+//			}			
+//		}
+//		wizard.addStep(newStep);
+//		wizard.activateStep(newStep);
+//		for(WizardStep os : olderSteps) {
+//			wizard.removeStep(os);
+//		}
+//	}
+//	/**
+//	 * @deprecated
+//	 * @param oldStep
+//	 */
+//	public void removeOlderSteps(WizardStep oldStep) {
+//		List<WizardStep> olderSteps = new LinkedList<WizardStep>();
+//		boolean found = false;
+//		for(WizardStep s:wizard.getSteps()) {
+//			if(s == oldStep) {
+//				found = true;
+//				continue;
+//			}
+//			if(found) {
+//				olderSteps.add(s);
+//			}			
+//		}
+//		for(WizardStep os : olderSteps) {
+//			wizard.removeStep(os);
+//		}
+//	}
+//	
 	/**
 	 * Method is called if any action was taken in a subwindow that needs the main content to update.
 	 */

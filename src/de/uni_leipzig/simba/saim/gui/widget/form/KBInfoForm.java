@@ -57,9 +57,9 @@ public class KBInfoForm extends Form
 
 	/**
 	 * Constructor to set default values of the fields.
-	 * 
 	 * @param title
 	 * @param defaultValues
+	 * @param messages
 	 */
 	public KBInfoForm(String title, KBInfo defaultValues,final Messages messages)
 	{
@@ -73,6 +73,26 @@ public class KBInfoForm extends Form
 		next			= new Button(messages.getString("ok"));			//$NON-NLS-1$
 		components	= new Component[] { url, graph,pageSize, next};
 		validator = new EndpointURLValidator(url,messages);
+		this.setImmediate(true);
+		this.setCaption(title);
+		this.setWidth(WIDTH);
+		// Have a button bar in the footer.
+				HorizontalLayout buttonBar = new HorizontalLayout();
+				// buttonBar.setHeight("25px");
+				getFooter().addComponent(buttonBar);
+				// Add an Ok (commit), Reset (discard), and Cancel buttons
+				setValidationVisible(true);
+				buttonBar.addComponent(new Button(messages.getString("reset"), this, "reset")); //$NON-NLS-1$ //$NON-NLS-2$
+				getLayout().setMargin(true);
+				
+				for (TextField field : textFields)
+				{
+					field.setWidth("100%"); //$NON-NLS-1$
+				}
+
+				setupContextHelp();
+			
+
 		if (defaultValues != null)
 		{
 			kbInfo = defaultValues;
@@ -82,6 +102,9 @@ public class KBInfoForm extends Form
 			kbInfo = new KBInfo();
 			kbInfo.endpoint = ""; //$NON-NLS-1$
 		}
+		presets();	setupContextHelp();
+		addFormFields();
+	
 	}
 
 	protected void presets()
