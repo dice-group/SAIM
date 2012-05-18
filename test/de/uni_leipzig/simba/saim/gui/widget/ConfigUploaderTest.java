@@ -13,7 +13,7 @@ public class ConfigUploaderTest
 	public void test()
 	{
 		ConfigReader reader = new ConfigReader();
-		Configuration config = Configuration.getInstance();
+		Configuration config = new Configuration();
 		reader.validateAndRead("resource/examples/drugbank-sider.xml");
 		config.setFromConfigReader(reader);
 		assertTrue(config.source.graph!=null);
