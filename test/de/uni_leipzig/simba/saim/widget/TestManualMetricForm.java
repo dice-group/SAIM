@@ -11,7 +11,7 @@ import de.uni_leipzig.simba.saim.gui.widget.form.ManualMetricForm;
 public class TestManualMetricForm {
 	@Test
 	public void testTestPropertiesAreSet() {
-		Configuration c = Configuration.getInstance();
+		Configuration c = new Configuration();
 		c.setSourceEndpoint(DefaultEndpointLoader.getDefaultEndpoints().get("lgd.aksw - Drugbank"));
 		c.setTargetEndpoint(DefaultEndpointLoader.getDefaultEndpoints().get("lgd.aksw - Sider"));
 		c.addPropertiesMatch("rdfs:label", "rdfs:FalseLable", true);

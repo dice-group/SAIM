@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vaadin.cytographer.Cytographer;
@@ -16,7 +15,6 @@ import org.vaadin.cytographer.GraphProperties;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
-import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
@@ -207,7 +205,8 @@ public class MetricPanel extends Panel
 	/**
 	 * @param o the Output node
 	 */
-	private void makeMetric(Node output){
+	private void makeMetric(Output output)
+	{
 		Stack<Node> cNodes = new Stack<Node>();
 		cNodes.push(output);
 		

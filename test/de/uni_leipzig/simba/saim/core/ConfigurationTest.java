@@ -22,7 +22,7 @@ public class ConfigurationTest
 
 	@Test
 	public void testToConfigReader() {
-		Configuration c = Configuration.getInstance();
+		Configuration c = new Configuration();
 		c.setSourceEndpoint(DefaultEndpointLoader.getDefaultEndpoints().get("Dailymed"));
 		c.setTargetEndpoint(DefaultEndpointLoader.getDefaultEndpoints().get("lgd.aksw - Sider"));
 		c.source.restrictions.add("testsourcerestriction1");
@@ -67,7 +67,7 @@ public class ConfigurationTest
 	
 	@Test
 	public void testisPropertyDefined() {
-		Configuration c = Configuration.getInstance();
+		Configuration c = new Configuration();
 		c.setSourceEndpoint(DefaultEndpointLoader.getDefaultEndpoints().get("lgd.aksw - Drugbank"));
 		c.setTargetEndpoint(DefaultEndpointLoader.getDefaultEndpoints().get("lgd.aksw - Sider"));
 		c.addPropertiesMatch("rdfs:label", "rdfs:FalseLable", true);
