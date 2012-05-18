@@ -189,7 +189,7 @@ public class MetricPanel extends Panel
 		//metricExpression = "AND(levenshtein(x.rdfs:label,y.rdfs:label)|0.1,levenshtein(x.dbp:name,y.dbp:name)|1.0)";
 		if( metricExpression != null){
 	
-			makeMetric( MetricParser.parse(metricExpression,"x"));
+			makeMetric( MetricParser.parse(metricExpression, config.getSource().var.replaceAll("\\?", "")));
 			cyNetworkView.applyLayout(new ForceDirectedLayout());		
 			cytographer.repaintGraph();
 		}else{

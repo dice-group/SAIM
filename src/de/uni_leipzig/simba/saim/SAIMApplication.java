@@ -213,6 +213,7 @@ public class SAIMApplication extends Application
 		
 		@Override
 		public void menuSelected(MenuItem selectedItem) {
+			config = new Configuration();
 			EndpointWindow endpointWindow = new EndpointWindow(app);
 			endpointWindow.setModal(true);
 			endpointWindow.setVisible(true);

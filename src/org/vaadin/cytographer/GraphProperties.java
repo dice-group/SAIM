@@ -291,7 +291,7 @@ public class GraphProperties {
 			nodeA = nodeB;
 			nodeB = tmp;			
 		}
-		if(nodeA.validParentOf(nodeB) && (nodeA.acceptsChild(nodeB))){		
+		if(nodeA.acceptsChild(nodeB)){		
 			nodeA.addChild(nodeB);	
 
 			final CyNode node1 = Cytoscape.getCyNode(nodeIdA+"", false);
@@ -311,7 +311,7 @@ public class GraphProperties {
 				throw new IllegalStateException("Edge creation failed since node not found");
 			}
 		}else{
-			mainWindow.showNotification("Edge not allowed.", Notification.TYPE_WARNING_MESSAGE);
+			mainWindow.showNotification("Edge not "+nodeA+" to "+ nodeB +" allowed.", Notification.TYPE_WARNING_MESSAGE);
 		}
 	}
 	private void removeEdgeFromTheMap(final Edge edge, final Node node) {

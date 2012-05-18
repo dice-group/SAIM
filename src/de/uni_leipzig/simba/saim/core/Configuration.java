@@ -219,7 +219,7 @@ public class Configuration
 			fillKBElement(sourceElement,source);
 			fillKBElement(targetElement,target);
 
-			
+			if(metric != null)
 			rootElement.getChild("METRIC").setText(metric.toString());
 			{
 			Element acceptanceElement = rootElement.getChild("ACCEPTANCE");

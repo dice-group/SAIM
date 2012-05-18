@@ -410,6 +410,7 @@ public class PropertyMatchingPanel extends Panel
 	 * Called on next button click.
 	 */
 	public void submit() {
+		propMapper.stop();
 		Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
 		for(Object[] row : rows) {
 			if(((PropertyComboBox)row[0]).getValue() != null && ((PropertyComboBox)row[0]).getValue()!=null &&
@@ -419,6 +420,6 @@ public class PropertyMatchingPanel extends Panel
 				addProperty(((PropertyComboBox)row[1]).getValue().toString(),config.getTarget());
 				config.addPropertiesMatch(((PropertyComboBox)row[0]).getValue().toString(), ((PropertyComboBox)row[1]).getValue().toString(), true);
 			}			
-		}		
+		}
 	}
 }
