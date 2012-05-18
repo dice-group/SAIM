@@ -19,12 +19,19 @@ public class InstanceInfoPanel extends Panel {
 	private static final long serialVersionUID = 1L;
 	public static final String TableWidth= "30em";
 	public static final String PanelWidth= "62em";
+	
+	Instance i1; Instance i2;
 	/** Default Constructor 
 	 * @param i1 the source instance
 	 * @param i2 the target instance
 	 */
 	public InstanceInfoPanel(Instance i1, Instance i2) {
 		super();
+		this.i1=i1;
+		this.i2=i2;
+	}
+	@Override
+	public void attach() {
 		HorizontalLayout mainLayout = new HorizontalLayout();
 		this.setContent(mainLayout);
 		

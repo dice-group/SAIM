@@ -41,7 +41,7 @@
     <PROPERTY>dbp:nationality</PROPERTY>
     <TYPE>SPARQL</TYPE>
   </TARGET>
-  <METRIC>and(levenshtein(src.rdfs:label,dest.rdfs:label)|1.0,levenshtein(src.dbp:name,dest.dbp:name)|1.0)|1.0</METRIC>
+  <METRIC>and(levenshtein(src.rdfs:label,dest.rdfs:label)|1.0,OR(levenshtein(src.dbp:name,dest.dbp:name)|0.9,trigrams(src.dbp:nationality,dest.dbp:nationality)|0.8)|0.8)</METRIC>
   <ACCEPTANCE>
     <THRESHOLD>1.0</THRESHOLD>
     <FILE>http://live.dbpedia.org/sparql-http://live.dbpedia.org/sparql-accept</FILE>
