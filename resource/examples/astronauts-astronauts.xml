@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE LIMES PUBLIC "LIMES" "http://konradhoeffner.de/files/limes.dtd">
+<LIMES>
+  <PREFIX>
+    <NAMESPACE>http://www.w3.org/2000/01/rdf-schema#</NAMESPACE>
+    <LABEL>rdfs</LABEL>
+  </PREFIX>
+  <PREFIX>
+    <NAMESPACE>http://dbpedia.org/property/</NAMESPACE>
+    <LABEL>dbp</LABEL>
+  </PREFIX>
+  <PREFIX>
+    <NAMESPACE>http://dbpedia.org/ontology/</NAMESPACE>
+    <LABEL>dbpo</LABEL>
+  </PREFIX>
+  <PREFIX>
+    <NAMESPACE>http://www.w3.org/1999/02/22-rdf-syntax-ns#</NAMESPACE>
+    <LABEL>rdf</LABEL>
+  </PREFIX>
+  <SOURCE>
+    <ID>live</ID>
+    <ENDPOINT>http://live.dbpedia.org/sparql</ENDPOINT>
+    <GRAPH>http://dbpedia.org</GRAPH>
+    <VAR>?src</VAR>
+    <PAGESIZE>1000</PAGESIZE>
+    <RESTRICTION>?src rdf:type dbpo:Astronaut;</RESTRICTION>
+    <PROPERTY>rdfs:label</PROPERTY>
+    <PROPERTY>dbp:name</PROPERTY>
+    <PROPERTY>dbp:nationality</PROPERTY>
+    <TYPE>SPARQL</TYPE>
+  </SOURCE>
+  <TARGET>
+    <ID>dbpedia</ID>
+    <ENDPOINT>http://live.dbpedia.org/sparql</ENDPOINT>
+    <GRAPH>http://dbpedia.org</GRAPH>
+    <VAR>?dest</VAR>
+    <PAGESIZE>1000</PAGESIZE>
+    <RESTRICTION>?dest rdf:type dbpo:Astronaut</RESTRICTION>
+    <PROPERTY>rdfs:label</PROPERTY>
+    <PROPERTY>dbp:name</PROPERTY>
+    <PROPERTY>dbp:nationality</PROPERTY>
+    <TYPE>SPARQL</TYPE>
+  </TARGET>
+  <METRIC>and(levenshtein(src.rdfs:label,dest.rdfs:label)|1.0,levenshtein(src.dbp:name,dest.dbp:name)|1.0)|1.0</METRIC>
+  <ACCEPTANCE>
+    <THRESHOLD>1.0</THRESHOLD>
+    <FILE>http://live.dbpedia.org/sparql-http://live.dbpedia.org/sparql-accept</FILE>
+    <RELATION>owl:sameAs</RELATION>
+  </ACCEPTANCE>
+  <REVIEW>
+    <THRESHOLD>0.9</THRESHOLD>
+    <FILE>http://live.dbpedia.org/sparql-http://live.dbpedia.org/sparql-review</FILE>
+    <RELATION>owl:sameAs</RELATION>
+  </REVIEW>
+  <EXECUTION>SIMPLE</EXECUTION>
+  <OUTPUT>N3</OUTPUT>
+</LIMES>

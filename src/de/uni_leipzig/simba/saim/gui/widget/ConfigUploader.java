@@ -117,6 +117,7 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver{
 		subLayout.addComponent(runExampleButton);
 		//@TODO generic way to load config.xmls.
 		localExamplesSelect.addItem("examples/PublicationData.xml");
+		localExamplesSelect.addItem("examples/astronauts-astronauts.xml");
 		localExamplesSelect.addItem(DEFAULT_LIMES_XML);
 		localExamplesSelect.select(DEFAULT_LIMES_XML);
 		// Button to run a default spec locally
@@ -130,6 +131,7 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver{
 				cR.validateAndRead(inStream);
 				// setting location of limes.dtd
 				// set paths to source and target
+				if(cR.sourceInfo.type!=null && cR.targetInfo.type != null)
 				try {
 					URL url;String path;
 					if(cR.sourceInfo.type.equalsIgnoreCase("CSV")) {
@@ -148,6 +150,7 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver{
 				config.setFromConfigReader(cR);
 				SAIMApplication appl = (SAIMApplication) getApplication();
 				appl.refresh();				
+				appl.getMainWindow().removeWindow(getWindow());
 			}
 		});
 		root.getContent().addComponent(subLayout);

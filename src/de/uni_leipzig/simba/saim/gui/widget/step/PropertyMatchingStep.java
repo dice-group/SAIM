@@ -45,6 +45,7 @@ public class PropertyMatchingStep implements WizardStep
 	@Override
 	public boolean onBack()
 	{
+		panel.submit();
 		return true;
 	}
 
