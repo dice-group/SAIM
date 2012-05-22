@@ -19,6 +19,7 @@ import org.vaadin.gwtgraphics.client.shape.Text;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
@@ -32,7 +33,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
 
 public class VNode extends Group 
-implements ContextListener, MouseDownHandler, MouseUpHandler, MouseMoveHandler, ClickHandler {
+implements ContextListener, MouseDownHandler, MouseUpHandler, MouseMoveHandler, ClickHandler{
 
 	protected final VCytographer cytographer;
 	protected Map<String, Command> commandMap;

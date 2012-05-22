@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
+
+import lombok.Getter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vaadin.cytographer.Cytographer;
@@ -48,8 +51,8 @@ import de.uni_leipzig.simba.saim.gui.widget.form.PreprocessingForm;
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
 public class MetricPanel extends Panel
 {
-	private final Messages messages;
-	Configuration config;
+	@Getter private final Messages messages;
+	@Getter Configuration config;
 	ManualMetricForm manualMetricForm;
 	private static final long	serialVersionUID	= 6766679517868840795L;
 	private static final boolean CACHING = true;
@@ -122,7 +125,6 @@ public class MetricPanel extends Panel
 		accordion.addTab(targetLayout,messages.getString("MetricPanel.targetproperties")); //$NON-NLS-1$
 		accordion.addTab(metricsLayout,messages.getString("MetricPanel.metrics"));  //$NON-NLS-1$
 		accordion.addTab(operatorsLayout,messages.getString("MetricPanel.operators"));	 //$NON-NLS-1$
-				
 		// add Cytographer
 		layout.addComponent(getCytographer());
 		
@@ -178,7 +180,7 @@ public class MetricPanel extends Panel
 		cyNetworkView = Cytoscape.createNetworkView(cyNetwork);
 
 		Window window = SAIMApplication.getInstance().getMainWindow();
-		cytographer = new Cytographer(cyNetwork, cyNetworkView, name, WIDTH, HEIGHT,window);
+		cytographer = new Cytographer(cyNetwork, cyNetworkView, name, WIDTH, HEIGHT,window,this);
 		cytographer.setImmediate(true);
 		cytographer.setWidth(WIDTH + "px");
 		cytographer.setHeight(HEIGHT + "px"); 
@@ -188,7 +190,7 @@ public class MetricPanel extends Panel
 		String metricExpression = config.getMetricExpression();
 		//metricExpression = "AND(levenshtein(x.rdfs:label,y.rdfs:label)|0.1,levenshtein(x.dbp:name,y.dbp:name)|1.0)";
 		if( metricExpression != null){
-	
+			//makeMetric( MetricParser.parse(metricExpression, "x"));
 			makeMetric( MetricParser.parse(metricExpression, config.getSource().var.replaceAll("\\?", "")));
 			cyNetworkView.applyLayout(new ForceDirectedLayout());		
 			cytographer.repaintGraph();
@@ -387,54 +389,53 @@ class AccordionLayoutClickListener implements LayoutClickListener
 			case SOURCE :{
 				String pref = config.getSource().var.replaceAll("\\?", ""); 
 				cytographer.addNode(pref+"."+label, x,y, shape); 
-				addProperty(label, config.getSource());
+				cytographer.addDefaultProperty(label, config.getSource());
 				break;
 			}
 			case TARGET : {
 				String pref = config.getTarget().var.replaceAll("\\?", ""); 
 				cytographer.addNode(pref+"."+label, x,y, shape); 
-				addProperty(label, config.getTarget());
+				cytographer.addDefaultProperty(label, config.getTarget());
 				break;
 			}
 			default :
 					cytographer.addNode(label, x,y, shape);
 			}
-
-			//cyNetworkView.applyLayout(new ForceDirectedLayout());		
-			//cytographer.fitToView();
 			// repaint
 			cytographer.repaintGraph();
 		}
 	}
 	
-	/**
-	 * Method to add Properties to according KBInfo. 
-	 * @param s URI of the property. May or may not be abbreviated.
-	 * @param info KBInfo of endpoint property belongs to.
-	 */
-	private void addProperty(String s, KBInfo info) {
-		String prop;
-		Logger logger = LoggerFactory.getLogger(AccordionLayoutClickListener.class);
-		if(s.startsWith("http:")) {//do not have a prefix, so we generate one
-			PrefixHelper.generatePrefix(s);
-			prop = PrefixHelper.abbreviate(s);
-		} else {// have the prefix already
-			prop = s;
-			s = PrefixHelper.expand(s);
-		}
-		if(!info.properties.contains(prop)) {
-			info.properties.add(prop);
-			logger.error("adding property "+prop+" again?"); 
-		}
-
-		Window sub = new Window(messages.getString("MetricPanel.definepreprocessingsubwindowname")+prop);
-		sub.setModal(true);
-		sub.addComponent(new PreprocessingForm(info, prop));
-		SAIMApplication.getInstance().getMainWindow().addWindow(sub);
-				
-		String base = PrefixHelper.getBase(s);
-		info.prefixes.put(PrefixHelper.getPrefix(base), PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
-	
-		logger.info(info.var+": adding property: "+prop+" with prefix "+PrefixHelper.getPrefix(base)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefix(base))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-	}
+// moved to Cytographer
+//	
+//	/**
+//	 * Method to add Properties to according KBInfo. 
+//	 * @param s URI of the property. May or may not be abbreviated.
+//	 * @param info KBInfo of endpoint property belongs to.
+//	 */
+//	private void addProperty(String s, KBInfo info) {
+//		String prop;
+//		Logger logger = LoggerFactory.getLogger(AccordionLayoutClickListener.class);
+//		if(s.startsWith("http:")) {//do not have a prefix, so we generate one
+//			PrefixHelper.generatePrefix(s);
+//			prop = PrefixHelper.abbreviate(s);
+//		} else {// have the prefix already
+//			prop = s;
+//			s = PrefixHelper.expand(s);
+//		}
+//		if(!info.properties.contains(prop)) {
+//			info.properties.add(prop);
+//			logger.error("adding property "+prop+" again?"); 
+//		}
+//
+//		Window sub = new Window(messages.getString("MetricPanel.definepreprocessingsubwindowname")+prop);
+//		sub.setModal(true);
+//		sub.addComponent(new PreprocessingForm(info, prop));
+//		SAIMApplication.getInstance().getMainWindow().addWindow(sub);
+//				
+//		String base = PrefixHelper.getBase(s);
+//		info.prefixes.put(PrefixHelper.getPrefix(base), PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
+//	
+//		logger.info(info.var+": adding property: "+prop+" with prefix "+PrefixHelper.getPrefix(base)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefix(base))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+//	}
 }

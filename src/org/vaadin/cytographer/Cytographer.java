@@ -20,8 +20,13 @@ import org.vaadin.cytographer.widgetset.client.ui.VCytographer;
 
 import cytoscape.CyNetwork;
 import cytoscape.view.CyNetworkView;
+import de.konrad.commons.sparql.PrefixHelper;
+import de.uni_leipzig.simba.io.KBInfo;
+import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.metric.Node;
 import de.uni_leipzig.simba.saim.core.metric.Output;
+import de.uni_leipzig.simba.saim.gui.widget.form.PreprocessingForm;
+import de.uni_leipzig.simba.saim.gui.widget.panel.MetricPanel;
 
 /**
  * Server side component for the VCytographer widget.
@@ -38,6 +43,7 @@ public class Cytographer extends AbstractComponent {
 	private final GraphProperties graphProperties;
 	private final PaintController paintController = new PaintController();
 	private Window mainWindow;
+	private MetricPanel mp; 
 	/**
 	 * Gets the metrics output node / root node
 	 */
@@ -50,13 +56,14 @@ public class Cytographer extends AbstractComponent {
 	/**
 	 * 
 	 */
-	public Cytographer(final CyNetwork network, final CyNetworkView finalView, final String title, final int width, final int height,Window mainWindow) {
+	public Cytographer(final CyNetwork network, final CyNetworkView finalView, final String title, final int width, final int height,Window mainWindow,MetricPanel mp) {
 
 		graphProperties = new GraphProperties(network, finalView, title);
 		graphProperties.setWidth(width);
 		graphProperties.setHeight(height);
 		this.mainWindow = mainWindow;
-		graphProperties.setMainWindow(mainWindow);		
+		graphProperties.setMainWindow(mainWindow);	
+		this.mp = mp;
 	}
 
 	public int  addNode(String name, int x, int y, GraphProperties.Shape shape){
@@ -134,66 +141,25 @@ public class Cytographer extends AbstractComponent {
 		}
 		if (variables.containsKey("doubleClick")) {
 			final String[] args = (String[]) variables.get("doubleClick");
-			
-			Window mywindow = new Window("");
-			
-			final TextField t = new TextField("option",args[3]);
-			final TextField tt = new TextField("option",args[4]);
-			mywindow.addComponent(t);
-			mywindow.addComponent(tt);
-			t.addValidator(new DoubleValidator("A Threshold must be a value between 1 and 0.") {
-				private static final long serialVersionUID = -5585916227598767457L;
-				@Override
-			    protected boolean isValidString(String value) {
-			        try {
-			            double d = Double.parseDouble(value);
-			            return d>=0 && d <=1;
-			        } catch (Exception e) {
-			            return false;
-			        }
-			    }
-			});
-			tt.addValidator(new DoubleValidator("A Threshold must be a value between 1 and 0.") {
-				private static final long serialVersionUID = 2933399368578994985L;
-				@Override
-			    protected boolean isValidString(String value) {
-			        try {
-			            double d = Double.parseDouble(value);
-			            return d>=0 && d <=1;
-			        } catch (Exception e) {
-			            return false;
-			        }
-			    }
-			});
-			t.setMaxLength(4);
-			tt.setMaxLength(4);
-			t.setImmediate(true);
-			tt.setImmediate(true);
-			mywindow.addListener(new CloseListener(){
-				private static final long serialVersionUID = -165177940359643613L;
-				@Override public void windowClose(CloseEvent e) {
-					if(t.isValid() && tt.isValid()){
-						List<Object> value = new ArrayList<>();
-						value.add(t.getValue());
-						value.add(tt.getValue());
-						
-						graphProperties.setNodeMetadata( args[0], value);
-						repaintGraph();
-					}else{
-						mainWindow.showNotification("A Threshold must be a value between 1 and 0.", Notification.TYPE_WARNING_MESSAGE);
-					}
+					
+			if(args.length == 6){
+				if(args[5].startsWith("Operator")){
+					makeModalWindowOperator(args);
 				}
-			});
-			mywindow.setResizable(false);
-			mywindow.setModal(true); 
-			mywindow.setHeight("180px");
-			mywindow.setWidth("200px");			 
-			mywindow.setPositionX(Math.round(Float.valueOf(args[1])));
-			mywindow.setPositionY(Math.round(Float.valueOf(args[2])));	
-
-			mainWindow.addWindow(mywindow);
-			
+				else if(args[5].startsWith("Target")){
+					String nodeName = (graphProperties.getNodeNames().get(Integer.valueOf(args[0])));
+					// remove prefix
+					addProperty(nodeName.substring(nodeName.indexOf('.')+1),mp.getConfig().getTarget());
+					
+				}
+				else if(args[5].startsWith("Source")){
+					String nodeName = (graphProperties.getNodeNames().get(Integer.valueOf(args[0])));
+					// remove prefix
+					addProperty(nodeName.substring(nodeName.indexOf('.')+1),mp.getConfig().getSource());
+				}				
+			}
 		}
+		
 		if (variables.containsKey("onNodeMouseUp")) {
 			final String[] args = (String[]) variables.get("onNodeMouseUp");
 			
@@ -205,7 +171,98 @@ public class Cytographer extends AbstractComponent {
 			graphProperties.getCyNetworkView().getNodeView(new Integer(nodeID)).setYPosition(Double.parseDouble(y));
 		}
 	}
+	public void addDefaultProperty(String s, KBInfo info){
+			//TODO
+			//set defaults 
+	}
+	/**
+	 * Method to add Properties to according KBInfo. 
+	 * @param s URI of the property. May or may not be abbreviated.
+	 * @param info KBInfo of endpoint property belongs to.
+	 */
+	private void addProperty(String s, KBInfo info) {
+		String prop;
+		
+		if(s.startsWith("http:")) {//do not have a prefix, so we generate one
+			PrefixHelper.generatePrefix(s);
+			prop = PrefixHelper.abbreviate(s);
+		} else {// have the prefix already
+			prop = s;
+			s = PrefixHelper.expand(s);
+		}
+		if(!info.properties.contains(prop)) {
+			info.properties.add(prop);
+			
+		}
 
+		Window sub = new Window(mp.getMessages().getString("MetricPanel.definepreprocessingsubwindowname")+prop);
+		sub.setModal(true);
+		sub.addComponent(new PreprocessingForm(info, prop));
+		SAIMApplication.getInstance().getMainWindow().addWindow(sub);
+				
+		String base = PrefixHelper.getBase(s);
+		info.prefixes.put(PrefixHelper.getPrefix(base), PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
+	
+	}
+	private void makeModalWindowOperator(final String[] args){
+		Window mywindow = new Window("");
+		
+		final TextField t = new TextField("option",args[3]);
+		final TextField tt = new TextField("option",args[4]);
+		mywindow.addComponent(t);
+		mywindow.addComponent(tt);
+		t.addValidator(new DoubleValidator("A threshold must be a value between 1 and 0.") {
+			private static final long serialVersionUID = -5585916227598767457L;
+			@Override
+		    protected boolean isValidString(String value) {
+		        try {
+		            double d = Double.parseDouble(value);
+		            return d>=0 && d <=1;
+		        } catch (Exception e) {
+		            return false;
+		        }
+		    }
+		});
+		tt.addValidator(new DoubleValidator("A threshold must be a value between 1 and 0.") {
+			private static final long serialVersionUID = 2933399368578994985L;
+			@Override
+		    protected boolean isValidString(String value) {
+		        try {
+		            double d = Double.parseDouble(value);
+		            return d>=0 && d <=1;
+		        } catch (Exception e) {
+		            return false;
+		        }
+		    }
+		});
+		t.setMaxLength(4);
+		tt.setMaxLength(4);
+		t.setImmediate(true);
+		tt.setImmediate(true);
+		mywindow.addListener(new CloseListener(){
+			private static final long serialVersionUID = -165177940359643613L;
+			@Override public void windowClose(CloseEvent e) {
+				if(t.isValid() && tt.isValid()){
+					List<Object> value = new ArrayList<>();
+					value.add(t.getValue());
+					value.add(tt.getValue());
+					
+					graphProperties.setNodeMetadata( args[0], value);
+					repaintGraph();
+				}else{
+					mainWindow.showNotification("A threshold must be a value between 1 and 0.", Notification.TYPE_WARNING_MESSAGE);
+				}
+			}
+		});
+		mywindow.setResizable(false);
+		mywindow.setModal(true); 
+		mywindow.setHeight("180px");
+		mywindow.setWidth("200px");			 
+		mywindow.setPositionX(Math.round(Float.valueOf(args[1])));
+		mywindow.setPositionY(Math.round(Float.valueOf(args[2])));	
+
+		mainWindow.addWindow(mywindow);
+	}
 	/**
 	 * Change texts visibilities
 	 * 

@@ -8,15 +8,22 @@ import org.vaadin.cytographer.widgetset.client.ui.shap.VCycle;
 import org.vaadin.cytographer.widgetset.client.ui.shap.VRectangle;
 import org.vaadin.gwtgraphics.client.Shape;
 
-public class VSource extends VNode{ 
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+
+
+public class VSource extends VNode  implements DoubleClickHandler{
 
 	public VSource(final VCytographer cytographer, final VGraph graph, final Shape shape, final String name,final String id,final VVisualStyle style) {
 		super(cytographer,graph,shape,name,id,style);		
+		addDoubleClickHandler(this);
 	}
 	public static Shape getShape(int x, int y,int nodeSize){
 		//return new VCycle(x, y,nodeSize,"#00C000"); //green 16 VGA
 		return new VRectangle(x, y,nodeSize,"#00C000"); //green 16 VGA
-		
-		
 	}	
+	@Override
+	public void onDoubleClick(DoubleClickEvent event) {
+		cytographer.doubleClick(new String[]{getID().toString(), getX()+"", getY()+"", "", "","Source"});		
+	}
 }

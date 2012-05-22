@@ -289,7 +289,7 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 		applicationConnection.updateVariable(paintableId, "selectedEdges", edges, false);		
 		applicationConnection.updateVariable(paintableId, "selectedNodes", nodes, true);		
 	}
-	
+
 	public void doubleClick(String[] values) {
 		applicationConnection.updateVariable(paintableId, "doubleClick", values, true);		
 	}

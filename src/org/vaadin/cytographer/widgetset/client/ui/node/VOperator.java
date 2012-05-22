@@ -55,9 +55,7 @@ public class VOperator extends VNode  implements DoubleClickHandler{
 	}
 	@Override
 	public void onDoubleClick(DoubleClickEvent event) {
-//		final int x = event.getX();
-//		final int y = event.getY();
-		cytographer.doubleClick(new String[]{getID().toString(), getX()+"", getY()+"", getValue1(), getValue2()});		
+		cytographer.doubleClick(new String[]{getID().toString(), getX()+"", getY()+"", getValue1(), getValue2(),"Operator"});		
 	}	
 	@Override
 	public void moveNode(final float x, final float y) {
