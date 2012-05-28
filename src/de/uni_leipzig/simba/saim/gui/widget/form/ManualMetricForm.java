@@ -18,7 +18,7 @@ import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 
 public class ManualMetricForm extends Form{
-	public final TextField metricTextField = new TextField("Insert metric here");
+	public final TextField metricTextField = new TextField("Metric Expression");
 	public final TextField thresholdTextField = new TextField("Acceptance threshold");
 	static Logger logger = Logger.getLogger("SAIM");
 	public ManualMetricForm() {

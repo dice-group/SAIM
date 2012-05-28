@@ -53,7 +53,7 @@ public class MetricPanel extends Panel
 {
 	@Getter private final Messages messages;
 	@Getter Configuration config;
-	ManualMetricForm manualMetricForm;
+//	ManualMetricForm manualMetricForm;
 	private static final long	serialVersionUID	= 6766679517868840795L;
 	private static final boolean CACHING = true;
 	Mapping propMapping;
@@ -105,7 +105,7 @@ public class MetricPanel extends Panel
 		progress.setIndeterminate(false);
 		accordionLayout.addComponent(progress);
 		// self config
-		mainLayout.addComponent(manualMetricForm=new ManualMetricForm());
+//		mainLayout.addComponent(manualMetricForm=new ManualMetricForm());
 		
 		//buttons		
 		mainLayout.addComponent(getButtonLayout());
@@ -308,16 +308,16 @@ public class MetricPanel extends Panel
 	 */
 	public boolean isValid() {
 		try{
-			manualMetricForm.validate();
+//			manualMetricForm.validate();
 		}catch(InvalidValueException e) {}
-		if(manualMetricForm.isValid()) {
-			config.setMetricExpression(manualMetricForm.metricTextField.getValue().toString());
-			config.setAcceptanceThreshold(Double.parseDouble(manualMetricForm.thresholdTextField.getValue().toString()));
+//		if(manualMetricForm.isValid()) {
+//			config.setMetricExpression(manualMetricForm.metricTextField.getValue().toString());
+//			config.setAcceptanceThreshold(Double.parseDouble(manualMetricForm.thresholdTextField.getValue().toString()));
 			return true;
-		} else {
+//		} else {
 		//	manualMetricForm.setComponentError();
-		}
-		return false;
+//		}
+//		return false;
 	}
 	
 	public Layout getButtonLayout() {
@@ -349,8 +349,8 @@ public class MetricPanel extends Panel
 					learnButton.setEnabled(true);
 					startMapping.setEnabled(true);
 
-					manualMetricForm.metricTextField.setValue(config.getMetricExpression());
-					manualMetricForm.thresholdTextField.setValue(config.getAcceptanceThreshold());
+//					manualMetricForm.metricTextField.setValue(config.getMetricExpression());
+//					manualMetricForm.thresholdTextField.setValue(config.getAcceptanceThreshold());
 				}
 			}
 		}		
