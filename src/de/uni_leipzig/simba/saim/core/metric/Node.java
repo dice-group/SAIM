@@ -52,7 +52,6 @@ public abstract class Node
 	/** Returns true if the subtree having this node as root node is complete.*/
 	public boolean isComplete()
 	{
-
 		if(childs.size()<getMaxChilds()) {return false;}
 		for(Node child : childs) {if(!child.isComplete()) return false;}
 		return true;

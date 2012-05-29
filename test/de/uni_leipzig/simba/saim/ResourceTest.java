@@ -1,26 +1,26 @@
 package de.uni_leipzig.simba.saim;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
+import java.awt.Color;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLDecoder;
+import java.util.Properties;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.junit.Test;
 
-import com.vaadin.terminal.ClassResource;
 
 public class ResourceTest {
 	@Test
 	public void testResource() throws FileNotFoundException {		
 		assertNotNull(getClass().getClassLoader().getResourceAsStream("examples/dbpedia-linkedmdb.xml"));
 		URL url = getClass().getClassLoader().getResource("examples");//dbpedia-linkedmdb.xml");
-	
+
 		String path;
 		try {
 			path = new File(url.toURI()).getAbsolutePath();
@@ -30,7 +30,23 @@ public class ResourceTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}//url.getFile();//URLDecoder.decode(url.getPath(),System.);
-	
+
 		//new ClassResource("img/no_crystal_clear_32.png",getApplication()))
+	}
+
+	@Test
+	public void testColorProperties() throws IOException
+	{
+		try(InputStream in=getClass().getClassLoader().getResourceAsStream("de/uni_leipzig/simba/saim/colors/default.properties"))				
+		{
+			assertNotNull(in);			
+			Properties properties = new Properties();
+			properties.load(in);
+			in.close();			
+			for(String key: new String[]{"measure","operator","output","sourceproperty","targetproperty"})
+			{				
+				Color.decode(properties.get(key).toString());
+			}
+		}
 	}
 }

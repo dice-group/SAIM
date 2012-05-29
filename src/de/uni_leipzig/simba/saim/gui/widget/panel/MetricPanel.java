@@ -49,8 +49,9 @@ import de.uni_leipzig.simba.saim.gui.widget.form.ManualMetricForm;
 import de.uni_leipzig.simba.saim.gui.widget.form.PreprocessingForm;
 
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
-public class MetricPanel extends Panel
-{
+public class MetricPanel extends Panel implements I18NComponent {
+    private final I18NComponentSupport support = new I18NComponentSupport(this);
+
 	@Getter private final Messages messages;
 	@Getter Configuration config;
 //	ManualMetricForm manualMetricForm;

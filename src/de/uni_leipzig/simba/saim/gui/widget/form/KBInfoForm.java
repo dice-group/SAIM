@@ -17,7 +17,6 @@ import com.vaadin.ui.TextField;
 
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.Messages;
-import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.DefaultEndpointLoader;
 import de.uni_leipzig.simba.saim.core.Endpoints;
 import de.uni_leipzig.simba.saim.gui.validator.EndpointURLValidator;
@@ -153,7 +152,7 @@ public class KBInfoForm extends Form
 		addField(messages.getString("presets"), presetComboBox); //$NON-NLS-1$
 
 		addField(messages.getString("endpointurl"), url); //$NON-NLS-1$
-
+		
 		url.addValidator(validator);
 		url.setRequired(true);
 		url.setRequiredError(messages.getString("endpointurlmaynotbeempty")); //$NON-NLS-1$
