@@ -59,16 +59,16 @@ public class NodeTest
 			for(int j=i+1;j<nodes.length;j++)
 			{assertTrue(nodes[i].color!=nodes[j].color);}
 		//Property s = new Property("rdf:type",Origin.SOURCE);
-		assertTrue(m.validParentOf(p));
+		assertTrue(m.isValidParentOf(p));
 		assertTrue(m.acceptsChild(p));
 		m.addChild(p);
-		assertFalse(p.validParentOf(m));
+		assertFalse(p.isValidParentOf(m));
 		assertFalse(p.acceptsChild(m));
 
-		assertTrue(m.validParentOf(q));
+		assertTrue(m.isValidParentOf(q));
 		assertFalse(m.acceptsChild(q));
 
-		assertTrue(m.validParentOf(r));
+		assertTrue(m.isValidParentOf(r));
 		assertTrue(m.acceptsChild(r));		
 		assertFalse(m.isComplete());
 		m.addChild(r);

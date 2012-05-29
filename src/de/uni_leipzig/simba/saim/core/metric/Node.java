@@ -24,12 +24,14 @@ public abstract class Node
 	public byte getMaxChilds() {return 0;}
 	/** returns true if the type of the parent and the child are compatible (e.g. a measure may only have properties as childs). */
 	public abstract Set<Class<? extends Node>> validChildClasses();
-	public final boolean validParentOf(Node node) {return validChildClasses().contains(node.getClass());}
+	public final boolean isValidParentOf(Node node) {return validChildClasses().contains(node.getClass());}
 	protected Node parent = null;
 	protected List<Node> childs = new Vector<>();
 
 	public List<Node> getChilds() {return Collections.unmodifiableList(childs);}
 
+	public enum Acceptance {OK,INVALID_PARENT,ALREADY_HAS_A_PARENT,CANNOT_ACCEPT_ANYMORE_CHILDREN,SOURCE_PROPERTY_EXPECTED,TARGET_PROPERTY_EXPECTED}
+	
 	/**	adds the child node to the node and returns true if it was successfull. */
 	public boolean addChild(Node child)
 	{		
@@ -47,7 +49,15 @@ public abstract class Node
 		child.pushDownColor(colors++);
 	}
 
-	public boolean acceptsChild(Node n) {return validParentOf(n)&&n.parent==null&&childs.size()<getMaxChilds()&&this.color!=n.color;}
+	public boolean acceptsChild(Node n) {return isValidParentOf(n)&&n.parent==null&&childs.size()<getMaxChilds()&&this.color!=n.color;}
+	
+	public Acceptance acceptsChildWithReason(Node n)
+	{
+		if(!isValidParentOf(n)) {return Acceptance.INVALID_PARENT;}
+		if(n.parent!=null) {return Acceptance.ALREADY_HAS_A_PARENT;}
+		if(childs.size()>=getMaxChilds()) {return Acceptance.CANNOT_ACCEPT_ANYMORE_CHILDREN;}
+		return Acceptance.OK;
+	}
 
 	/** Returns true if the subtree having this node as root node is complete.*/
 	public boolean isComplete()

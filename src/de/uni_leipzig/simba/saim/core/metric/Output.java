@@ -8,7 +8,7 @@ import java.util.Set;
 /** The metric tree's root node specifiying the acceptance and review thresholds. It's single child is either a metric or an operator.*/
 public class Output extends Node
 {
-	public Output() {super(null);}
+	public Output() {super("output");}
 	@Override public Set<String> identifiers()	{return new HashSet<>(Arrays.asList(new String[] {"output"}));}	
 	@SuppressWarnings("unchecked")
 	static public final Set<Class<? extends Node>> validChildClasses =
