@@ -194,7 +194,7 @@ public class MetricPanel extends Panel
 			cyNetworkView.applyLayout(new ForceDirectedLayout());		
 			cytographer.repaintGraph();
 		}else{
-			cytographer.addNode("Metric", WIDTH/2, HEIGHT/2, GraphProperties.Shape.OUTPUT);
+			cytographer.addNode(new Output().id, WIDTH/2, HEIGHT/2, GraphProperties.Shape.OUTPUT);
 			cytographer.repaintGraph();
 		}
 		return cytographer;		
@@ -246,7 +246,7 @@ public class MetricPanel extends Panel
 		Integer id = null;
 		// make node
 		if(n instanceof Output){
-			id= cytographer.addNode("Out", 0, 0, GraphProperties.Shape.OUTPUT);
+			id= cytographer.addNode(new Output().id, 0, 0, GraphProperties.Shape.OUTPUT);
 		
 		}else if(n instanceof Operator){
 			id= cytographer.addNode(((Operator)n).id, 0, 0, GraphProperties.Shape.OPERATOR);
