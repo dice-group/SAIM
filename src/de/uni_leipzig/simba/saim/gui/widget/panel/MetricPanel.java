@@ -16,9 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.vaadin.cytographer.Cytographer;
 import org.vaadin.cytographer.GraphProperties;
 
-import com.github.peholmst.i18n4vaadin.I18N;
-import com.github.peholmst.i18n4vaadin.I18NComponent;
-import com.github.peholmst.i18n4vaadin.support.I18NComponentSupport;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
@@ -51,12 +48,10 @@ import de.uni_leipzig.simba.saim.core.metric.Property;
 import de.uni_leipzig.simba.saim.gui.widget.Listener.MetricPanelListeners;
 
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
-public class MetricPanel extends Panel implements I18NComponent
-{
-    private final I18NComponentSupport support = new I18NComponentSupport(this);
-
+public class MetricPanel extends Panel
+{    
 	@Getter private final Messages messages;
-	@Getter Configuration config;
+	@Getter private Configuration config;
 //	ManualMetricForm manualMetricForm;
 	private static final long	serialVersionUID	= 6766679517868840795L;
 	private static final boolean CACHING = true;
@@ -359,15 +354,7 @@ public class MetricPanel extends Panel implements I18NComponent
 			}
 		}		
 	}
-	@Override
-	public void setI18N(I18N i18n)
-	{
-	}
-	@Override
-	public I18N getI18N()
-	{
-		return null;
-	}
+
 }
 
 

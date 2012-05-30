@@ -1,6 +1,8 @@
 package de.uni_leipzig.simba.saim;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Locale;
 
 import org.junit.Test;
 
@@ -10,7 +12,7 @@ public class MessagesTest
 	@Test
 	public void testGetString()
 	{
-		assertTrue(new Messages().getString("ClassMatchingPanel.nosuggestionsfound").equals("Keine Vorschläge gefunden"));
+		assertTrue(new Messages(new Locale("de")).getString("ClassMatchingPanel.nosuggestionsfound").equals("Keine Vorschläge gefunden"));
+		assertTrue(new Messages(new Locale("en")).getString("ClassMatchingPanel.nosuggestionsfound").equals("No suggestions found"));
 	}
-
 }
