@@ -2,6 +2,11 @@ package de.uni_leipzig.simba.saim.gui.widget.window;
 
 import org.vaadin.teemu.wizards.Wizard;
 import org.vaadin.teemu.wizards.WizardStep;
+import org.vaadin.teemu.wizards.event.WizardCancelledEvent;
+import org.vaadin.teemu.wizards.event.WizardCompletedEvent;
+import org.vaadin.teemu.wizards.event.WizardProgressListener;
+import org.vaadin.teemu.wizards.event.WizardStepActivationEvent;
+import org.vaadin.teemu.wizards.event.WizardStepSetChangedEvent;
 
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
@@ -28,6 +33,16 @@ public class EndpointWindow extends Window
 		this.app = app;
 		this.setSizeFull();
 		wizard = new Wizard();
+		wizard.addListener(new WizardProgressListener()
+		{			
+			@Override public void wizardCompleted(WizardCompletedEvent event){}
+			@Override public void wizardCancelled(WizardCancelledEvent event)
+			{
+				EndpointWindow.this.close();
+			}
+			@Override public void stepSetChanged(WizardStepSetChangedEvent event){}
+			@Override public void activeStepChanged(WizardStepActivationEvent event){}
+		});
 		wizardFull();
 		this.addListener(new EndpointWindowCloseListener());
 		init();

@@ -30,7 +30,10 @@ public abstract class Node
 
 	public List<Node> getChilds() {return Collections.unmodifiableList(childs);}
 
-	public enum Acceptance {OK,INVALID_PARENT,ALREADY_HAS_A_PARENT,CANNOT_ACCEPT_ANYMORE_CHILDREN,SOURCE_PROPERTY_EXPECTED,TARGET_PROPERTY_EXPECTED}
+	public enum Acceptance
+	{
+		OK
+		,INVALID_PARENT,ALREADY_HAS_A_PARENT,CANNOT_ACCEPT_ANYMORE_CHILDREN,SOURCE_PROPERTY_EXPECTED,TARGET_PROPERTY_EXPECTED}
 	
 	/**	adds the child node to the node and returns true if it was successfull. */
 	public boolean addChild(Node child)
