@@ -13,7 +13,6 @@ public class VMetric extends VNode{
 		super(cytographer,graph,shape,name,id,style);			
 	}	
 	public static Shape getShape(int x, int y,int nodeSize){
-		return new VDiamond(x,y,nodeSize,"#00C0C0"); // teal 16 VGA
-		//return new VRectangle(x,y,nodeSize,"#0000FF"); // blue 16 VGA
+		return new VDiamond(x,y,nodeSize,"#dddd99"); 
 	}
 }

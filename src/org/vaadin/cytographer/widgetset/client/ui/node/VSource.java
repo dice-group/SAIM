@@ -18,9 +18,8 @@ public class VSource extends VNode  implements DoubleClickHandler{
 		super(cytographer,graph,shape,name,id,style);		
 		addDoubleClickHandler(this);
 	}
-	public static Shape getShape(int x, int y,int nodeSize){
-		//return new VCycle(x, y,nodeSize,"#00C000"); //green 16 VGA
-		return new VRectangle(x, y,nodeSize,"#00C000"); //green 16 VGA
+	public static Shape getShape(int x, int y,int nodeSize){		
+		return new VRectangle(x, y,nodeSize,"#66bbbb"); 
 	}	
 	@Override
 	public void onDoubleClick(DoubleClickEvent event) {

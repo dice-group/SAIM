@@ -40,7 +40,7 @@ public class VOperator extends VNode  implements DoubleClickHandler{
 		shape.setFontFamily(style.getFontFamily());		
 	}
 	public static Shape getShape(int x, int y,int nodeSize){
-		return new VTriangle(x,y,nodeSize,"#FFFF00"); //yellow 16 VGA
+		return new VTriangle(x,y,nodeSize,"#eeddcc"); 
 	}	
 
 	public void updateValues(String value1,String value2){

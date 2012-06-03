@@ -18,7 +18,7 @@ public class VTarget extends VNode  implements DoubleClickHandler{
 		addDoubleClickHandler(this);
 	}
 	public static Shape getShape(int x, int y,int nodeSize){
-		return new VRectangle(x, y, nodeSize,"#FF0000"); //red 16 VGA
+		return new VRectangle(x, y, nodeSize,"#dd9955"); 
 	}
 	@Override
 	public void onDoubleClick(DoubleClickEvent event) {
