@@ -12,6 +12,7 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
+import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.gui.widget.panel.PerformPanel;
 import de.uni_leipzig.simba.saim.gui.widget.step.ClassMatchingStep;
@@ -30,6 +31,7 @@ public class EndpointWindow extends Window
 	
 	public EndpointWindow(SAIMApplication app)
 	{
+		super(app.messages.getString("createnewconfiguration"));
 		this.app = app;
 		this.setSizeFull();
 		wizard = new Wizard();
