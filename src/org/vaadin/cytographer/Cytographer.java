@@ -19,6 +19,7 @@ import com.vaadin.ui.Window.Notification;
 import org.vaadin.cytographer.widgetset.client.ui.VCytographer;
 
 import cytoscape.CyNetwork;
+import cytoscape.layout.CyLayoutAlgorithm;
 import cytoscape.view.CyNetworkView;
 import de.konrad.commons.sparql.PrefixHelper;
 import de.uni_leipzig.simba.io.KBInfo;
@@ -52,6 +53,10 @@ public class Cytographer extends AbstractComponent {
 			if(n instanceof Output)
 				return n;
 		}return null;
+	}
+	public void applyLayoutAlgorithm(final CyLayoutAlgorithm loAlgorithm) {
+		graphProperties.applyLayoutAlgorithm(loAlgorithm);
+		repaintGraph();
 	}
 	/**
 	 * 

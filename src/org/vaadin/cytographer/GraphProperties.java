@@ -26,6 +26,7 @@ import cytoscape.CyNetwork;
 import cytoscape.CyNode;
 import cytoscape.Cytoscape;
 import cytoscape.data.Semantics;
+import cytoscape.layout.CyLayoutAlgorithm;
 import cytoscape.view.CyNetworkView;
 import de.uni_leipzig.simba.saim.core.metric.Measure;
 import de.uni_leipzig.simba.saim.core.metric.Operator;
@@ -72,7 +73,11 @@ public class GraphProperties {
 	@Getter @Setter private boolean useFitting = false;
 	@Getter @Setter private boolean textsVisible = false;
 	@Getter @Setter private boolean styleOptimization = false;
-
+	
+	public void applyLayoutAlgorithm(final CyLayoutAlgorithm loAlgorithm) {
+		cyNetworkView.applyLayout(loAlgorithm);
+		//cytogerpager.repaintGraph();
+	}
 
 	public GraphProperties(final CyNetwork network, final CyNetworkView finalView, final String p_title) {
 		cyNetwork = network;

@@ -14,6 +14,7 @@ import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vaadin.cytographer.Cytographer;
+import org.vaadin.cytographer.CytographerActionToolbar;
 import org.vaadin.cytographer.GraphProperties;
 
 import com.github.peholmst.i18n4vaadin.I18N;
@@ -130,7 +131,9 @@ public class MetricPanel extends Panel implements I18NComponent
 		accordion.addTab(metricsLayout,messages.getString("MetricPanel.metrics"));  //$NON-NLS-1$
 		accordion.addTab(operatorsLayout,messages.getString("MetricPanel.operators"));	 //$NON-NLS-1$
 		// add Cytographer
-		layout.addComponent(getCytographer());
+		cytographer = getCytographer();
+		layout.addComponent(new CytographerActionToolbar(cytographer));
+		layout.addComponent(cytographer);
 		
 		new Thread(){			
 			@Override
@@ -194,7 +197,7 @@ public class MetricPanel extends Panel implements I18NComponent
 		String metricExpression = config.getMetricExpression();
 		//metricExpression = "AND(levenshtein(x.rdfs:label,y.rdfs:label)|0.1,levenshtein(x.dbp:name,y.dbp:name)|1.0)";
 		if( metricExpression != null){
-			//makeMetric( MetricParser.parse(metricExpression, "x"));
+		//	makeMetric( MetricParser.parse(metricExpression, "x"));
 			makeMetric( MetricParser.parse(metricExpression, config.getSource().var.replaceAll("\\?", "")));
 			cyNetworkView.applyLayout(new ForceDirectedLayout());		
 			cytographer.repaintGraph();
