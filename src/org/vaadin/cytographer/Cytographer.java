@@ -36,7 +36,7 @@ public class Cytographer extends AbstractComponent {
 	private static final long serialVersionUID = 8483008141219579936L;
 	
 	public enum GraphOperation {
-		REPAINT, SET_NODE_SIZE, SET_VISUAL_STYLE, SET_TEXT_VISIBILITY, SET_OPTIMIZED_STYLES, SET_ZOOM, REFRESH //,UPDATE_NODE
+		REPAINT, SET_NODE_SIZE, SET_VISUAL_STYLE, SET_TEXT_VISIBILITY, SET_OPTIMIZED_STYLES, SET_ZOOM, REFRESH 
 	}
 	private GraphOperation currentOperation = GraphOperation.REPAINT;
 		
@@ -133,7 +133,7 @@ public class Cytographer extends AbstractComponent {
 		}
 		if (variables.containsKey("edgeCreated")) {
 			String[] args = (String[]) variables.get("edgeCreated");
-			graphProperties.createAnEdge(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2]);
+			createAnEdge(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2]);
 			repaintGraph();
 		}
 		if (variables.containsKey("removedEdge")) {

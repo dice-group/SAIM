@@ -263,7 +263,7 @@ public class GraphProperties {
 		cyNetwork.removeEdge(edge.getRootGraphIndex(), true);
 		//
 		de.uni_leipzig.simba.saim.core.metric.Node nodeA = nodeMap.get(edge.getSource().getRootGraphIndex());
-		de.uni_leipzig.simba.saim.core.metric.Node nodeB = nodeMap.get( edge.getTarget().getRootGraphIndex());
+		de.uni_leipzig.simba.saim.core.metric.Node nodeB = nodeMap.get(edge.getTarget().getRootGraphIndex());
 		if(nodeA.getChilds().contains(nodeB))
 			nodeA.removeChild(nodeB);
 		else 

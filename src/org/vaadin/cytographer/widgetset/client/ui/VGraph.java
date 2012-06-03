@@ -203,10 +203,8 @@ public class VGraph extends VectorObject {
 			updateEdges(n, true);
 		}
 	}
-	public void moveGraph(final float x, final float y) {
-		
-		//VConsole.log("VGraph.moveGraph() ...");
-		
+	public void moveGraph(final float x, final float y) {		
+		//VConsole.log("VGraph.moveGraph() ...");		
 		for (final VNode vnode : getPaintedShapes()) {
 			vnode.moveNode(vnode.getX()-x,vnode.getY()- y);
 			updateEdges(vnode, false);
@@ -225,18 +223,22 @@ public class VGraph extends VectorObject {
 			paintedShapes.add(node);
 			return;
 		}
+		VConsole.log("updateEdges");
 		for (final VEdge e : edgs) {
 			// update edge positions
 			if (e.getFirstNode().equals(node)) {
-				e.setX1((int) node.getX());
-				e.setY1((int) node.getY());
+				e.getLine().setX1((int) node.getX());
+				e.getLine().setY1((int) node.getY());
+				e.makeArrow(node, e.getSecondNode());
 				e.getText().setX((int) (node.getX() + e.getSecondNode().getX()) / 2);
 				e.getText().setY((int) (node.getY() + e.getSecondNode().getY()) / 2);
 			} else {
-				e.setX2((int) node.getX());
-				e.setY2((int) node.getY());
+				e.getLine().setX2((int) node.getX());
+				e.getLine().setY2((int) node.getY());
 				e.getText().setX((int) (e.getFirstNode().getX() + node.getX()) / 2);
 				e.getText().setY((int) (e.getFirstNode().getY() + node.getY()) / 2);
+				e.makeArrow(e.getFirstNode(), node);
+				
 			}
 			if (repaint) 
 				updateEdgeIntoCanvas(e, node, false);
@@ -305,11 +307,16 @@ public class VGraph extends VectorObject {
 //						e.setStrokeColor(e.getOrginalStrokeColor());
 //					}
 //					getSelectedEdges().clear();
-//				}				
-				edge.setStrokeColor(vVisualStyle.getEdgeSelectionColor());
+//				}	
+				
+				edge.getLine().setStrokeColor(vVisualStyle.getEdgeSelectionColor());
+				edge.getArrow1().setStrokeColor(vVisualStyle.getEdgeSelectionColor());
+				edge.getArrow2().setStrokeColor(vVisualStyle.getEdgeSelectionColor());
 				getSelectedEdges().add(edge);				
 			} else {
-				edge.setStrokeColor(edge.getOrginalStrokeColor());
+				edge.getLine().setStrokeColor(edge.getOrginalStrokeColor());
+				edge.getArrow1().setStrokeColor(edge.getOrginalStrokeColor());
+				edge.getArrow2().setStrokeColor(edge.getOrginalStrokeColor());
 				getSelectedEdges().remove(edge);
 			}
 		}
@@ -345,6 +352,10 @@ public class VGraph extends VectorObject {
 		updateEdgeIntoCanvas(edge, null, true);
 	}
 
+	private void createEdgeConnections(final VEdge edge) {
+		createEdgeConnections(edge,edge.getFirstNode());
+		createEdgeConnections(edge,edge.getSecondNode());
+	}
 	
 	private void createEdgeConnections(final VEdge vedge,final VNode vnode){
 		Set<VEdge> e = shapeToEdgesMap.get(vnode);
@@ -355,12 +366,6 @@ public class VGraph extends VectorObject {
 		e.add(vedge);
 	}
 	
-	private void createEdgeConnections(final VEdge edge) {
-		createEdgeConnections(edge,edge.getFirstNode());
-		createEdgeConnections(edge,edge.getSecondNode());
-	}
-	
-
 	public void removeNode(final VNode node) {
 		
 		//VConsole.log("VGraph.removeNode");	

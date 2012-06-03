@@ -1,5 +1,6 @@
 package org.vaadin.cytographer.widgetset.client.ui;
 
+import org.vaadin.gwtgraphics.client.Group;
 import org.vaadin.gwtgraphics.client.Line;
 import org.vaadin.gwtgraphics.client.Shape;
 import org.vaadin.gwtgraphics.client.impl.util.SVGUtil;
@@ -8,9 +9,9 @@ import org.vaadin.gwtgraphics.client.shape.Text;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.VConsole;
+//import com.vaadin.terminal.gwt.client.VConsole;
 
-public class VEdge extends Line implements ClickHandler {
+public class VEdge  extends Group implements ClickHandler {
 
 	private final VGraph graph;
 	// two nodes
@@ -20,10 +21,46 @@ public class VEdge extends Line implements ClickHandler {
 	private final String name;
 	private String originalStrokeColor;
 	private final VCytographer cytographer;
+	
+	private Line line = null;
+	private Line arrow1 = new Line(0,0,0,0);
+	private Line arrow2 = new Line(0,0,0,0);
+	
+	public Line getLine(){
+		return line;
+	}
+	public Line getArrow1(){
+		return arrow1;
+	}
+	public Line getArrow2(){
+		return arrow2;
+	}
+	public void makeArrow(VNode node1, VNode node2){
+	
+		final int arrowSize = 5;		
+		// middle
+		final float toX = (( node1.getX() + node2.getX())/2);
+		final float toY = (( node1.getY() + node2.getY())/2);
+		// d
+		final int dx = (int) (toX - node1.getX());
+		final int dy = (int) (toY - node1.getY());		
+		
+		double hdx = (arrowSize*dx)/Math.sqrt(dx*dx+dy*dy);
+		double hdy = (arrowSize*dy)/Math.sqrt(dx*dx+dy*dy);		
+		
+		arrow1.setX1((int)(toX));               arrow1.setY1((int)(toY));		
+		arrow1.setX2((int)(toX-hdx+hdy));       arrow1.setY2((int)(toY-hdy-hdx));		
+		arrow2.setX1((int)(toX));               arrow2.setY1((int)(toY));		
+		arrow2.setX2((int)(toX-hdx-hdy));       arrow2.setY2((int)(toY-hdy+hdx));	
+	}
 
 	public VEdge(final VCytographer cytographer, final VGraph graph, final VNode node1, final VNode node2, final Shape text,final String name) {
 		
-		super((int) node1.getX(), (int) node1.getY(), (int) node2.getX(), (int) node2.getY());
+		line = new Line((int) node1.getX(), (int) node1.getY(), (int) node2.getX(), (int) node2.getY());
+		add(line);		
+		makeArrow(node1,node2);
+		add(arrow1);
+		add(arrow2);
 		
 		this.cytographer = cytographer;
 		this.graph = graph;
@@ -43,19 +80,30 @@ public class VEdge extends Line implements ClickHandler {
 		textShape.setFillColor(style.getEdgeLabelColor());
 
 		// set edge 
-		setStrokeColor(style.getEdgeColor());
-		setStrokeWidth(style.getEdgeLineWidth());
+		line.setStrokeColor(style.getEdgeColor());
+		arrow1.setStrokeColor(style.getEdgeColor());
+		arrow2.setStrokeColor(style.getEdgeColor());
+		
+		line.setStrokeWidth(style.getEdgeLineWidth());
+		arrow1.setStrokeWidth(style.getEdgeLineWidth());
+		arrow2.setStrokeWidth(style.getEdgeLineWidth());
+		
 		setStrokeDashArray(style.getEdgeDashArray());
 
 		// edge specific style attributes
 		if (child != null){
 			if (child.hasAttribute("_ec")) {
-				setStrokeColor(child.getStringAttribute("_ec"));
-				setOriginalStrokeColor(getStrokeColor());
+				line.setStrokeColor(child.getStringAttribute("_ec"));
+				arrow1.setStrokeColor(child.getStringAttribute("_ec"));
+				arrow2.setStrokeColor(child.getStringAttribute("_ec"));
+				
+				setOriginalStrokeColor(line.getStrokeColor());
 			}
-			if (child.hasAttribute("_elw")) 
-				setStrokeWidth(child.getIntAttribute("_elw"));
-			
+			if (child.hasAttribute("_elw")) {
+				line.setStrokeWidth(child.getIntAttribute("_elw"));
+				arrow1.setStrokeWidth(child.getIntAttribute("_elw"));
+				arrow2.setStrokeWidth(child.getIntAttribute("_elw"));
+			}
 			if (child.hasAttribute("_eda")) 
 				setStrokeDashArray(child.getStringAttribute("_eda"));
 		}
@@ -71,7 +119,7 @@ public class VEdge extends Line implements ClickHandler {
 	}
 	// static method to make an edge
 	public static VEdge createAnEdge(final UIDL child, final VCytographer cytographer, final VGraph graph, final String name, final VNode node1, final VNode node2, final VVisualStyle style) {
-		
+	
 		final Text text = new Text((int) (node1.getX() + node2.getX()) / 2, (int) (node1.getY() + node2.getY()) / 2, name);
 		text.setFontSize(style.getEdgeFontSize());
 		text.setFontFamily(style.getFontFamily());
@@ -80,17 +128,26 @@ public class VEdge extends Line implements ClickHandler {
 		text.setFillColor(style.getEdgeLabelColor());
 		
 		final VEdge edge = new VEdge(cytographer, graph, node1, node2, text, name);
-		edge.setStrokeColor(style.getEdgeColor());
-		edge.setStrokeWidth(style.getEdgeLineWidth());
+		edge.getLine().setStrokeColor(style.getEdgeColor());
+		edge.getArrow1().setStrokeColor(style.getEdgeColor());
+		edge.getArrow2().setStrokeColor(style.getEdgeColor());
+		
+		edge.getLine().setStrokeWidth(style.getEdgeLineWidth());
+		edge.getArrow1().setStrokeWidth(style.getEdgeLineWidth());
+		edge.getArrow2().setStrokeWidth(style.getEdgeLineWidth());
 		edge.setStrokeDashArray(style.getEdgeDashArray());
 
 		// edge specific style attributes
 		if (child != null && child.hasAttribute("_ec")) {
-			edge.setStrokeColor(child.getStringAttribute("_ec"));
-			edge.setOriginalStrokeColor(edge.getStrokeColor());
+			edge.getLine().setStrokeColor(child.getStringAttribute("_ec"));
+			edge.getArrow1().setStrokeColor(child.getStringAttribute("_ec"));
+			edge.getArrow2().setStrokeColor(child.getStringAttribute("_ec"));
+			edge.setOriginalStrokeColor(edge.getLine().getStrokeColor());
 		}
 		if (child != null && child.hasAttribute("_elw")) {
-			edge.setStrokeWidth(child.getIntAttribute("_elw"));
+			edge.getLine().setStrokeWidth(child.getIntAttribute("_elw"));
+			edge.getArrow1().setStrokeWidth(child.getIntAttribute("_elw"));
+			edge.getArrow2().setStrokeWidth(child.getIntAttribute("_elw"));
 		}
 		if (child != null && child.hasAttribute("_eda")) {
 			edge.setStrokeDashArray(child.getStringAttribute("_eda"));

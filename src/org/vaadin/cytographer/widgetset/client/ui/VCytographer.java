@@ -251,7 +251,7 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 	private Line getLinkLine(final int x, final int y) {
 		final Line linkLine = new Line((int) startX, (int) startY, x, y);
 		linkLine.setStrokeColor(style.getEdgeColor());
-		linkLine.setStrokeOpacity(0.55);
+		linkLine.setStrokeOpacity(0.35);
 		return linkLine;
 	}
 
@@ -395,7 +395,6 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 	}
 
 	public boolean isOnLink() {
-		//VConsole.log("isOnLink: " + onLink );
 		return onLink;
 	}
 
