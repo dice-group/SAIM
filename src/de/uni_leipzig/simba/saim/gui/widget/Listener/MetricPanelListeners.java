@@ -9,6 +9,7 @@ import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.gui.widget.panel.ExecutionPanel;
 import de.uni_leipzig.simba.saim.gui.widget.panel.LearningPanel;
+import de.uni_leipzig.simba.saim.gui.widget.panel.MetricPanel;
 import de.uni_leipzig.simba.saim.gui.widget.panel.PerformPanel;
 import de.uni_leipzig.simba.saim.gui.widget.panel.SelfConfigPanel;
 

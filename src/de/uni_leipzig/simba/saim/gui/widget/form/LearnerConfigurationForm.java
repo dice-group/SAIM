@@ -10,7 +10,6 @@ import com.vaadin.ui.Form;
 import com.vaadin.ui.FormFieldFactory;
 import com.vaadin.ui.Slider;
 import de.uni_leipzig.simba.saim.Messages;
-import de.uni_leipzig.simba.saim.SAIMApplication;
 /**
  * Form used to configure genetic metric learner.
  * @author Lyko

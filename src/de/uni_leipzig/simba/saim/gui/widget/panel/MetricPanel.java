@@ -22,6 +22,7 @@ import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
@@ -29,6 +30,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Button.ClickEvent;
 
 import csplugins.layout.algorithms.force.ForceDirectedLayout;
 import cytoscape.CyNetwork;
@@ -49,26 +51,22 @@ import de.uni_leipzig.simba.saim.core.metric.Property;
 import de.uni_leipzig.simba.saim.gui.widget.Listener.MetricPanelListeners;
 
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
-public class MetricPanel extends Panel
-{    
+public class MetricPanel extends Panel{    
+
+	final static Logger logger = LoggerFactory.getLogger(MetricPanel.class);
 	@Getter private final Messages messages;
 	@Getter private Configuration config;
-//	ManualMetricForm manualMetricForm;
 	private static final long	serialVersionUID	= 6766679517868840795L;
-	private static final boolean CACHING = true;
-	Mapping propMapping;
 	VerticalLayout mainLayout = new VerticalLayout();
 	HorizontalLayout layout = new HorizontalLayout();
 	HorizontalLayout buttonLayout = new HorizontalLayout();
-	
 	Set<String> sourceProps = new HashSet<String>();
 	Set<String> targetProps = new HashSet<String>();
-
-	final static Logger logger = LoggerFactory.getLogger(MetricPanel.class);
 	
 	Button selfConfigButton;
 	Button learnButton;
 	Button startMapping;
+	Button setMetric;
 	
 	Cytographer cytographer;
 	CyNetworkView cyNetworkView;
@@ -85,43 +83,28 @@ public class MetricPanel extends Panel
 			config = ((SAIMApplication)getApplication()).getConfig();
 		mainLayout.setSpacing(false);
 		mainLayout.setMargin(false);
-//		mainLayout.setWidth("100%");
-//		mainLayout.setHeight("100%");
-//		
 		final VerticalLayout accordionLayout = new VerticalLayout();
-//		accordionLayout.setHeight("100%");
 		layout.addComponent(accordionLayout);
-//		for(int i=0;i<5;i++) {accordionLayout.addComponent(new Button());}
-		
 		layout.setSpacing(false);
 		layout.setMargin(false);
 		setContent(mainLayout);
-//		layout.setWidth("100%");
 		mainLayout.addComponent(layout);
-//		mainLayout.setComponentAlignment(layout, Alignment.TOP_LEFT);
-		
-//		layout.setComponentAlignment(accordionLayout, Alignment.TOP_LEFT);
 		final ProgressIndicator progress = new ProgressIndicator();
 		progress.setIndeterminate(false);
 		accordionLayout.addComponent(progress);
-		// self config
-//		mainLayout.addComponent(manualMetricForm=new ManualMetricForm());
-		
 		//buttons		
 		mainLayout.addComponent(getButtonLayout());
-
 		// accordion panel
 		Panel accordionPanel = new Panel();
 		accordionPanel.setHeight("100%"); //$NON-NLS-1$
 		accordionLayout.addComponent(accordionPanel);
 		accordionPanel.setWidth("25em"); //$NON-NLS-1$
-
 		final Accordion accordion = new Accordion();		
 		accordion.setHeight("100%"); //$NON-NLS-1$
 
 		accordionPanel.addComponent(accordion);
 		
-		accordion.addTab(sourceLayout,messages.getString("MetricPanel.sourceproperties"));		 //$NON-NLS-1$
+		accordion.addTab(sourceLayout,messages.getString("MetricPanel.sourceproperties")); //$NON-NLS-1$
 		accordion.addTab(targetLayout,messages.getString("MetricPanel.targetproperties")); //$NON-NLS-1$
 		accordion.addTab(metricsLayout,messages.getString("MetricPanel.metrics"));  //$NON-NLS-1$
 		accordion.addTab(operatorsLayout,messages.getString("MetricPanel.operators"));	 //$NON-NLS-1$
@@ -184,8 +167,8 @@ public class MetricPanel extends Panel
 		Window window = SAIMApplication.getInstance().getMainWindow();
 		cytographer = new Cytographer(cyNetwork, cyNetworkView, name, WIDTH, HEIGHT,window,this);
 		cytographer.setImmediate(true);
-		cytographer.setWidth(WIDTH + "px");
-		cytographer.setHeight(HEIGHT + "px"); 
+		cytographer.setWidth(WIDTH + "px"); //$NON-NLS-1$
+		cytographer.setHeight(HEIGHT + "px"); //$NON-NLS-1$
 		cytographer.setTextVisible(true);		
 		cytographer.setNodeSize(NODESIZE, true);	
 		
@@ -193,7 +176,7 @@ public class MetricPanel extends Panel
 		//metricExpression = "AND(levenshtein(x.rdfs:label,y.rdfs:label)|0.1,levenshtein(x.dbp:name,y.dbp:name)|1.0)";
 		if( metricExpression != null){
 		//	makeMetric( MetricParser.parse(metricExpression, "x"));
-			makeMetric( MetricParser.parse(metricExpression, config.getSource().var.replaceAll("\\?", "")));
+			makeMetric( MetricParser.parse(metricExpression, config.getSource().var.replaceAll("\\?", ""))); //$NON-NLS-1$
 			cyNetworkView.applyLayout(new ForceDirectedLayout());		
 			cytographer.repaintGraph();
 		}else{
@@ -298,46 +281,61 @@ public class MetricPanel extends Panel
 			}			
 			return;
 	}
-
-
-//	private void showErrorMessage(String message) {
-//		layout.setComponentError(new UserError(message));
-//	}
-
+	
 	/**
-	 * To decide whether we can proceed to the execution panel
+	 * Creates the button is the lower window.
 	 * @return
 	 */
-	public boolean isValid() {
-		try{
-//			manualMetricForm.validate();
-		}catch(InvalidValueException e) {}
-//		if(manualMetricForm.isValid()) {
-//			config.setMetricExpression(manualMetricForm.metricTextField.getValue().toString());
-//			config.setAcceptanceThreshold(Double.parseDouble(manualMetricForm.thresholdTextField.getValue().toString()));
-			return true;
-//		} else {
-		//	manualMetricForm.setComponentError();
-//		}
-//		return false;
-	}
-	
 	public Layout getButtonLayout() {
-		selfConfigButton = new Button(messages.getString("MetricPanel.startselfconfigbutton"));
+		this.setMetric = new Button(messages.getString("MetricPanel.setmetricbutton"));
+		setMetric.setEnabled(true);
+		setMetric.addListener(new ClickListener() {			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				setMetricFromGraph();
+			}
+		});
+		
+		selfConfigButton = new Button(messages.getString("MetricPanel.startselfconfigbutton")); //$NON-NLS-1$
 		selfConfigButton.setEnabled(false);
 		selfConfigButton.addListener(new MetricPanelListeners.SelfConfigClickListener(messages));
-		this.learnButton = new Button(messages.getString("MetricPanel.learnmetricbutton"));
+		
+		this.learnButton = new Button(messages.getString("MetricPanel.learnmetricbutton")); //$NON-NLS-1$
 		learnButton.setEnabled(false);
 		learnButton.addListener(new MetricPanelListeners.LearnClickListener(messages));
-		this.startMapping = new Button(messages.getString("MetricPanel.startmappingbutton"));
+		
+		this.startMapping = new Button(messages.getString("MetricPanel.startmappingbutton")); //$NON-NLS-1$
 		startMapping.setEnabled(false);
 		startMapping.addListener(new MetricPanelListeners.StartMappingListener(messages));
+		
+		buttonLayout.addComponent(setMetric);
 		buttonLayout.addComponent(selfConfigButton);
 		buttonLayout.addComponent(learnButton);
 		buttonLayout.addComponent(startMapping);
 		return buttonLayout;		
 	}
 	
+	/**
+	 * Method to set Metric from the graph.
+	 */
+	protected void setMetricFromGraph() {
+		if(!cytographer.getMetric().isComplete()) {
+			getApplication().getMainWindow().showNotification(messages.getString("MetricPanel.settingnotablenotcomplete")); //$NON-NLS-1$
+		} else {
+			Node node =  cytographer.getMetric();
+			String expr = cytographer.getMetric().toString();
+			config.setMetricExpression(expr);
+			System.out.println(node.param1+" - "+node.param2); //$NON-NLS-1$
+			if(node.param1 != null && node.param2 != null) {
+				config.setAcceptanceThreshold(node.param1);
+				config.setVerificationThreshold(node.param2);
+				getApplication().getMainWindow().showNotification("Setting: "+expr+ "with thresholds "+node.param1+" / "+node.param2); //$NON-NLS-1$
+			}
+			else {
+				getApplication().getMainWindow().showNotification(messages.getString("MetricPanel.settingnotablenothreholds")); //$NON-NLS-1$
+			}
+		}		
+	}
 	/**
 	 * Checks whether the Buttons (selfconfig, learning and startMapping) could be activated.
 	 */
@@ -350,95 +348,58 @@ public class MetricPanel extends Panel
 				if(config.getMetricExpression() != null && config.getMetricExpression().length()>0) {
 					learnButton.setEnabled(true);
 					startMapping.setEnabled(true);
-
-//					manualMetricForm.metricTextField.setValue(config.getMetricExpression());
-//					manualMetricForm.thresholdTextField.setValue(config.getAcceptanceThreshold());
 				}
-			}
-		}		
-	}
-
-}
-
-
-/**Listener to react on clicks in the accordion panel.*/
-class AccordionLayoutClickListener implements LayoutClickListener
-{
-	private static final long serialVersionUID = -3498649095113131161L;
-	private Cytographer cytographer;
-	private CyNetworkView cyNetworkView;
-	private GraphProperties.Shape shape;
-	private Configuration config;
-	private final Messages messages;
-	
-	public AccordionLayoutClickListener(Cytographer cytographer, CyNetworkView cyNetworkView,GraphProperties.Shape shape, Configuration config,final Messages messages)
-	{
-		this.cytographer = cytographer;
-		this.cyNetworkView = cyNetworkView;
-		this.shape = shape;
-		this.config = config;
-		this.messages=messages;
-	}
-	
-	@Override
-	public void layoutClick(LayoutClickEvent event) {
-		// its left button
-		if(event.getButtonName().equalsIgnoreCase("left") && event.getClickedComponent() instanceof Label ){ 
-			String label = ((Label)event.getClickedComponent()).getValue().toString();
-			int x = (int)cytographer.getWidth()/2;
-			int y = (int)cytographer.getHeight()/2;
-			
-			switch(shape){
-			case SOURCE :{
-				String pref = config.getSource().var.replaceAll("\\?", ""); 
-				cytographer.addNode(pref+"."+label, x,y, shape); 
-				cytographer.addDefaultProperty(label, config.getSource());
-				break;
-			}
-			case TARGET : {
-				String pref = config.getTarget().var.replaceAll("\\?", ""); 
-				cytographer.addNode(pref+"."+label, x,y, shape); 
-				cytographer.addDefaultProperty(label, config.getTarget());
-				break;
-			}
-			default :
-					cytographer.addNode(label, x,y, shape);
-			}
-			// repaint
-			cytographer.repaintGraph();
+			}		
 		}
 	}
-	
-// moved to Cytographer
-//	
-//	/**
-//	 * Method to add Properties to according KBInfo. 
-//	 * @param s URI of the property. May or may not be abbreviated.
-//	 * @param info KBInfo of endpoint property belongs to.
-//	 */
-//	private void addProperty(String s, KBInfo info) {
-//		String prop;
-//		Logger logger = LoggerFactory.getLogger(AccordionLayoutClickListener.class);
-//		if(s.startsWith("http:")) {//do not have a prefix, so we generate one
-//			PrefixHelper.generatePrefix(s);
-//			prop = PrefixHelper.abbreviate(s);
-//		} else {// have the prefix already
-//			prop = s;
-//			s = PrefixHelper.expand(s);
-//		}
-//		if(!info.properties.contains(prop)) {
-//			info.properties.add(prop);
-//			logger.error("adding property "+prop+" again?"); 
-//		}
-//
-//		Window sub = new Window(messages.getString("MetricPanel.definepreprocessingsubwindowname")+prop);
-//		sub.setModal(true);
-//		sub.addComponent(new PreprocessingForm(info, prop));
-//		SAIMApplication.getInstance().getMainWindow().addWindow(sub);
-//				
-//		String base = PrefixHelper.getBase(s);
-//		info.prefixes.put(PrefixHelper.getPrefix(base), PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
-//	
-//		logger.info(info.var+": adding property: "+prop+" with prefix "+PrefixHelper.getPrefix(base)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefix(base))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-//	}
-}
+
+
+	/**Listener to react on clicks in the accordion panel.*/
+	class AccordionLayoutClickListener implements LayoutClickListener
+	{
+		private static final long serialVersionUID = -3498649095113131161L;
+		private Cytographer cytographer;
+		private CyNetworkView cyNetworkView;
+		private GraphProperties.Shape shape;
+		private Configuration config;
+		private final Messages messages;
+		
+		public AccordionLayoutClickListener(Cytographer cytographer, CyNetworkView cyNetworkView,GraphProperties.Shape shape, Configuration config,final Messages messages)
+		{
+			this.cytographer = cytographer;
+			this.cyNetworkView = cyNetworkView;
+			this.shape = shape;
+			this.config = config;
+			this.messages=messages;
+		}
+		
+		@Override
+		public void layoutClick(LayoutClickEvent event) {
+			// its left button
+			if(event.getButtonName().equalsIgnoreCase("left") && event.getClickedComponent() instanceof Label ){ //$NON-NLS-1$
+				String label = ((Label)event.getClickedComponent()).getValue().toString();
+				int x = (int)cytographer.getWidth()/2;
+				int y = (int)cytographer.getHeight()/2;
+				
+				switch(shape){
+				case SOURCE :{
+					String pref = config.getSource().var.replaceAll("\\?", ""); //$NON-NLS-1$
+					cytographer.addNode(pref+"."+label, x,y, shape); //$NON-NLS-1$
+					cytographer.addDefaultProperty(label, config.getSource());
+					break;
+				}
+				case TARGET : {
+					String pref = config.getTarget().var.replaceAll("\\?", ""); //$NON-NLS-1$
+					cytographer.addNode(pref+"."+label, x,y, shape); //$NON-NLS-1$
+					cytographer.addDefaultProperty(label, config.getTarget());
+					break;
+				}
+				default :
+						cytographer.addNode(label, x,y, shape);
+				}
+				// repaint
+				cytographer.repaintGraph();
+			}
+		}
+	} // end of class AccordionClickListener
+}// end of MetricPanel
