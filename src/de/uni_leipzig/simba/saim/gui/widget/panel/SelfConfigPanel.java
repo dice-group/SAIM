@@ -10,6 +10,7 @@ import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -25,6 +26,8 @@ import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
+import de.uni_leipzig.simba.saim.gui.widget.form.SelfConfigMeshBasedBean;
+import de.uni_leipzig.simba.saim.gui.widget.form.SelfConfigMeshBasedForm;
 import de.uni_leipzig.simba.selfconfig.ComplexClassifier;
 import de.uni_leipzig.simba.selfconfig.MeshBasedSelfConfigurator;
 import de.uni_leipzig.simba.selfconfig.SimpleClassifier;
@@ -37,7 +40,6 @@ import de.uni_leipzig.simba.selfconfig.SimpleClassifier;
 public class SelfConfigPanel extends PerformPanel{
 	private static final Logger logger = LoggerFactory.getLogger(SelfConfigPanel.class);
 	private final Messages messages;
-//	private Component parentComponent;
 	private Layout mainLayout;
 	MeshBasedSelfConfigurator bsc;
 	List<SimpleClassifier> classifiers;
@@ -45,12 +47,15 @@ public class SelfConfigPanel extends PerformPanel{
 	final ProgressIndicator indicator = new ProgressIndicator();
 	final Panel stepPanel = new Panel();
 	Panel resultPanel;
-//	Button nextRound;
-//	Button generateMetric;
 	Select resultSelect = new Select();
 	String generatedMetricexpression = "";
 	Thread thread;
 	Configuration config;
+	
+	// to config self config
+	SelfConfigMeshBasedBean bean = new SelfConfigMeshBasedBean();
+	SelfConfigMeshBasedForm form;
+	Button start;
 	
 	/**
 	 * Constructor to may embed Panel in a parent component, e.g. an existing WizardStep Component.
@@ -61,7 +66,6 @@ public class SelfConfigPanel extends PerformPanel{
 	@Override
 	public void attach() {
 		this.config = ((SAIMApplication)getApplication()).getConfig();
-//		this.parentComponent = parentComponent;
 		init();
 	}
 	
@@ -83,31 +87,39 @@ public class SelfConfigPanel extends PerformPanel{
 		indicator.setCaption(messages.getString("SelfConfigPanel.progress")); //$NON-NLS-1$
 		mainLayout.addComponent(indicator);
 		indicator.setImmediate(true);
-
+		indicator.setVisible(false);
 		
 		stepPanel.setCaption(messages.getString("SelfConfigPanel.panelcaption")); //$NON-NLS-1$
 		mainLayout.addComponent(stepPanel);
-
+		stepPanel.setVisible(false);
+		
 		resultSelect.setCaption(messages.getString("SelfConfigPanel.classifierlistcaption")); //$NON-NLS-1$
 		resultSelect.setNullSelectionAllowed(false);
+		resultSelect.setVisible(false);
 		
-
+		mainLayout.addComponent(form = new SelfConfigMeshBasedForm(bean, messages));
+		start = new Button(messages.getString("SelfConfigPanel.startbutton"));
+		start.addListener(new ClickListener() {
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				mainLayout.removeComponent(start);
+				indicator.setVisible(true);
+				stepPanel.setVisible(true);
+				performSelfConfiguration();
+				
+			}
+		});
+		mainLayout.addComponent(start);
+		
 		
 		resultPanel = new Panel();
 		mainLayout.addComponent(resultPanel);
 		// Buttons
 		VerticalLayout resultLayout = new VerticalLayout();
-		HorizontalLayout buttonLayout = new HorizontalLayout();
 		resultLayout.addComponent(resultSelect);
-		resultLayout.addComponent(buttonLayout);
 		resultPanel.setContent(resultLayout);		
-//		nextRound = new Button(messages.getString("SelfConfigPanel.nextroundbutton")); //$NON-NLS-1$
-//		nextRound.addListener(new NextRoundButtonClickListener());
-//		generateMetric = new Button(messages.getString("SelfConfigPanel.generatemetricbutton")); //$NON-NLS-1$
-//		generateMetric.addListener(new GenerateMetricButtonClickListener(mainLayout));
-//		generateMetric.setEnabled(false);
-//		buttonLayout.addComponent(nextRound);
-//		buttonLayout.addComponent(generateMetric);
+
 		
 	
 	}
@@ -133,7 +145,7 @@ public class SelfConfigPanel extends PerformPanel{
 				indicator.setValue(new Float(3f/steps));
 				stepPanel.setCaption(messages.getString("SelfConfigPanel.performselfconfig")); //$NON-NLS-1$
 				
-				bsc = new MeshBasedSelfConfigurator(sourceCache, targetCache, 0.6, 0.5);
+				bsc = new MeshBasedSelfConfigurator(sourceCache, targetCache, bean.getMinCoverage(), bean.getBeta());
 				classifiers = bsc.getBestInitialClassifiers();
 				showSimpleClassifiers();
 				indicator.setValue(new Float(4f/steps));
@@ -141,7 +153,7 @@ public class SelfConfigPanel extends PerformPanel{
 				if(classifiers.size()>0) {
 					classifiers = bsc.learnClassifer(classifiers);
 					//@TODO interface to change parameters
-					cc = bsc.getZoomedHillTop(5, 5, classifiers);
+					cc = bsc.getZoomedHillTop(bean.getGridPoints(), bean.getIterations(), classifiers);
 					System.out.println(cc);
 					for(SimpleClassifier co:cc.classifiers) {
 						System.out.println(co);
@@ -170,20 +182,20 @@ public class SelfConfigPanel extends PerformPanel{
 //		Configuration config = Configuration.getInstance();
 		if(classifiers.size()>0) {
 			logger.info("Replacing property mapping.");
-			config.propertyMapping = new PropertyMapping();
+//			config.propertyMapping = new PropertyMapping();
 		}
 		for(SimpleClassifier cl : classifiers) {
 			resultSelect.addItem(cl);
 			resultSelect.select(cl);
-			if(cl.measure.equalsIgnoreCase("euclidean")) {
-				logger.info("Adding number propertyMatch between: "+cl.sourceProperty +" - "+ cl.targetProperty);
-				config.addPropertiesMatch(cl.sourceProperty, cl.targetProperty, false);
-			}else {
-				config.addPropertiesMatch(cl.sourceProperty, cl.targetProperty, true);
-				logger.info("Adding string propertyMatch between: "+cl.sourceProperty +" - "+ cl.targetProperty);
-			}
+//			if(cl.measure.equalsIgnoreCase("euclidean")) {
+//				logger.info("Adding number propertyMatch between: "+cl.sourceProperty +" - "+ cl.targetProperty);
+//				config.addPropertiesMatch(cl.sourceProperty, cl.targetProperty, false);
+//			}else {
+//				config.addPropertiesMatch(cl.sourceProperty, cl.targetProperty, true);
+//				logger.info("Adding string propertyMatch between: "+cl.sourceProperty +" - "+ cl.targetProperty);
+//			}
 		}
-		
+		resultSelect.setVisible(true);		
 	}
 	
 	/**Method shows complex classifier*/
@@ -285,25 +297,18 @@ public class SelfConfigPanel extends PerformPanel{
 		}
 		return min>1?0.5d:min;
 	}
-	
-//	/**Controls Action taken by nextRound Button.*/
-//	class NextRoundButtonClickListener implements Button.ClickListener {
-//		@Override
-//		public void buttonClick(ClickEvent event) {
-//			classifiers = bsc.learnClassifer(classifiers);
-//			showResults();
-//		}		
-//	}
+
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onClose() {
 		//FIXME save stopping of thread
-		thread.stop();
+		if(thread.isAlive())
+			thread.stop();
 		((SAIMApplication) SAIMApplication.getInstance()).refresh();
 		
 	}
 	@Override
 	public void start() {
-		performSelfConfiguration();
+//		performSelfConfiguration();
 	}
 }

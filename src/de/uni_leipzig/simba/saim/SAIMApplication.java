@@ -102,13 +102,15 @@ public class SAIMApplication extends Application
 		//menuBar.setStyleName("margin1em");
 
 		MenuItem fileMenu = menuBar.addItem(messages.getString("file"), null, null); //$NON-NLS-1$
-		fileMenu.addItem(messages.getString("open"), null, null).setEnabled(false); //$NON-NLS-1$
-		fileMenu.addItem(messages.getString("save"), null, null).setEnabled(false); //$NON-NLS-1$
+		fileMenu.addItem(messages.getString("startnewconfig"), null, new StartCommand(this));
+		
+//		fileMenu.addItem(messages.getString("open"), null, null).setEnabled(false); //$NON-NLS-1$
+//		fileMenu.addItem(messages.getString("save"), null, null).setEnabled(false); //$NON-NLS-1$
 
 		fileMenu.addItem(messages.getString("importlimes"), null, importLIMESCommand).setEnabled(true);		 //$NON-NLS-1$
 		fileMenu.addItem(messages.getString("exportlimes"), null, exportLIMESCommand).setEnabled(true); //$NON-NLS-1$
 
-		menuBar.addItem(messages.getString("startnewconfig"), null, new StartCommand(this));
+		
 
 		MenuItem languageMenu = menuBar.addItem(messages.getString("language"), null, null); //$NON-NLS-1$
 		languageMenu.addItem(messages.getString("german"), null, new SetLanguageCommand("de"));		 //$NON-NLS-1$

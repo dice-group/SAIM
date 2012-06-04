@@ -27,6 +27,7 @@ public class InstanceInfoPanel extends Panel {
 	 */
 	public InstanceInfoPanel(Instance i1, Instance i2) {
 		super();
+		this.setWidth("80%");
 		this.i1=i1;
 		this.i2=i2;
 	}
