@@ -302,8 +302,9 @@ public class SelfConfigPanel extends PerformPanel{
 	@Override
 	public void onClose() {
 		//FIXME save stopping of thread
-		if(thread.isAlive())
-			thread.stop();
+		if(thread != null)
+			if(thread.isAlive())
+				thread.stop();
 		((SAIMApplication) SAIMApplication.getInstance()).refresh();
 		
 	}
