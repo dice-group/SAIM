@@ -37,8 +37,8 @@ import de.uni_leipzig.simba.selfconfig.SimpleClassifier;
  * @author Lyko
  *
  */
-public class SelfConfigPanel extends PerformPanel{
-	private static final Logger logger = LoggerFactory.getLogger(SelfConfigPanel.class);
+public class MeshBasedSelfConfigPanel extends PerformPanel{
+	private static final Logger logger = LoggerFactory.getLogger(MeshBasedSelfConfigPanel.class);
 	private final Messages messages;
 	private Layout mainLayout;
 	MeshBasedSelfConfigurator bsc;
@@ -61,7 +61,7 @@ public class SelfConfigPanel extends PerformPanel{
 	 * Constructor to may embed Panel in a parent component, e.g. an existing WizardStep Component.
 	 * @param parentComponent
 	 */
-	public SelfConfigPanel(final Messages messages) {this.messages=messages;}
+	public MeshBasedSelfConfigPanel(final Messages messages) {this.messages=messages;}
 	
 	@Override
 	public void attach() {

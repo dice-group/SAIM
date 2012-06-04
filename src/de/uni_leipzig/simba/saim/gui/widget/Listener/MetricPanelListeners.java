@@ -11,7 +11,7 @@ import de.uni_leipzig.simba.saim.gui.widget.panel.ExecutionPanel;
 import de.uni_leipzig.simba.saim.gui.widget.panel.LearningPanel;
 import de.uni_leipzig.simba.saim.gui.widget.panel.MetricPanel;
 import de.uni_leipzig.simba.saim.gui.widget.panel.PerformPanel;
-import de.uni_leipzig.simba.saim.gui.widget.panel.SelfConfigPanel;
+import de.uni_leipzig.simba.saim.gui.widget.panel.MeshBasedSelfConfigPanel;
 
 public class MetricPanelListeners
 {
@@ -27,7 +27,7 @@ public class MetricPanelListeners
 		@Override
 		public void buttonClick(ClickEvent event)
 		{
-			getWindow(new SelfConfigPanel(messages));
+			getWindow(new MeshBasedSelfConfigPanel(messages));
 		}			
 	}
 
