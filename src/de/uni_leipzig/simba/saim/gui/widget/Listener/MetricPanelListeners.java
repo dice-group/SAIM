@@ -8,6 +8,7 @@ import com.vaadin.ui.Window.CloseListener;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.gui.widget.panel.ExecutionPanel;
+import de.uni_leipzig.simba.saim.gui.widget.panel.GenericSelfConfigurationPanel;
 import de.uni_leipzig.simba.saim.gui.widget.panel.LearningPanel;
 import de.uni_leipzig.simba.saim.gui.widget.panel.MetricPanel;
 import de.uni_leipzig.simba.saim.gui.widget.panel.PerformPanel;
@@ -27,7 +28,7 @@ public class MetricPanelListeners
 		@Override
 		public void buttonClick(ClickEvent event)
 		{
-			getWindow(new MeshBasedSelfConfigPanel(messages));
+			getWindow(new GenericSelfConfigurationPanel(messages));
 		}			
 	}
 

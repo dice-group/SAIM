@@ -73,10 +73,9 @@ public class MeshBasedSelfConfigPanel extends PerformPanel{
 	 * Initialize all Panel.
 	 */
 	private void init() {
-		this.setCaption(messages.getString("SelfConfigPanel.caption")); //$NON-NLS-1$
 		mainLayout = new VerticalLayout();
 		this.setContent(mainLayout);
-		Label descriptor = new Label(messages.getString("SelfConfigPanel.description")); //$NON-NLS-1$
+		Label descriptor = new Label(messages.getString("MeshBasedSelfConfigPanel.description")); //$NON-NLS-1$
 		mainLayout.addComponent(descriptor);
 		Refresher refresher = new Refresher();
 		SelfConfigRefreshListener listener = new SelfConfigRefreshListener();
@@ -84,21 +83,21 @@ public class MeshBasedSelfConfigPanel extends PerformPanel{
 		addComponent(refresher);
 
 		
-		indicator.setCaption(messages.getString("SelfConfigPanel.progress")); //$NON-NLS-1$
+		indicator.setCaption(messages.getString("MeshBasedSelfConfigPanel.progress")); //$NON-NLS-1$
 		mainLayout.addComponent(indicator);
 		indicator.setImmediate(true);
 		indicator.setVisible(false);
 		
-		stepPanel.setCaption(messages.getString("SelfConfigPanel.panelcaption")); //$NON-NLS-1$
+		stepPanel.setCaption(messages.getString("MeshBasedSelfConfigPanel.panelcaption")); //$NON-NLS-1$
 		mainLayout.addComponent(stepPanel);
 		stepPanel.setVisible(false);
 		
-		resultSelect.setCaption(messages.getString("SelfConfigPanel.classifierlistcaption")); //$NON-NLS-1$
+		resultSelect.setCaption(messages.getString("MeshBasedSelfConfigPanel.classifierlistcaption")); //$NON-NLS-1$
 		resultSelect.setNullSelectionAllowed(false);
 		resultSelect.setVisible(false);
 		
 		mainLayout.addComponent(form = new SelfConfigMeshBasedForm(bean, messages));
-		start = new Button(messages.getString("SelfConfigPanel.startbutton"));
+		start = new Button(messages.getString("MeshBasedSelfConfigPanel.startbutton"));
 		start.addListener(new ClickListener() {
 			
 			@Override
@@ -136,20 +135,20 @@ public class MeshBasedSelfConfigPanel extends PerformPanel{
 				float steps = 5f;
 				indicator.setValue(new Float(1f/steps));
 				indicator.requestRepaint();
-				stepPanel.setCaption(messages.getString("SelfConfigPanel.sourcecache")); //$NON-NLS-1$
+				stepPanel.setCaption(messages.getString("MeshBasedSelfConfigPanel.sourcecache")); //$NON-NLS-1$
 				HybridCache sourceCache = HybridCache.getData(config.getSource());
 				indicator.setValue(new Float(2f/steps));
 				indicator.requestRepaint();
-				stepPanel.setCaption(messages.getString("SelfConfigPanel.targetcache")); //$NON-NLS-1$
+				stepPanel.setCaption(messages.getString("MeshBasedSelfConfigPanel.targetcache")); //$NON-NLS-1$
 				HybridCache targetCache = HybridCache.getData(config.getTarget());
 				indicator.setValue(new Float(3f/steps));
-				stepPanel.setCaption(messages.getString("SelfConfigPanel.performselfconfig")); //$NON-NLS-1$
+				stepPanel.setCaption(messages.getString("MeshBasedSelfConfigPanel.performselfconfig")); //$NON-NLS-1$
 				
 				bsc = new MeshBasedSelfConfigurator(sourceCache, targetCache, bean.getMinCoverage(), bean.getBeta());
 				classifiers = bsc.getBestInitialClassifiers();
 				showSimpleClassifiers();
 				indicator.setValue(new Float(4f/steps));
-				stepPanel.setCaption(messages.getString("SelfConfigPanel.gotinitialclassifiers")); //$NON-NLS-1$
+				stepPanel.setCaption(messages.getString("MeshBasedSelfConfigPanel.gotinitialclassifiers")); //$NON-NLS-1$
 				if(classifiers.size()>0) {
 					classifiers = bsc.learnClassifer(classifiers);
 					//@TODO interface to change parameters
@@ -160,7 +159,7 @@ public class MeshBasedSelfConfigPanel extends PerformPanel{
 					}
 //					classifiers = cc.classifiers;
 					indicator.setValue(new Float(5f/steps));
-					stepPanel.setCaption(messages.getString("SelfConfigPanel.complexclassifiercaption")); //$NON-NLS-1$
+					stepPanel.setCaption(messages.getString("MeshBasedSelfConfigPanel.complexclassifiercaption")); //$NON-NLS-1$
 					generatedMetricexpression = generateMetric(cc.classifiers, "");
 					showComplexClassifier();
 					
@@ -168,7 +167,7 @@ public class MeshBasedSelfConfigPanel extends PerformPanel{
 					config.setAcceptanceThreshold(getThreshold(cc.classifiers));
 				} else {
 					indicator.setValue(new Float(5f/steps));
-					stepPanel.setCaption(messages.getString("SelfConfigPanel.nosimpleclassifiers"));
+					stepPanel.setCaption(messages.getString("MeshBasedSelfConfigPanel.nosimpleclassifiers"));
 				}
 			}
 		};
