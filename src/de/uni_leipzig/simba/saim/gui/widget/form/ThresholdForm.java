@@ -1,8 +1,10 @@
 package de.uni_leipzig.simba.saim.gui.widget.form;
 
 import com.vaadin.data.Item;
+import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
+import com.vaadin.ui.Form;
 import com.vaadin.ui.FormFieldFactory;
 import com.vaadin.ui.Slider;
 
@@ -14,13 +16,18 @@ import de.uni_leipzig.simba.saim.core.Configuration;
  * @author Lyko
  *
  */
-public class ThresholdForm {
+public class ThresholdForm extends Form {
 
 	private final Messages messages;
 	public static final String elementsWidth = "100px"; //$NON-NLS-1$
+
 	
-	public ThresholdForm(final Messages messages) {
+	public ThresholdForm(final Messages messages, ThresholdBean bean) {
 		this.messages = messages;
+
+		 BeanItem item = new BeanItem(bean);		
+		 setItemDataSource(item);
+		 this.setWriteThrough(true);
 	}
 	
 	class ThresholdFormFieldFactory implements FormFieldFactory {		
