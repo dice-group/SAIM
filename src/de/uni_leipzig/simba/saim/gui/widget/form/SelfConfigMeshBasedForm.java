@@ -8,6 +8,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.FormFieldFactory;
+import com.vaadin.ui.Select;
 import com.vaadin.ui.Slider;
 
 import de.uni_leipzig.simba.saim.Messages;
@@ -26,6 +27,7 @@ public class SelfConfigMeshBasedForm extends Form {
 	 * @param messages Messages instance to externalize Strings.
 	 */
 	public SelfConfigMeshBasedForm(SelfConfigMeshBasedBean bean, final Messages messages) {
+		
 		this.messages = messages;
 		
 		setFormFieldFactory(new SelfConfigMeshBasedFormFieldFactory());
@@ -78,11 +80,24 @@ public class SelfConfigMeshBasedForm extends Form {
 				IntStepper intStepper = new IntStepper();
 	            intStepper.setStepAmount(1);
 	            intStepper.setMaxValue(100);
-	            intStepper.setMinValue(5);
+	            intStepper.setMinValue(1);
 	            intStepper.setCaption(messages.getString("SelfConfigMeshBasedForm.gridpoints"));  //$NON-NLS-1$
 	            intStepper.setWidth(elementsWidth);
 	            intStepper.setPropertyDataSource(item.getItemProperty(pid));
 	            return intStepper;
+			}
+			if("classifierName".equals(pid)) {//$NON-NLS-1$
+				Select s = new Select("Choose a classifier");
+				Object id = s.addItem(0);
+				s.addItem(1);
+				s.addItem(2);
+				s.setItemCaption(0, "MeshBased SelfConfigurator");
+				s.setItemCaption(1, "Linear MeshBased Selfconfigurator");
+				s.setItemCaption(2, "Disjunctive MeshBased Selfconfigurator");
+			
+				s.setNullSelectionAllowed(false);
+				s.select(id);
+				return s;
 			}
 			return null;//unknown field.
 		}

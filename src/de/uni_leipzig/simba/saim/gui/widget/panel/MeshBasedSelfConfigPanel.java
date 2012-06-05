@@ -144,7 +144,8 @@ public class MeshBasedSelfConfigPanel extends PerformPanel{
 				indicator.setValue(new Float(3f/steps));
 				stepPanel.setCaption(messages.getString("MeshBasedSelfConfigPanel.performselfconfig")); //$NON-NLS-1$
 				
-				bsc = new MeshBasedSelfConfigurator(sourceCache, targetCache, bean.getMinCoverage(), bean.getBeta());
+				bsc = bean.getConfigurator(bean.getClassifierName(), sourceCache, targetCache, bean.getMinCoverage(), bean.getBeta());
+			//			new MeshBasedSelfConfigurator(sourceCache, targetCache, bean.getMinCoverage(), bean.getBeta());
 				classifiers = bsc.getBestInitialClassifiers();
 				showSimpleClassifiers();
 				indicator.setValue(new Float(4f/steps));
@@ -165,6 +166,7 @@ public class MeshBasedSelfConfigPanel extends PerformPanel{
 					
 					config.setMetricExpression(generatedMetricexpression);
 					config.setAcceptanceThreshold(getThreshold(cc.classifiers));
+					System.out.println("SelfConfig class= "+bsc.getClass().getCanonicalName());
 				} else {
 					indicator.setValue(new Float(5f/steps));
 					stepPanel.setCaption(messages.getString("MeshBasedSelfConfigPanel.nosimpleclassifiers"));
