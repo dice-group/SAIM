@@ -23,7 +23,7 @@
 		<TYPE>CSV</TYPE>
 	</TARGET>
 	
-	<METRIC>trigrams(x.title,y.title)</METRIC>
+	<METRIC>AND(levenshtein(x.title,y.title)|0.25,trigrams(x.title,y.title)|0.25)</METRIC>
 	<ACCEPTANCE>
 		<THRESHOLD>0.8</THRESHOLD>
 		<FILE>dbpedia-linkedmdb_accepted.txt</FILE>

@@ -8,6 +8,11 @@ import java.util.HashMap;
  *
  */
 public class LearnerConfigurationBean {
+	private int generations;
+	private int population;
+	private double mutationRate;
+	private double crossoverRate;
+	private int numberOfInqueriesPerRun;
 	
 	public LearnerConfigurationBean() {
 		setDefaultValues();
@@ -20,6 +25,7 @@ public class LearnerConfigurationBean {
 		setGenerations(20);
 		setPopulation(20);
 		setMutationRate(0.4d);
+		setCrossoverRate(0.4d);
 		setNumberOfInqueriesPerRun(10);
 	}
 
@@ -47,10 +53,15 @@ public class LearnerConfigurationBean {
 	public void setNumberOfInqueriesPerRun(int numberOfInqueriesPerRun) {
 			this.numberOfInqueriesPerRun = numberOfInqueriesPerRun;
 	}
-	private int generations;
-	private int population;
-	private double mutationRate;
-	private int numberOfInqueriesPerRun;
+	
+	public double getCrossoverRate() {
+		return crossoverRate;
+	}
+
+	public void setCrossoverRate(double crossoverRate) {
+		this.crossoverRate = crossoverRate;
+	}
+	
 	@Override
 	public String toString() {
 		return "BEAN: gens="+generations+" pop="+population+" mutationRate="+mutationRate+" inquieries="+numberOfInqueriesPerRun;
@@ -65,7 +76,10 @@ public class LearnerConfigurationBean {
 	    params.put("populationSize", getPopulation());
 		params.put("generations", getGenerations());
 		params.put("mutationRate", (float)getMutationRate());
+		params.put("crossoverRate", (float)getCrossoverRate());
 		params.put("trainingDataSize", getNumberOfInqueriesPerRun());
 		return params;
 	}
+
+
 }

@@ -213,7 +213,11 @@ public class MetricPanel extends Panel{
 			cNodes.addAll(n.getChilds());
 			for(Node c : n.getChilds()){
 				Integer cID = null; 
-				if(!blacklist.containsValue(c)){
+				/* Need to support for adding multiple property nodes 
+				 * the second or part does that.
+				 * @TODO test test test!!!
+				 */
+				if(!blacklist.containsValue(c)||c.getMaxChilds()==0){
 					cID = addNode(c);
 					blacklist.put(cID, c);
 				}else{

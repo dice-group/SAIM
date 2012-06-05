@@ -132,7 +132,7 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver
 				ConfigReader cR = new ConfigReader();
 				InputStream inStream;
 				inStream = getClass().getClassLoader().getResourceAsStream(""+localExamplesSelect.getValue());
-				cR.validateAndRead(inStream);
+				cR.validateAndRead(inStream, (String) localExamplesSelect.getValue());
 				// setting location of limes.dtd
 				// set paths to source and target
 				if(cR.sourceInfo.type!=null && cR.targetInfo.type != null)

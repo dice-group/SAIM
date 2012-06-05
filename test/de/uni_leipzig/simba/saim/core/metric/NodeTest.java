@@ -21,7 +21,8 @@ public class NodeTest
 			"ADD(0.6*jaccard(x.dc:title,dest.dc:title),0.6*cosine(x.authors,dest.authors))",
 			"AND(levenshtein(x.rdfs:label,y.rdfs:label)|1.0,levenshtein(x.dbp:name,y.dbp:name)|1.0)",
 			"MAX(jaccard(x.dc:title,y.dc:title)|0.3,cosine(x.authors,y.authors)|0.7)",
-			"AND(levenshtein(x.rdfs:label,dest.rdfs:label)|1.0,levenshtein(x.dbp:name,dest.dbp:name)|1.0)"
+			"AND(levenshtein(x.rdfs:label,dest.rdfs:label)|1.0,levenshtein(x.rdfs:label,dest.dbp:name)|1.0)",
+			"AND(levenshtein(x.title,y.title)|0.25,trigrams(x.director,y.title)|1.0)"
 			};
 	@Test
 	public void testMetricParsing() {
