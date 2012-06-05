@@ -152,10 +152,48 @@ public abstract class Node
 	//	}
 	public boolean hasFrontParameters() {return "add".equalsIgnoreCase(id);}
 	
-	@Override public boolean equals(Object o)
+	public boolean equals(Object o) {
+		return equals(o, false);
+	}
+	
+	public boolean equals(Object o, boolean strict)
 	{
-		if(o==null||!(this.getClass()==o.getClass())) return false;
-		// @TODO maybe implement non-tostring equals later?
-		return this.toString().equals(o.toString());
+		if(o==null||!(this.getClass()==o.getClass())) 
+			return false;
+		Node n2 = (Node) o;
+		boolean stringTest = false, parentTest = true, childTest = true, completeTest;
+		stringTest = this.toString().equals(o.toString());
+		if((this.parent == null && n2.parent != null) || (n2.parent==null && this.parent != null)) {
+			// one of the parents is null
+			parentTest = false;
+		}			
+		else if(this.parent != null && n2.parent != null)
+			if( this.parent.toString().equals(n2.parent.toString())) {
+				//same parent node, that is the tricky part
+				if(this.parent.isComplete())//if parent is complete, they're probably not the same
+					parentTest = false;
+			} else { // not the same parent
+				parentTest = false;
+			}
+		//testing children
+		if(this.getMaxChilds() == n2.getMaxChilds() && this.getMaxChilds()>0) {
+			List<Node> childrens1 = this.getChilds();
+			List<Node> childrens2 = n2.getChilds();
+			// @TODO we have probably have to check if there exists some alignment, where all children are the same
+			for(int i = 0; i<childrens1.size(); i++) {
+				for(int j = 0; j < childrens2.size(); j++)
+					if(!childrens1.get(i).equals(childrens2.get(j)))
+							childTest = false;
+			}
+		}else {
+			childTest = false;
+		}		
+		//testing completeness
+		completeTest = this.isComplete() == n2.isComplete();
+//		return stringTest && parentTest && childTest && completeTest;
+		if(strict)
+			return stringTest && parentTest;
+		else
+			return stringTest;
 	}
 }

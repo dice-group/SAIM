@@ -22,7 +22,9 @@ public class NodeTest
 			"AND(levenshtein(x.rdfs:label,y.rdfs:label)|1.0,levenshtein(x.dbp:name,y.dbp:name)|1.0)",
 			"MAX(jaccard(x.dc:title,y.dc:title)|0.3,cosine(x.authors,y.authors)|0.7)",
 			"AND(levenshtein(x.rdfs:label,dest.rdfs:label)|1.0,levenshtein(x.rdfs:label,dest.dbp:name)|1.0)",
-			"AND(levenshtein(x.title,y.title)|0.25,trigrams(x.director,y.title)|1.0)"
+			"AND(levenshtein(x.title,y.title)|0.25,trigrams(x.director,y.title)|1.0)",
+			"OR(jaccard(x.title,y.title)|0.5446749320576767,XOR(jaccard(x.title,y.title)|0.5446749320576767,jaccard(x.title,y.title)|0.5446749320576767)|0.5446749320576767)"
+			 
 			};
 	@Test
 	public void testMetricParsing() {
