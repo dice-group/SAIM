@@ -286,9 +286,8 @@ public class GraphProperties {
 		if(!nodeA.isValidParentOf(nodeB)&&nodeB.isValidParentOf(nodeA))
 		{
 			// implicit direction is clearly meant the other way around, reverse it
-			de.uni_leipzig.simba.saim.core.metric.Node tmp = nodeA;
-			nodeA = nodeB;
-			nodeB = tmp;			
+			createAnEdge(nodeIdB, nodeIdA, attribute);
+			return;
 		}
 		if(!nodeA.isValidParentOf(nodeB)&&!nodeB.isValidParentOf(nodeA))
 		{
