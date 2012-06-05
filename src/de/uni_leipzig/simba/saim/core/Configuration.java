@@ -42,7 +42,7 @@ public class Configuration
 	public KBInfo target = null;
 	public boolean isLocal  = false;
 
-	volatile public PropertyMapping propertyMapping = new PropertyMapping(); 
+	public volatile PropertyMapping propertyMapping = new PropertyMapping(); 
 
 	public String getMetricExpression() {
 		if(metric != null)
@@ -52,7 +52,6 @@ public class Configuration
 	
 	public void setMetricExpression(String metricExpression) {
 		logger.info("Setting metric expression to "+metricExpression+" using the source.var "+source.var);
-		
 		if(metric != null) {
 			double param1 = 2.0d;
 			double param2 = 2.0d;
@@ -119,7 +118,7 @@ public class Configuration
 		this.cR = cR;
 		source = cR.sourceInfo;
 		target = cR.targetInfo;
-
+		this.propertyMapping = new PropertyMapping();
 		metric = MetricParser.parse(cR.metricExpression,cR.sourceInfo.var.replace("?",""));
 		setAcceptanceThreshold(cR.acceptanceThreshold);
 		metric.param2 = cR.verificationThreshold;

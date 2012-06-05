@@ -105,6 +105,9 @@ public class MetricLearnPanel extends  PerformPanel{
 
 	@Override
 	public void onClose() {
+		learner.getFitnessFunction().destroy();
+		
+		learner = null;
 		((SAIMApplication) SAIMApplication.getInstance()).refresh();		
 	}
 

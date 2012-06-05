@@ -27,14 +27,14 @@
 		<TYPE>CSV</TYPE>
 	</TARGET>
 	
-	<METRIC>jaccard(x.title,y.title)|0.5</METRIC>
+	<METRIC>jaccard(x.title,y.title)</METRIC>
 	<ACCEPTANCE>
-		<THRESHOLD>0.6047183264539443</THRESHOLD>
+		<THRESHOLD>0.8</THRESHOLD>
 		<FILE>pub_accepted.txt</FILE>
 		<RELATION>owl:sameAs</RELATION>
 	</ACCEPTANCE>
 	<REVIEW>
-		<THRESHOLD>0.5</THRESHOLD>
+		<THRESHOLD>0.7</THRESHOLD>
 		<FILE>pub_reviewme.txt</FILE>
 		<RELATION>owl:sameAs</RELATION>
 	</REVIEW>
