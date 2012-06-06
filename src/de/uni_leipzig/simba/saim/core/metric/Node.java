@@ -165,16 +165,21 @@ public abstract class Node
 		stringTest = this.toString().equals(o.toString());
 		if((this.parent == null && n2.parent != null) || (n2.parent==null && this.parent != null)) {
 			// one of the parents is null
-			parentTest = false;
+//			parentTest = false;
 		}			
 		else if(this.parent != null && n2.parent != null)
-			if( this.parent.toString().equals(n2.parent.toString())) {
-				//same parent node, that is the tricky part
-				if(this.parent.isComplete())//if parent is complete, they're probably not the same
-					parentTest = false;
-			} else { // not the same parent
+			if(this.parent == n2.parent) { // same parent
+				
+			} else {
 				parentTest = false;
 			}
+//			if( this.parent.toString().equals(n2.parent.toString())) {
+//				//same parent node, that is the tricky part
+//				if(this.parent.isComplete())//if parent is complete, they're probably not the same
+//					parentTest = false;
+//			} else { // not the same parent
+//				parentTest = false;
+//			}
 		//testing children
 		if(this.getMaxChilds() == n2.getMaxChilds() && this.getMaxChilds()>0) {
 			List<Node> childrens1 = this.getChilds();
