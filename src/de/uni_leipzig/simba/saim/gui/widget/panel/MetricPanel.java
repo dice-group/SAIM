@@ -177,7 +177,7 @@ public class MetricPanel extends Panel{
 		//metricExpression = "AND(levenshtein(x.rdfs:label,y.rdfs:label)|0.1,levenshtein(x.dbp:name,y.dbp:name)|1.0)";
 		if( metricExpression != null){
 		//	makeMetric( MetricParser.parse(metricExpression, "x"));
-			makeMetricNew(MetricParser.parse(metricExpression, config.getSource().var.replaceAll("\\?", "")), -1); //$NON-NLS-1$
+			makeMetricRecursive(MetricParser.parse(metricExpression, config.getSource().var.replaceAll("\\?", "")), -1); //$NON-NLS-1$
 			cyNetworkView.applyLayout(new ForceDirectedLayout());		
 			cytographer.repaintGraph();
 		}else{
@@ -239,7 +239,7 @@ public class MetricPanel extends Panel{
 	 * @param n Call with the Output (root) node.
 	 * @param parentId On call just use an arbitrary value: 
 	 */
-	private void makeMetricNew(Node n, int parentId) {
+	private void makeMetricRecursive(Node n, int parentId) {
 		if(n.getClass()==Output.class) {
 			parentId = addNode(n);
 		}
@@ -251,7 +251,7 @@ public class MetricPanel extends Panel{
 			addEdge(parentId, c.getKey());
 		}
 		for(Entry<Integer, Node> c : cList.entrySet()) {
-			makeMetricNew(c.getValue(), c.getKey());
+			makeMetricRecursive(c.getValue(), c.getKey());
 		}
 	}
 	private int addNode(Node n){
@@ -259,7 +259,9 @@ public class MetricPanel extends Panel{
 		// make node
 		if(n instanceof Output){
 			id= cytographer.addNode(new Output().id, 0, 0, GraphProperties.Shape.OUTPUT);
-		
+			List<Object> l = new ArrayList<Object>();
+			l.add(((Output)n).param1);
+			l.add(((Output)n).param2);
 		}else if(n instanceof Operator){
 			id= cytographer.addNode(((Operator)n).id, 0, 0, GraphProperties.Shape.OPERATOR);
 			List<Object> l = new ArrayList<Object>();
