@@ -218,8 +218,11 @@ public class Configuration
 			fillKBElement(sourceElement,source);
 			fillKBElement(targetElement,target);
 
-			if(metric != null)
-			rootElement.getChild("METRIC").setText(metric.toString());
+			if(metric != null) {
+				rootElement.getChild("METRIC").setText(metric.toString());
+				System.out.println(metric.toString());
+			}
+			
 			{
 			Element acceptanceElement = rootElement.getChild("ACCEPTANCE");
 			acceptanceElement.getChild("FILE").setText(source.endpoint+'-'+target.endpoint+"-accept");
@@ -232,7 +235,7 @@ public class Configuration
 			reviewElement.getChild("THRESHOLD").setText(Double.toString(getVerificationThreshold()));
 			}
 			XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
-			out.output(document,new FileOutputStream(filename));
+			out.output(document,new FileOutputStream(filename,false));
 
 			//getElementById("/LIMES/SOURCE/VAR")
 		}

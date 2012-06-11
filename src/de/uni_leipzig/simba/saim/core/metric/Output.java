@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-/** The metric tree's root node specifiying the acceptance and review thresholds. It's single child is either a metric or an operator.*/
+/** The metric tree's root node specifying the acceptance and review thresholds. It's single child is either a metric or an operator.*/
 public class Output extends Node
 {
 	public Output() {super("output");}
@@ -20,6 +20,6 @@ public class Output extends Node
 	/**	returns the Metric Expression for the metric tree, e.g. <pre>trigrams(y.dc:title,x.linkedct:condition_name).</pre>*/
 	@Override public String toString()
 	{
-		return (getChilds().isEmpty()?"":getChilds().iterator().next().toString())+(param1!=null?"|"+param1:"")+(param2!=null?"|"+param2:"");
+		return (getChilds().isEmpty()?"":getChilds().iterator().next().toString());//+(param1!=null?"|"+param1:"")+(param2!=null?"|"+param2:"");
 	}	
 }

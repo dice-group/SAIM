@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
 
@@ -176,7 +177,7 @@ public class MetricPanel extends Panel{
 		//metricExpression = "AND(levenshtein(x.rdfs:label,y.rdfs:label)|0.1,levenshtein(x.dbp:name,y.dbp:name)|1.0)";
 		if( metricExpression != null){
 		//	makeMetric( MetricParser.parse(metricExpression, "x"));
-			makeMetric( MetricParser.parse(metricExpression, config.getSource().var.replaceAll("\\?", ""))); //$NON-NLS-1$
+			makeMetricRecursive(MetricParser.parse(metricExpression, config.getSource().var.replaceAll("\\?", "")), -1); //$NON-NLS-1$
 			cyNetworkView.applyLayout(new ForceDirectedLayout());		
 			cytographer.repaintGraph();
 		}else{
@@ -189,6 +190,7 @@ public class MetricPanel extends Panel{
 	private Map<Integer,Node> blacklist = new HashMap<Integer,Node>();
 	/**
 	 * @param o the Output node
+	 * @deprecated use makeMetricRecursive() instead.
 	 */
 	private void makeMetric(Output output)
 	{
@@ -232,12 +234,34 @@ public class MetricPanel extends Panel{
 			}
 		}
 	}
+	/**
+	 * Recursive  function to create a graphical representation out of a output node.
+	 * @param n Call with the Output (root) node.
+	 * @param parentId On call just use an arbitrary value: 
+	 */
+	private void makeMetricRecursive(Node n, int parentId) {
+		if(n.getClass()==Output.class) {
+			parentId = addNode(n);
+		}
+		HashMap<Integer, Node> cList = new HashMap<Integer, Node>();
+		for(Node c : n.getChilds()) {
+				cList.put(addNode(c), c);
+		}
+		for(Entry<Integer, Node> c : cList.entrySet()) {
+			addEdge(parentId, c.getKey());
+		}
+		for(Entry<Integer, Node> c : cList.entrySet()) {
+			makeMetricRecursive(c.getValue(), c.getKey());
+		}
+	}
 	private int addNode(Node n){
 		Integer id = null;
 		// make node
 		if(n instanceof Output){
 			id= cytographer.addNode(new Output().id, 0, 0, GraphProperties.Shape.OUTPUT);
-		
+			List<Object> l = new ArrayList<Object>();
+			l.add(((Output)n).param1);
+			l.add(((Output)n).param2);
 		}else if(n instanceof Operator){
 			id= cytographer.addNode(((Operator)n).id, 0, 0, GraphProperties.Shape.OPERATOR);
 			List<Object> l = new ArrayList<Object>();
