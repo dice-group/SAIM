@@ -196,6 +196,7 @@ public class MeshBasedSelfConfigPanel extends PerformPanel{
 //				logger.info("Adding string propertyMatch between: "+cl.sourceProperty +" - "+ cl.targetProperty);
 //			}
 		}
+		resultSelect.setWidth("80%");//$NON-NLS-1$
 		resultSelect.setVisible(true);		
 	}
 	

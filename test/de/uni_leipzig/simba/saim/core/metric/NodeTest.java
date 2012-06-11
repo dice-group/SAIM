@@ -31,7 +31,7 @@ public class NodeTest
 		for(String s : testMetrics) {
 			System.out.println("testing: "+s);
 			Output o = MetricParser.parse(s,"x");
-			System.out.println("parsed : "+o);	
+			System.out.println("parsed : "+o.toString());	
 			assertTrue("metric strings not equal, s="+s+", o="+o,o.toString().equalsIgnoreCase(s));
 			assertTrue(o.isComplete());
 		}

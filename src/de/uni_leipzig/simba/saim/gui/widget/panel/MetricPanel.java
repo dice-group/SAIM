@@ -177,7 +177,10 @@ public class MetricPanel extends Panel{
 		//metricExpression = "AND(levenshtein(x.rdfs:label,y.rdfs:label)|0.1,levenshtein(x.dbp:name,y.dbp:name)|1.0)";
 		if( metricExpression != null){
 		//	makeMetric( MetricParser.parse(metricExpression, "x"));
-			makeMetricRecursive(MetricParser.parse(metricExpression, config.getSource().var.replaceAll("\\?", "")), -1); //$NON-NLS-1$
+			Output outp = MetricParser.parse(metricExpression, config.getSource().var.replaceAll("\\?", ""));
+			outp.param1 = config.getAcceptanceThreshold();
+			outp.param2 = config.getVerificationThreshold();
+			makeMetricRecursive(outp, -1); //$NON-NLS-1$
 			cyNetworkView.applyLayout(new ForceDirectedLayout());		
 			cytographer.repaintGraph();
 		}else{
@@ -262,6 +265,7 @@ public class MetricPanel extends Panel{
 			List<Object> l = new ArrayList<Object>();
 			l.add(((Output)n).param1);
 			l.add(((Output)n).param2);
+			cytographer.setNodeMetadata(id+"", l);
 		}else if(n instanceof Operator){
 			id= cytographer.addNode(((Operator)n).id, 0, 0, GraphProperties.Shape.OPERATOR);
 			List<Object> l = new ArrayList<Object>();

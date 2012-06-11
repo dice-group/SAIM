@@ -384,7 +384,7 @@ public class PropertyMatchingPanel extends Panel
 	private void displayPropertyMapping(Map<String, HashMap<String, Double>> map)
 	{
 		Panel showPropMapping = new Panel("Computed propertyMapping");
-		VerticalLayout vert2 = new VerticalLayout();
+//		VerticalLayout vert2 = new VerticalLayout();
 		//String s = "";
 		listenerActive=false;
 		for(String key : map.keySet()) {
@@ -399,11 +399,11 @@ public class PropertyMatchingPanel extends Panel
 				targetBox.select(e.getKey());
 				table.addItem(row,row);
 				logger.debug("Mapped: "+key+" to "+e.getKey()+" :: "+e.getValue());
-				vert2.addComponent(new Label("Mapped: "+key+" to "+e.getKey()+" :: "+e.getValue()));
+//				vert2.addComponent(new Label("Mapped: "+key+" to "+e.getKey()+" :: "+e.getValue()));
 			}
 		}
 		listenerActive=true;
-		showPropMapping.addComponent(vert2);
+//		showPropMapping.addComponent(vert2);
 		mainLayout.addComponent(showPropMapping);		
 	}
 
