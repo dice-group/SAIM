@@ -148,8 +148,8 @@ public class Cytographer extends AbstractComponent {
 			final String[] args = (String[]) variables.get("doubleClick");
 					
 			if(args.length == 6){
-				if(args[5].startsWith("Operator")){
-					makeModalWindowOperator(args);
+				if(args[5].startsWith("Operator") || args[5].startsWith("Output")){
+					makeModalWindow(args,args[5]);
 				}
 				else if(args[5].startsWith("Target")){
 					String nodeName = (graphProperties.getNodeNames().get(Integer.valueOf(args[0])));
@@ -162,21 +162,14 @@ public class Cytographer extends AbstractComponent {
 					// remove prefix
 					addProperty(nodeName.substring(nodeName.indexOf('.')+1),mp.getConfig().getSource());
 				}	
-				else if(args[5].startsWith("Output")){
-					makeModalWindowOperator(args);
-				}	
 			}
 		}
 		
 		if (variables.containsKey("onNodeMouseUp")) {
 			final String[] args = (String[]) variables.get("onNodeMouseUp");
 			
-			String nodeID = args[0];
-			String x = args[1];
-			String y = args[2];
-			
-			graphProperties.getCyNetworkView().getNodeView(new Integer(nodeID)).setXPosition(Double.parseDouble(x));
-			graphProperties.getCyNetworkView().getNodeView(new Integer(nodeID)).setYPosition(Double.parseDouble(y));
+			graphProperties.getCyNetworkView().getNodeView(new Integer(args[0])).setXPosition(Double.parseDouble(args[1]));
+			graphProperties.getCyNetworkView().getNodeView(new Integer(args[0])).setYPosition(Double.parseDouble(args[2]));
 		}
 	}
 	public void addDefaultProperty(String s, KBInfo info){
@@ -203,7 +196,7 @@ public class Cytographer extends AbstractComponent {
 			
 		}
 
-		Window sub = new Window(mp.getMessages().getString("MetricPanel.definepreprocessingsubwindowname")+prop);
+		Window sub = new Window(mp.getMessages().getString("Cytographer.definepreprocessingsubwindowname")+prop);
 		sub.setModal(true);
 		sub.addComponent(new PreprocessingForm(info, prop));
 		SAIMApplication.getInstance().getMainWindow().addWindow(sub);
@@ -212,37 +205,17 @@ public class Cytographer extends AbstractComponent {
 		info.prefixes.put(PrefixHelper.getPrefix(base), PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
 	
 	}
-	private void makeModalWindowOperator(final String[] args){
+
+	private void makeModalWindow(final String[] args,final String name){
+			
 		Window mywindow = new Window("");
 		
-		final TextField t = new TextField("option",args[3]);
-		final TextField tt = new TextField("option",args[4]);
+		final TextField t = new TextField( mp.getMessages().getString("Cytographer.modalWindowTextField1Label"+name),args[3]);
+		final TextField tt = new TextField(mp.getMessages().getString("Cytographer.modalWindowTextField2Label"+name),args[4]);
 		mywindow.addComponent(t);
 		mywindow.addComponent(tt);
-		t.addValidator(new DoubleValidator("A threshold must be a value between 1 and 0.") {
-			private static final long serialVersionUID = -5585916227598767457L;
-			@Override
-		    protected boolean isValidString(String value) {
-		        try {
-		            double d = Double.parseDouble(value);
-		            return d>=0 && d <=1;
-		        } catch (Exception e) {
-		            return false;
-		        }
-		    }
-		});
-		tt.addValidator(new DoubleValidator("A threshold must be a value between 1 and 0.") {
-			private static final long serialVersionUID = 2933399368578994985L;
-			@Override
-		    protected boolean isValidString(String value) {
-		        try {
-		            double d = Double.parseDouble(value);
-		            return d>=0 && d <=1;
-		        } catch (Exception e) {
-		            return false;
-		        }
-		    }
-		});
+		t.addValidator( new MyDoubleValidator(mp.getMessages().getString("Cytographer.thresholdWarning"+name)));
+		tt.addValidator(new MyDoubleValidator(mp.getMessages().getString("Cytographer.thresholdWarning"+name)));
 		t.setMaxLength(4);
 		tt.setMaxLength(4);
 		t.setImmediate(true);
@@ -258,7 +231,7 @@ public class Cytographer extends AbstractComponent {
 					graphProperties.setNodeMetadata( args[0], value);
 					repaintGraph();
 				}else{
-					mainWindow.showNotification("A threshold must be a value between 1 and 0.", Notification.TYPE_WARNING_MESSAGE);
+					mainWindow.showNotification(mp.getMessages().getString("Cytographer.thresholdWarning"+name), Notification.TYPE_WARNING_MESSAGE);
 				}
 			}
 		});
@@ -339,5 +312,20 @@ public class Cytographer extends AbstractComponent {
 	public void refresh() {
 		currentOperation = GraphOperation.REFRESH;
 		requestRepaint();
+	}
+	class MyDoubleValidator extends DoubleValidator {
+		private static final long serialVersionUID = -5585916227598767457L;
+		public MyDoubleValidator(String msg) {
+			super(msg);
+		}		
+		@Override
+		protected boolean isValidString(String value) {
+			try {
+				double d = Double.parseDouble(value);
+				return d>=0 && d <=1;
+			} catch (Exception e) {
+				return false;
+			}
+		}
 	}
 }
