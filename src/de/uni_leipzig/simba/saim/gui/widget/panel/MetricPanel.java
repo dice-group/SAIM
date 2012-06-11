@@ -262,6 +262,7 @@ public class MetricPanel extends Panel{
 			List<Object> l = new ArrayList<Object>();
 			l.add(((Output)n).param1);
 			l.add(((Output)n).param2);
+			cytographer.setNodeMetadata(id+"", l);
 		}else if(n instanceof Operator){
 			id= cytographer.addNode(((Operator)n).id, 0, 0, GraphProperties.Shape.OPERATOR);
 			List<Object> l = new ArrayList<Object>();
