@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.vaadin.cytographer.widgetset.client.ui.node.VOperator;
+import org.vaadin.cytographer.widgetset.client.ui.node.VOutput;
 import org.vaadin.gwtgraphics.client.Group;
 import org.vaadin.gwtgraphics.client.Shape;
 import org.vaadin.gwtgraphics.client.VectorObject;
@@ -132,6 +133,10 @@ public class VGraph extends VectorObject {
 					VOperator vp = (VOperator)node1;
 					vp.updateValues(meta1[0],meta1[1]);
 				}
+				if(node1 != null && shape1.equals("OUTPUT")){
+					VOutput vp = (VOutput)node1;
+					vp.updateValues(meta1[0],meta1[1]);
+				}
 			}
 			
 			String smeta2 = child.getStringAttribute("meta2");
@@ -142,6 +147,10 @@ public class VGraph extends VectorObject {
 
 				if( node2 != null && shape2.equals("OPERATOR")){
 					VOperator vp = (VOperator)node2;
+					vp.updateValues(meta2[0],meta2[1]);				
+				}
+				if( node2 != null && shape2.equals("OUTPUT")){
+					VOutput vp = (VOutput)node2;
 					vp.updateValues(meta2[0],meta2[1]);				
 				}
 			}

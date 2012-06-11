@@ -161,7 +161,10 @@ public class Cytographer extends AbstractComponent {
 					String nodeName = (graphProperties.getNodeNames().get(Integer.valueOf(args[0])));
 					// remove prefix
 					addProperty(nodeName.substring(nodeName.indexOf('.')+1),mp.getConfig().getSource());
-				}				
+				}	
+				else if(args[5].startsWith("Output")){
+					makeModalWindowOperator(args);
+				}	
 			}
 		}
 		
