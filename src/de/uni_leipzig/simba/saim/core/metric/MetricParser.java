@@ -102,7 +102,7 @@ public class MetricParser
 	 * @param sourceVar the source variable without question mark, e.g. "x"
 	 * @return the Output root node of the metric tree represented by the argument in a metric expression.
 	 * @throws MetricFormatException  if the string does not contain a parsable metric. */
-	public static Output parse(String s,String sourceVar) throws MetricFormatException
+	public static Output parse(String s, String sourceVar) throws MetricFormatException
 	{
 		if(s.isEmpty()) throw new MetricFormatException();
 		Output output = new Output();

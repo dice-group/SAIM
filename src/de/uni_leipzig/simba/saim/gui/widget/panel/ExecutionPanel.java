@@ -73,13 +73,14 @@ public class ExecutionPanel extends PerformPanel implements PropertyChangeListen
 	
 	
 	private void runMapping() {
+		final Configuration config = ((SAIMApplication)getApplication()).getConfig();
 		thread = new Thread() {
 			@Override
 			public void run() {
 				m = lR.runConfig(((SAIMApplication)getApplication()).getConfig());	
 				progress.setValue(1f);
 				progressLabel.setValue(messages.getString("ExecutionPanel.mappingperformed")); //$NON-NLS-1$
-				InstanceMappingTable iT = new InstanceMappingTable(m, lR.getSourceCache(), lR.getTargetCache(), false,messages);
+				InstanceMappingTable iT = new InstanceMappingTable(config, m, lR.getSourceCache(), lR.getTargetCache(), false,messages);
 				ResultPanel results = new ResultPanel(iT,messages);
 				mainLayout.addComponent(results);
 //				mainLayout.removeComponent(start);

@@ -71,7 +71,7 @@ public class BatchLearningPanel extends MetricLearnPanel
 			e.printStackTrace();
 		}
 		Mapping map = learner.learn(new Mapping());
-		iMapTable = new InstanceMappingTable(map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache(), true,messages);
+		iMapTable = new InstanceMappingTable(config, map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache(), true,messages);
 		if (map.size()>0)
 		{
 			learnLayout.removeAllComponents();
@@ -105,7 +105,7 @@ public class BatchLearningPanel extends MetricLearnPanel
 			}
 			
 			//iMapTable = new DetailedInstanceMappingTable(map,learner.getFitnessFunction().getSourceCache(),learner.getFitnessFunction().getTargetCache());
-			iMapTable = new InstanceMappingTable(map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache(), true,messages);
+			iMapTable = new InstanceMappingTable(config, map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache(), true,messages);
 			l.removeAllComponents();
 			l.addComponent(iMapTable.getTable());
 			l.removeAllComponents();

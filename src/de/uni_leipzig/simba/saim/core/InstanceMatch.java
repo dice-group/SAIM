@@ -77,6 +77,9 @@ public class InstanceMatch  implements Serializable{
 	public static Label getLinkLabelToUri(String uri) {
 		return new Label("<a href='"+uri.replaceAll("[<>\"]", "")+"' target='_blank'>"+PrefixHelper.abbreviate(uri)+"</a>", Label.CONTENT_XHTML);
 	}
+	public static Label getLinkLabelToUri(String uri, String caption) {
+		return new Label("<a href='"+uri.replaceAll("[<>\"]", "")+"' target='_blank'>"+caption+"</a>", Label.CONTENT_XHTML);
+	}
 	public String getOriginalUri1() {
 		return originalUri1;
 	}

@@ -1,9 +1,12 @@
 package de.uni_leipzig.simba.saim.gui.widget;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.TreeSet;
+
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.BeanItemContainer;
@@ -22,8 +25,10 @@ import com.vaadin.ui.Window;
 import de.uni_leipzig.simba.cache.HybridCache;
 import de.uni_leipzig.simba.data.Instance;
 import de.uni_leipzig.simba.data.Mapping;
+import de.uni_leipzig.simba.genetics.util.Pair;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
+import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.InstanceMatch;
 import de.uni_leipzig.simba.saim.gui.widget.panel.InstanceInfoPanel;
 
@@ -39,8 +44,10 @@ public class InstanceMappingTable implements Serializable
 	BeanItemContainer<InstanceMatch> beanItemContainer;
 	Table t;
 	// TODO:  t.setColumnCollapsingAllowed(true);
-	public InstanceMappingTable(Mapping m, HybridCache sourceCache, HybridCache targetCache, boolean showBoxes,final Messages messages)
+	Configuration config;
+	public InstanceMappingTable(Configuration config, Mapping m, HybridCache sourceCache, HybridCache targetCache, boolean showBoxes,final Messages messages)
 	{
+		this.config = config;
 		this.messages=messages;
 		this.showBoxes = showBoxes;
 		data = m;
@@ -86,7 +93,7 @@ public class InstanceMappingTable implements Serializable
 	                    @Override
 	                    public void valueChange(final ValueChangeEvent event) {
 	                        bean.setSelected((Boolean) event.getProperty().getValue());
-	                        System.out.println("Selected " + bean); //$NON-NLS-1$
+//	                        System.out.println("Selected " + bean); //$NON-NLS-1$
 	                    }
 	                });
 
@@ -113,12 +120,32 @@ public class InstanceMappingTable implements Serializable
 				return image;
 			}
 		});
+		final List<Pair<String>> propPair = new LinkedList<Pair<String>>();
+		Iterator<Pair<String>> propMapIterator = config.propertyMapping.stringPropPairs.iterator();
+		if(propMapIterator.hasNext()) {
+			propPair.add(propMapIterator.next());
+		} else {
+			//walkaround: just select some random prop
+			propPair.add(new Pair<String>(config.getSource().functions.entrySet().iterator().next().getKey(), config.getTarget().functions.entrySet().iterator().next().getKey()));
+		}
 		// add column for source uri
 		t.addGeneratedColumn(messages.getString("InstanceMappingTable.sourceuri"), new Table.ColumnGenerator() { //$NON-NLS-1$
 			  @Override
 			  public Object generateCell(Table source, final Object itemId, final Object columnId) {
 				final InstanceMatch bean = (InstanceMatch) itemId;
 			    String uri = String.valueOf(bean.getUri1());
+			    String uri2 = bean.getOriginalUri1();
+				TreeSet<String> labels = null;
+				if(targetCache.containsUri(uri2)) {
+			    	Instance instance =  sourceCache.getInstance(uri2);
+			    	if(instance.getAllProperties().contains("rdfs:label"))
+			    		labels = sourceCache.getInstance(uri2).getProperty("rdfs:label");
+			    	if(labels == null || labels.size()==0) {
+			    		labels = sourceCache.getInstance(uri2).getProperty(propPair.get(0).a);
+			    	}
+			    }
+			    if(labels != null && labels.size()>=1)
+			    	return InstanceMatch.getLinkLabelToUri(uri, labels.first());
 			    return InstanceMatch.getLinkLabelToUri(uri);  
 			  }
 			});
@@ -127,6 +154,18 @@ public class InstanceMappingTable implements Serializable
 			  public Object generateCell(Table source, final Object itemId, final Object columnId) {
 				final InstanceMatch bean = (InstanceMatch) itemId;
 				String uri = String.valueOf(bean.getUri2());
+				String uri2 = bean.getOriginalUri2();
+				TreeSet<String> labels = null;
+				if(targetCache.containsUri(uri2)) {
+			    	Instance instance =  targetCache.getInstance(uri2);
+			    	if(instance.getAllProperties().contains("rdfs:label"))
+			    		labels = targetCache.getInstance(uri2).getProperty("rdfs:label");
+			    	if(labels == null || labels.size()==0) {
+			    		labels = targetCache.getInstance(uri2).getProperty(propPair.get(0).b);
+			    	}
+			    }
+				if(labels != null && labels.size()>=1)
+			    	return InstanceMatch.getLinkLabelToUri(uri, labels.first());
 			    return InstanceMatch.getLinkLabelToUri(uri);  
 			  }
 			});

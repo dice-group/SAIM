@@ -18,7 +18,6 @@ import org.vaadin.cytographer.Cytographer;
 import org.vaadin.cytographer.CytographerActionToolbar;
 import org.vaadin.cytographer.GraphProperties;
 
-import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.ui.Accordion;
@@ -39,7 +38,6 @@ import cytoscape.Cytoscape;
 import cytoscape.view.CyNetworkView;
 import cytoscape.visual.VisualPropertyType;
 import de.konrad.commons.sparql.PrefixHelper;
-import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
@@ -362,6 +360,7 @@ public class MetricPanel extends Panel{
 				config.setAcceptanceThreshold(node.param1);
 				config.setVerificationThreshold(node.param2);
 				getApplication().getMainWindow().showNotification("Setting: "+expr+ "with thresholds "+node.param1+" / "+node.param2); //$NON-NLS-1$
+				checkButtons();
 			}
 			else {
 				getApplication().getMainWindow().showNotification(messages.getString("MetricPanel.settingnotablenothreholds")); //$NON-NLS-1$
