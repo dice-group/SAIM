@@ -28,20 +28,14 @@ public class ExecutionPanel extends PerformPanel implements PropertyChangeListen
 	private ProgressIndicator progress;
 	private Mapping m = new Mapping();
 	private float maxSteps = LimesRunner.MAX_STEPS;
-//	Button start;
-	//Button showResults;
-//	Button startActiveLearning;
-//	Button startBatchLearning;
-//	Button startSelfConfig;
+	
 	Layout mainLayout = new VerticalLayout();
 	Thread thread;
-	@SuppressWarnings("serial")
 	public ExecutionPanel(final Messages messages)
 	{		
 		super(messages.getString("ExecutionPanel.executelinkspecification")); //$NON-NLS-1$
 		this.messages=messages;
 //		Label l;
-//		Configuration config = ((SAIMApplication)getApplication()).getConfig();
 		lR = new LimesRunner();
 		lR.addPropertyChangeListener(this);
 		progressLabel = new Label(messages.getString("ExecutionPanel.initialized")); //$NON-NLS-1$
@@ -83,40 +77,8 @@ public class ExecutionPanel extends PerformPanel implements PropertyChangeListen
 		};
 		thread.start();
 	}
-	
-//	private Panel showPropertyMatching() {
-@SuppressWarnings("deprecation")
-	//		Panel p = new Panel();
-//		if(!Configuration.getInstance().propertyMapping.wasSet()) {
-//			p.setContent(new Panel(messages.getString("ExecutionPanel.nopropertymappingdefined"))); //$NON-NLS-1$
-//		} else {
-//			p.setCaption(messages.getString("ExecutionPanel.propertymapping")); //$NON-NLS-1$
-//			VerticalLayout panelLayout = new VerticalLayout();
-//			p.setContent(panelLayout);
-//		
-//			ListSelect stringSelect = new ListSelect(messages.getString("ExecutionPanel.stringproperties")); //$NON-NLS-1$
-//			stringSelect.setNullSelectionAllowed(false);
-//			stringSelect.setRows(Configuration.getInstance().propertyMapping.getStringPropMapping().map.size());
-//			for(Entry<String, HashMap<String, Double>> entry : Configuration.getInstance().propertyMapping.getStringPropMapping().map.entrySet()) {
-//				for(String t : entry.getValue().keySet()) {
-//					stringSelect.addItem(entry.getKey() +" - "+t); //$NON-NLS-1$
-//				}
-//			}
-//			ListSelect numberSelect = new ListSelect(messages.getString("ExecutionPanel.numberproperty")); //$NON-NLS-1$
-//			numberSelect.setNullSelectionAllowed(false);
-//			numberSelect.setRows(Configuration.getInstance().propertyMapping.getNumberPropMapping().map.size());
-//			for(Entry<String, HashMap<String, Double>> entry : Configuration.getInstance().propertyMapping.getNumberPropMapping().map.entrySet()) {
-//				for(String t : entry.getValue().keySet()) {
-//					numberSelect.addItem(entry.getKey() +" - "+t); //$NON-NLS-1$
-//				}
-//			}
-//			if(Configuration.getInstance().propertyMapping.getStringPropMapping().size>0)
-//				panelLayout.addComponent(stringSelect);
-//			if(Configuration.getInstance().propertyMapping.getNumberPropMapping().size>0)
-//				panelLayout.addComponent(numberSelect);
-//		}
-//		return p;
-//	}
+
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onClose() {
 		thread.stop();

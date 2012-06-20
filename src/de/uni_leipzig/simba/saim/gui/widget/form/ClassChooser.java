@@ -91,7 +91,7 @@ public class ClassChooser extends Panel
 		final List<ClassNode> subNodes = new LinkedList<ClassNode>();
 		if(tree.hasChildren(node))
 		{
-			for(Object o: tree.getChildren(node))
+			for(@SuppressWarnings("unused") Object o: tree.getChildren(node))
 			{
 				subNodes.add((ClassNode)node);
 			}

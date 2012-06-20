@@ -11,7 +11,7 @@ import de.uni_leipzig.simba.saim.core.metric.Property.Origin;
 public class Measure extends Node
 {
 	public Measure(String id) {super(id);}
-	public static final Set<String> identifiers = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+	public static final Set<String> identifiers = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
 			new String[] {"trigram","trigrams","jaccard","cosine","levenshtein","cosine","euclidean", "overlap"})));	
 
 	@Override public Set<String> identifiers()	{return identifiers;}	

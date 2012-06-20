@@ -16,7 +16,7 @@ public class EndpointURLValidator implements Validator
 	private final Messages messages;		
 
 	private static final long	serialVersionUID	= -5470766225738299746L;
-	protected static Map<String,EndpointStatus> validateCache = new HashMap<>();
+	protected static Map<String,EndpointStatus> validateCache = new HashMap<String,EndpointStatus>();
 	final Component component;
 
 	public EndpointURLValidator() {this(null,null);}

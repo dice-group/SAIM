@@ -19,7 +19,7 @@ public class ItemUnion implements Item
 	private static final long serialVersionUID = 8975349959967352635L;
 	// todo: wenn zwei den gleiche namen haben darf keins wegfallen
 	public final List<Item> items;
-	public final List<String> ids = new LinkedList<>();
+	public final List<String> ids = new LinkedList<String>();
 
 	
 	

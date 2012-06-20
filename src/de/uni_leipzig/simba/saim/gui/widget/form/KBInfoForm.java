@@ -45,7 +45,7 @@ public class KBInfoForm extends Form
 	final EndpointURLValidator validator;
 
 	/** the knowledge base presets */
-	protected final Map<String, KBInfo>	presetToKB		= new HashMap<>();
+	protected final Map<String, KBInfo>	presetToKB = new HashMap<String, KBInfo>();
 
 	public void close()
 	{

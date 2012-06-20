@@ -5,9 +5,6 @@ import org.apache.log4j.Logger;
 import com.vaadin.data.Validator;
 import com.vaadin.data.validator.DoubleValidator;
 import com.vaadin.terminal.UserError;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
@@ -16,11 +13,12 @@ import de.uni_leipzig.simba.controller.Parser;
 import de.uni_leipzig.simba.genetics.util.Pair;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
-
+/**
+ * Deprecated class was used to set metric manually
+ * @author Lyko
+ *
+ */
 public class ManualMetricForm extends Form{
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4168159525103296182L;
 	public final TextField metricTextField = new TextField("Metric Expression");
 	public final TextField thresholdTextField = new TextField("Acceptance threshold");
@@ -39,41 +37,12 @@ public class ManualMetricForm extends Form{
 		this.addField("metric", metricTextField);
 		this.addField("threshold", thresholdTextField);
 		getFooter().addComponent(okbar);
-//		Button okbutton = getOKButton();
-//		okbar.addComponent(okbutton);
-//		okbar.setComponentAlignment(okbutton, Alignment.TOP_RIGHT);
-//		okbar.addComponent(new Button("Reset", this, "setDefaultValues"));
 	}
 	
 
 	private void addValidators() {
 		thresholdTextField.addValidator(new ThresHoldValidator());
 		metricTextField.addValidator(new MetricValidator());
-	}
-	
-	private Button getOKButton() {
-		Button b = new Button("OK", this, "commit");
-		b.addListener(new ClickListener() {			
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = -1893518847469931285L;
-
-			@Override
-			public void buttonClick(ClickEvent event) {
-				// get and store values
-				String metric = metricTextField.getValue().toString();
-				Double threshold = Double.parseDouble(thresholdTextField.getValue().toString());
-				Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
-				config.setMetricExpression(metric);
-				config.setAcceptanceThreshold(threshold);
-//				config.setDefaultNameSpaces();
-				// run it
-//				SAIMApplication appl = (SAIMApplication) getApplication();
-//				appl.showComponent(new ExecutionPanel());
-			}
-		});
-		return b;
 	}
 	
 	public class ThresHoldValidator extends DoubleValidator {

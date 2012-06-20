@@ -34,6 +34,7 @@ public class LearningPanel extends PerformPanel
 	private PerformPanel learnerPanel = null;
 	private Select learnerSelect;
 	private Panel propMappingPanel;	
+	@SuppressWarnings("unused")
 	private LearnerConfigurationForm configForm;
 	private LearnerConfigurationBean learnerConfigBean = new LearnerConfigurationBean();
 	

@@ -89,11 +89,11 @@ public class PropertyMatchingPanel extends Panel
 			progress.setVisible(false);
 			progressLabel.setVisible(false);
 		}
-
+		
 		private Map<String, HashMap<String, Double>> mockPropertyMap()
 		{
-			Map<String, HashMap<String, Double>> map = new HashMap<>();
-			HashMap<String,Double> value = new HashMap<>();
+			Map<String, HashMap<String, Double>> map = new HashMap<String, HashMap<String, Double>>();
+			HashMap<String,Double> value = new HashMap<String,Double>();
 			value.put("rdfs:label",0.337);
 			map.put("rdfs:label",value);
 			return map;

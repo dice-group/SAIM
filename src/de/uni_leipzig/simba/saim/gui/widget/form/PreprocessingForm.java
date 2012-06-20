@@ -113,7 +113,7 @@ public class PreprocessingForm extends Form{
 		if(info.functions.containsKey(prop)) {
 			logger.info("removing preprocessing function "+name);
 			String split[] = info.functions.get(prop).split("->");
-			List<String> funcList = new LinkedList();
+			List<String> funcList = new LinkedList<String>();
 			for(int i = 0; i<split.length; i++) {
 				if(!split[i].equals(name))
 					funcList.add(split[i]);
