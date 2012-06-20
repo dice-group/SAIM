@@ -26,7 +26,7 @@ public abstract class Node
 	public abstract Set<Class<? extends Node>> validChildClasses();
 	public final boolean isValidParentOf(Node node) {return validChildClasses().contains(node.getClass());}
 	protected Node parent = null;
-	protected List<Node> childs = new Vector<>();
+	protected List<Node> childs = new Vector<Node>();
 
 	public List<Node> getChilds() {return Collections.unmodifiableList(childs);}
 
@@ -156,6 +156,7 @@ public abstract class Node
 		return equals(o, false);
 	}
 	
+	@SuppressWarnings("unused")
 	public boolean equals(Object o, boolean strict)
 	{
 		if(o==null||!(this.getClass()==o.getClass())) 

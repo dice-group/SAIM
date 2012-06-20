@@ -224,7 +224,7 @@ public class Cytographer extends AbstractComponent {
 			private static final long serialVersionUID = -165177940359643613L;
 			@Override public void windowClose(CloseEvent e) {
 				if(t.isValid() && tt.isValid()){
-					List<Object> value = new ArrayList<>();
+					List<Object> value = new ArrayList<Object>();
 					value.add(t.getValue());
 					value.add(tt.getValue());
 					

@@ -29,7 +29,8 @@ public class ThresholdForm extends Form {
 	public ThresholdForm(final Messages messages, ThresholdBean bean) {
 		this.messages = messages;
 
-		 BeanItem item = new BeanItem(bean);		
+		 @SuppressWarnings("unchecked")
+		BeanItem item = new BeanItem(bean);		
 		 setItemDataSource(item);
 		 this.setWriteThrough(true);
 	}

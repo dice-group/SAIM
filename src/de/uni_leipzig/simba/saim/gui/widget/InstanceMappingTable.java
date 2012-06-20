@@ -10,8 +10,6 @@ import java.util.TreeSet;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.terminal.ClassResource;
@@ -74,14 +72,13 @@ public class InstanceMappingTable implements Serializable
 //		t.setColumnWidth("Is a match?", "3em");
 //		t.setColumnWidth("uri2", 150);
 		
-		t.addListener(new ItemClickListener() {			
-			@Override
-			public void itemClick(ItemClickEvent event) {
-				InstanceMatch m = (InstanceMatch) event.getItemId();
-				//@TODO 
-			//	SAIMApplication.getInstance().getMainWindow().open(new ExternalResource(m.getUri1()), "_");
-			}
-		});
+//		t.addListener(new ItemClickListener() {			
+//			@Override
+//			public void itemClick(ItemClickEvent event) {
+//				InstanceMatch m = (InstanceMatch) event.getItemId();
+//				SAIMApplication.getInstance().getMainWindow().open(new ExternalResource(m.getUri1()), "_");
+//			}
+//		});
 		if(showBoxes) {
 			t.addGeneratedColumn(messages.getString("InstanceMappingTable.isamatch"), new ColumnGenerator() { //$NON-NLS-1$
 	            @Override

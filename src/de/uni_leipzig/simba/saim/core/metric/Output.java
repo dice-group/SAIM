@@ -9,7 +9,7 @@ import java.util.Set;
 public class Output extends Node
 {
 	public Output() {super("output");}
-	@Override public Set<String> identifiers()	{return new HashSet<>(Arrays.asList(new String[] {"output"}));}	
+	@Override public Set<String> identifiers()	{return new HashSet<String>(Arrays.asList(new String[] {"output"}));}	
 	@SuppressWarnings("unchecked")
 	static public final Set<Class<? extends Node>> validChildClasses =
 	Collections.unmodifiableSet(new HashSet<Class<? extends Node>>(Arrays.asList((Class<? extends Node>[])new Class[] {Measure.class,Operator.class})));		

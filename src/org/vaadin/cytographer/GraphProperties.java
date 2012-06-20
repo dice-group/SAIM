@@ -50,7 +50,7 @@ public class GraphProperties {
 
 	@Getter private Map<Integer, String> nodeNames = new HashMap<Integer,String>();
 
-	private final Map<String, List<Object>> nodeMetadata = new HashMap<>();
+	private final Map<String, List<Object>> nodeMetadata = new HashMap<String, List<Object>>();
 
 	public enum Shape {
 		SOURCE,TARGET, METRIC, OPERATOR,OUTPUT
@@ -58,11 +58,11 @@ public class GraphProperties {
 	private Map<Integer, Shape> shapes = new HashMap<Integer, Shape>();
 	/** key = 0 for Output node*/
 	@Getter private Map<Integer, de.uni_leipzig.simba.saim.core.metric.Node> nodeMap = new HashMap<Integer,de.uni_leipzig.simba.saim.core.metric.Node>();
-	@Getter private final Set<String> selectedNodes = new HashSet<>();
-	@Getter private final Set<String> selectedEdges = new HashSet<>();
+	@Getter private final Set<String> selectedNodes = new HashSet<String>();
+	@Getter private final Set<String> selectedEdges = new HashSet<String>();
 
 	private final Map<String, Edge> edgeMap = new HashMap<String, Edge>();
-	private final Map<Node, List<Edge>> nodeToEdgesMap = new HashMap<>();
+	private final Map<Node, List<Edge>> nodeToEdgesMap = new HashMap<Node, List<Edge>>();
 
 	@Getter @Setter private int width, height, cytoscapeViewWidth, cytoscapeViewHeight;	
 	@Getter @Setter private int zoomFactor = 0;
@@ -101,7 +101,7 @@ public class GraphProperties {
 	public List<Object> getNodeMetadata(String node){
 		List<Object> value =  nodeMetadata.get(node);
 		if(value == null){
-			return new ArrayList<>();
+			return new ArrayList<Object>();
 		}else return value;	
 	}
 

@@ -337,7 +337,7 @@ public class SPARQLHelper
 
 	public static List<String> resultSetToList(ResultSet rs)
 	{
-		List<String> list = new Vector<>();
+		List<String> list = new Vector<String>();
 		while(rs.hasNext())
 		{
 			QuerySolution qs = rs.nextSolution();

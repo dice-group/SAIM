@@ -14,6 +14,7 @@ import de.uni_leipzig.simba.saim.gui.widget.panel.PerformPanel;
 
 public class MetricPanelListeners
 {
+	@SuppressWarnings("unused")
 	private final Messages messages;	
 	public MetricPanelListeners(final Messages messages){this.messages=messages;}
 

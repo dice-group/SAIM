@@ -36,9 +36,10 @@ public class ResourceTest {
 
 	@Test
 	public void testColorProperties() throws IOException
-	{
-		try(InputStream in=getClass().getClassLoader().getResourceAsStream("de/uni_leipzig/simba/saim/colors/default.properties"))				
+	{//TODO make test compilable with Java 1.6
+		try				
 		{
+			InputStream in=getClass().getClassLoader().getResourceAsStream("de/uni_leipzig/simba/saim/colors/default.properties");
 			assertNotNull(in);			
 			Properties properties = new Properties();
 			properties.load(in);
@@ -47,6 +48,9 @@ public class ResourceTest {
 			{				
 				Color.decode(properties.get(key).toString());
 			}
+		} catch(Exception e) {
+			// workaround
+			assertNotNull(null);
 		}
 	}
 }

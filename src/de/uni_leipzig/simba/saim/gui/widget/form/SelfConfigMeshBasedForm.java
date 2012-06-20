@@ -35,7 +35,8 @@ public class SelfConfigMeshBasedForm extends Form {
 		
 		setFormFieldFactory(new SelfConfigMeshBasedFormFieldFactory());
 		
-		 BeanItem item = new BeanItem(bean);
+		 @SuppressWarnings("unchecked")
+		BeanItem item = new BeanItem(bean);
 		
 		 setItemDataSource(item);
 		 this.setWriteThrough(true);

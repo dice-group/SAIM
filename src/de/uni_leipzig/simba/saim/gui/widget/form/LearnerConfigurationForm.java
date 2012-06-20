@@ -31,7 +31,8 @@ public class LearnerConfigurationForm extends Form
 		 
 		setFormFieldFactory(new LearnerCofigurationFormFieldFactory());
 		
-		 BeanItem item = new BeanItem(bean);
+		 @SuppressWarnings("unchecked")
+		BeanItem item = new BeanItem(bean);
 		
 		 setItemDataSource(item);
 		 this.setWriteThrough(true);
