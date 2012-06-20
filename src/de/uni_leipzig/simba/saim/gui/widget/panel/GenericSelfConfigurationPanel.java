@@ -9,6 +9,10 @@ import com.vaadin.ui.VerticalLayout;
 import de.uni_leipzig.simba.saim.Messages;
 
 public class GenericSelfConfigurationPanel extends PerformPanel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2272006849293767043L;
 	private final Messages messages;
 	private final Layout mainLayout = new VerticalLayout();
 	private PerformPanel sub = null;
@@ -44,6 +48,11 @@ public class GenericSelfConfigurationPanel extends PerformPanel{
 	}
 	
 	class ConfigurationSelectionListener implements ValueChangeListener {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -8110159175024579415L;
+
 		@Override
 		public void valueChange(ValueChangeEvent event) {
 			System.out.println(event.getProperty().toString());

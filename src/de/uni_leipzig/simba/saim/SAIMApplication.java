@@ -1,9 +1,6 @@
 package de.uni_leipzig.simba.saim;
 
 import java.io.File;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import lombok.Getter;
@@ -17,8 +14,6 @@ import com.vaadin.terminal.ParameterHandler;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;

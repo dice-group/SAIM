@@ -12,13 +12,16 @@ import com.vaadin.ui.Select;
 import com.vaadin.ui.Slider;
 
 import de.uni_leipzig.simba.saim.Messages;
-import de.uni_leipzig.simba.saim.gui.widget.form.LearnerConfigurationForm.LearnerCofigurationFormFieldFactory;
 
 /**
  * Configurator for the Meshbased selfconfigurator.
  * @author Lyko
  */
 public class SelfConfigMeshBasedForm extends Form {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3184156595397084333L;
 	private final Messages messages;
 	public static final String elementsWidth = "100px"; //$NON-NLS-1$
 	/**
@@ -44,6 +47,11 @@ public class SelfConfigMeshBasedForm extends Form {
 	 *
 	 */
 	class SelfConfigMeshBasedFormFieldFactory implements FormFieldFactory {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 52534782115538460L;
 
 		@Override
 		public Field createField(Item item, Object propertyId,

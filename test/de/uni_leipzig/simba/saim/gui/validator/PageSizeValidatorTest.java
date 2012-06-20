@@ -1,8 +1,6 @@
 package de.uni_leipzig.simba.saim.gui.validator;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.fail;
-
 import org.junit.Test;
 
 import com.vaadin.data.Validator.InvalidValueException;

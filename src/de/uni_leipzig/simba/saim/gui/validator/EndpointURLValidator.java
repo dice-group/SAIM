@@ -7,7 +7,6 @@ import com.vaadin.data.Validator;
 import com.vaadin.ui.Component;
 
 import de.uni_leipzig.simba.saim.Messages;
-import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.EndpointTester;
 import de.uni_leipzig.simba.saim.core.EndpointTester.EndpointStatus;
 

@@ -6,7 +6,6 @@ import com.vaadin.ui.Panel;
 import de.konrad.commons.sparql.PrefixHelper;
 import de.konrad.commons.sparql.SPARQLHelper;
 import de.uni_leipzig.simba.io.KBInfo;
-import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.panel.ClassMatchingPanel;

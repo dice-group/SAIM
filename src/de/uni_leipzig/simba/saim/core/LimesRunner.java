@@ -8,12 +8,16 @@ import de.uni_leipzig.simba.cache.HybridCache;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.filter.Filter;
 import de.uni_leipzig.simba.filter.LinearFilter;
-import de.uni_leipzig.simba.io.ConfigReader;
 import de.uni_leipzig.simba.mapper.SetConstraintsMapper;
 import de.uni_leipzig.simba.mapper.SetConstraintsMapperFactory;
 
 public class LimesRunner implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7235467719847804816L;
+
 	private PropertyChangeSupport changes = new PropertyChangeSupport( this ); 
 	 
 	private int step = 0;

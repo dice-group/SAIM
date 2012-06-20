@@ -11,24 +11,25 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
 import de.uni_leipzig.simba.genetics.core.Metric;
-import de.uni_leipzig.simba.genetics.learner.GeneticActiveLearner;
 import de.uni_leipzig.simba.genetics.learner.LinkSpecificationLearner;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
 import de.uni_leipzig.simba.saim.gui.widget.form.LearnerConfigurationBean;
-import de.uni_leipzig.simba.saim.gui.widget.panel.ActiveLearningPanel.ActiveLearnButtonClickListener;
 /**
  * Panel used for metric genetic learner.
  * @author Lyko
  *
  */
 public class MetricLearnPanel extends  PerformPanel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2043563912763885666L;
 	public static Logger logger = Logger.getLogger("LIMES");
 	protected Configuration config;// = Configuration.getInstance();
 	public LinkSpecificationLearner learner;
@@ -74,6 +75,10 @@ public class MetricLearnPanel extends  PerformPanel{
 	}
 
 	public class TerminateButtonClickListener implements Button.ClickListener {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 6943435309453349530L;
 		Layout l;
 		Label label = new Label();
 		public TerminateButtonClickListener(Layout l) {

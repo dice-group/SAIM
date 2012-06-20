@@ -16,6 +16,10 @@ import de.uni_leipzig.simba.saim.gui.widget.form.ClassChooser.ClassNode;
  * The user gets shown some classes and can add some manually or create the matching manually.*/
 public class ClassMatchingForm extends Form
 {	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7897392568006310314L;
 	protected final ComboBox field; 
 //	protected final TextField target; 
 	protected final ClassChooser chooser;
@@ -32,6 +36,11 @@ public class ClassMatchingForm extends Form
 		chooser = new ClassChooser(info.endpoint, info.id, info.graph);
 		
 		chooser.tree.addListener(new ItemClickListener() {	
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -4408783618595964107L;
+
 			@Override
 			public void itemClick(ItemClickEvent event) {
 				field.setValue(event.getItemId());

@@ -6,7 +6,6 @@ import org.vaadin.cytographer.widgetset.client.ui.VGraph;
 import org.vaadin.cytographer.widgetset.client.ui.VNode;
 import org.vaadin.cytographer.widgetset.client.ui.VVisualStyle;
 import org.vaadin.cytographer.widgetset.client.ui.shap.VCycle;
-import org.vaadin.cytographer.widgetset.client.ui.shap.VRectangle;
 import org.vaadin.gwtgraphics.client.Shape;
 import org.vaadin.gwtgraphics.client.shape.Text;
 

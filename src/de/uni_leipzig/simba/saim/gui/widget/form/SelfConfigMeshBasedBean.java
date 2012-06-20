@@ -1,7 +1,5 @@
 package de.uni_leipzig.simba.saim.gui.widget.form;
 
-import java.util.LinkedList;
-
 import de.uni_leipzig.simba.cache.Cache;
 import de.uni_leipzig.simba.selfconfig.DisjunctiveMeshSelfConfigurator;
 import de.uni_leipzig.simba.selfconfig.LinearMeshSelfConfigurator;

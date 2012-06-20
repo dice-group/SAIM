@@ -1,9 +1,5 @@
 package de.uni_leipzig.simba.saim.core;
 
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-
 public class EndpointsTest
 {
 //	@Test

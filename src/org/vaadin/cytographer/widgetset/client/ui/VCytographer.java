@@ -28,7 +28,6 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.VConsole;
 
 public class VCytographer extends Composite implements 
 Paintable, ClickHandler,MouseDownHandler, MouseUpHandler, 

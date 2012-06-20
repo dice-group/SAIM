@@ -16,6 +16,10 @@ import de.uni_leipzig.simba.saim.Messages;
  */
 public class LearnerConfigurationForm extends Form
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3980421724099685985L;
 	private final Messages messages;
 	public static final String elementsWidth = "100px"; //$NON-NLS-1$
 	
@@ -39,7 +43,12 @@ public class LearnerConfigurationForm extends Form
 	 *
 	 */
 	class LearnerCofigurationFormFieldFactory implements FormFieldFactory {
-	    public Field createField(Item item, Object propertyId,
+	    /**
+		 * 
+		 */
+		private static final long serialVersionUID = 8475635563877784242L;
+
+		public Field createField(Item item, Object propertyId,
 	                             Component uiContext) {
 	        // Identify the fields by their Property ID.
 	        String pid = (String) propertyId;

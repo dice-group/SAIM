@@ -2,17 +2,9 @@ package de.uni_leipzig.simba.saim.gui.widget.panel;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.HashMap;
-import java.util.Map.Entry;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.ListSelect;
-import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.saim.Messages;
@@ -20,13 +12,16 @@ import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.LimesRunner;
 import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
-import de.uni_leipzig.simba.saim.gui.widget.Listener.MetricPanelListeners;
 /**
  * Panel to execute a Mapping.
  * @author Lyko
  */
 public class ExecutionPanel extends PerformPanel implements PropertyChangeListener
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6418644523043046619L;
 	private final Messages messages;
 	private LimesRunner lR;
 	private Label progressLabel;

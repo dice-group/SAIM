@@ -1,7 +1,6 @@
 package de.uni_leipzig.simba.saim.gui.widget.window;
 
 import org.vaadin.teemu.wizards.Wizard;
-import org.vaadin.teemu.wizards.WizardStep;
 import org.vaadin.teemu.wizards.event.WizardCancelledEvent;
 import org.vaadin.teemu.wizards.event.WizardCompletedEvent;
 import org.vaadin.teemu.wizards.event.WizardProgressListener;
@@ -12,9 +11,7 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
-import de.uni_leipzig.simba.saim.gui.widget.panel.PerformPanel;
 import de.uni_leipzig.simba.saim.gui.widget.step.ClassMatchingStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.EndpointStep;
 import de.uni_leipzig.simba.saim.gui.widget.step.PropertyMatchingStep;
@@ -25,6 +22,10 @@ import de.uni_leipzig.simba.saim.gui.widget.step.PropertyMatchingStep;
  */
 public class EndpointWindow extends Window
 {	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2991623255901308493L;
 	Layout mainLayout;
 	Wizard wizard;
 	SAIMApplication app;
@@ -66,6 +67,11 @@ public class EndpointWindow extends Window
 	}
 	
 	public class EndpointWindowCloseListener implements CloseListener {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 7712910111369830002L;
+
 		@Override
 		public void windowClose(CloseEvent e) {
 //			for(WizardStep s : wizard.getSteps()) {

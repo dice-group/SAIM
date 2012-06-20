@@ -19,6 +19,10 @@ import com.vaadin.ui.Tree.ExpandListener;
 /** Lets the user choose a class from a given SPARQL endpoint. Queries the endpoint for classes and presents them as a tree. */
 public class ClassChooser extends Panel
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7664923698708644130L;
 	protected static final boolean PRELOAD = false;
 	protected final String endpoint,graph;
 	protected final Tree tree;

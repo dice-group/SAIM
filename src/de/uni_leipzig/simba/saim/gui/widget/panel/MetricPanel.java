@@ -320,6 +320,11 @@ public class MetricPanel extends Panel{
 		this.setMetric = new Button(messages.getString("MetricPanel.setmetricbutton"));
 		setMetric.setEnabled(true);
 		setMetric.addListener(new ClickListener() {			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 2349781868228639555L;
+
 			@Override
 			public void buttonClick(ClickEvent event) {
 				setMetricFromGraph();

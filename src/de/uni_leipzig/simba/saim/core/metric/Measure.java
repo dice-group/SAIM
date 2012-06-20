@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import de.uni_leipzig.simba.saim.core.metric.Node.Acceptance;
 import de.uni_leipzig.simba.saim.core.metric.Property.Origin;
 
 /** A similarity measure.*/

@@ -18,6 +18,10 @@ import de.uni_leipzig.simba.saim.core.Configuration;
  */
 public class ThresholdForm extends Form {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 108894012576028115L;
 	private final Messages messages;
 	public static final String elementsWidth = "100px"; //$NON-NLS-1$
 
@@ -31,6 +35,11 @@ public class ThresholdForm extends Form {
 	}
 	
 	class ThresholdFormFieldFactory implements FormFieldFactory {		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 7097223897721929002L;
+
 		@Override
 		public Field createField(Item item, Object propertyId,
 				Component uiContext) {

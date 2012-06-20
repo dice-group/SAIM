@@ -2,8 +2,6 @@ package de.uni_leipzig.simba.saim.gui.widget.window;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map.Entry;
 
 import org.slf4j.Logger;
@@ -14,7 +12,6 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.terminal.FileResource;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -28,6 +25,10 @@ import de.uni_leipzig.simba.saim.core.Configuration;
 
 public class SerializationWindow extends Window
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 949091830343396212L;
 	private final Messages messages;
 	VerticalLayout mainLayout;
 	HashMap<String, Serializer> serializerNames;
@@ -84,6 +85,11 @@ public class SerializationWindow extends Window
 	}
 	
 	private class SerializerSelectListener implements ValueChangeListener {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -4905589098233429238L;
+
 		@Override
 		public void valueChange(ValueChangeEvent event) {
 			Logger logger = LoggerFactory.getLogger(SerializerSelectListener.class);

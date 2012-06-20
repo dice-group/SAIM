@@ -2,35 +2,22 @@ package de.uni_leipzig.simba.saim.gui.widget.panel;
 
 import java.util.Map.Entry;
 
-import sun.security.krb5.Config;
-
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
 
-import de.konrad.commons.sparql.PrefixHelper;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.genetics.util.Pair;
 import de.uni_leipzig.simba.learning.query.PropertyMapper;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
-import de.uni_leipzig.simba.saim.gui.widget.PropertyMappingGenerator;
-import de.uni_leipzig.simba.saim.gui.widget.Listener.MetricPanelListeners;
 import de.uni_leipzig.simba.saim.gui.widget.form.LearnerConfigurationBean;
 import de.uni_leipzig.simba.saim.gui.widget.form.LearnerConfigurationForm;
-import de.uni_leipzig.simba.saim.gui.widget.window.EndpointWindow;
 /**
  * Panel for Learner Configuration.
  * @author Lyko
@@ -38,6 +25,10 @@ import de.uni_leipzig.simba.saim.gui.widget.window.EndpointWindow;
  */
 public class LearningPanel extends PerformPanel
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1906531007896945738L;
 	private final Messages messages;
 	private final Layout mainLayout = new VerticalLayout();
 	private PerformPanel learnerPanel = null;
@@ -145,6 +136,10 @@ public class LearningPanel extends PerformPanel
 	 */
 	public class LearnerSelectListener implements ValueChangeListener
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 4295499822581706211L;
 		private final Messages messages;
 		public LearnerSelectListener(final Messages messages) {this.messages=messages;}
 

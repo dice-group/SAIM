@@ -11,8 +11,6 @@ import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
@@ -21,7 +19,6 @@ import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
 
 import de.uni_leipzig.simba.cache.HybridCache;
-import de.uni_leipzig.simba.genetics.util.PropertyMapping;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
@@ -38,6 +35,10 @@ import de.uni_leipzig.simba.selfconfig.SimpleClassifier;
  *
  */
 public class MeshBasedSelfConfigPanel extends PerformPanel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -457009966196619211L;
 	private static final Logger logger = LoggerFactory.getLogger(MeshBasedSelfConfigPanel.class);
 	private final Messages messages;
 	private Layout mainLayout;
@@ -100,6 +101,11 @@ public class MeshBasedSelfConfigPanel extends PerformPanel{
 		start = new Button(messages.getString("MeshBasedSelfConfigPanel.startbutton"));
 		start.addListener(new ClickListener() {
 			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 5899998766641774597L;
+
 			@Override
 			public void buttonClick(ClickEvent event) {
 				mainLayout.removeComponent(start);
@@ -227,6 +233,10 @@ public class MeshBasedSelfConfigPanel extends PerformPanel{
 	
 	/**Implements Listener for generateMetrik Button*/
 	class GenerateMetricButtonClickListener implements Button.ClickListener {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -7458046435037113584L;
 		Layout l;
 		public GenerateMetricButtonClickListener(Layout content) {
 			l = content;

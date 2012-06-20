@@ -10,9 +10,7 @@ import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.gui.widget.panel.ExecutionPanel;
 import de.uni_leipzig.simba.saim.gui.widget.panel.GenericSelfConfigurationPanel;
 import de.uni_leipzig.simba.saim.gui.widget.panel.LearningPanel;
-import de.uni_leipzig.simba.saim.gui.widget.panel.MetricPanel;
 import de.uni_leipzig.simba.saim.gui.widget.panel.PerformPanel;
-import de.uni_leipzig.simba.saim.gui.widget.panel.MeshBasedSelfConfigPanel;
 
 public class MetricPanelListeners
 {
@@ -22,6 +20,10 @@ public class MetricPanelListeners
 	/**Listener for SelfConfig button.*/
 	public static class SelfConfigClickListener implements Button.ClickListener
 	{		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 6934044117967277527L;
 		private final Messages messages;
 		public SelfConfigClickListener(final Messages messages) {this.messages=messages;}
 
@@ -35,6 +37,10 @@ public class MetricPanelListeners
 	/**Listener for SelfConfig button.*/
 	public static class LearnClickListener implements Button.ClickListener
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -3099913074308209584L;
 		private final Messages messages;
 		public LearnClickListener(final Messages messages) {this.messages=messages;}
 		@Override
@@ -46,6 +52,10 @@ public class MetricPanelListeners
 	/**Listener for SelfConfig button.*/
 	public static class StartMappingListener implements Button.ClickListener
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -688724646561873984L;
 		private final Messages messages;	
 		public StartMappingListener(final Messages messages){this.messages=messages;}
 
@@ -62,6 +72,11 @@ public class MetricPanelListeners
 	public static void getWindow(final PerformPanel content) {
 		Window sub = new Window();
 		sub.addListener(new CloseListener() {			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 5880054040870696798L;
+
 			@Override
 			public void windowClose(CloseEvent e) {
 				content.onClose();

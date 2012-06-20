@@ -19,6 +19,10 @@ import de.uni_leipzig.simba.saim.gui.widget.form.LearnerConfigurationBean;
 
 public class BatchLearningPanel extends MetricLearnPanel
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8799521759150040510L;
 	private final Messages messages;
 	
 	public BatchLearningPanel(final Messages messages)
@@ -85,6 +89,10 @@ public class BatchLearningPanel extends MetricLearnPanel
 	/** Listener for learn buttton @author Lyko */
 	public class BatchLearnButtonClickListener implements Button.ClickListener
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -5750209861689708829L;
 		Layout l;
 		/** Constructor with the Component to hold the Table.*/
 		public BatchLearnButtonClickListener(Layout l) {this.l = l;}

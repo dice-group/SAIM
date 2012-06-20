@@ -7,6 +7,10 @@ import com.vaadin.ui.Label;
 import de.konrad.commons.sparql.PrefixHelper;
 
 public class InstanceMatch  implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1683632585316114100L;
 	public static final int SEED = 23;
 	String uri1, uri2;
 	double Matchvalue = new Double(0);

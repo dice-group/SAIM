@@ -23,13 +23,9 @@ import static de.konrad.commons.sparql.SPARQLHelper.querySelect;
 import static de.konrad.commons.sparql.SPARQLHelper.resultSetToList;
 import static de.konrad.commons.sparql.SPARQLHelper.rootClasses;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Map;
 
 import org.junit.Test;
-import org.junit.internal.runners.statements.Fail;
-
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.core.DefaultEndpointLoader;
 import de.uni_leipzig.simba.saim.gui.validator.EndpointURLValidator;

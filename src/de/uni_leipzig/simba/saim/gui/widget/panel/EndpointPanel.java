@@ -3,7 +3,6 @@ package de.uni_leipzig.simba.saim.gui.widget.panel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import com.google.gwt.core.client.impl.AsyncFragmentLoader.Logger;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
 
@@ -13,6 +12,10 @@ import de.uni_leipzig.simba.saim.gui.widget.form.KBInfoForm;
 import de.uni_leipzig.simba.saim.Messages;
 public class EndpointPanel extends Panel implements PropertyChangeListener
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5883644284527880143L;
 	private final Messages messages;
 	public KBInfoForm kbISource;
 	public KBInfoForm kbITarget;

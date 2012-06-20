@@ -9,7 +9,6 @@ import com.vaadin.ui.VerticalLayout;
 import de.uni_leipzig.simba.data.Instance;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.SAIMApplication;
-import de.uni_leipzig.simba.saim.core.Configuration;
 /**
  * Panel to display information available for two instances.
  * @author Lyko

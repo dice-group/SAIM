@@ -3,8 +3,6 @@ package de.uni_leipzig.simba.saim.gui.widget;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.vaadin.ui.Button;
@@ -19,9 +17,12 @@ import de.konrad.commons.sparql.SPARQLHelper;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.SAIMApplication;
-import de.uni_leipzig.simba.saim.core.Configuration;
 
 public class PropertyMappingGenerator extends Panel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2569976837556090479L;
 	VerticalLayout layout = new VerticalLayout();
 	Set<String> sourceProps = new HashSet<String>();
 	Set<String> targetProps = new HashSet<String>();
@@ -91,6 +92,11 @@ public class PropertyMappingGenerator extends Panel {
 	}
 	
 	private class addPropertyMatchListener implements Button.ClickListener {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1931071630998923715L;
 
 		@Override
 		public void buttonClick(ClickEvent event) {
