@@ -22,7 +22,8 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.Window;
-import de.uni_leipzig.simba.cache.HybridCache;
+
+import de.uni_leipzig.simba.cache.Cache;
 import de.uni_leipzig.simba.data.Instance;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.genetics.util.Pair;
@@ -36,8 +37,8 @@ public class InstanceMappingTable implements Serializable
 {
 	private final Messages messages;
 	private static final long serialVersionUID	= 4443146911119590775L;
-	final HybridCache sourceCache;
-	final HybridCache targetCache;
+	final Cache sourceCache;
+	final Cache targetCache;
 	final Mapping data;
 	final List <InstanceMatch> dataList = new LinkedList<InstanceMatch>();
 	private boolean showBoxes = true;
@@ -45,7 +46,7 @@ public class InstanceMappingTable implements Serializable
 	Table t;
 	// TODO:  t.setColumnCollapsingAllowed(true);
 	Configuration config;
-	public InstanceMappingTable(Configuration config, Mapping m, HybridCache sourceCache, HybridCache targetCache, boolean showBoxes,final Messages messages)
+	public InstanceMappingTable(Configuration config, Mapping m, Cache sourceCache, Cache targetCache, boolean showBoxes,final Messages messages)
 	{
 		this.config = config;
 		this.messages=messages;
@@ -77,7 +78,7 @@ public class InstanceMappingTable implements Serializable
 		t.addListener(new ItemClickListener() {			
 			@Override
 			public void itemClick(ItemClickEvent event) {
-				InstanceMatch m = (InstanceMatch) event.getItemId();
+//				InstanceMatch m = (InstanceMatch) event.getItemId();
 				//@TODO 
 			//	SAIMApplication.getInstance().getMainWindow().open(new ExternalResource(m.getUri1()), "_");
 			}

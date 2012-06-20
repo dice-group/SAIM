@@ -30,15 +30,12 @@ public class SelfConfigMeshBasedForm extends Form {
 	 * @param messages Messages instance to externalize Strings.
 	 */
 	public SelfConfigMeshBasedForm(SelfConfigMeshBasedBean bean, final Messages messages) {
-		
 		this.messages = messages;
-		
 		setFormFieldFactory(new SelfConfigMeshBasedFormFieldFactory());
-		
-		 BeanItem item = new BeanItem(bean);
-		
-		 setItemDataSource(item);
-		 this.setWriteThrough(true);
+		@SuppressWarnings("unchecked")
+		BeanItem item = new BeanItem(bean);
+		setItemDataSource(item);
+		this.setWriteThrough(true);
 	}
 	
 	/**
@@ -47,10 +44,6 @@ public class SelfConfigMeshBasedForm extends Form {
 	 *
 	 */
 	class SelfConfigMeshBasedFormFieldFactory implements FormFieldFactory {
-
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 52534782115538460L;
 
 		@Override
@@ -59,7 +52,7 @@ public class SelfConfigMeshBasedForm extends Form {
 			 // Identify the fields by their Property ID. This is the name of the field of the corresponding bean.
 	        String pid = (String) propertyId;
 			if("beta".equals(pid)) {//$NON-NLS-1$
-				Slider slider = new Slider(0d, 1d, 1);
+				Slider slider = new Slider(0.1d, 2.0d, 1);
 	        	slider.setCaption(messages.getString("SelfConfigMeshBasedForm.beta"));  //$NON-NLS-1$
 	        	slider.setWidth(elementsWidth);
 	        	slider.setOrientation(Slider.ORIENTATION_HORIZONTAL);

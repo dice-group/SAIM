@@ -9,19 +9,19 @@ import com.vaadin.ui.VerticalLayout;
 import de.uni_leipzig.simba.saim.Messages;
 
 public class GenericSelfConfigurationPanel extends PerformPanel{
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -2272006849293767043L;
 	private final Messages messages;
 	private final Layout mainLayout = new VerticalLayout();
 	private PerformPanel sub = null;
 	private Select configuratorSelect;
 	private String MESH;
+	private String GENETICSELFCONFIG;
 	
 	public GenericSelfConfigurationPanel(final Messages messages) {
 		this.messages = messages;
 		MESH = messages.getString("GenericSelfConfigurationPanel.meshbased"); //$NON-NLS-1$
+		GENETICSELFCONFIG = messages.getString("GenericSelfConfigurationPanel.GeneticSelfConfig"); //$NON-NLS-1$
 	}
 	@Override
 	public void attach() {
@@ -35,6 +35,7 @@ public class GenericSelfConfigurationPanel extends PerformPanel{
 	private Select getConfigurationSelection() {
 		Select select = new Select(messages.getString("GenericSelfConfigurationPanel.selectcaption")); //$NON-NLS-1$
 		select.addItem(MESH);		
+		select.addItem(GENETICSELFCONFIG);
 		select.setImmediate(true);
 		select.addListener(new ConfigurationSelectionListener());
 		return select;
@@ -47,10 +48,14 @@ public class GenericSelfConfigurationPanel extends PerformPanel{
 		sub.start();
 	}
 	
+	private void doGeneticBasedSelfConfiguration() {
+		mainLayout.removeAllComponents();
+		sub = new GeneticBasedSelfConfigPanel(messages);
+		mainLayout.addComponent(sub);
+		sub.start();
+	}
+	
 	class ConfigurationSelectionListener implements ValueChangeListener {
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = -8110159175024579415L;
 
 		@Override
@@ -58,6 +63,9 @@ public class GenericSelfConfigurationPanel extends PerformPanel{
 			System.out.println(event.getProperty().toString());
 			if(event.getProperty().toString().equals(MESH)) {
 				doMeshBasedSelfConfiguration();
+			}
+			if(event.getProperty().toString().equals(GENETICSELFCONFIG)) {
+				doGeneticBasedSelfConfiguration();
 			}
 		}
 		
