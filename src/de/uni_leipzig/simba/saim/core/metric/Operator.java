@@ -17,7 +17,7 @@ public class Operator extends Node
 {
 	public Operator(String id) {super(id);}
 	public static final Set<String> identifiers =
-			Collections.unmodifiableSet(new HashSet<>(Arrays.asList(new String[] {"min","max","add","mult","and","or","diff","xor", "minus"})));
+			Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(new String[] {"min","max","add","mult","and","or","diff","xor", "minus"})));
 	@Override public Set<String> identifiers()	{return identifiers;}	
 	@Override public byte getMaxChilds() {return 2;}
 	@SuppressWarnings("unchecked")

@@ -34,7 +34,7 @@ public class SortedMapping {
 	public String toString() {
 		String s = "";
 		for(Entry<Double, Pair<String>> e : sortedMapping.descendingMap().entrySet()) {
-			s += e.getKey() +" : "+e.getValue()+System.lineSeparator();
+			s += e.getKey() +" : "+e.getValue()+System.getProperty ( "line.separator" );
 		}
 		return s;
 	}

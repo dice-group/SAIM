@@ -35,6 +35,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import csplugins.layout.algorithms.force.ForceDirectedLayout;
 import cytoscape.CyNetwork;
 import cytoscape.Cytoscape;
+import cytoscape.CytoscapeInit;
 import cytoscape.view.CyNetworkView;
 import cytoscape.visual.VisualPropertyType;
 import de.konrad.commons.sparql.PrefixHelper;
@@ -160,9 +161,10 @@ public class MetricPanel extends Panel{
 		Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.NODE_SIZE, NODESIZE);
 		
 		String name = "MyName";
-		CyNetwork cyNetwork = Cytoscape.createNetwork(name, false);		
+		CyNetwork cyNetwork = Cytoscape.createNetwork(name, false);	
+		
 		cyNetworkView = Cytoscape.createNetworkView(cyNetwork);
-
+		
 		Window window = SAIMApplication.getInstance().getMainWindow();
 		cytographer = new Cytographer(cyNetwork, cyNetworkView, name, WIDTH, HEIGHT,window,this);
 		cytographer.setImmediate(true);
