@@ -15,6 +15,14 @@ public class VVisualStyle {
 	private String fontFamily = "Times New Roman Regular";
 	private String edgeDashArray;
 
+	// add colors for node shapes
+	private String metric;
+	private String operator;
+	private String output;
+	private String source;
+	private String target;
+
+	//
 	private int edgeLineWidth;
 	private int nodeBorderWidth;
 	private int nodeSize;
@@ -25,7 +33,14 @@ public class VVisualStyle {
 	private boolean textsVisible = true;
 
 	public void parseGeneralStyleAttributesFromUidl(final UIDL uidl) {
-	
+		// add colors for node shapes
+		metric = uidl.getStringAttribute("metric");
+		operator = uidl.getStringAttribute("operator");
+		output = uidl.getStringAttribute("output");
+		source = uidl.getStringAttribute("source");
+		target = uidl.getStringAttribute("target");
+
+		//
 		textsVisible = uidl.getBooleanAttribute("texts");
 		bgColor = uidl.getStringAttribute("bc");
 		edgeColor = uidl.getStringAttribute("ec");
@@ -174,4 +189,45 @@ public class VVisualStyle {
 	public String getEdgeDashArray() {
 		return edgeDashArray;
 	}
+	
+	public String getMetric() {
+		return metric;
+	}
+
+	public void setMetric(String metric) {
+		this.metric = metric;
+	}
+
+	public String getOperator() {
+		return operator;
+	}
+
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}
+
+	public String getOutput() {
+		return output;
+	}
+
+	public void setOutput(String output) {
+		this.output = output;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	public String getTarget() {
+		return target;
+	}
+
+	public void setTarget(String target) {
+		this.target = target;
+	}
+
 }

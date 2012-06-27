@@ -16,8 +16,8 @@ public class VTarget extends VNode  implements DoubleClickHandler{
 		super(cytographer,graph,shape,name,id,style);	
 		addDoubleClickHandler(this);
 	}
-	public static Shape getShape(int x, int y,int nodeSize){
-		return new VRectangle(x, y, nodeSize,"#dd9955"); 
+	public static Shape getShape(int x, int y,int nodeSize,String color){
+		return new VRectangle(x, y, nodeSize,color); 
 	}
 	@Override
 	public void onDoubleClick(DoubleClickEvent event) {

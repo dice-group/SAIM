@@ -87,15 +87,15 @@ implements ContextListener, MouseDownHandler, MouseUpHandler, MouseMoveHandler, 
 		}	
 		
 		if(shape.equals("METRIC"))
-			return new VMetric(cytographer, graph, VMetric.getShape(x,y, style.getNodeSize()), nodeName,nodeID, style);
+			return new VMetric(cytographer, graph, VMetric.getShape(x,y, style.getNodeSize(),style.getMetric()), nodeName,nodeID, style);
 		else if(shape.equals("OPERATOR"))
-			return new VOperator(cytographer, graph, VOperator.getShape(x,y, style.getNodeSize()), nodeName,nodeID, style);
+			return new VOperator(cytographer, graph, VOperator.getShape(x,y, style.getNodeSize(),style.getOperator()), nodeName,nodeID, style);
 		else if(shape.equals("SOURCE"))
-			return new VSource(cytographer, graph, VSource.getShape(x,y, style.getNodeSize()), nodeName,nodeID, style);
+			return new VSource(cytographer, graph, VSource.getShape(x,y, style.getNodeSize(),style.getSource()), nodeName,nodeID, style);
 		else if(shape.equals("TARGET"))
-			return new VTarget(cytographer, graph, VTarget.getShape(x,y, style.getNodeSize()), nodeName,nodeID, style);
+			return new VTarget(cytographer, graph, VTarget.getShape(x,y, style.getNodeSize(),style.getTarget()), nodeName,nodeID, style);
 		else if(shape.equals("OUTPUT"))
-			return new VOutput(cytographer, graph, VOutput.getShape(x,y, style.getNodeSize()), nodeName,nodeID, style);
+			return new VOutput(cytographer, graph, VOutput.getShape(x,y, style.getNodeSize(),style.getOutput()), nodeName,nodeID, style);
 
 		else  throw new IllegalStateException("Shape creation failed since shape not found,use:SOURCE,TARGET,METRIC, OUTPUT or OPERATOR.");
 	}

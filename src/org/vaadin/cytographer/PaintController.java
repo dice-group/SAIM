@@ -1,10 +1,17 @@
 package org.vaadin.cytographer;
 
+import static org.junit.Assert.assertNotNull;
 import giny.model.Edge;
 import giny.model.Node;
 
 import java.awt.Color;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Set;
 
 
@@ -20,7 +27,11 @@ import cytoscape.visual.VisualPropertyType;
 public class PaintController {
 
 	private static final int MARGIN = 20;
-
+	private Map<String,String> colormap = new HashMap<String,String>();
+	// colors
+	private String[] keys  = new String[]{"metric","operator","output","source","target"};
+	private final String resource = "de/uni_leipzig/simba/saim/colors/default.properties";
+	//
 	private Set<Integer> paintedNodes = new HashSet<Integer>();	
 	/**
 	 */
@@ -32,10 +43,41 @@ public class PaintController {
 	private Object getEdgeAppearance (VisualPropertyType vpt){
 		return Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().get(vpt);
 	}
+	private void initNodeColors(){
+		colormap.clear();
+		InputStream in=getClass().getClassLoader().getResourceAsStream(resource);
+		if(in != null){		
+			Properties properties = new Properties();
+			try {
+				properties.load(in);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			try {
+				in.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}			
+			for(String key: keys){				
+				colormap.put(key, properties.get(key).toString());
+			}
+		}
+	}
 	/**
 	 */
 	public void repaintGraph(final PaintTarget paintTarget, final GraphProperties graphProperties) throws PaintException {
 		
+		// add colors for node shapes
+		if(colormap.size() == 0){
+			initNodeColors();
+		}
+		if(colormap.size() != 0){
+			for(Entry<String, String> e : colormap.entrySet()){
+				paintTarget.addAttribute(e.getKey(), e.getValue());
+			}
+		}
+		
+		//
 		paintTarget.addAttribute("title", graphProperties.getTitle());
 		paintTarget.addAttribute("gwidth", graphProperties.getWidth());
 		paintTarget.addAttribute("gheight", graphProperties.getHeight());

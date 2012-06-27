@@ -12,7 +12,7 @@ public class VMetric extends VNode{
 	public VMetric(final VCytographer cytographer, final VGraph graph, final Shape shape, final String name,final String id,final VVisualStyle style) {
 		super(cytographer,graph,shape,name,id,style);			
 	}	
-	public static Shape getShape(int x, int y,int nodeSize){
-		return new VDiamond(x,y,nodeSize,"#dddd99"); 
+	public static Shape getShape(int x, int y,int nodeSize,String color){
+		return new VDiamond(x,y,nodeSize,color); 
 	}
 }

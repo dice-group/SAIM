@@ -107,8 +107,16 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 		currentKeyModifiers = new HashSet<Integer>();
 		final String operation = uidl.getStringAttribute("operation");
 
-		if ("REPAINT".equals(operation)) 
+		
+		if ("REPAINT".equals(operation)) {
+	
+			style.setMetric(uidl.getStringAttribute("metric"));
+			style.setOperator(uidl.getStringAttribute("operator"));
+			style.setOutput(uidl.getStringAttribute("output"));
+			style.setSource(uidl.getStringAttribute("source"));
+			style.setTarget(uidl.getStringAttribute("target"));
 			repaint(uidl);
+		}
 		else if ("SET_NODE_SIZE".equals(operation)) {
 			style.setNodeSize(uidl.getIntAttribute("ns") / 2);
 			graph.updateGraphProperties(style);

@@ -44,8 +44,8 @@ public class VOutput extends VNode implements DoubleClickHandler{
 		textShape1.setText(value1);
 		textShape2.setText(value2);
 	}
-	public static Shape getShape(int x, int y,int nodeSize){
-		return new VCycle(x,y,nodeSize,"#998866"); 
+	public static Shape getShape(int x, int y,int nodeSize,String color){
+		return new VCycle(x,y,nodeSize,color); 
 	}
 	@Override
 	public void initCommands(final VContextMenu menu) {

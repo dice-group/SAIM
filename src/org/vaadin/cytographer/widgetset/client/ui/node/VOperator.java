@@ -39,8 +39,8 @@ public class VOperator extends VNode  implements DoubleClickHandler{
 		shape.setFontSize(style.getNodeFontSize());
 		shape.setFontFamily(style.getFontFamily());		
 	}
-	public static Shape getShape(int x, int y,int nodeSize){
-		return new VTriangle(x,y,nodeSize,"#eeddcc"); 
+	public static Shape getShape(int x, int y,int nodeSize,String color){
+		return new VTriangle(x,y,nodeSize,color); 
 	}	
 
 	public void updateValues(String value1,String value2){
