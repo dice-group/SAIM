@@ -3,9 +3,13 @@ package org.vaadin.cytographer;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeSelect;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.VerticalLayout;
 
 import csplugins.layout.algorithms.circularLayout.CircularLayoutAlgorithm;
 import csplugins.layout.algorithms.force.ForceDirectedLayout;
@@ -13,16 +17,33 @@ import csplugins.layout.algorithms.hierarchicalLayout.HierarchicalLayoutAlgorith
 import cytoscape.layout.CyLayoutAlgorithm;
 import cytoscape.layout.algorithms.GridNodeLayout;
 
-public class CytographerActionToolbar extends HorizontalLayout {
+public class CytographerActionToolbar extends VerticalLayout {
 	private static final long serialVersionUID = -2390577303164805877L;
 	
 	private NativeSelect layoutSelect;
 	private Cytographer cytographer;
 
 	public CytographerActionToolbar(Cytographer cytographer) {
-		setSpacing(true);
-		addComponent(getLayoutSelect());
 		this.cytographer = cytographer;
+		
+		setSpacing(true);
+		
+		Component layout  = getLayoutSelect();
+		addComponent(layout);
+		
+		Component fitb  = getFitToViewButton();
+		addComponent(fitb);
+		
+		HorizontalLayout hl = new HorizontalLayout();
+		hl.setSpacing(true);
+		hl.addComponent(getZoomInButton());
+		hl.addComponent(getZoomOutButton());
+		
+		addComponent(hl);		
+		
+		setComponentAlignment(layout, Alignment.MIDDLE_CENTER);
+		setComponentAlignment(fitb, Alignment.MIDDLE_CENTER);
+		setComponentAlignment(hl, Alignment.MIDDLE_CENTER);
 	}
 
 	private Component getLayoutSelect() {
@@ -58,5 +79,45 @@ public class CytographerActionToolbar extends HorizontalLayout {
 			}
 		});
 		return layoutSelect;
+	}
+	private Component getFitToViewButton() {
+		final Button button = new Button("Fit to view");
+		button.setImmediate(true);
+		button.addListener(new Button.ClickListener() {
+			private static final long serialVersionUID = -8874905593085298508L;
+
+			@Override
+			public void buttonClick(final ClickEvent event) {
+				cytographer.fitToView();
+			}
+		});
+		return button;
+	}
+	private Component getZoomOutButton() {
+		final Button button = new Button("-");
+		button.setImmediate(true);
+		button.addListener(new Button.ClickListener() {
+			private static final long serialVersionUID = -2424360452782278429L;
+
+			@Override
+			public void buttonClick(final ClickEvent event) {
+				cytographer.zoomOut();
+			}
+		});
+		return button;
+	}
+
+	private Component getZoomInButton() {
+		final Button button = new Button("+");
+		button.setImmediate(true);
+		button.addListener(new Button.ClickListener() {
+			private static final long serialVersionUID = -1990896114255311865L;
+
+			@Override
+			public void buttonClick(final ClickEvent event) {
+				cytographer.zoomIn();
+			}
+		});
+		return button;
 	}
 }
