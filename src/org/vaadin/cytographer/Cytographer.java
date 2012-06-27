@@ -15,6 +15,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
 import com.vaadin.ui.Window.Notification;
+import com.vaadin.ui.themes.Reindeer;
 
 import org.vaadin.cytographer.widgetset.client.ui.VCytographer;
 
@@ -237,11 +238,13 @@ public class Cytographer extends AbstractComponent {
 		});
 		mywindow.setResizable(false);
 		mywindow.setModal(true); 
+		mywindow.addStyleName(Reindeer.WINDOW_BLACK);
 		mywindow.setHeight("180px");
 		mywindow.setWidth("200px");			 
 		mywindow.setPositionX(Math.round(Float.valueOf(args[1])));
 		mywindow.setPositionY(Math.round(Float.valueOf(args[2])));	
 
+		
 		mainWindow.addWindow(mywindow);
 	}
 	/**
