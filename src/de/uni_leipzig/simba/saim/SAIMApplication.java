@@ -48,7 +48,8 @@ public class SAIMApplication extends Application
 		// reproduce failure on headless environments
 //		System.setProperty("java.awt.headless", "true"); 
 		logger.debug("SAIMApplication()");
-		messages = new Messages(Locale.getDefault());
+		//messages = new Messages(Locale.getDefault());
+		messages = new Messages(Locale.ENGLISH);
 		mainWindow = new Window();
 		ParameterHandler parameterHandler = new ParameterHandler()
 		{			
