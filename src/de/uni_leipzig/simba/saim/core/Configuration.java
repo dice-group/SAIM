@@ -24,7 +24,7 @@ import de.uni_leipzig.simba.saim.core.metric.Output;
 /**Class holds all configuration settings for a linking process. */
 public class Configuration
 {
-	private static Logger logger = Logger.getLogger("SAIM");
+	private Logger logger = Logger.getLogger("SAIM");
 	public Output metric = null; 
 //	private static Configuration instance = new Configuration();	
 	private PropertyChangeSupport changes = new PropertyChangeSupport( this ); 
@@ -259,29 +259,28 @@ public class Configuration
 		if(!source.properties.contains(s_abr)) {
 			source.properties.add(s_abr);
 			source.prefixes.put(PrefixHelper.getBase(s_abr), PrefixHelper.getURI(PrefixHelper.getBase(s_abr)));
-			source.functions.put(s_abr, "lowercase");	
+			source.functions.put(s_abr, "nolang->lowercase");	
 		}
 		//		System.out.println("Adding source property: "+s_abr+"::::"+PrefixHelper.getPrefixFromURI(s_abr)+" -- "+PrefixHelper.getURI(PrefixHelper.getPrefixFromURI(s_abr)));
 
 		if(!target.properties.contains(t_abr)) {
 			target.properties.add(t_abr);
 			target.prefixes.put(PrefixHelper.getBase(t_abr), PrefixHelper.getURI(PrefixHelper.getBase(t_abr)));
-			target.functions.put(t_abr, "lowercase");
+			target.functions.put(t_abr, "nolang->lowercase");
 		}
 		if(stringProps) {
 			logger.info("Adding String Property Match: "+s_abr+" - "+t_abr);
 			propertyMapping.addStringPropertyMatch(s_abr, t_abr);
 			if(!source.functions.containsKey(s_abr))
-				source.functions.put(s_abr, "lowercase");
-			if(!target.functions.containsKey(t_abr))
-				target.functions.put(t_abr, "lowercase");
+				source.functions.put(s_abr, "nolang->lowercase");
+			
+			if(!target.functions.containsKey(t_abr)) 
+				target.functions.put(t_abr, "nolang->lowercase");
 		} else {
 			logger.info("Adding Number Property Match: "+s_abr+" - "+t_abr);
 			propertyMapping.addNumberPropertyMatch(s_abr, t_abr);
-			if(!source.functions.containsKey(s_abr))
-				source.functions.put(s_abr, "number");
-			if(!target.functions.containsKey(t_abr))
-				target.functions.put(t_abr, "number");
+			source.functions.put(s_abr, "number");
+			target.functions.put(t_abr, "number");
 		}
 	}
 

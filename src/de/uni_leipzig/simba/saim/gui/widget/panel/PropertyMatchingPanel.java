@@ -12,6 +12,9 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.terminal.ClassResource;
@@ -21,6 +24,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.Table;
@@ -52,13 +56,23 @@ public class PropertyMatchingPanel extends Panel
 	private final ProgressIndicator progress = new ProgressIndicator();
 	private Label progressLabel;
 	private boolean listenerActive = true;
-
+	// to display computed ones
+	HorizontalLayout selectionLayout = new HorizontalLayout();
+	ListSelect select = new ListSelect("Computed Property Mappings");
+	Button useAll  = new Button("Use them all");
+	
+	
 	public PropertyMatchingPanel(final Messages messages)
 	{
 		this.messages=messages;
 		progressLabel = new Label(messages.getString("generatingpropertymatching"));	
 		mainLayout = new VerticalLayout();
-
+		
+		selectionLayout.addComponent(select);
+		selectionLayout.addComponent(useAll);
+		useAll.setEnabled(false);
+		mainLayout.addComponent(selectionLayout);
+		
 		setContent(mainLayout);
 		getContent().setWidth("100%");
 		/* Create the table with a caption. */
@@ -70,7 +84,6 @@ public class PropertyMatchingPanel extends Panel
 		progressLayout.addComponent(progressLabel);
 		progressLayout.addComponent(progress);
 		propMapper.start();
-		System.out.println("thread started");
 	}
 
 	Cache cache = null;
@@ -288,7 +301,7 @@ public class PropertyMatchingPanel extends Panel
 		}
 		if(!info.properties.contains(prop))
 			info.properties.add(prop);
-		info.functions.put(prop,"lowercase");
+		info.functions.put(prop,"nolang->lowercase");
 		String base = PrefixHelper.getBase(s);
 		info.prefixes.put(PrefixHelper.getPrefix(base), PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
 
@@ -381,32 +394,67 @@ public class PropertyMatchingPanel extends Panel
 		return propMap.getPropertyMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().getClassOfendpoint(), config.getTarget().getClassOfendpoint());
 	}
 
+	/**
+	 * Show computed Property mapping in select, activate Button to use them all.
+	 * @param map
+	 */
 	private void displayPropertyMapping(Map<String, HashMap<String, Double>> map)
 	{
-		Panel showPropMapping = new Panel("Computed propertyMapping");
-//		VerticalLayout vert2 = new VerticalLayout();
-		//String s = "";
-		listenerActive=false;
+		logger.info("Displaying property Mapping");
+		useAll.addListener(new UseComputedClickListener(map));
+		if(map.size()>0)
+			useAll.setEnabled(true);
 		for(String key : map.keySet()) {
 			for(Entry<String, Double> e : map.get(key).entrySet())
-			{
-				Object[] row = createTableRow();
-				PropertyComboBox sourceBox = (PropertyComboBox) row[0];
-				PropertyComboBox targetBox = (PropertyComboBox) row[1];
-				sourceBox.addItem(key);
-				sourceBox.select(key);
-				targetBox.addItem(e.getKey());
-				targetBox.select(e.getKey());
-				table.addItem(row,row);
-				logger.debug("Mapped: "+key+" to "+e.getKey()+" :: "+e.getValue());
-//				vert2.addComponent(new Label("Mapped: "+key+" to "+e.getKey()+" :: "+e.getValue()));
+			{				
+				select.addItem(new ClassMatchItem(key, e.getKey(), e.getValue()));
 			}
 		}
-		listenerActive=true;
-//		showPropMapping.addComponent(vert2);
-		mainLayout.addComponent(showPropMapping);		
+		select.setImmediate(true);
+		select.setNullSelectionAllowed(false);
+
+		select.addListener(new Property.ValueChangeListener() {			
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				ClassMatchItem item = (ClassMatchItem) select.getValue();
+				addSingleMatchToTable(item.getSourceClass(), item.getTargetClass());
+			}
+		});
 	}
 
+	/**
+	 * Public method to submit computed property mapping from the ButtonListener to the table.
+	 * @param propertyMap
+	 */
+	public void addMapToTable(Map<String, HashMap<String, Double>> propertyMap) {
+		for(String key : propertyMap.keySet()) {
+			for(Entry<String, Double> e : propertyMap.get(key).entrySet())
+			{
+				addSingleMatchToTable(key, e.getKey());
+			}
+		}
+		useAll.setEnabled(false);
+	}
+	/**
+	 * Method to add a single match to table.
+	 * @param sourceClass
+	 * @param targetClass
+	 */
+	public void addSingleMatchToTable(String sourceClass, String targetClass) {
+		if(sourceClass == null || sourceClass.length()==0 || targetClass == null || targetClass.length()==0)
+			return;
+		listenerActive=false;
+		Object[] row = createTableRow();
+		PropertyComboBox sourceBox = (PropertyComboBox) row[0];
+		PropertyComboBox targetBox = (PropertyComboBox) row[1];
+		sourceBox.addItem(sourceClass);
+		sourceBox.select(sourceClass);
+		targetBox.addItem(targetClass);
+		targetBox.select(targetClass);
+		table.addItem(row,row);
+		listenerActive=true;
+	}
+	
 	/**
 	 * Called on next button click.
 	 */
@@ -421,6 +469,66 @@ public class PropertyMatchingPanel extends Panel
 				addProperty(((PropertyComboBox)row[1]).getValue().toString(),config.getTarget());
 				config.addPropertiesMatch(((PropertyComboBox)row[0]).getValue().toString(), ((PropertyComboBox)row[1]).getValue().toString(), true);
 			}			
+		}
+	}
+	
+	/**
+	 * Listener to add all computed property matches to the table.
+	 * @author Lyko
+	 *
+	 */
+	class UseComputedClickListener implements Button.ClickListener {
+		Map<String, HashMap<String, Double>> propertyMap;
+		public UseComputedClickListener(Map<String, HashMap<String, Double>> propertyMap) {
+			this.propertyMap = propertyMap;
+		}
+		
+		@Override
+		public void buttonClick(ClickEvent event) {
+			addMapToTable(propertyMap);		
+		}
+	}
+	
+	/**
+	 * Bean for a single class match.
+	 * @author Lyko
+	 */
+	class ClassMatchItem {
+		private String sourceClass;
+		private String targetClass;
+		private double similarity;
+		public ClassMatchItem(String sourceClass, String targetClass, double similarity) {
+			this.sourceClass=sourceClass;
+			this.targetClass=targetClass;
+			this.similarity=similarity;
+		}
+		public ClassMatchItem(String sourceClass, String targetClass) {
+			
+		}
+		public String getSourceClass() {
+			return sourceClass;
+		}
+		public void setSourceClass(String sourceClass) {
+			this.sourceClass = sourceClass;
+		}
+		public String getTargetClass() {
+			return targetClass;
+		}
+		public void setTargetClass(String targetClass) {
+			this.targetClass = targetClass;
+		}
+		public double getSimilarity() {
+			return similarity;
+		}
+		public void setSimilarity(double similarity) {
+			this.similarity = similarity;
+		}
+		@Override
+		public String toString() {
+			String ret = sourceClass + " - " +targetClass;
+			if(!Double.isNaN(similarity))
+				ret+= " (" + similarity + ")";
+			return ret;
 		}
 	}
 }
