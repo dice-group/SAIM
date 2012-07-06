@@ -58,23 +58,26 @@ public class PropertyMatchingPanel extends Panel
 	private boolean listenerActive = true;
 	// to display computed ones
 	HorizontalLayout selectionLayout = new HorizontalLayout();
-	ListSelect select = new ListSelect("Computed Property Mappings");
-	Button useAll  = new Button("Use them all");
+	ListSelect select;
+	Button useAll;
 	
 	
 	public PropertyMatchingPanel(final Messages messages)
 	{
 		this.messages=messages;
-		progressLabel = new Label(messages.getString("generatingpropertymatching"));	
+		progressLabel = new Label(messages.getString("generatingpropertymatching"));	 //$NON-NLS-1$
 		mainLayout = new VerticalLayout();
 		
+		select = new ListSelect(messages.getString("PropertyMatchingPanel.computed")); //$NON-NLS-1$
+		useAll  = new Button(messages.getString("PropertyMatchingPanel.useButton")); //$NON-NLS-1$
 		selectionLayout.addComponent(select);
 		selectionLayout.addComponent(useAll);
 		useAll.setEnabled(false);
 		mainLayout.addComponent(selectionLayout);
 		
+		
 		setContent(mainLayout);
-		getContent().setWidth("100%");
+		getContent().setWidth("100%"); //$NON-NLS-1$
 		/* Create the table with a caption. */
 
 		//	setupContextHelp();
@@ -107,8 +110,8 @@ public class PropertyMatchingPanel extends Panel
 		{
 			Map<String, HashMap<String, Double>> map = new HashMap<String, HashMap<String, Double>>();
 			HashMap<String,Double> value = new HashMap<String,Double>();
-			value.put("rdfs:label",0.337);
-			map.put("rdfs:label",value);
+			value.put("rdfs:label",0.337); //$NON-NLS-1$
+			map.put("rdfs:label",value); //$NON-NLS-1$
 			return map;
 		}
 	};
@@ -133,7 +136,7 @@ public class PropertyMatchingPanel extends Panel
 
 	private String classRestrictionToClass(String classRestriction)
 	{
-		return classRestriction.substring((classRestriction.lastIndexOf(' ')+1)).replace("<","").replace(">","");
+		return classRestriction.substring((classRestriction.lastIndexOf(' ')+1)).replace("<","").replace(">",""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 
 	/**	returns all properties (not just the ones from the property matching) that instances of the knowledge base of the 
@@ -148,7 +151,7 @@ public class PropertyMatchingPanel extends Panel
 
 	private List<String> mockAllPropertiesFromKBInfo(KBInfo kb)
 	{
-		return Arrays.asList(new String[] {"rdfs:label","rdfs:schmabel"});
+		return Arrays.asList(new String[] {"rdfs:label","rdfs:schmabel"}); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private class RowChangeListener implements ValueChangeListener
@@ -248,14 +251,14 @@ public class PropertyMatchingPanel extends Panel
 		//			String s_abr=PrefixHelper.abbreviate(prop);
 		//			targetProperties.add(s_abr);
 		//		}
-		table.setWidth("100%");
+		table.setWidth("100%"); //$NON-NLS-1$
 		addComponent(table);		
-		closeImageResource = new ClassResource("img/no_crystal_clear_16.png",getApplication());		
+		closeImageResource = new ClassResource("img/no_crystal_clear_16.png",getApplication());		 //$NON-NLS-1$
 		/* Define the names and data types of columns.
 		 * The "default value" parameter is meaningless here. */		
-		table.addContainerProperty(messages.getString("sourceproperty"), PropertyComboBox.class,  null);
-		table.addContainerProperty(messages.getString("targetproperty"), PropertyComboBox.class,  null);
-		table.addContainerProperty("", Button.class,  null);
+		table.addContainerProperty(messages.getString("sourceproperty"), PropertyComboBox.class,  null); //$NON-NLS-1$
+		table.addContainerProperty(messages.getString("targetproperty"), PropertyComboBox.class,  null); //$NON-NLS-1$
+		table.addContainerProperty("", Button.class,  null); //$NON-NLS-1$
 		//table.setColumnWidth("",48);
 
 		/* Add a few items in the table. */
@@ -291,8 +294,8 @@ public class PropertyMatchingPanel extends Panel
 	 */
 	private void addProperty(String s, KBInfo info) {
 		String prop;
-		System.out.println("Add property "+s+" to "+info.id);
-		if(s.startsWith("http:")) {//do not have a prefix, so we generate one
+		System.out.println("Add property "+s+" to "+info.id); //$NON-NLS-1$ //$NON-NLS-2$
+		if(s.startsWith("http:")) {//do not have a prefix, so we generate one //$NON-NLS-1$
 			PrefixHelper.generatePrefix(s);
 			prop = PrefixHelper.abbreviate(s);
 		} else {// have the prefix already
@@ -301,11 +304,11 @@ public class PropertyMatchingPanel extends Panel
 		}
 		if(!info.properties.contains(prop))
 			info.properties.add(prop);
-		info.functions.put(prop,"nolang->lowercase");
+		info.functions.put(prop,"nolang->lowercase"); //$NON-NLS-1$
 		String base = PrefixHelper.getBase(s);
 		info.prefixes.put(PrefixHelper.getPrefix(base), PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
 
-		LoggerFactory.getLogger(AccordionLayoutClickListener.class).info(info.var+": adding property: "+prop+" with prefix "+PrefixHelper.getPrefix(base)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
+		LoggerFactory.getLogger(AccordionLayoutClickListener.class).info(info.var+": adding property: "+prop+" with prefix "+PrefixHelper.getPrefix(base)+" - "+PrefixHelper.getURI(PrefixHelper.getPrefix(base))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	private void getAllProperties() {
@@ -313,7 +316,7 @@ public class PropertyMatchingPanel extends Panel
 		targetProperties = new LinkedList<String>();
 		Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
 		if(config.isLocal) {
-			logger.info("Local data - using specified properties");
+			logger.info("Local data - using specified properties"); //$NON-NLS-1$
 			for(String prop : config.getSource().properties) {
 				String s_abr=PrefixHelper.abbreviate(prop);
 				sourceProperties.add(s_abr);
@@ -328,18 +331,18 @@ public class PropertyMatchingPanel extends Panel
 		List<String> propListSource = null;
 		List<String> propListTarget = null;
 		KBInfo info = config.getSource();
-		String className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
+		String className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8); //$NON-NLS-1$
 		if(CACHING) {
-			cache = CacheManager.getInstance().getCache("propertymapping");
+			cache = CacheManager.getInstance().getCache("propertymapping"); //$NON-NLS-1$
 			//			if(cache.getStatus()==net.sf.ehcache.Status.STATUS_UNINITIALISED) {cache.initialise();}					
 			List<Object> parameters = Arrays.asList(new Object[] {info.endpoint, info.graph, className});
 			try{
 				if(cache.isKeyInCache(parameters))
 				{		
 					propListSource = (List<String>) cache.get(parameters).getValue();
-					logger.info("Property List Cache hit: "+info.endpoint);
+					logger.info("Property List Cache hit: "+info.endpoint); //$NON-NLS-1$
 				}
-			} catch(Exception e){logger.info("PropertyMapping cache exception:"+e.getMessage());}
+			} catch(Exception e){logger.info("PropertyMapping cache exception:"+e.getMessage());} //$NON-NLS-1$
 			if(propListSource == null || propListSource.size()==0) {
 				propListSource = SPARQLHelper.properties(info.endpoint, info.graph, className);
 				cache.put(new Element(parameters, propListSource));
@@ -347,15 +350,15 @@ public class PropertyMatchingPanel extends Panel
 			}
 			// target
 			info = config.getTarget();
-			className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
+			className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8); //$NON-NLS-1$
 			parameters = Arrays.asList(new Object[] {info.endpoint, info.graph, className});
 			try{
 				if(cache.isKeyInCache(parameters))
 				{		
 					propListTarget = (List<String>) cache.get(parameters).getValue();
-					logger.info("Property List Cache hit: "+info.endpoint);
+					logger.info("Property List Cache hit: "+info.endpoint); //$NON-NLS-1$
 				}
-			} catch(Exception e){logger.info("PropertyMapping cache exception:"+e.getMessage());}
+			} catch(Exception e){logger.info("PropertyMapping cache exception:"+e.getMessage());} //$NON-NLS-1$
 			if(propListTarget == null || propListTarget.size()==0) {
 				propListTarget = SPARQLHelper.properties(info.endpoint, info.graph, className);
 				if(cache.getStatus()==net.sf.ehcache.Status.STATUS_UNINITIALISED) {cache.initialise();}					
@@ -366,13 +369,13 @@ public class PropertyMatchingPanel extends Panel
 		}
 		else {
 			info = config.getSource();
-			className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
+			className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8); //$NON-NLS-1$
 			propListSource = SPARQLHelper.properties(info.endpoint, info.graph, className);
-			logger.info("Got "+propListSource.size()+ " source props");
+			logger.info("Got "+propListSource.size()+ " source props"); //$NON-NLS-1$ //$NON-NLS-2$
 			info = config.getTarget();
-			className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);
+			className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8); //$NON-NLS-1$
 			propListTarget = SPARQLHelper.properties(info.endpoint, info.graph, className);
-			logger.info("Got "+propListTarget.size()+ " target props");
+			logger.info("Got "+propListTarget.size()+ " target props"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		for(String prop : propListSource) {
 			String s_abr=PrefixHelper.abbreviate(prop);
@@ -400,7 +403,7 @@ public class PropertyMatchingPanel extends Panel
 	 */
 	private void displayPropertyMapping(Map<String, HashMap<String, Double>> map)
 	{
-		logger.info("Displaying property Mapping");
+		logger.info("Displaying property Mapping"); //$NON-NLS-1$
 		useAll.addListener(new UseComputedClickListener(map));
 		if(map.size()>0)
 			useAll.setEnabled(true);
@@ -525,9 +528,9 @@ public class PropertyMatchingPanel extends Panel
 		}
 		@Override
 		public String toString() {
-			String ret = sourceClass + " - " +targetClass;
+			String ret = sourceClass + " - " +targetClass; //$NON-NLS-1$
 			if(!Double.isNaN(similarity))
-				ret+= " (" + similarity + ")";
+				ret+= " (" + similarity + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			return ret;
 		}
 	}
