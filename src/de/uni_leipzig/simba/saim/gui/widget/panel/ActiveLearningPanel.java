@@ -69,7 +69,7 @@ public class ActiveLearningPanel extends MetricLearnPanel
 		}
 		Mapping map = learner.learn(new Mapping());
 		iMapTable = new InstanceMappingTable
-				(config, map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache(), true,messages);
+				(getApplication(), config, map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache(), true,messages);
 		if (map.size()>0)
 		{
 			learnLayout.removeAllComponents();
@@ -100,12 +100,12 @@ public class ActiveLearningPanel extends MetricLearnPanel
 				logger.info("Starting round"); //$NON-NLS-1$
 				map = iMapTable.tabletoMapping();
 				if(map.size()==0)
-					SAIMApplication.getInstance().getMainWindow().showNotification(messages.getString("ActiveLearningPanel.learningwithoutnotification")); //$NON-NLS-1$
+					getApplication().getMainWindow().showNotification(messages.getString("ActiveLearningPanel.learningwithoutnotification")); //$NON-NLS-1$
 				map = learner.learn(map);
 			}
 
 			//iMapTable = new DetailedInstanceMappingTable(map,learner.getFitnessFunction().getSourceCache(),learner.getFitnessFunction().getTargetCache());
-			iMapTable = new InstanceMappingTable(config, map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache(), true,messages);
+			iMapTable = new InstanceMappingTable(getApplication(), config, map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache(), true,messages);
 
 			l.removeAllComponents();
 			l.addComponent(iMapTable.getTable());

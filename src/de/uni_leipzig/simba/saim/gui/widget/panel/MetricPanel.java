@@ -35,7 +35,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import csplugins.layout.algorithms.force.ForceDirectedLayout;
 import cytoscape.CyNetwork;
 import cytoscape.Cytoscape;
-import cytoscape.CytoscapeInit;
 import cytoscape.view.CyNetworkView;
 import cytoscape.visual.VisualPropertyType;
 import de.konrad.commons.sparql.PrefixHelper;
@@ -48,7 +47,9 @@ import de.uni_leipzig.simba.saim.core.metric.Node;
 import de.uni_leipzig.simba.saim.core.metric.Operator;
 import de.uni_leipzig.simba.saim.core.metric.Output;
 import de.uni_leipzig.simba.saim.core.metric.Property;
-import de.uni_leipzig.simba.saim.gui.widget.Listener.MetricPanelListeners;
+import de.uni_leipzig.simba.saim.gui.widget.Listener.LearnClickListener;
+import de.uni_leipzig.simba.saim.gui.widget.Listener.SelfConfigClickListener;
+import de.uni_leipzig.simba.saim.gui.widget.Listener.StartMappingListener;
 
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
 public class MetricPanel extends Panel{    
@@ -165,7 +166,7 @@ public class MetricPanel extends Panel{
 		
 		cyNetworkView = Cytoscape.createNetworkView(cyNetwork);
 		
-		Window window = SAIMApplication.getInstance().getMainWindow();
+		Window window = getApplication().getMainWindow();
 		cytographer = new Cytographer(cyNetwork, cyNetworkView, name, WIDTH, HEIGHT,window,this);
 		cytographer.setImmediate(true);
 		cytographer.setWidth(WIDTH + "px"); //$NON-NLS-1$
@@ -190,53 +191,53 @@ public class MetricPanel extends Panel{
 		return cytographer;		
 	}
 
-	private Map<Integer,Node> blacklist = new HashMap<Integer,Node>();
-	/**
-	 * @param o the Output node
-	 * @deprecated use makeMetricRecursive() instead.
-	 */
-	private void makeMetric(Output output)
-	{
-		Stack<Node> cNodes = new Stack<Node>();
-		cNodes.push(output);
-		
-		while(!cNodes.isEmpty()){
-			Integer nID = null;
-			Node n = cNodes.pop();
-			if(!blacklist.containsValue(n)){
-				nID = addNode(n);
-				blacklist.put(nID, n);
-			}else{
-				for(Integer id : blacklist.keySet()){
-					if(blacklist.get(id).equals(n)){
-						nID=id;
-						break;						
-					}
-				}
-			}
-			
-			cNodes.addAll(n.getChilds());
-			for(Node c : n.getChilds()){
-				Integer cID = null; 
-				/* Need to support for adding multiple property nodes 
-				 * the second or part does that.
-				 * @TODO test test test!!!
-				 */
-				if(!blacklist.containsValue(c)||c.getMaxChilds()==0){
-					cID = addNode(c);
-					blacklist.put(cID, c);
-				}else{
-					for(Integer id : blacklist.keySet()){
-						if(blacklist.get(id).equals(c)){
-							cID=id;
-							break;						
-						}
-					}
-				}				
-				addEdge(nID,cID);			
-			}
-		}
-	}
+//	private Map<Integer,Node> blacklist = new HashMap<Integer,Node>();
+//	/**
+//	 * @param o the Output node
+//	 * @deprecated use makeMetricRecursive() instead.
+//	 */
+//	private void makeMetric(Output output)
+//	{
+//		Stack<Node> cNodes = new Stack<Node>();
+//		cNodes.push(output);
+//		
+//		while(!cNodes.isEmpty()){
+//			Integer nID = null;
+//			Node n = cNodes.pop();
+//			if(!blacklist.containsValue(n)){
+//				nID = addNode(n);
+//				blacklist.put(nID, n);
+//			}else{
+//				for(Integer id : blacklist.keySet()){
+//					if(blacklist.get(id).equals(n)){
+//						nID=id;
+//						break;						
+//					}
+//				}
+//			}
+//			
+//			cNodes.addAll(n.getChilds());
+//			for(Node c : n.getChilds()){
+//				Integer cID = null; 
+//				/* Need to support for adding multiple property nodes 
+//				 * the second or part does that.
+//				 * @TODO test test test!!!
+//				 */
+//				if(!blacklist.containsValue(c)||c.getMaxChilds()==0){
+//					cID = addNode(c);
+//					blacklist.put(cID, c);
+//				}else{
+//					for(Integer id : blacklist.keySet()){
+//						if(blacklist.get(id).equals(c)){
+//							cID=id;
+//							break;						
+//						}
+//					}
+//				}				
+//				addEdge(nID,cID);			
+//			}
+//		}
+//	}
 	/**
 	 * Recursive  function to create a graphical representation out of a output node.
 	 * @param n Call with the Output (root) node.
@@ -335,15 +336,15 @@ public class MetricPanel extends Panel{
 		
 		selfConfigButton = new Button(messages.getString("MetricPanel.startselfconfigbutton")); //$NON-NLS-1$
 		selfConfigButton.setEnabled(false);
-		selfConfigButton.addListener(new MetricPanelListeners.SelfConfigClickListener(messages));
+		selfConfigButton.addListener(new SelfConfigClickListener(getApplication(), messages));
 		
 		this.learnButton = new Button(messages.getString("MetricPanel.learnmetricbutton")); //$NON-NLS-1$
 		learnButton.setEnabled(false);
-		learnButton.addListener(new MetricPanelListeners.LearnClickListener(messages));
+		learnButton.addListener(new LearnClickListener(getApplication(), messages));
 		
 		this.startMapping = new Button(messages.getString("MetricPanel.startmappingbutton")); //$NON-NLS-1$
 		startMapping.setEnabled(false);
-		startMapping.addListener(new MetricPanelListeners.StartMappingListener(messages));
+		startMapping.addListener(new StartMappingListener(getApplication(), messages));
 		
 		buttonLayout.addComponent(setMetric);
 		buttonLayout.addComponent(selfConfigButton);

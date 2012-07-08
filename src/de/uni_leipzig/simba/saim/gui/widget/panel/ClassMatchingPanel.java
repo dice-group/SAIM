@@ -194,7 +194,7 @@ public class ClassMatchingPanel extends Panel
 								targetClassForm.requestRepaint();
 							}
 						});
-						System.out.println("suggested enabled: "+suggestionComboBox.size()+" items");					 //$NON-NLS-1$ //$NON-NLS-2$
+//						System.out.println("suggested enabled: "+suggestionComboBox.size()+" items");					 //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					progress.setEnabled(false);
 					removeComponent(progress);

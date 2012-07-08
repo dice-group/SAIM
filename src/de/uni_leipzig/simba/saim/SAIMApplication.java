@@ -32,7 +32,7 @@ public class SAIMApplication extends Application
 {
 	public final Messages messages;
 	private static final long	serialVersionUID	= -7665596682464881860L;
-	private static SAIMApplication application = null; 
+	private SAIMApplication application = null; 
 	@Getter private final Window mainWindow;
 	private VerticalLayout mainLayout;
 	private Wizard wizard;
@@ -40,7 +40,7 @@ public class SAIMApplication extends Application
 	Configuration config = new Configuration();
 	Panel content;	
 	static final Logger logger = Logger.getLogger(SAIMApplication.class);
-	public static Application getInstance() {return application;}
+//	public  Application getInstance() {return application;}
 	private MenuBar menuBar = null;
 
 	public SAIMApplication()

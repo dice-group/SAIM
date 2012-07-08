@@ -66,7 +66,7 @@ public class SerializationWindow extends Window
 			}
 		}
 		serial.close();
-		return new Link(messages.getString("downloadlinkspec"),new FileResource(new File(fileName), SAIMApplication.getInstance())); 
+		return new Link(messages.getString("downloadlinkspec"),new FileResource(new File(fileName), getApplication())); 
 	}
 	
 	private NativeSelect getSerializerSelect() {

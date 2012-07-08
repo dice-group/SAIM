@@ -161,7 +161,7 @@ public class LearningPanel extends PerformPanel
 
 	@Override
 	public void onClose() {
-		((SAIMApplication) SAIMApplication.getInstance()).refresh();
+		((SAIMApplication) getApplication()).refresh();
 		if(learnerPanel!=null) {
 			learnerPanel.onClose();
 		}

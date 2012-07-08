@@ -60,7 +60,7 @@ public class ResultPanel extends Panel
 		public void buttonClick(ClickEvent event) {
 			
 			Window download = new SerializationWindow(data.getMapping(),messages);
-			SAIMApplication.getInstance().getMainWindow().addWindow(download);
+			getApplication().getMainWindow().addWindow(download);
 		}
 	}
 }

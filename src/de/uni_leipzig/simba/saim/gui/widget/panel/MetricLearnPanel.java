@@ -102,7 +102,7 @@ public class MetricLearnPanel extends  PerformPanel{
 				label.setValue(metric.expression+" with threshold "+metric.threshold);
 				config.setMetricExpression(metric.expression);
 				config.setAcceptanceThreshold(metric.threshold);
-				((SAIMApplication) SAIMApplication.getInstance()).refresh();
+				((SAIMApplication) getApplication()).refresh();
 				l.addComponent(label);
 			}
 		}
@@ -113,7 +113,7 @@ public class MetricLearnPanel extends  PerformPanel{
 		learner.getFitnessFunction().destroy();
 		
 		learner = null;
-		((SAIMApplication) SAIMApplication.getInstance()).refresh();		
+		((SAIMApplication) getApplication()).refresh();		
 	}
 
 	@Override

@@ -317,7 +317,7 @@ public class MeshBasedSelfConfigPanel extends PerformPanel{
 		if(thread != null)
 			if(thread.isAlive())
 				thread.stop();
-		((SAIMApplication) SAIMApplication.getInstance()).refresh();
+		((SAIMApplication) getApplication()).refresh();
 		
 	}
 	@Override

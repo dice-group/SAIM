@@ -29,8 +29,6 @@ import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
 import de.uni_leipzig.simba.saim.gui.widget.form.SelfConfigGeneticBasedBean;
 import de.uni_leipzig.simba.saim.gui.widget.form.SelfConfigGeneticBasedForm;
-import de.uni_leipzig.simba.saim.gui.widget.form.SelfConfigMeshBasedForm;
-import de.uni_leipzig.simba.saim.gui.widget.panel.MeshBasedSelfConfigPanel.SelfConfigRefreshListener;
 /**
  * Panel displayed after selecting genetic based self configuration.
  * Shows form to configure the the genetic based learning approach, and starts 
@@ -194,7 +192,7 @@ public class GeneticBasedSelfConfigPanel extends PerformPanel {
 		if(thread != null)
 			if(thread.isAlive())
 				thread.stop();
-		((SAIMApplication) SAIMApplication.getInstance()).refresh();
+		((SAIMApplication) getApplication()).refresh();
 	}
 
 	@Override
@@ -220,7 +218,7 @@ public class GeneticBasedSelfConfigPanel extends PerformPanel {
 		@Override
 		public void buttonClick(ClickEvent event) {
 			Window sub = new Window("Pseudo Results");
-			InstanceMappingTable table = new InstanceMappingTable(config, data, sC, tC, false, messages);
+			InstanceMappingTable table = new InstanceMappingTable(getApplication(), config, data, sC, tC, false, messages);
 			ResultPanel res = new ResultPanel(table, messages);
 			sub.setSizeUndefined();
 			sub.setContent(res);

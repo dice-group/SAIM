@@ -12,13 +12,16 @@ import de.uni_leipzig.simba.saim.gui.widget.panel.PropertyMatchingPanel;
 public class PropertyMatchingStep implements WizardStep
 {
 	private final Messages messages;	
-
+	SAIMApplication application;
 	PropertyMatchingPanel panel;
 	Window sub = null;
-	public PropertyMatchingStep(final Messages messages) {this.messages=messages;}		
-	public PropertyMatchingStep(Window sub,final Messages messages)
+	public PropertyMatchingStep(SAIMApplication application, final Messages messages) {
+		this.messages=messages;
+		this.application = application;
+	}		
+	public PropertyMatchingStep(SAIMApplication application, Window sub, final Messages messages)
 	{		
-		this(messages);
+		this(application, messages);
 		this.sub = sub;
 	}
 	@Override
@@ -36,8 +39,8 @@ public class PropertyMatchingStep implements WizardStep
 		if(panel.isValid()) {
 			panel.submit();
 			if(sub != null) {
-				SAIMApplication.getInstance().getMainWindow().removeWindow(sub);
-				((SAIMApplication) SAIMApplication.getInstance()).refresh();
+				application.getMainWindow().removeWindow(sub);
+				application.refresh();
 			}
 			return true;
 		}		

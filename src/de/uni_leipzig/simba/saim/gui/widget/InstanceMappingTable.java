@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeSet;
 
+import com.vaadin.Application;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.BeanItemContainer;
@@ -26,7 +27,6 @@ import de.uni_leipzig.simba.data.Instance;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.genetics.util.Pair;
 import de.uni_leipzig.simba.saim.Messages;
-import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.InstanceMatch;
 import de.uni_leipzig.simba.saim.gui.widget.panel.InstanceInfoPanel;
@@ -43,9 +43,11 @@ public class InstanceMappingTable implements Serializable
 	BeanItemContainer<InstanceMatch> beanItemContainer;
 	Table t;
 	// TODO:  t.setColumnCollapsingAllowed(true);
+	Application application;
 	Configuration config;
-	public InstanceMappingTable(Configuration config, Mapping m, Cache sourceCache, Cache targetCache, boolean showBoxes,final Messages messages)
+	public InstanceMappingTable(Application application, Configuration config, Mapping m, Cache sourceCache, Cache targetCache, boolean showBoxes,final Messages messages)
 	{
+		this.application=application;
 		this.config = config;
 		this.messages=messages;
 		this.showBoxes = showBoxes;
@@ -111,7 +113,7 @@ public class InstanceMappingTable implements Serializable
 			public Object generateCell(Table source, Object itemId, Object columnId) {
 				final InstanceMatch bean = (InstanceMatch) itemId;
 				// TODO is there a more elegant way for this?
-				ClassResource cRes = new ClassResource("../../../../icons/emblem-notice.png", SAIMApplication.getInstance());
+				ClassResource cRes = new ClassResource("../../../../icons/emblem-notice.png", application);
 				Embedded image = new Embedded("",
 						cRes);
 				image.addListener(new InfoIconClickListener(bean));
@@ -230,7 +232,7 @@ public class InstanceMappingTable implements Serializable
 				Panel p = new InstanceInfoPanel(i1, i2);
 				sub.setWidth(p.getWidth()+2f, p.getWidthUnits());
 				sub.addComponent(p);
-				SAIMApplication.getInstance().getMainWindow().addWindow(sub);
+				application.getMainWindow().addWindow(sub);
 				}
 		}
 		

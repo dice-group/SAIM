@@ -24,7 +24,6 @@ import cytoscape.layout.CyLayoutAlgorithm;
 import cytoscape.view.CyNetworkView;
 import de.konrad.commons.sparql.PrefixHelper;
 import de.uni_leipzig.simba.io.KBInfo;
-import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.metric.Node;
 import de.uni_leipzig.simba.saim.core.metric.Output;
 import de.uni_leipzig.simba.saim.gui.widget.form.PreprocessingForm;
@@ -200,7 +199,7 @@ public class Cytographer extends AbstractComponent {
 		Window sub = new Window(mp.getMessages().getString("Cytographer.definepreprocessingsubwindowname")+prop);
 		sub.setModal(true);
 		sub.addComponent(new PreprocessingForm(info, prop));
-		SAIMApplication.getInstance().getMainWindow().addWindow(sub);
+		getApplication().getMainWindow().addWindow(sub);
 				
 		String base = PrefixHelper.getBase(s);
 		info.prefixes.put(PrefixHelper.getPrefix(base), PrefixHelper.getURI(PrefixHelper.getPrefix(base)));

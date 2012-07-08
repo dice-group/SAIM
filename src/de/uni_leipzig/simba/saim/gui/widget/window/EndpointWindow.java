@@ -63,7 +63,7 @@ public class EndpointWindow extends Window
 	{
 		wizard.addStep(new EndpointStep(app));		
 		wizard.addStep(new ClassMatchingStep(app));
-		wizard.addStep(new PropertyMatchingStep(this,app.messages));
+		wizard.addStep(new PropertyMatchingStep(app, this, app.messages));
 	}
 	
 	public class EndpointWindowCloseListener implements CloseListener {
