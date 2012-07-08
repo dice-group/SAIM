@@ -25,9 +25,9 @@ public class ActiveLearningPanel extends MetricLearnPanel
 	//		init();
 	//	}
 
-	public ActiveLearningPanel(LearnerConfigurationBean learnerConfigBean,final Messages messages)
+	public ActiveLearningPanel(SAIMApplication application, LearnerConfigurationBean learnerConfigBean,final Messages messages)
 	{
-		super(learnerConfigBean);
+		super(application, learnerConfigBean);
 		this.messages=messages;
 		learn.addListener(new ActiveLearnButtonClickListener(learnLayout));
 	}

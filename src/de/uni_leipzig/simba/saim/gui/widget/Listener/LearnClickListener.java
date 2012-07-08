@@ -16,6 +16,6 @@ public  class LearnClickListener extends MetricPanelListeners implements Button.
 	}
 	@Override
 	public void buttonClick(ClickEvent event) {
-		getWindow(new LearningPanel(messages));
+		getWindow(new LearningPanel(application, messages));
 	}			
 }

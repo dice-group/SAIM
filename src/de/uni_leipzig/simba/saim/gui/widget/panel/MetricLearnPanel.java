@@ -31,6 +31,7 @@ public class MetricLearnPanel extends  PerformPanel{
 	 */
 	private static final long serialVersionUID = -2043563912763885666L;
 	public static Logger logger = Logger.getLogger("LIMES");
+	SAIMApplication application;
 	protected Configuration config;// = Configuration.getInstance();
 	public LinkSpecificationLearner learner;
 	protected VerticalLayout layout;
@@ -41,7 +42,8 @@ public class MetricLearnPanel extends  PerformPanel{
 	protected Layout learnLayout;
 	protected HashMap<String, Object> params;
 	
-	public MetricLearnPanel() {
+	public MetricLearnPanel(SAIMApplication application) {
+		this.application = application;
 		logger.setLevel(Level.WARN);
 		layout = new VerticalLayout();
 		layout.setWidth("100%");
@@ -69,8 +71,8 @@ public class MetricLearnPanel extends  PerformPanel{
 		config = ((SAIMApplication)getApplication()).getConfig();
 	}
 	
-	public MetricLearnPanel(LearnerConfigurationBean learnerConfigBean) {
-		this();
+	public MetricLearnPanel(SAIMApplication application, LearnerConfigurationBean learnerConfigBean) {
+		this(application);
 		params = learnerConfigBean.createParams();
 	}
 
@@ -113,7 +115,7 @@ public class MetricLearnPanel extends  PerformPanel{
 		learner.getFitnessFunction().destroy();
 		
 		learner = null;
-		((SAIMApplication) getApplication()).refresh();		
+		application.refresh();		
 	}
 
 	@Override

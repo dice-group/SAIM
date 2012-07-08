@@ -37,8 +37,12 @@ public class LearningPanel extends PerformPanel
 	@SuppressWarnings("unused")
 	private LearnerConfigurationForm configForm;
 	private LearnerConfigurationBean learnerConfigBean = new LearnerConfigurationBean();
+	SAIMApplication application;
 	
-	public LearningPanel(final Messages messages) {this.messages=messages;}
+	public LearningPanel(SAIMApplication application, final Messages messages) {
+		this.application = application;
+		this.messages=messages;
+	}
 	
 	@Override
 	public void attach() {
@@ -147,10 +151,10 @@ public class LearningPanel extends PerformPanel
 		@Override
 		public void valueChange(ValueChangeEvent event) {
 			if(event.getProperty().toString().equals(messages.getString("LearningPanel.gpbatchlearner"))) {
-				learnerPanel = new BatchLearningPanel(learnerConfigBean,messages);
+				learnerPanel = new BatchLearningPanel(application, learnerConfigBean,messages);
 			}
 			if(event.getProperty().toString().equals(messages.getString("LearningPanel.gpactivelearner"))) {
-				learnerPanel = new ActiveLearningPanel(learnerConfigBean,messages);
+				learnerPanel = new ActiveLearningPanel(application, learnerConfigBean,messages);
 			}
 			mainLayout.removeAllComponents();
 			mainLayout.addComponent(learnerPanel);
@@ -161,7 +165,7 @@ public class LearningPanel extends PerformPanel
 
 	@Override
 	public void onClose() {
-		((SAIMApplication) getApplication()).refresh();
+		application.refresh();
 		if(learnerPanel!=null) {
 			learnerPanel.onClose();
 		}

@@ -25,9 +25,9 @@ public class BatchLearningPanel extends MetricLearnPanel
 	private static final long serialVersionUID = 8799521759150040510L;
 	private final Messages messages;
 	
-	public BatchLearningPanel(final Messages messages)
+	public BatchLearningPanel(SAIMApplication application, final Messages messages)
 	{
-		super();
+		super(application);
 		this.messages=messages;
 	}
 	
@@ -37,9 +37,9 @@ public class BatchLearningPanel extends MetricLearnPanel
 		init();
 	}
 	
-	public BatchLearningPanel(LearnerConfigurationBean learnerConfigBean,final Messages messages)
+	public BatchLearningPanel(SAIMApplication application, LearnerConfigurationBean learnerConfigBean,final Messages messages)
 	{
-		super(learnerConfigBean);
+		super(application, learnerConfigBean);
 		learn.addListener(new BatchLearnButtonClickListener(learnLayout));
 		this.messages=messages;
 	}
