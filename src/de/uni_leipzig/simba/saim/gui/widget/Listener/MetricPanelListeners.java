@@ -1,10 +1,10 @@
 package de.uni_leipzig.simba.saim.gui.widget.Listener;
 
-import com.vaadin.Application;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
 import de.uni_leipzig.simba.saim.Messages;
+import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.gui.widget.panel.PerformPanel;
 /**
  * Class with common methods of the metricPanel Buttons ClickListeners
@@ -14,8 +14,8 @@ import de.uni_leipzig.simba.saim.gui.widget.panel.PerformPanel;
 public class MetricPanelListeners
 {
 	protected final Messages messages;	
-	protected Application application;
-	public MetricPanelListeners(Application application, final Messages messages){
+	protected SAIMApplication application;
+	public MetricPanelListeners(SAIMApplication application, final Messages messages){
 		this.messages=messages;
 		this.application = application;
 	}

@@ -7,6 +7,7 @@ import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
 
 import de.uni_leipzig.simba.saim.Messages;
+import de.uni_leipzig.simba.saim.SAIMApplication;
 
 public class GenericSelfConfigurationPanel extends PerformPanel{
 
@@ -17,8 +18,9 @@ public class GenericSelfConfigurationPanel extends PerformPanel{
 	private Select configuratorSelect;
 	private String MESH;
 	private String GENETICSELFCONFIG;
-	
-	public GenericSelfConfigurationPanel(final Messages messages) {
+	SAIMApplication application;
+	public GenericSelfConfigurationPanel(SAIMApplication application, final Messages messages) {
+		this.application = application;
 		this.messages = messages;
 		MESH = messages.getString("GenericSelfConfigurationPanel.meshbased"); //$NON-NLS-1$
 		GENETICSELFCONFIG = messages.getString("GenericSelfConfigurationPanel.GeneticSelfConfig"); //$NON-NLS-1$
@@ -43,14 +45,14 @@ public class GenericSelfConfigurationPanel extends PerformPanel{
 	
 	private void doMeshBasedSelfConfiguration() {
 		mainLayout.removeAllComponents();
-		sub=new MeshBasedSelfConfigPanel(messages);
+		sub=new MeshBasedSelfConfigPanel(application, messages);
 		mainLayout.addComponent(sub);
 		sub.start();
 	}
 	
 	private void doGeneticBasedSelfConfiguration() {
 		mainLayout.removeAllComponents();
-		sub = new GeneticBasedSelfConfigPanel(messages);
+		sub = new GeneticBasedSelfConfigPanel(application, messages);
 		mainLayout.addComponent(sub);
 		sub.start();
 	}

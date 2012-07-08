@@ -51,6 +51,7 @@ public class MeshBasedSelfConfigPanel extends PerformPanel{
 	Select resultSelect = new Select();
 	String generatedMetricexpression = "";
 	Thread thread;
+	SAIMApplication application;
 	Configuration config;
 	
 	// to config self config
@@ -62,7 +63,10 @@ public class MeshBasedSelfConfigPanel extends PerformPanel{
 	 * Constructor to may embed Panel in a parent component, e.g. an existing WizardStep Component.
 	 * @param parentComponent
 	 */
-	public MeshBasedSelfConfigPanel(final Messages messages) {this.messages=messages;}
+	public MeshBasedSelfConfigPanel(SAIMApplication application, final Messages messages) {
+		this.application = application; 
+		this.messages=messages;
+	}
 	
 	@Override
 	public void attach() {
@@ -317,7 +321,7 @@ public class MeshBasedSelfConfigPanel extends PerformPanel{
 		if(thread != null)
 			if(thread.isAlive())
 				thread.stop();
-		((SAIMApplication) getApplication()).refresh();
+		application.refresh();
 		
 	}
 	@Override

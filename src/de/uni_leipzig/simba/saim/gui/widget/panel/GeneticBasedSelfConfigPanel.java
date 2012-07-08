@@ -38,6 +38,7 @@ import de.uni_leipzig.simba.saim.gui.widget.form.SelfConfigGeneticBasedForm;
  */
 public class GeneticBasedSelfConfigPanel extends PerformPanel {
 	private static final long serialVersionUID = -6889241029277079008L;
+	SAIMApplication application;
 	private final Messages messages;
 	private Layout mainLayout;
 	private Configuration config;
@@ -54,7 +55,8 @@ public class GeneticBasedSelfConfigPanel extends PerformPanel {
 	Thread thread;
 	Button start;
 	
-	public GeneticBasedSelfConfigPanel(final Messages messages) {
+	public GeneticBasedSelfConfigPanel(SAIMApplication application, final Messages messages) {
+		this.application = application;
 		this.messages = messages;
 	}
 
@@ -192,7 +194,7 @@ public class GeneticBasedSelfConfigPanel extends PerformPanel {
 		if(thread != null)
 			if(thread.isAlive())
 				thread.stop();
-		((SAIMApplication) getApplication()).refresh();
+		application.refresh();
 	}
 
 	@Override
