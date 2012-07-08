@@ -77,7 +77,7 @@ public class SerializationWindow extends Window
 		serializerNames.put(messages.getString("SerializationWindow.tabseparated"), SerializerFactory.getSerializer("tab")); 
 		for(String s : serializerNames.keySet())
 			select.addItem(s);
-		select.select(messages.getString("SerializationWindow.n3"));
+//		select.select(messages.getString("SerializationWindow.n3"));
 		select.addListener(new SerializerSelectListener());
 		select.setNullSelectionAllowed(false);
 		
