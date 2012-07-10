@@ -35,7 +35,7 @@ public class VEdge  extends Group implements ClickHandler {
 	public Line getArrow2(){
 		return arrow2;
 	}
-	public void makeArrow(VNode node1, VNode node2){
+	public void makeArrow(VNode node2, VNode node1){
 	
 		final int arrowSize = 5;		
 		// middle

@@ -39,11 +39,11 @@ public class CytographerActionToolbar extends VerticalLayout {
 		hl.addComponent(getZoomInButton());
 		hl.addComponent(getZoomOutButton());
 		
-		addComponent(hl);		
+		//addComponent(hl);		
 		
 		setComponentAlignment(layout, Alignment.MIDDLE_CENTER);
 		setComponentAlignment(fitb, Alignment.MIDDLE_CENTER);
-		setComponentAlignment(hl, Alignment.MIDDLE_CENTER);
+		//setComponentAlignment(hl, Alignment.MIDDLE_CENTER);
 	}
 
 	private Component getLayoutSelect() {

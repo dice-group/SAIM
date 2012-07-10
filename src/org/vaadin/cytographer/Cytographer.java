@@ -8,6 +8,9 @@ import com.vaadin.data.Container;
 import com.vaadin.data.validator.DoubleValidator;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.server.WebApplicationContext;
+import com.vaadin.terminal.gwt.server.WebBrowser;
+
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.TextField;
@@ -127,6 +130,7 @@ public class Cytographer extends AbstractComponent {
 		}
 		if (variables.containsKey("zoomFactor")) {
 			graphProperties.setZoomFactor((Integer) variables.get("zoomFactor"));
+			
 		}
 		if (variables.containsKey("createdANode")) {
 			final Object[] nodeData = (Object[]) variables.get("createdANode");
@@ -276,7 +280,34 @@ public class Cytographer extends AbstractComponent {
 		}
 	}
 
+	// TODO
+	// graphProperties.setWidth ...
+	// won't save values
 	public void repaintGraph() {
+		
+		int hadjust = 100;
+		int wadjust = 450;
+		
+		int wm = Math.round(mainWindow.getWidth()-wadjust);
+		int hm = Math.round(mainWindow.getHeight()-hadjust);
+		int wg = graphProperties.getWidth();
+		int hg = graphProperties.getHeight();
+		
+		if(
+				wm > 0 && 
+				hm > 0 &&
+				wg != wm &&
+				hg != hm
+				
+				){
+			
+//			System.out.println(wm + ":"+ wg);
+//			System.out.println(hm + ":"+ hg);
+			
+			graphProperties.setWidth(wm);
+			graphProperties.setHeight(hm);
+		}
+		
 		currentOperation = GraphOperation.REPAINT;
 		graphProperties.setZoomFactor(0);
 		requestRepaint();
@@ -303,15 +334,18 @@ public class Cytographer extends AbstractComponent {
 		graphProperties.setZoomFactor(graphProperties.getZoomFactor() + 1);
 		currentOperation = GraphOperation.SET_ZOOM;
 		requestRepaint();
+
 	}
 
 	public void zoomOut() {
 		graphProperties.setZoomFactor(graphProperties.getZoomFactor() - 1);
 		currentOperation = GraphOperation.SET_ZOOM;
 		requestRepaint();
+
 	}
 
 	public void refresh() {
+	
 		currentOperation = GraphOperation.REFRESH;
 		requestRepaint();
 	}
