@@ -82,7 +82,7 @@ public class EndpointTester
 		if(!pingEndpoint(url)) {
 			return EndpointStatus.SERVER_NOT_FOUND;
 		}	
-
+		executor = Executors.newCachedThreadPool();
 		boolean result = false;        
 		Callable<Boolean> task = new Callable<Boolean>()
 				{
@@ -109,7 +109,7 @@ public class EndpointTester
 				} catch (Exception e) {
 					e.printStackTrace();
 					return EndpointStatus.OTHER_ERROR;
-				}finally{
+				}finally{executor.shutdownNow();
 					executor.shutdown();
 				}
 	}
