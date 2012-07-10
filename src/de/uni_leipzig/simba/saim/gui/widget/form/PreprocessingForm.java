@@ -44,8 +44,8 @@ public class PreprocessingForm extends Form{
 	
 	private void init() {
 		Set<String> choosen = new HashSet<String>();
-		if(info.functions.get(prop)!=null &&info.functions.get(prop).trim().length()>0) {
-			String split[] = info.functions.get(prop).split("->");
+		if(info.functions.get(prop)!=null &&info.functions.containsKey(prop)) {
+			String split[] = info.functions.get(prop).get(prop).split("->");
 			for(String preproc : split) {
 				if(preproc.trim().length()>0)
 					choosen.add(preproc.trim());		
@@ -81,18 +81,19 @@ public class PreprocessingForm extends Form{
 	 * @param name Name of the preprocessing function.
 	 */
 	private void addPreprocessing(String name) {
-		if(!info.functions.containsKey(prop)) {
+		if(!info.functions.containsKey(prop) || !info.functions.get(prop).containsKey(prop)) {
 			logger.info("Adding preprocessing "+name+" to property "+prop+" for "+info.id);
-			info.functions.put(prop, name);
+			info.functions.put(prop, new HashMap<String, String>());
+			info.functions.get(prop).put(prop,name);
 		} else {
-			String funcChain = info.functions.get(prop);
+			String funcChain = info.functions.get(prop).get(prop);
 			if(funcChain.trim().length()>0) {
 				funcChain+="->"+name;
 			} else {
 				funcChain = name;
 			}
 			logger.info("Adding preprocessing "+funcChain+" to property "+prop+" for "+info.id);
-			info.functions.put(prop, funcChain);
+			info.functions.get(prop).put(prop, funcChain);
 		}
 	}
 	
@@ -103,7 +104,10 @@ public class PreprocessingForm extends Form{
 	private void removePreprocessing(String name) {
 		if(info.functions.containsKey(prop)) {
 			logger.info("removing preprocessing function "+name);
-			String split[] = info.functions.get(prop).split("->");
+			String funcChain = "";
+			if(info.functions.get(prop).containsKey(prop))
+				funcChain = info.functions.get(prop).get(prop);
+			String split[] = funcChain.split("->");
 			List<String> funcList = new LinkedList<String>();
 			for(int i = 0; i<split.length; i++) {
 				if(!split[i].equals(name))
