@@ -101,10 +101,13 @@ public class EndpointTester
 				} catch (TimeoutException ex) {
 					return EndpointStatus.TIMED_OUT;
 				} catch (InterruptedException e) {
+					e.printStackTrace();
 					return EndpointStatus.OTHER_ERROR;
 				} catch (ExecutionException e) {
+					e.printStackTrace();
 					return EndpointStatus.EXECUTION_ERROR;
 				} catch (Exception e) {
+					e.printStackTrace();
 					return EndpointStatus.OTHER_ERROR;
 				}finally{
 					executor.shutdown();

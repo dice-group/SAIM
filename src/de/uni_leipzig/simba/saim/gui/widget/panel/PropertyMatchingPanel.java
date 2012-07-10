@@ -303,7 +303,8 @@ public class PropertyMatchingPanel extends Panel
 		}
 		if(!info.properties.contains(prop))
 			info.properties.add(prop);
-		info.functions.put(prop,"nolang->lowercase"); //$NON-NLS-1$
+		info.functions.put(prop, new HashMap<String,String>()); //$NON-NLS-1$
+		info.functions.get(prop).put(prop, "nolang->lowercase");
 		String base = PrefixHelper.getBase(s);
 		info.prefixes.put(PrefixHelper.getPrefix(base), PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
 
