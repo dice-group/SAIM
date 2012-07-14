@@ -122,7 +122,12 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver
 		subLayout.addComponent(runExampleButton);
 		//@TODO generic way to load config.xmls.
 		localExamplesSelect.addItem("examples/PublicationData.xml");
+		localExamplesSelect.addItem("examples/DBLP-Scholar.xml");
+		localExamplesSelect.addItem("examples/dailymed-drugbank.xml");
+		localExamplesSelect.addItem("examples/Abt-Buy.xml");
+		localExamplesSelect.addItem("examples/Amazon-GoogleProducts.xml");
 		localExamplesSelect.addItem("examples/astronauts-astronauts.xml");
+		
 		localExamplesSelect.addItem(DEFAULT_LIMES_XML);
 		localExamplesSelect.select(DEFAULT_LIMES_XML);
 		// Button to run a default spec locally
@@ -135,6 +140,7 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver
 				InputStream inStream;
 				inStream = getClass().getClassLoader().getResourceAsStream(""+localExamplesSelect.getValue());
 				cR.validateAndRead(inStream, (String) localExamplesSelect.getValue());
+				System.out.println(cR);
 				// setting location of limes.dtd
 				// set paths to source and target
 				if(cR.sourceInfo.type!=null && cR.targetInfo.type != null)

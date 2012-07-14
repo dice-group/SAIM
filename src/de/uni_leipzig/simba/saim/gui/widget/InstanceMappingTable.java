@@ -140,9 +140,6 @@ public class InstanceMappingTable implements Serializable
 			    	Instance instance =  sourceCache.getInstance(uri2);
 			    	if(instance.getAllProperties().contains("rdfs:label"))
 			    		labels = sourceCache.getInstance(uri2).getProperty("rdfs:label");
-			    	if(labels == null || labels.size()==0) {
-			    		labels = sourceCache.getInstance(uri2).getProperty(propPair.get(0).a);
-			    	}
 			    }
 			    if(labels != null && labels.size()>=1)
 			    	return InstanceMatch.getLinkLabelToUri(uri, labels.first());
@@ -160,9 +157,6 @@ public class InstanceMappingTable implements Serializable
 			    	Instance instance =  targetCache.getInstance(uri2);
 			    	if(instance.getAllProperties().contains("rdfs:label"))
 			    		labels = targetCache.getInstance(uri2).getProperty("rdfs:label");
-			    	if(labels == null || labels.size()==0) {
-			    		labels = targetCache.getInstance(uri2).getProperty(propPair.get(0).b);
-			    	}
 			    }
 				if(labels != null && labels.size()>=1)
 			    	return InstanceMatch.getLinkLabelToUri(uri, labels.first());
@@ -184,6 +178,7 @@ public class InstanceMappingTable implements Serializable
 		
 		// Allow selecting items from the table.
 		t.setSelectable(true);
+		t.setSortDisabled(false);
 		// Send changes in selection immediately to server.
 		t.setImmediate(true);
 		return t;

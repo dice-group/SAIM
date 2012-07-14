@@ -1,0 +1,4 @@
+"title"	"name"	string
+"description"	"description"	string
+"manufacturer"	"manufacturer"	string
+"price"	"price"	number

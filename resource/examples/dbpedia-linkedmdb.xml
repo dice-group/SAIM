@@ -23,14 +23,14 @@
 		<TYPE>CSV</TYPE>
 	</TARGET>
 	
-	<METRIC>OR(jaccard(x.title,y.title)|0.5446749320576767,XOR(jaccard(x.title,y.title)|0.5446749320576767,jaccard(x.title,y.title)|0.5446749320576767)|0.5446749320576767)</METRIC>
+	<METRIC>OR(AND(AND(cosine(x.director,y.director)|0.55,jaccard(x.title,y.title)|0.62)|0.54,AND(cosine(x.director,y.director)|0.54,trigrams(x.director,y.director)|0.54)|0.37)|0.69,jaccard(x.title,y.title)|0.62)</METRIC>
 	<ACCEPTANCE>
-		<THRESHOLD>0.8</THRESHOLD>
+		<THRESHOLD>0.91</THRESHOLD>
 		<FILE>dbpedia-linkedmdb_accepted.txt</FILE>
 		<RELATION>owl:sameAs</RELATION>
 	</ACCEPTANCE>
 	<REVIEW>
-		<THRESHOLD>0.6</THRESHOLD>
+		<THRESHOLD>0.8</THRESHOLD>
 		<FILE>dbpedia-linkedmdb_reviewme.txt</FILE>
 		<RELATION>owl:sameAs</RELATION>
 	</REVIEW>

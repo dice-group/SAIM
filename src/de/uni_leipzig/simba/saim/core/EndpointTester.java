@@ -104,7 +104,7 @@ public class EndpointTester
 					e.printStackTrace();
 					return EndpointStatus.OTHER_ERROR;
 				} catch (ExecutionException e) {
-					e.printStackTrace();
+					e.printStackTrace();	
 					return EndpointStatus.EXECUTION_ERROR;
 				} catch (Exception e) {
 					e.printStackTrace();
