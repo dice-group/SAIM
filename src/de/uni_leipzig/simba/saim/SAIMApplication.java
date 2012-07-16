@@ -113,7 +113,6 @@ public class SAIMApplication extends Application
 		MenuItem languageMenu = menuBar.addItem(messages.getString("language"), null, null); //$NON-NLS-1$
 		languageMenu.addItem(messages.getString("german"), null, new SetLanguageCommand("de"));		 //$NON-NLS-1$
 		languageMenu.addItem(messages.getString("english"), null, new SetLanguageCommand("en")).setEnabled(true); //$NON-NLS-1$
-
 		return menuBar;
 	}
 
@@ -250,14 +249,16 @@ public class SAIMApplication extends Application
 	 */
 	public void refresh()
 	{
-		mainLayout.removeComponent(content);
+		//mainLayout.removeComponent(content);
 		mainWindow.removeComponent(menuBar);
 		//FIXME call refresh() method instead of constructing completely new?
-		content = new MetricPanel(messages);
-		mainLayout.addComponent(content);
+		//content = new MetricPanel(messages);
+		content.attach();
+		//mainLayout.addComponent(content);
 
-		mainLayout.removeComponent(menuBar);
-		mainLayout.addComponent(menuBar=buildMenuBar(),0);		
+		mainLayout.addComponent(menuBar=buildMenuBar(),0);	
+		
+		
 	}
 
 	public class StartCommand implements Command
