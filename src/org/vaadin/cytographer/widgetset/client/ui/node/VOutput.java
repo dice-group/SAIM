@@ -31,7 +31,7 @@ public class VOutput extends VNode implements DoubleClickHandler{
 		
 		add(textShape1);
 		add(textShape2);
-		moveNode(shape.getX(),shape.getY());
+		moveNode(shape.getX(),shape.getY()); // set text shape positions
 	}	
 	public static void setStyle(final VVisualStyle style,final Text shape){
 		shape.setFillColor("#000000");
@@ -65,11 +65,21 @@ public class VOutput extends VNode implements DoubleClickHandler{
 	@Override
 	public void moveNode(final float x, final float y) {
 
+		graph.updateEdges(this, true);
+		
+		this.x = x;
+		shape.setX((int) x);
+		
+		this.y = y;
+		shape.setY((int) y);
+		
+		textShape.setX((int) (x-textShape.getTextWidth()/2));
+		textShape.setY((int) (y-shapeSize+textShape.getTextHeight()+shapeSize*0.3));
+		
 		textShape1.setX((int)(x-textShape1.getTextWidth()/2));
-		textShape1.setY((int)y+textShape.getFontSize()*2);
+		textShape1.setY((int) (y-shapeSize+textShape.getTextHeight()+shapeSize*0.3+textShape.getFontSize()*2));
 				
 		textShape2.setX((int)(x-textShape2.getTextWidth()/2));
-		textShape2.setY((int)y+textShape.getFontSize()*2+textShape1.getFontSize());
-		super.moveNode(x, y);
+		textShape2.setY((int) (y-shapeSize+textShape.getTextHeight()+shapeSize*0.3+textShape.getFontSize()*2+textShape1.getFontSize()));
 	}
 }

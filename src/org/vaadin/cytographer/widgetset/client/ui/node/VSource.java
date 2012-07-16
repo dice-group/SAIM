@@ -22,6 +22,6 @@ public class VSource extends VNode  implements DoubleClickHandler{
 	}	
 	@Override
 	public void onDoubleClick(DoubleClickEvent event) {
-		cytographer.doubleClick(new String[]{getID().toString(), getX()+"", getY()+"", "", "","Source"});		
+		cytographer.doubleClick(new String[]{getID().toString(), this.getAbsoluteLeft()+"", this.getAbsoluteTop()+"", "", "","Source"});		
 	}
 }

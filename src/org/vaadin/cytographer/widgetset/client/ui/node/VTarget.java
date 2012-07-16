@@ -21,6 +21,6 @@ public class VTarget extends VNode  implements DoubleClickHandler{
 	}
 	@Override
 	public void onDoubleClick(DoubleClickEvent event) {
-		cytographer.doubleClick(new String[]{getID().toString(), getX()+"", getY()+"", "", "","Target"});		
+		cytographer.doubleClick(new String[]{getID().toString(), this.getAbsoluteLeft()+"", this.getAbsoluteTop()+"", "", "","Target"});		
 	}	
 }

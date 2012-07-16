@@ -34,13 +34,15 @@ implements ContextListener, MouseDownHandler, MouseUpHandler, MouseMoveHandler, 
 	protected final VCytographer cytographer;
 	protected Map<String, Command> commandMap;
 
-	private final VGraph graph;
-	private float x, y;
+	protected final VGraph graph;
+	protected float x, y;
 
-	private Shape shape;
+	protected Shape shape;
 	protected final Text textShape;
 	private final String name;
 	private Integer id = null;
+	protected int shapeSize = 0;
+	
 	
 	public Integer getID(){
 		return id;
@@ -53,11 +55,16 @@ implements ContextListener, MouseDownHandler, MouseUpHandler, MouseMoveHandler, 
 		super();
 		this.cytographer = cytographer;
 		this.graph = graph;
-		VNode.setStyleToShape(shape, style);
+		this.id = Integer.parseInt(nodeID);	
 		this.shape = shape;
+		this.shapeSize = style.getNodeSize();
+		
+		VNode.setStyleToShape(shape, style);	
+		
+		int x= shape.getX()-name.length()/2;
+		int y= shape.getY()-name.length()/2;
 		this.name = name;
-		this.id = Integer.parseInt(nodeID);		
-		textShape = new Text(shape.getX()-name.length()/2,shape.getY()-name.length()/2, name);
+		textShape = new Text(x,y, name);
 		textShape.setStrokeOpacity(0);
 
 		setX(shape.getX());

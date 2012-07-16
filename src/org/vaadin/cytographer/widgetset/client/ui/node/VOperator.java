@@ -4,7 +4,7 @@ import org.vaadin.cytographer.widgetset.client.ui.VCytographer;
 import org.vaadin.cytographer.widgetset.client.ui.VGraph;
 import org.vaadin.cytographer.widgetset.client.ui.VNode;
 import org.vaadin.cytographer.widgetset.client.ui.VVisualStyle;
-import org.vaadin.cytographer.widgetset.client.ui.shap.VTriangle;
+import org.vaadin.cytographer.widgetset.client.ui.shap.VHexagon;
 import org.vaadin.gwtgraphics.client.Shape;
 import org.vaadin.gwtgraphics.client.shape.Text;
 
@@ -12,7 +12,6 @@ import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 
 public class VOperator extends VNode  implements DoubleClickHandler{ 
-	
 
 	protected final Text textShape1;
 	protected final Text textShape2;
@@ -33,6 +32,7 @@ public class VOperator extends VNode  implements DoubleClickHandler{
 		add(textShape2);
 		moveNode(shape.getX(),shape.getY());
 	}
+
 	public static void setStyle(final VVisualStyle style,final Text shape){
 		shape.setFillColor("#000000");
 		shape.setFillOpacity(1);
@@ -40,7 +40,8 @@ public class VOperator extends VNode  implements DoubleClickHandler{
 		shape.setFontFamily(style.getFontFamily());		
 	}
 	public static Shape getShape(int x, int y,int nodeSize,String color){
-		return new VTriangle(x,y,nodeSize,color); 
+		//return new VTriangle(x,y,nodeSize,color); 
+		return new VHexagon(x,y,nodeSize,color);  
 	}	
 
 	public void updateValues(String value1,String value2){
@@ -60,11 +61,21 @@ public class VOperator extends VNode  implements DoubleClickHandler{
 	@Override
 	public void moveNode(final float x, final float y) {
 
+		graph.updateEdges(this, true);
+		
+		this.x = x;
+		shape.setX((int) x);
+		
+		this.y = y;
+		shape.setY((int) y);
+		
+		textShape.setX((int) (x-textShape.getTextWidth()/2));
+		textShape.setY((int) (y-shapeSize+textShape.getTextHeight()+shapeSize*0.3));
+		
 		textShape1.setX((int)(x-textShape1.getTextWidth()/2));
-		textShape1.setY((int)y+textShape.getFontSize()*2);
+		textShape1.setY((int) (y-shapeSize+textShape.getTextHeight()+shapeSize*0.3+textShape.getFontSize()*2));
 				
 		textShape2.setX((int)(x-textShape2.getTextWidth()/2));
-		textShape2.setY((int)y+textShape.getFontSize()*2+textShape1.getFontSize());
-		super.moveNode(x, y);
+		textShape2.setY((int) (y-shapeSize+textShape.getTextHeight()+shapeSize*0.3+textShape.getFontSize()*2+textShape1.getFontSize()));
 	}
 }
