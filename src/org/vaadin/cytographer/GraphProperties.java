@@ -328,4 +328,10 @@ public class GraphProperties {
 				edgs.remove(edge);
 		}
 	}
+	
+	/**set node positions in cynetowrkview */
+	public void setNodePos(Integer id,Double x,Double y){
+		cyNetworkView.getNodeView(id).setXPosition(x);
+		cyNetworkView.getNodeView(id).setYPosition(y);
+	}
 }

@@ -173,10 +173,11 @@ public class Cytographer extends AbstractComponent {
 		}
 		
 		if (variables.containsKey("onNodeMouseUp")) {
-			final String[] args = (String[]) variables.get("onNodeMouseUp");
-			
-			graphProperties.getCyNetworkView().getNodeView(new Integer(args[0])).setXPosition(Double.parseDouble(args[1]));
-			graphProperties.getCyNetworkView().getNodeView(new Integer(args[0])).setYPosition(Double.parseDouble(args[2]));
+			final String[] args = (String[]) variables.get("onNodeMouseUp");	
+			Integer id = new Integer(args[0]);
+			Double x = Double.parseDouble(args[1]);
+			Double y = Double.parseDouble(args[2]);
+			graphProperties.setNodePos(id,x,y);
 		}
 	}
 	public void addDefaultProperty(String s, KBInfo info){

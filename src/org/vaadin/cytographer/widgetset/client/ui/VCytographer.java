@@ -209,9 +209,13 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 
 	@Override
 	public void onMouseUp(final MouseUpEvent event) {
+
 		extractSelection();
 		removeSelectionBox();
 		graph.setMovedShape(null);
+		if(onMove && event.getSource().equals(canvas)){
+			graph.refreshPos();
+		}
 		onMove = false;
 		startX = 0;
 		startY = 0;

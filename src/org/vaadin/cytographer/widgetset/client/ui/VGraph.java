@@ -221,6 +221,11 @@ public class VGraph extends VectorObject {
 		paintGraph();
 	}
 
+	public void refreshPos(){
+		for (final VNode vnode : getPaintedShapes()) 
+			vnode.onMouseUp(null);
+	}
+	
 	public void updateEdges(final VNode node, final boolean repaint) {
 		final Set<VEdge> edgs = shapeToEdgesMap.get(node);
 
@@ -232,7 +237,7 @@ public class VGraph extends VectorObject {
 			paintedShapes.add(node);
 			return;
 		}
-		VConsole.log("updateEdges");
+		//VConsole.log("updateEdges");
 		for (final VEdge e : edgs) {
 			// update edge positions
 			if (e.getFirstNode().equals(node)) {
