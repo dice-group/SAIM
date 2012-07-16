@@ -150,8 +150,8 @@ public class GeneticBasedSelfConfigPanel extends PerformPanel {
 				indicator.setValue(1f);
 				stepPanel.setCaption("Ready! Setting the learned Link Specification: "+learnedMetric);
 				indicator.requestRepaint();
-				config.setMetricExpression(learnedMetric.expression);
-				config.setAcceptanceThreshold(learnedMetric.threshold);
+				config.setMetricExpression(learnedMetric.getExpression());
+				config.setAcceptanceThreshold(learnedMetric.getThreshold());
 				
 				learnedMapping = learner.getMapping();			
 				onFinish(sourceCache, targetCache);

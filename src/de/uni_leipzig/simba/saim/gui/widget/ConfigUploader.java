@@ -1,12 +1,16 @@
 package de.uni_leipzig.simba.saim.gui.widget;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.List;
+
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -18,6 +22,8 @@ import com.vaadin.ui.Upload.SucceededEvent;
 import de.uni_leipzig.simba.io.ConfigReader;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
+import de.uni_leipzig.simba.saim.backend.ExampleConfig;
+import de.uni_leipzig.simba.saim.backend.ExampleLoader;
 import de.uni_leipzig.simba.saim.core.Configuration;
 
 @SuppressWarnings("serial")
@@ -33,7 +39,8 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver
 	private final NativeSelect localExamplesSelect;
 	private final Button runExampleButton;
 	private static final String DEFAULT_LIMES_XML = "examples/dbpedia-linkedmdb.xml";
-
+	Button add;
+	ExampleLoader loader;
 	public ConfigUploader(Messages messages)
 	{
 		//this.messages=messages;
@@ -64,6 +71,10 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver
 			}
 		});       
 		root.getContent().addComponent(executeFileButton);
+	}
+	
+	public void attach() {
+		loader = new ExampleLoader((SAIMApplication) getApplication());
 		buildLocalExamplesSelection();
 	}
 
@@ -121,15 +132,20 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver
 		subLayout.addComponent(localExamplesSelect);
 		subLayout.addComponent(runExampleButton);
 		//@TODO generic way to load config.xmls.
-		localExamplesSelect.addItem("examples/PublicationData.xml");
-		localExamplesSelect.addItem("examples/DBLP-Scholar.xml");
-		localExamplesSelect.addItem("examples/dailymed-drugbank.xml");
-		localExamplesSelect.addItem("examples/Abt-Buy.xml");
-		localExamplesSelect.addItem("examples/Amazon-GoogleProducts.xml");
-		localExamplesSelect.addItem("examples/astronauts-astronauts.xml");
-		
-		localExamplesSelect.addItem(DEFAULT_LIMES_XML);
-		localExamplesSelect.select(DEFAULT_LIMES_XML);
+		List<ExampleConfig> list = loader.getExamples();
+		for(ExampleConfig ex : list) {
+			localExamplesSelect.addItem(ex.getFilePath());
+		}
+		localExamplesSelect.select(list.get(1).getFilePath());
+//		localExamplesSelect.addItem("examples/PublicationData.xml");
+//		localExamplesSelect.addItem("examples/DBLP-Scholar.xml");
+//		localExamplesSelect.addItem("examples/dailymed-drugbank.xml");
+//		localExamplesSelect.addItem("examples/Abt-Buy.xml");
+//		localExamplesSelect.addItem("examples/Amazon-GoogleProducts.xml");
+//		localExamplesSelect.addItem("examples/astronauts-astronauts.xml");
+//		
+//		localExamplesSelect.addItem(DEFAULT_LIMES_XML);
+//		localExamplesSelect.select(DEFAULT_LIMES_XML);
 		// Button to run a default spec locally
 		runExampleButton.addListener(new Button.ClickListener() {			
 			@Override
