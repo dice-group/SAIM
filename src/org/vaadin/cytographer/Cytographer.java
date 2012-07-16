@@ -8,11 +8,14 @@ import com.vaadin.data.Container;
 import com.vaadin.data.validator.DoubleValidator;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.server.WebApplicationContext;
-import com.vaadin.terminal.gwt.server.WebBrowser;
+
 
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ClientWidget;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
@@ -197,22 +200,32 @@ public class Cytographer extends AbstractComponent {
 		}
 		if(!info.properties.contains(prop)) {
 			info.properties.add(prop);
-			
 		}
 
-		Window sub = new Window(mp.getMessages().getString("Cytographer.definepreprocessingsubwindowname")+prop);
+		final Window sub = new Window(mp.getMessages().getString("Cytographer.definepreprocessingsubwindowname")+prop);
 		sub.setModal(true);
 		sub.addComponent(new PreprocessingForm(info, prop));
+		sub.setResizable(false);
+		sub.addStyleName(Reindeer.WINDOW_BLACK);
+		sub.setHeight("250px");
+		sub.setWidth("250px");	
 		getApplication().getMainWindow().addWindow(sub);
-				
+
+		final Button btnok = new Button("Ok");	
+		 btnok.addListener(new ClickListener(){
+			@Override
+			public void buttonClick(ClickEvent event) {
+				getApplication().getMainWindow().removeWindow(sub); // close
+			}		 
+		 });
+		 sub.addComponent(btnok);
 		String base = PrefixHelper.getBase(s);
-		info.prefixes.put(PrefixHelper.getPrefix(base), PrefixHelper.getURI(PrefixHelper.getPrefix(base)));
-	
+		info.prefixes.put(PrefixHelper.getPrefix(base), PrefixHelper.getURI(PrefixHelper.getPrefix(base)));	
 	}
 
 	private void makeModalWindow(final String[] args,final String name){
-			
-		Window mywindow = new Window("");
+		
+		final Window mywindow = new Window("");
 		
 		final TextField t = new TextField( mp.getMessages().getString("Cytographer.modalWindowTextField1Label"+name),args[3]);
 		final TextField tt = new TextField(mp.getMessages().getString("Cytographer.modalWindowTextField2Label"+name),args[4]);
@@ -224,31 +237,67 @@ public class Cytographer extends AbstractComponent {
 		tt.setMaxLength(4);
 		t.setImmediate(true);
 		tt.setImmediate(true);
-		mywindow.addListener(new CloseListener(){
+		
+		mywindow.setResizable(false);
+		mywindow.setModal(true); 
+		mywindow.addStyleName(Reindeer.WINDOW_BLACK);
+		mywindow.setHeight("180px");
+		mywindow.setWidth("200px");	
+		//mywindow.setPositionX(Math.round(Float.valueOf(args[1])));
+		//mywindow.setPositionY(Math.round(Float.valueOf(args[2])));
+		
+		HorizontalLayout layout = new HorizontalLayout();		
+		final Button btnok = new Button("Ok");	
+		final Button btncancel = new Button("Cancel");
+		layout.addComponent(btnok);
+		layout.addComponent(btncancel);
+		mywindow.addComponent(layout);
+		getApplication().getMainWindow().addWindow(mywindow);
+		
+		btnok.setEnabled(true);
+	    btnok.setImmediate(true);
+	    btnok.setVisible(true);	 
+		btncancel.setEnabled(true);
+		btncancel.setImmediate(true);
+		btncancel.setVisible(true);	 		
+		
+		class MyListener implements CloseListener,ClickListener{
+			
 			private static final long serialVersionUID = -165177940359643613L;
+			
 			@Override public void windowClose(CloseEvent e) {
-				if(t.isValid() && tt.isValid()){
+				//click();
+			}
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				if(event.getButton() == btnok){
+					if(click())
+						getApplication().getMainWindow().removeWindow(mywindow); // close
+				}else if(event.getButton() == btncancel){
+					getApplication().getMainWindow().removeWindow(mywindow); // close
+				}				
+			}
+			
+			private boolean click(){
+				if(t.isValid() && tt.isValid() && !tt.getValue().toString().isEmpty() ){
 					List<Object> value = new ArrayList<Object>();
 					value.add(t.getValue());
 					value.add(tt.getValue());
 					
 					graphProperties.setNodeMetadata( args[0], value);
 					repaintGraph();
+					return true;
 				}else{
 					mainWindow.showNotification(mp.getMessages().getString("Cytographer.thresholdWarning"+name), Notification.TYPE_WARNING_MESSAGE);
+					return false;
 				}
 			}
-		});
-		mywindow.setResizable(false);
-		mywindow.setModal(true); 
-		mywindow.addStyleName(Reindeer.WINDOW_BLACK);
-		mywindow.setHeight("180px");
-		mywindow.setWidth("200px");			 
-		mywindow.setPositionX(Math.round(Float.valueOf(args[1])));
-		mywindow.setPositionY(Math.round(Float.valueOf(args[2])));	
-
+		}
 		
-		mainWindow.addWindow(mywindow);
+		mywindow.addListener(new MyListener());
+	    btnok.addListener(new MyListener());
+	    btncancel.addListener(new MyListener());
 	}
 	/**
 	 * Change texts visibilities
