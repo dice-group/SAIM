@@ -101,9 +101,10 @@ public class MetricLearnPanel extends  PerformPanel{
 				// get expression and set it
 				Metric metric = learner.terminate();				
 				label.setCaption("Best solution:");
-				label.setValue(metric.expression+" with threshold "+metric.threshold);
-				config.setMetricExpression(metric.expression);
-				config.setAcceptanceThreshold(metric.threshold);
+				
+				label.setValue(metric.getExpression()+" with threshold "+ metric.getThreshold());
+				config.setMetricExpression(metric.getExpression());
+				config.setAcceptanceThreshold(metric.getThreshold());
 				((SAIMApplication) getApplication()).refresh();
 				l.addComponent(label);
 			}

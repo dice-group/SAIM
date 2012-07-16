@@ -58,7 +58,7 @@ public class SerializationWindow extends Window
 		serial.open(fileName);
 		String predicate = config.getLimesConfiReader().acceptanceRelation;
 		// print prefixes
-		System.out.println(config.getLimesConfiReader().prefixes);
+//		System.out.println(config.getLimesConfiReader().prefixes);
 		serial.setPrefixes(config.getLimesConfiReader().prefixes);
 		for(String uri1 : m.map.keySet()) {
 			for(Entry<String, Double> e : m.map.get(uri1).entrySet()) {

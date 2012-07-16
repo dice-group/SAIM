@@ -11,6 +11,7 @@ import cern.colt.Arrays;
 import com.vaadin.Application;
 import com.vaadin.terminal.FileResource;
 import com.vaadin.terminal.ParameterHandler;
+import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -32,7 +33,7 @@ public class SAIMApplication extends Application
 {
 	public final Messages messages;
 	private static final long	serialVersionUID	= -7665596682464881860L;
-	private SAIMApplication application = null; 
+//	private SAIMApplication application = null; 
 	@Getter private final Window mainWindow;
 	private VerticalLayout mainLayout;
 	private Wizard wizard;
@@ -83,7 +84,7 @@ public class SAIMApplication extends Application
 		mainLayout.addComponent(content);
 		wizard = new Wizard();	
 		setTheme("saim");
-		application=this;
+//		application=this;
 	}
 
 	private void setLanguage(String language)
@@ -264,7 +265,7 @@ public class SAIMApplication extends Application
 	{
 		SAIMApplication app;
 		public StartCommand(SAIMApplication app) {this.app=app;}
-
+		
 		@Override
 		public void menuSelected(MenuItem selectedItem) {
 			config = new Configuration();
@@ -273,5 +274,16 @@ public class SAIMApplication extends Application
 			endpointWindow.setVisible(true);
 			app.getMainWindow().addWindow(endpointWindow);
 		}
+	}
+	
+	/**
+	 * Get the WEB-INF Folder on runtime
+	 * @return
+	 */
+	public File getWebInfFolder() {
+		WebApplicationContext context = (WebApplicationContext)getContext();
+		File f = new File ( context.getHttpSession().getServletContext().getRealPath("/WEB-INF") );
+		System.out.println(f.getAbsolutePath());
+		return f;
 	}
 }

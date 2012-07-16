@@ -1,0 +1,7 @@
+"DBLP-ACM (local)";"examples/PublicationData.xml"
+"DBLP-Google Scholar (local)";"examples/DBLP-Scholar.xml"
+"DailyMed-Drugbank (local)";"examples/dailymed-drugbank.xml"
+"Abt-Buy (local)";"examples/Abt-Buy.xml"
+"Amazon-GoogleProducts (local)";"examples/Amazon-GoogleProducts.xml"
+"DBPedia-LinkedMDB (local)";"examples/dbpedia-linkedmdb.xml";
+"dbp:astronauts-dbp:astronauts";"examples/astronauts-astronauts.xml"
