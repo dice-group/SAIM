@@ -170,12 +170,14 @@ public class InstanceMappingTable implements Serializable
 			    return bean.getValue();
 			  }
 			});
-		// for ordering renaming
+		// to support sorting we have to rename column separately
 		t.setColumnReorderingAllowed(true);
 		t.setColumnHeader("uri1", messages.getString("InstanceMappingTable.sourceuri"));
 		t.setColumnHeader("uri2", messages.getString("InstanceMappingTable.targeturi"));
 		t.setColumnHeader("value", messages.getString("value"));
-		
+		String sort[] = {"value", "uri1", "uri2"};
+		boolean ascending[] = {true, true, true};
+		t.sort(sort, ascending);
 		if(showBoxes)
 			t.setVisibleColumns(new Object[] {"info", "uri1", "uri2", "value", messages.getString("InstanceMappingTable.isamatch")});
 		else
