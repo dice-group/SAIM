@@ -21,6 +21,7 @@ public class EndpointStep implements WizardStep
 		this.app = app;
 		this.messages=app.messages;
 		panel = new EndpointPanel(messages);
+		panel.setHeight("400px");
 	}
 	
 	@Override

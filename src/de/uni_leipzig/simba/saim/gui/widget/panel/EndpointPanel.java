@@ -32,7 +32,6 @@ public class EndpointPanel extends Panel implements PropertyChangeListener
 		HorizontalLayout layout = new HorizontalLayout();
 		layout.setSpacing(true);
 		this.setContent(layout);
-
 		config.addPropertyChangeListener(this);
 		kbISource = new KBInfoForm(messages.getString("EndpointPanel.configuresourceendpoint"), config.getSource(),messages); //$NON-NLS-1$
 		kbITarget = new KBInfoForm(messages.getString("EndpointPanel.configuretargetendpoint"), config.getTarget(),messages); //$NON-NLS-1$

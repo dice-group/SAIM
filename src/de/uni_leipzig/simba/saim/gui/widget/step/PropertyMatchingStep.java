@@ -30,7 +30,9 @@ public class PropertyMatchingStep implements WizardStep
 	@Override
 	public Component getContent()
 	{
-		return (panel=new PropertyMatchingPanel(messages));
+		panel=new PropertyMatchingPanel(messages);
+		panel.setHeight("400px");
+		return (panel);
 	}
 
 	@Override
