@@ -42,7 +42,6 @@ public class InstanceMappingTable implements Serializable
 	private boolean showBoxes = true;
 	BeanItemContainer<InstanceMatch> beanItemContainer;
 	Table t;
-	// TODO:  t.setColumnCollapsingAllowed(true);
 	Application application;
 	Configuration config;
 	public InstanceMappingTable(Application application, Configuration config, Mapping m, Cache sourceCache, Cache targetCache, boolean showBoxes,final Messages messages)
@@ -64,24 +63,13 @@ public class InstanceMappingTable implements Serializable
 	{	
 		beanItemContainer = new BeanItemContainer<InstanceMatch>(InstanceMatch.class);
 		beanItemContainer.addAll(dataList);
-//		t = new Table(messages.getString("InstanceMappingTable.instances"), beanItemContainer); //$NON-NLS-1$
 		t = new Table("", beanItemContainer);
-//		t.addItem();
 		t.setWidth("100%"); //$NON-NLS-1$
 		t.setColumnExpandRatio("uri1", 0.5f); //$NON-NLS-1$
 		t.setColumnExpandRatio("uri2", 0.5f); //$NON-NLS-1$
 		t.setColumnAlignment("value", Table.ALIGN_RIGHT); //$NON-NLS-1$
 		t.setColumnAlignment(messages.getString("InstanceMappingTable.isamatch"), Table.ALIGN_CENTER); //$NON-NLS-1$
-//		t.setColumnWidth("Is a match?", "3em");
-//		t.setColumnWidth("uri2", 150);
-		
-//		t.addListener(new ItemClickListener() {			
-//			@Override
-//			public void itemClick(ItemClickEvent event) {
-//				InstanceMatch m = (InstanceMatch) event.getItemId();
-//				SAIMApplication.getInstance().getMainWindow().open(new ExternalResource(m.getUri1()), "_");
-//			}
-//		});
+
 		if(showBoxes) {
 			t.addGeneratedColumn(messages.getString("InstanceMappingTable.isamatch"), new ColumnGenerator() { //$NON-NLS-1$
 	            @Override
@@ -93,7 +81,6 @@ public class InstanceMappingTable implements Serializable
 	                    @Override
 	                    public void valueChange(final ValueChangeEvent event) {
 	                        bean.setSelected((Boolean) event.getProperty().getValue());
-//	                        System.out.println("Selected " + bean); //$NON-NLS-1$
 	                    }
 	                });
 
@@ -176,6 +163,7 @@ public class InstanceMappingTable implements Serializable
 		t.setColumnHeader("uri2", messages.getString("InstanceMappingTable.targeturi"));
 		t.setColumnHeader("value", messages.getString("value"));
 		String sort[] = {"value", "uri1", "uri2"};
+		
 		boolean ascending[] = {true, true, true};
 		t.sort(sort, ascending);
 		if(showBoxes)

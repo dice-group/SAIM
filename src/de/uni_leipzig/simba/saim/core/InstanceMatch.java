@@ -1,6 +1,7 @@
 package de.uni_leipzig.simba.saim.core;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import com.vaadin.ui.Label;
 
@@ -46,7 +47,7 @@ public class InstanceMatch  implements Serializable{
 		this.uri2 = (uri2.replaceAll("[<>\"]", ""));
 	}
 	public double getValue() {
-		return value;
+		return new BigDecimal(value).setScale(2, BigDecimal.ROUND_HALF_EVEN).doubleValue();
 	}
 
 	@Override
