@@ -29,7 +29,10 @@ public class ExampleLoader {
 		this.app = app;
 	}
 	
-	
+	/**
+	 * Public method to get the examples from store. As of now a file.
+	 * @return
+	 */
 	public List<ExampleConfig> getExamples() {
 		try {
 			return readFile();
@@ -43,6 +46,12 @@ public class ExampleLoader {
 		}
 	}
 	
+	/**
+	 * Reads the example config file.
+	 * @return
+	 * @throws IOException
+	 * @throws URISyntaxException
+	 */
 	public List<ExampleConfig> readFile() throws IOException, URISyntaxException {
 		URL url;String path;
 		url = getClass().getClassLoader().getResource(storageFile);
@@ -61,6 +70,12 @@ public class ExampleLoader {
 		return list;
 	}
 	
+	/**
+	 * Method to add a new entry into the examples file.
+	 * @param c
+	 * @throws URISyntaxException
+	 * @throws IOException
+	 */
 	public void addEntry(ExampleConfig c) throws URISyntaxException, IOException {
 		URL url;String path;
 		url = getClass().getClassLoader().getResource(storageFile);
