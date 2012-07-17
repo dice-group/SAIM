@@ -209,9 +209,13 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 
 	@Override
 	public void onMouseUp(final MouseUpEvent event) {
+
 		extractSelection();
 		removeSelectionBox();
 		graph.setMovedShape(null);
+		if(onMove && event.getSource().equals(canvas)){
+			graph.refreshPos();
+		}
 		onMove = false;
 		startX = 0;
 		startY = 0;
@@ -306,17 +310,21 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 	}
 	@Override
 	public void onMouseWheel(final MouseWheelEvent event) {
-		final int delta = event.getDeltaY();
-		if (currentKeyModifiers.contains(KeyCodes.KEY_ALT)) {
-			if (delta < 0) 
-				rotate(0.05);
-			else if (delta > 0) 
-				rotate(-0.05);
-		} else {
-			if (delta < 0) 
-				zoom(ZOOM_UP);
-			 else if (delta > 0) 
-				zoom(ZOOM_DOWN);
+		// zoom inb idel
+		if(!applicationConnection.isLoadingIndicatorVisible()){
+			final int delta = event.getDeltaY();
+			if (currentKeyModifiers.contains(KeyCodes.KEY_ALT)) {
+				if (delta < 0) 
+					rotate(0.05);
+				else if (delta > 0) 
+					rotate(-0.05);
+			} else {
+				if (delta < 0) 
+					zoom(ZOOM_UP);
+				 else if (delta > 0) 
+					zoom(ZOOM_DOWN);
+			}
+			graph.moveGraph(0, 0);
 		}
 	}
 
@@ -330,6 +338,8 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 		angle += delta;
 	}
 
+	
+	
 	private void setZoom(final int newZoomFactor) {
 		if (newZoomFactor > zoomFactor) 
 			for (int i = 0; i < newZoomFactor - zoomFactor; i++) 
@@ -338,17 +348,17 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 			for (int i = 0; i < zoomFactor - newZoomFactor; i++) 
 				zoom(ZOOM_DOWN);
 	}
-
+	
 	private void zoom(final double factor) {
+		
 		if (factor < 1)
 			zoomFactor--;
 		 else 
 			zoomFactor++;
-		
+	
 		for (final VNode n : graph.getPaintedShapes()) {
-			
 			n.moveNode(((float) ((n.getX() - centerX) * factor) + centerX),((float) ((n.getY() - centerY) * factor) + centerY));
-			
+			n.onMouseUp(null);
 			if (n.getView() instanceof Circle) {
 				/*
 				 * if (delta > 1) { ((Circle) n.getView()).setRadius((((Circle)

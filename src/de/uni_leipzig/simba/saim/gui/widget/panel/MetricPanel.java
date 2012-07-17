@@ -5,10 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Stack;
 
 import lombok.Getter;
 
@@ -55,36 +53,36 @@ import de.uni_leipzig.simba.saim.gui.widget.Listener.StartMappingListener;
 public class MetricPanel extends Panel{    
 
 	final static Logger logger = LoggerFactory.getLogger(MetricPanel.class);
+	private static final long serialVersionUID = 6766679517868840795L;
+	
 	@Getter private final Messages messages;
 	@Getter private Configuration config;
-	private static final long	serialVersionUID	= 6766679517868840795L;
-	VerticalLayout mainLayout = new VerticalLayout();
-	HorizontalLayout layout = new HorizontalLayout();
-	HorizontalLayout buttonLayout = new HorizontalLayout();
-	Set<String> sourceProps = new HashSet<String>();
-	Set<String> targetProps = new HashSet<String>();
 	
-	Button selfConfigButton;
-	Button learnButton;
-	Button startMapping;
-	Button setMetric;
+	VerticalLayout mainLayout, sourceLayout, targetLayout, metricsLayout, operatorsLayout;
+
+	HorizontalLayout layout, buttonLayout;
+	
+	Set<String> sourceProps,targetProps;
+	
+	Button selfConfigButton, learnButton, startMapping, setMetric;
 	
 	Cytographer cytographer;
 	CyNetworkView cyNetworkView;
 	
-	VerticalLayout sourceLayout =  new VerticalLayout();
-	VerticalLayout targetLayout =  new VerticalLayout();
-	VerticalLayout metricsLayout =  new VerticalLayout();
-	VerticalLayout operatorsLayout =  new VerticalLayout();
-
-	public MetricPanel(final Messages messages) {	this.messages = messages;}
+	
+	public MetricPanel(final Messages messages) {	
+		this.messages = messages;
+	}
+	
 	@Override
 	public void attach() {
 		if((SAIMApplication)getApplication()!= null)
 			config = ((SAIMApplication)getApplication()).getConfig();
+		mainLayout = new VerticalLayout();
 		mainLayout.setSpacing(false);
 		mainLayout.setMargin(false);
 		final VerticalLayout accordionLayout = new VerticalLayout();
+		layout = new HorizontalLayout();
 		layout.addComponent(accordionLayout);
 		layout.setSpacing(false);
 		layout.setMargin(false);
@@ -104,6 +102,11 @@ public class MetricPanel extends Panel{
 		accordion.setHeight("100%"); //$NON-NLS-1$
 
 		accordionPanel.addComponent(accordion);
+		
+		sourceLayout =  new VerticalLayout();
+		targetLayout =  new VerticalLayout();
+		metricsLayout =  new VerticalLayout();
+		operatorsLayout =  new VerticalLayout();
 		
 		accordion.addTab(sourceLayout,messages.getString("MetricPanel.sourceproperties")); //$NON-NLS-1$
 		accordion.addTab(targetLayout,messages.getString("MetricPanel.targetproperties")); //$NON-NLS-1$
@@ -291,6 +294,8 @@ public class MetricPanel extends Panel{
 	}
 	
 	private void getAllProps() {
+		sourceProps = new HashSet<String>();
+		targetProps = new HashSet<String>();
 //		Configuration config = Configuration.getInstance();
 //		if(config.isLocal) {
 //			logger.info("Local data - using specified properties");
@@ -346,6 +351,7 @@ public class MetricPanel extends Panel{
 		startMapping.setEnabled(false);
 		startMapping.addListener(new StartMappingListener((SAIMApplication) getApplication(), messages));
 		
+		buttonLayout = new HorizontalLayout();
 		buttonLayout.addComponent(setMetric);
 		buttonLayout.addComponent(selfConfigButton);
 		buttonLayout.addComponent(learnButton);
