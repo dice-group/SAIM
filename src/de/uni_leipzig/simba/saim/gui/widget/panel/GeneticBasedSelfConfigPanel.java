@@ -8,6 +8,7 @@ import org.jgap.InvalidConfigurationException;
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
@@ -51,9 +52,13 @@ public class GeneticBasedSelfConfigPanel extends PerformPanel {
 	// configuration
 	SelfConfigGeneticBasedBean bean = new SelfConfigGeneticBasedBean();
 	SelfConfigGeneticBasedForm form;
+	// indicator layout
+	Layout indicatorLayout;
 	//perform
 	Thread thread;
 	Button start;
+	Button close;
+	Button showMapping;
 	
 	public GeneticBasedSelfConfigPanel(SAIMApplication application, final Messages messages) {
 		this.application = application;
@@ -74,6 +79,8 @@ public class GeneticBasedSelfConfigPanel extends PerformPanel {
 		refresher.addListener(listener);
 		addComponent(refresher);
 
+		indicatorLayout = new VerticalLayout();
+		
 		indicator.setCaption("Current action"); 
 		mainLayout.addComponent(indicator);
 		indicator.setImmediate(true);
@@ -103,12 +110,31 @@ public class GeneticBasedSelfConfigPanel extends PerformPanel {
 		});
 		mainLayout.addComponent(start);
 		
+		mainLayout.addComponent(indicatorLayout);
 		
 		resultPanel = new Panel();
 		mainLayout.addComponent(resultPanel);
 		// Buttons
 		VerticalLayout resultLayout = new VerticalLayout();
 		resultPanel.setContent(resultLayout);	
+		close = new Button("Close");
+		close.addListener(new Button.ClickListener() {			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				onClose();
+				//@FIXME not best practice here!
+				application.getMainWindow().removeWindow(getWindow());
+			}
+		});
+		close.setEnabled(false);
+		
+		showMapping = new Button("Show Mapping");
+		showMapping.setEnabled(false);
+		
+		HorizontalLayout finishButtonsLayout = new HorizontalLayout();
+		finishButtonsLayout.addComponent(showMapping);
+		finishButtonsLayout.addComponent(close);
+		mainLayout.addComponent(finishButtonsLayout);
 	}
 	
 	/**
@@ -118,8 +144,8 @@ public class GeneticBasedSelfConfigPanel extends PerformPanel {
 	 * (3)learn metric
 	 */
 	protected void performSelfConfiguration() {
-		mainLayout.addComponent(indicator);
-		mainLayout.addComponent(stepPanel);
+		indicatorLayout.addComponent(indicator);
+		indicatorLayout.addComponent(stepPanel);
 		thread = new Thread() {
 			public void run() {
 				float steps = 5f;
@@ -164,10 +190,13 @@ public class GeneticBasedSelfConfigPanel extends PerformPanel {
 	 * Method displays button to show the learned Mapping.
 	 */
 	private void onFinish(Cache sC, Cache tC) {
-		Button showMapping = new Button("Show Mapping");
+		close.setEnabled(true);
+		
 		showMapping.addListener(new ShowPseudoMappingClickListener(sC, tC, learnedMapping, messages, getApplication().getMainWindow()));
-		if(learnedMapping!= null && learnedMapping.size()>0)
-			resultPanel.addComponent(showMapping);
+		if(learnedMapping!= null && learnedMapping.size()>0) {
+			showMapping.setEnabled(true);
+		}
+			
 	}
 	
 	/**To enable refreshing while multithreading*/
@@ -224,7 +253,7 @@ public class GeneticBasedSelfConfigPanel extends PerformPanel {
 			ResultPanel res = new ResultPanel(table, messages);
 			sub.setSizeUndefined();
 			sub.setContent(res);
-			sub.setWidth("90%");
+//			sub.setWidth("90%");
 //			sub.setPositionX(parent.);
 			parent.addWindow(sub);
 		}
