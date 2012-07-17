@@ -68,9 +68,9 @@ public class InstanceMappingTable implements Serializable
 		t = new Table("", beanItemContainer);
 //		t.addItem();
 		t.setWidth("100%"); //$NON-NLS-1$
-		t.setColumnExpandRatio(messages.getString("InstanceMappingTable.sourceuri"), 0.5f); //$NON-NLS-1$
-		t.setColumnExpandRatio(messages.getString("InstanceMappingTable.targeturi"), 0.5f); //$NON-NLS-1$
-		t.setColumnAlignment(messages.getString("value"), Table.ALIGN_RIGHT); //$NON-NLS-1$
+		t.setColumnExpandRatio("uri1", 0.5f); //$NON-NLS-1$
+		t.setColumnExpandRatio("uri2", 0.5f); //$NON-NLS-1$
+		t.setColumnAlignment("value", Table.ALIGN_RIGHT); //$NON-NLS-1$
 		t.setColumnAlignment(messages.getString("InstanceMappingTable.isamatch"), Table.ALIGN_CENTER); //$NON-NLS-1$
 //		t.setColumnWidth("Is a match?", "3em");
 //		t.setColumnWidth("uri2", 150);
@@ -129,7 +129,7 @@ public class InstanceMappingTable implements Serializable
 			propPair.add(new Pair<String>(config.getSource().functions.entrySet().iterator().next().getKey(), config.getTarget().functions.entrySet().iterator().next().getKey()));
 		}
 		// add column for source uri
-		t.addGeneratedColumn(messages.getString("InstanceMappingTable.sourceuri"), new Table.ColumnGenerator() { //$NON-NLS-1$
+		t.addGeneratedColumn("uri1", new Table.ColumnGenerator() { //$NON-NLS-1$
 			  @Override
 			  public Object generateCell(Table source, final Object itemId, final Object columnId) {
 				final InstanceMatch bean = (InstanceMatch) itemId;
@@ -146,7 +146,7 @@ public class InstanceMappingTable implements Serializable
 			    return InstanceMatch.getLinkLabelToUri(uri);  
 			  }
 			});
-		t.addGeneratedColumn(messages.getString("InstanceMappingTable.targeturi"), new Table.ColumnGenerator() { //$NON-NLS-1$
+		t.addGeneratedColumn("uri2", new Table.ColumnGenerator() { //$NON-NLS-1$
 			  @Override
 			  public Object generateCell(Table source, final Object itemId, final Object columnId) {
 				final InstanceMatch bean = (InstanceMatch) itemId;
@@ -163,22 +163,28 @@ public class InstanceMappingTable implements Serializable
 			    return InstanceMatch.getLinkLabelToUri(uri);  
 			  }
 			});
-		t.addGeneratedColumn(messages.getString("value"), new Table.ColumnGenerator() { //$NON-NLS-1$
+		t.addGeneratedColumn("value", new Table.ColumnGenerator() { //$NON-NLS-1$
 			  @Override
 			  public Object generateCell(Table source, final Object itemId, final Object columnId) {
 				final InstanceMatch bean = (InstanceMatch) itemId;
 			    return bean.getValue();
 			  }
 			});
+		// for ordering renaming
 		t.setColumnReorderingAllowed(true);
+		t.setColumnHeader("uri1", messages.getString("InstanceMappingTable.sourceuri"));
+		t.setColumnHeader("uri2", messages.getString("InstanceMappingTable.targeturi"));
+		t.setColumnHeader("value", messages.getString("value"));
+		
 		if(showBoxes)
-			t.setVisibleColumns(new Object[] {"info", messages.getString("InstanceMappingTable.sourceuri"), messages.getString("InstanceMappingTable.targeturi"), messages.getString("value"), messages.getString("InstanceMappingTable.isamatch")});
+			t.setVisibleColumns(new Object[] {"info", "uri1", "uri2", "value", messages.getString("InstanceMappingTable.isamatch")});
 		else
-			t.setVisibleColumns(new Object[] {"info", messages.getString("InstanceMappingTable.sourceuri"), messages.getString("InstanceMappingTable.targeturi"), messages.getString("value")});
+			t.setVisibleColumns(new Object[] {"info","uri1","uri2", "value"});
 		
 		// Allow selecting items from the table.
 		t.setSelectable(true);
 		t.setSortDisabled(false);
+		t.setColumnReorderingAllowed(true);
 		// Send changes in selection immediately to server.
 		t.setImmediate(true);
 		return t;

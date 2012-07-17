@@ -13,7 +13,7 @@ public class InstanceMatch  implements Serializable{
 	private static final long serialVersionUID = -1683632585316114100L;
 	public static final int SEED = 23;
 	String uri1, uri2;
-	double Matchvalue = new Double(0);
+	double value = new Double(0);
 	boolean selected = false;
 	String originalUri1, originalUri2;
 	public boolean isSelected() {
@@ -28,7 +28,7 @@ public class InstanceMatch  implements Serializable{
 	}
 	public InstanceMatch(String uri1, String uri2, double value) {
 		this(uri1, uri2);
-		this.Matchvalue = value;
+		this.value = value;
 	}
 	public String getUri1() {
 		return uri1;
@@ -46,7 +46,7 @@ public class InstanceMatch  implements Serializable{
 		this.uri2 = (uri2.replaceAll("[<>\"]", ""));
 	}
 	public double getValue() {
-		return Matchvalue;
+		return value;
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class InstanceMatch  implements Serializable{
 	
 	@Override
 	public String toString() {
-		return uri1 + " - " + uri2 +": "+Matchvalue+"? "+selected;
+		return uri1 + " - " + uri2 +": "+value+"? "+selected;
 	}
 	
 	public static Label getLinkLabelToUri(String uri) {
