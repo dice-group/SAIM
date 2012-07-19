@@ -15,6 +15,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
 
+import de.uni_leipzig.simba.cache.Cache;
 import de.uni_leipzig.simba.cache.HybridCache;
 import de.uni_leipzig.simba.genetics.util.PropertyMapping;
 import de.uni_leipzig.simba.io.KBInfo;
@@ -102,10 +103,13 @@ public class MeshBasedSelfConfigPanel extends SelfConfigExecutionPanel{
 					stepPanel.setCaption(messages.getString("MeshBasedSelfConfigPanel.complexclassifiercaption")); //$NON-NLS-1$
 					generatedMetricexpression = generateMetric(cc.classifiers, "");
 					showComplexClassifier();
-					
+					if(cc.mapping != null && cc.mapping.size()>0)
+						learnedMapping = cc.mapping;
 					config.setMetricExpression(generatedMetricexpression);
 					config.setAcceptanceThreshold(getThreshold(cc.classifiers));
 					System.out.println("SelfConfig class= "+bsc.getClass().getCanonicalName());
+
+					onFinish(sourceCache, targetCache);
 				} else {
 					indicator.setValue(new Float(5f/steps));
 					stepPanel.setCaption(messages.getString("MeshBasedSelfConfigPanel.nosimpleclassifiers"));
@@ -141,17 +145,20 @@ public class MeshBasedSelfConfigPanel extends SelfConfigExecutionPanel{
 	/**Method shows complex classifier*/
 	private void showComplexClassifier() {
 		if(this.cc == null)
-			return;
-		
+			return;		
 		Panel result = new Panel("Classifier: "+generatedMetricexpression
 				+ " with pseudo f-measure="+cc.fMeasure);
 		stepPanel.addComponent(result);
-		onFinish();
 	}
 	
-	private void onFinish() {
+	private void onFinish(Cache sC, Cache tC) {
 		start.setEnabled(true);
 		close.setEnabled(true);
+		
+		showMapping.addListener(new ShowPseudoMappingClickListener(sC, tC, learnedMapping, messages, getApplication().getMainWindow()));
+		if(learnedMapping!= null && learnedMapping.size()>0) {
+			showMapping.setEnabled(true);
+		}	
 	}
 
 	/**Implements Listener for generateMetrik Button*/

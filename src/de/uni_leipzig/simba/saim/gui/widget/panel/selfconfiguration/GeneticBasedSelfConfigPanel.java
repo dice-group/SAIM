@@ -8,22 +8,17 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Window;
 
 import de.uni_leipzig.simba.cache.Cache;
 import de.uni_leipzig.simba.cache.HybridCache;
-import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.genetics.core.Metric;
 import de.uni_leipzig.simba.genetics.selfconfig.BasicGeneticSelfConfigurator;
 import de.uni_leipzig.simba.genetics.selfconfig.GeneticSelfConfigurator;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
-import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
 import de.uni_leipzig.simba.saim.gui.widget.form.SelfConfigGeneticBasedBean;
 import de.uni_leipzig.simba.saim.gui.widget.form.SelfConfigGeneticBasedForm;
-import de.uni_leipzig.simba.saim.gui.widget.panel.ResultPanel;
+
 /**
  * Panel displayed after selecting genetic based self configuration.
  * Shows form to configure the the genetic based learning approach, and starts 
@@ -102,8 +97,7 @@ public class GeneticBasedSelfConfigPanel extends SelfConfigExecutionPanel {
 		showMapping.addListener(new ShowPseudoMappingClickListener(sC, tC, learnedMapping, messages, getApplication().getMainWindow()));
 		if(learnedMapping!= null && learnedMapping.size()>0) {
 			showMapping.setEnabled(true);
-		}
-			
+		}			
 	}
 
 	@Override
@@ -125,36 +119,6 @@ public class GeneticBasedSelfConfigPanel extends SelfConfigExecutionPanel {
 	public void start() {
 		//nothing to do here so far...
 	}
-	
-	class ShowPseudoMappingClickListener implements ClickListener {
-		private static final long serialVersionUID = -5605524411526653096L;
-		Mapping data;
-		Cache sC;
-		Cache tC;
-		Messages messages;
-		Window parent;
-		
-		public ShowPseudoMappingClickListener(Cache sC, Cache tC, Mapping data, Messages messages, Window parent) {
-			this.sC = sC;
-			this.tC = tC;
-			this.data = data;
-			this.messages = messages;
-			this.parent = parent;
-		}
-		@Override
-		public void buttonClick(ClickEvent event) {
-			Window sub = new Window("Pseudo Results");
-			InstanceMappingTable table = new InstanceMappingTable(getApplication(), config, data, sC, tC, false, messages);
-			ResultPanel res = new ResultPanel(table, messages);
-			sub.setSizeUndefined();
-			sub.setContent(res);
-//			sub.setWidth("90%");
-//			sub.setPositionX(parent.);
-			parent.addWindow(sub);
-		}
-		
-	}
-
 
 	@Override
 	protected Component getDescriptionComponent() {

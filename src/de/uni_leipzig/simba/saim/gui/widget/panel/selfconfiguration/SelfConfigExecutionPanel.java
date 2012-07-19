@@ -9,14 +9,18 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
+import de.uni_leipzig.simba.cache.Cache;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
+import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
 import de.uni_leipzig.simba.saim.gui.widget.panel.PerformPanel; 
+import de.uni_leipzig.simba.saim.gui.widget.panel.ResultPanel;
 
 /**
  * Implements the idea of a generic Execution window for SelfConfigurators.
@@ -155,6 +159,39 @@ public abstract class SelfConfigExecutionPanel extends PerformPanel{
 				source.setEnabled(false);
 			}
 		}
+	}
+
+	/**
+	 * Listener to show mapping computed by self configurators.
+	 * @author Lyko
+	 *
+	 */
+	class ShowPseudoMappingClickListener implements ClickListener {
+		private static final long serialVersionUID = -5605524411526653096L;
+		Mapping data;
+		Cache sC;
+		Cache tC;
+		Messages messages;
+		Window parent;
+		
+		public ShowPseudoMappingClickListener(Cache sC, Cache tC, Mapping data, Messages messages, Window parent) {
+			this.sC = sC;
+			this.tC = tC;
+			this.data = data;
+			this.messages = messages;
+			this.parent = parent;
+		}
+		@Override
+		public void buttonClick(ClickEvent event) {
+			Window sub = new Window("Pseudo Results");
+			sub.setWidth("80%");
+			InstanceMappingTable table = new InstanceMappingTable(getApplication(), config, data, sC, tC, false, messages);
+			ResultPanel res = new ResultPanel(table, messages);
+//			sub.setSizeUndefined();
+			sub.setContent(res);
+			parent.addWindow(sub);
+		}
+		
 	}
 
 }
