@@ -57,6 +57,7 @@ public class SAIMApplication extends Application
 			@Override
 			public void handleParameters(Map<String, String[]> parameters)
 			{
+				logger.setLevel(Level.DEBUG);
 				if(logger.getEffectiveLevel().isGreaterOrEqual(Level.INFO))
 				{logger.info("SAIMApplication was called with url parameters "+parametersToString(parameters));}
 

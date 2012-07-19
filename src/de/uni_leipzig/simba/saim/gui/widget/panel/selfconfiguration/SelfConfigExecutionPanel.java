@@ -12,6 +12,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
+import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
@@ -37,6 +38,8 @@ public abstract class SelfConfigExecutionPanel extends PerformPanel{
 	Button start;
 	Button close;
 	Button showMapping;
+	// learned mapping
+	Mapping learnedMapping = new Mapping();
 	
 	public SelfConfigExecutionPanel(SAIMApplication application, final Messages messages) {
 		this.application = application;

@@ -305,14 +305,16 @@ public class MetricPanel extends Panel{
 				for(String prop : config.getSource().properties) {
 					if(prop.trim().length()>0) {
 						String s_abr=PrefixHelper.abbreviate(prop);
-						sourceProps.add(s_abr);
+						if(!sourceProps.contains(s_abr))
+							sourceProps.add(s_abr);
 					}
 				}
 				
 				for(String prop : config.getTarget().properties) {
 					if(prop.trim().length()>0) {
 						String s_abr=PrefixHelper.abbreviate(prop);
-						targetProps.add(s_abr);
+						if(!targetProps.contains(s_abr))
+							targetProps.add(s_abr);
 					}
 				}
 				selfConfigButton.setEnabled(true);

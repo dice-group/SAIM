@@ -34,7 +34,6 @@ import de.uni_leipzig.simba.saim.gui.widget.panel.ResultPanel;
 public class GeneticBasedSelfConfigPanel extends SelfConfigExecutionPanel {
 	private static final long serialVersionUID = -6889241029277079008L;
 	Metric learnedMetric;
-	Mapping learnedMapping = new Mapping();
 	// configuration
 	SelfConfigGeneticBasedBean bean = new SelfConfigGeneticBasedBean();
 	SelfConfigGeneticBasedForm form;

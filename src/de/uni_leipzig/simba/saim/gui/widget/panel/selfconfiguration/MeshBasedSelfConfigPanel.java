@@ -16,6 +16,7 @@ import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
 
 import de.uni_leipzig.simba.cache.HybridCache;
+import de.uni_leipzig.simba.genetics.util.PropertyMapping;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
@@ -120,10 +121,18 @@ public class MeshBasedSelfConfigPanel extends SelfConfigExecutionPanel{
 	private void showSimpleClassifiers() {
 		if(classifiers.size()>0) {
 			logger.info("Replacing property mapping.");
+			config.propertyMapping = new PropertyMapping();
 		}
 		for(SimpleClassifier cl : classifiers) {
 			resultSelect.addItem(cl);
 			resultSelect.select(cl);
+			if(cl.measure.equalsIgnoreCase("euclidean")) {
+				logger.info("Adding number propertyMatch between: "+cl.sourceProperty +" - "+ cl.targetProperty);
+				config.addPropertiesMatch(cl.sourceProperty, cl.targetProperty, false);
+			}else {
+				config.addPropertiesMatch(cl.sourceProperty, cl.targetProperty, true);
+				logger.info("Adding string propertyMatch between: "+cl.sourceProperty +" - "+ cl.targetProperty);
+			}
 	}
 		resultSelect.setWidth("80%");//$NON-NLS-1$
 		resultSelect.setVisible(true);		
