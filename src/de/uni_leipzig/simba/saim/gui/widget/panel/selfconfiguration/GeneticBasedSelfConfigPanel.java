@@ -1,18 +1,12 @@
-package de.uni_leipzig.simba.saim.gui.widget.panel;
+package de.uni_leipzig.simba.saim.gui.widget.panel.selfconfiguration;
 
 import java.util.HashMap;
 
 import org.jgap.InvalidConfigurationException;
 
-
-import com.github.wolfie.refresher.Refresher;
-import com.github.wolfie.refresher.Refresher.RefreshListener;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -26,10 +20,10 @@ import de.uni_leipzig.simba.genetics.selfconfig.BasicGeneticSelfConfigurator;
 import de.uni_leipzig.simba.genetics.selfconfig.GeneticSelfConfigurator;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
-import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
 import de.uni_leipzig.simba.saim.gui.widget.form.SelfConfigGeneticBasedBean;
 import de.uni_leipzig.simba.saim.gui.widget.form.SelfConfigGeneticBasedForm;
+import de.uni_leipzig.simba.saim.gui.widget.panel.ResultPanel;
 /**
  * Panel displayed after selecting genetic based self configuration.
  * Shows form to configure the the genetic based learning approach, and starts 
@@ -37,117 +31,30 @@ import de.uni_leipzig.simba.saim.gui.widget.form.SelfConfigGeneticBasedForm;
  * @author Lyko
  *
  */
-public class GeneticBasedSelfConfigPanel extends PerformPanel {
+public class GeneticBasedSelfConfigPanel extends SelfConfigExecutionPanel {
 	private static final long serialVersionUID = -6889241029277079008L;
-	SAIMApplication application;
-	private final Messages messages;
-	private Layout mainLayout;
-	private Configuration config;
-	//to show progress
-	final ProgressIndicator indicator = new ProgressIndicator();
-	final Panel stepPanel = new Panel();
-	Panel resultPanel;
 	Metric learnedMetric;
 	Mapping learnedMapping = new Mapping();
 	// configuration
 	SelfConfigGeneticBasedBean bean = new SelfConfigGeneticBasedBean();
 	SelfConfigGeneticBasedForm form;
-	// indicator layout
-	Layout indicatorLayout;
 	//perform
 	Thread thread;
-	Button start;
-	Button close;
-	Button showMapping;
+
 	
 	public GeneticBasedSelfConfigPanel(SAIMApplication application, final Messages messages) {
-		this.application = application;
-		this.messages = messages;
+		super(application, messages);
 	}
 
-	
-	/**
-	 * Method initializes the view. Called on attachment.
-	 */
-	private void init() {
-		mainLayout = new VerticalLayout();
-		this.setContent(mainLayout);
-		Label descriptor = new Label("Configure and run a selfconfiguration based on Genetic Programming."); //$NON-NLS-1$
-		mainLayout.addComponent(descriptor);
-		Refresher refresher = new Refresher();
-		SelfConfigRefreshListener listener = new SelfConfigRefreshListener();
-		refresher.addListener(listener);
-		addComponent(refresher);
 
-		indicatorLayout = new VerticalLayout();
-		
-		indicator.setCaption("Current action"); 
-		mainLayout.addComponent(indicator);
-		indicator.setImmediate(true);
-		indicator.setVisible(false);
-		
-	
-		stepPanel.setCaption(""); 
-		mainLayout.addComponent(stepPanel);
-		stepPanel.setVisible(false);
-		if(!config.propertyMapping.wasSet()) {
-			Panel info = new Panel("No property mapping was set. So we use a default.");
-			config.propertyMapping.setDefault(config.getSource(), config.getTarget());
-			mainLayout.addComponent(info);
-		}
-		
-		mainLayout.addComponent(form = new SelfConfigGeneticBasedForm(bean, messages));
-		start = new Button("Start learning");
-		start.addListener(new ClickListener() {
-			private static final long serialVersionUID = 5899998766641774597L;
-			@Override
-			public void buttonClick(ClickEvent event) {
-				mainLayout.removeComponent(start);
-				indicator.setVisible(true);
-				stepPanel.setVisible(true);
-				performSelfConfiguration();
-			}
-		});
-		mainLayout.addComponent(start);
-		
-		mainLayout.addComponent(indicatorLayout);
-		
-		resultPanel = new Panel();
-		mainLayout.addComponent(resultPanel);
-		// Buttons
-		VerticalLayout resultLayout = new VerticalLayout();
-		resultPanel.setContent(resultLayout);	
-		close = new Button("Close");
-		close.addListener(new Button.ClickListener() {			
-			@Override
-			public void buttonClick(ClickEvent event) {
-				onClose();
-				//@FIXME not best practice here!
-				application.getMainWindow().removeWindow(getWindow());
-			}
-		});
-		close.setEnabled(false);
-		
-		showMapping = new Button("Show Mapping");
-		showMapping.setEnabled(false);
-		
-		HorizontalLayout finishButtonsLayout = new HorizontalLayout();
-		finishButtonsLayout.addComponent(showMapping);
-		finishButtonsLayout.addComponent(close);
-		mainLayout.addComponent(finishButtonsLayout);
-	}
-	
-	/**
-	 * Runs the algorithm. Steps: 
-	 * (1)get Caches
-	 * (2)get bean settings
-	 * (3)learn metric
-	 */
+	@Override
 	protected void performSelfConfiguration() {
 		indicatorLayout.addComponent(indicator);
 		indicatorLayout.addComponent(stepPanel);
+		mainLayout.addComponent(indicatorLayout);
 		thread = new Thread() {
 			public void run() {
+				start.setEnabled(false);
 				float steps = 5f;
 				indicator.setValue(new Float(1f/steps));
 				indicator.requestRepaint();
@@ -190,6 +97,7 @@ public class GeneticBasedSelfConfigPanel extends PerformPanel {
 	 * Method displays button to show the learned Mapping.
 	 */
 	private void onFinish(Cache sC, Cache tC) {
+		start.setEnabled(true);
 		close.setEnabled(true);
 		
 		showMapping.addListener(new ShowPseudoMappingClickListener(sC, tC, learnedMapping, messages, getApplication().getMainWindow()));
@@ -198,26 +106,14 @@ public class GeneticBasedSelfConfigPanel extends PerformPanel {
 		}
 			
 	}
-	
-	/**To enable refreshing while multithreading*/
-	public class SelfConfigRefreshListener implements RefreshListener  {
-		boolean running = true; 
-		private static final long serialVersionUID = -8765221895426102605L;		    
-		@Override 
-		public void refresh(final Refresher source)	{
-			if(!running) {
-				removeComponent(source);
-				source.setEnabled(false);
-			}
-		}
-	}
 
 	@Override
 	public void attach() {
 		this.config = ((SAIMApplication)getApplication()).getConfig();
-		init();
+		super.init();
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onClose() {
 		if(thread != null)
@@ -258,5 +154,39 @@ public class GeneticBasedSelfConfigPanel extends PerformPanel {
 			parent.addWindow(sub);
 		}
 		
+	}
+
+
+	@Override
+	protected Component getDescriptionComponent() {
+		System.out.println("Calling getDescriptionComponent() in Gen");
+		Label descr = new Label("Configure and run a selfconfiguration based on Genetic Programming.");
+		if(!config.propertyMapping.wasSet()) {
+			Panel info = new Panel("No property mapping was set. So we use a default.");
+			config.propertyMapping.setDefault(config.getSource(), config.getTarget());
+			VerticalLayout vl = new VerticalLayout();
+			vl.addComponent(descr);
+			vl.addComponent(info);
+			return vl;
+		} else {
+			return descr;
+		}
+	}	
+
+
+	@Override
+	protected Component getConfigPanel() {
+		System.out.println("generating genetic form");
+		form = new SelfConfigGeneticBasedForm(bean, messages);
+		return form;
+	}
+
+
+	@Override
+	protected Component getPerformPanel() {
+		resultPanel = new Panel();
+		VerticalLayout resultLayout = new VerticalLayout();
+		resultPanel.setContent(resultLayout);
+		return resultPanel;
 	}
 }

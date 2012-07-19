@@ -1,4 +1,4 @@
-package de.uni_leipzig.simba.saim.gui.widget.panel;
+package de.uni_leipzig.simba.saim.gui.widget.panel.selfconfiguration;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -8,6 +8,7 @@ import com.vaadin.ui.VerticalLayout;
 
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
+import de.uni_leipzig.simba.saim.gui.widget.panel.PerformPanel;
 
 public class GenericSelfConfigurationPanel extends PerformPanel{
 

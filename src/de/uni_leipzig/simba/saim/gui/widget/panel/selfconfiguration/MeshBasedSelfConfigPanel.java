@@ -1,4 +1,4 @@
-package de.uni_leipzig.simba.saim.gui.widget.panel;
+package de.uni_leipzig.simba.saim.gui.widget.panel.selfconfiguration;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -6,15 +6,12 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.wolfie.refresher.Refresher;
-import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
 
@@ -22,9 +19,9 @@ import de.uni_leipzig.simba.cache.HybridCache;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
-import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.form.SelfConfigMeshBasedBean;
 import de.uni_leipzig.simba.saim.gui.widget.form.SelfConfigMeshBasedForm;
+import de.uni_leipzig.simba.saim.gui.widget.panel.ExecutionPanel;
 import de.uni_leipzig.simba.selfconfig.ComplexClassifier;
 import de.uni_leipzig.simba.selfconfig.MeshBasedSelfConfigurator;
 import de.uni_leipzig.simba.selfconfig.SimpleClassifier;
@@ -34,114 +31,45 @@ import de.uni_leipzig.simba.selfconfig.SimpleClassifier;
  * @author Lyko
  *
  */
-public class MeshBasedSelfConfigPanel extends PerformPanel{
+public class MeshBasedSelfConfigPanel extends SelfConfigExecutionPanel{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -457009966196619211L;
 	private static final Logger logger = LoggerFactory.getLogger(MeshBasedSelfConfigPanel.class);
-	private final Messages messages;
-	private Layout mainLayout;
+	
 	MeshBasedSelfConfigurator bsc;
 	List<SimpleClassifier> classifiers;
 	ComplexClassifier cc;
-	final ProgressIndicator indicator = new ProgressIndicator();
-	final Panel stepPanel = new Panel();
-	Panel resultPanel;
 	Select resultSelect = new Select();
 	String generatedMetricexpression = "";
 	Thread thread;
-	SAIMApplication application;
-	Configuration config;
-	
+		
 	// to config self config
 	SelfConfigMeshBasedBean bean = new SelfConfigMeshBasedBean();
 	SelfConfigMeshBasedForm form;
-	Button start;
 	
 	/**
 	 * Constructor to may embed Panel in a parent component, e.g. an existing WizardStep Component.
 	 * @param parentComponent
 	 */
 	public MeshBasedSelfConfigPanel(SAIMApplication application, final Messages messages) {
-		this.application = application; 
-		this.messages=messages;
+		super(application, messages);
 	}
 	
 	@Override
 	public void attach() {
 		this.config = ((SAIMApplication)getApplication()).getConfig();
-		init();
+		super.init();
 	}
 	
-	/**
-	 * Initialize all Panel.
-	 */
-	private void init() {
-		mainLayout = new VerticalLayout();
-		this.setContent(mainLayout);
-		Label descriptor = new Label(messages.getString("MeshBasedSelfConfigPanel.description")); //$NON-NLS-1$
-		mainLayout.addComponent(descriptor);
-		Refresher refresher = new Refresher();
-		SelfConfigRefreshListener listener = new SelfConfigRefreshListener();
-		refresher.addListener(listener);
-		addComponent(refresher);
-
-		
-		indicator.setCaption(messages.getString("MeshBasedSelfConfigPanel.progress")); //$NON-NLS-1$
-		mainLayout.addComponent(indicator);
-		indicator.setImmediate(true);
-		indicator.setVisible(false);
-		
-		stepPanel.setCaption(messages.getString("MeshBasedSelfConfigPanel.panelcaption")); //$NON-NLS-1$
-		mainLayout.addComponent(stepPanel);
-		stepPanel.setVisible(false);
-		
-		resultSelect.setCaption(messages.getString("MeshBasedSelfConfigPanel.classifierlistcaption")); //$NON-NLS-1$
-		resultSelect.setNullSelectionAllowed(false);
-		resultSelect.setVisible(false);
-		
-		mainLayout.addComponent(form = new SelfConfigMeshBasedForm(bean, messages));
-		start = new Button(messages.getString("MeshBasedSelfConfigPanel.startbutton"));
-		start.addListener(new ClickListener() {
-			
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 5899998766641774597L;
-
-			@Override
-			public void buttonClick(ClickEvent event) {
-				mainLayout.removeComponent(start);
-				indicator.setVisible(true);
-				stepPanel.setVisible(true);
-				performSelfConfiguration();
-				
-			}
-		});
-		mainLayout.addComponent(start);
-		
-		
-		resultPanel = new Panel();
-		mainLayout.addComponent(resultPanel);
-		// Buttons
-		VerticalLayout resultLayout = new VerticalLayout();
-		resultLayout.addComponent(resultSelect);
-		resultPanel.setContent(resultLayout);		
-
-		
-	
-	}
-	
-	/**
-	 * Performs SelfConfiguration
-	 */
+	@Override
 	protected void performSelfConfiguration() {
 		mainLayout.addComponent(indicator);
 		mainLayout.addComponent(stepPanel);
 		thread = new Thread() {
 			public void run() {
-
+				start.setEnabled(false);
 				float steps = 5f;
 				indicator.setValue(new Float(1f/steps));
 				indicator.requestRepaint();
@@ -190,22 +118,13 @@ public class MeshBasedSelfConfigPanel extends PerformPanel{
 	 * Method to show results after initialization.
 	 */
 	private void showSimpleClassifiers() {
-//		Configuration config = Configuration.getInstance();
 		if(classifiers.size()>0) {
 			logger.info("Replacing property mapping.");
-//			config.propertyMapping = new PropertyMapping();
 		}
 		for(SimpleClassifier cl : classifiers) {
 			resultSelect.addItem(cl);
 			resultSelect.select(cl);
-//			if(cl.measure.equalsIgnoreCase("euclidean")) {
-//				logger.info("Adding number propertyMatch between: "+cl.sourceProperty +" - "+ cl.targetProperty);
-//				config.addPropertiesMatch(cl.sourceProperty, cl.targetProperty, false);
-//			}else {
-//				config.addPropertiesMatch(cl.sourceProperty, cl.targetProperty, true);
-//				logger.info("Adding string propertyMatch between: "+cl.sourceProperty +" - "+ cl.targetProperty);
-//			}
-		}
+	}
 		resultSelect.setWidth("80%");//$NON-NLS-1$
 		resultSelect.setVisible(true);		
 	}
@@ -218,23 +137,14 @@ public class MeshBasedSelfConfigPanel extends PerformPanel{
 		Panel result = new Panel("Classifier: "+generatedMetricexpression
 				+ " with pseudo f-measure="+cc.fMeasure);
 		stepPanel.addComponent(result);
-		
-//		generateMetric.setEnabled(true);
+		onFinish();
 	}
 	
-	/**To enable refreshing while multithreading*/
-	public class SelfConfigRefreshListener implements RefreshListener  {
-		boolean running = true; 
-		private static final long serialVersionUID = -8765221895426102605L;		    
-		@Override 
-		public void refresh(final Refresher source)	{
-			if(!running) {
-				removeComponent(source);
-				source.setEnabled(false);
-			}
-		}
+	private void onFinish() {
+		start.setEnabled(true);
+		close.setEnabled(true);
 	}
-	
+
 	/**Implements Listener for generateMetrik Button*/
 	class GenerateMetricButtonClickListener implements Button.ClickListener {
 		/**
@@ -254,7 +164,6 @@ public class MeshBasedSelfConfigPanel extends PerformPanel{
 			String metric = generatedMetricexpression;
 		
 			config.setMetricExpression(metric);
-//			Configuration.getInstance().setAcceptanceThreshold(cl.threshold);
 			l.removeAllComponents();
 			l.addComponent(new ExecutionPanel(messages));
 		}
@@ -326,6 +235,32 @@ public class MeshBasedSelfConfigPanel extends PerformPanel{
 	}
 	@Override
 	public void start() {
-//		performSelfConfiguration();
+//		nothing to do here
+	}
+
+	@Override
+	protected Component getConfigPanel() {
+		System.out.println("generating mesh form");		
+		form = new SelfConfigMeshBasedForm(bean, messages);
+		return form;
+	}
+
+	@Override
+	protected Component getPerformPanel() {
+		resultSelect.setCaption(messages.getString("MeshBasedSelfConfigPanel.classifierlistcaption")); //$NON-NLS-1$
+		resultSelect.setNullSelectionAllowed(false);
+		resultSelect.setVisible(false);
+		
+		resultPanel = new Panel();
+		VerticalLayout resultLayout = new VerticalLayout();
+		resultLayout.addComponent(resultSelect);
+		resultPanel.setContent(resultLayout);
+		return resultPanel;
+	}
+
+	@Override
+	protected Component getDescriptionComponent() {
+		System.out.println("Calling getDescriptionComponent() in Mesh");
+		return new Label(messages.getString("MeshBasedSelfConfigPanel.description")); //$NON-NLS-1$
 	}
 }
