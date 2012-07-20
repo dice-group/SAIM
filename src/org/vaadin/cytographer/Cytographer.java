@@ -9,7 +9,6 @@ import com.vaadin.data.validator.DoubleValidator;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 
-
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -26,14 +25,17 @@ import com.vaadin.ui.themes.Reindeer;
 import org.vaadin.cytographer.widgetset.client.ui.VCytographer;
 
 import cytoscape.CyNetwork;
+import cytoscape.Cytoscape;
 import cytoscape.layout.CyLayoutAlgorithm;
 import cytoscape.view.CyNetworkView;
 import de.konrad.commons.sparql.PrefixHelper;
 import de.uni_leipzig.simba.io.KBInfo;
+import de.uni_leipzig.simba.saim.Messages;
+import de.uni_leipzig.simba.saim.SAIMApplication;
+import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.metric.Node;
 import de.uni_leipzig.simba.saim.core.metric.Output;
 import de.uni_leipzig.simba.saim.gui.widget.form.PreprocessingForm;
-import de.uni_leipzig.simba.saim.gui.widget.panel.MetricPanel;
 
 /**
  * Server side component for the VCytographer widget.
@@ -43,14 +45,57 @@ public class Cytographer extends AbstractComponent {
 	private static final long serialVersionUID = 8483008141219579936L;
 	
 	public enum GraphOperation {
-		REPAINT, SET_NODE_SIZE, SET_VISUAL_STYLE, SET_TEXT_VISIBILITY, SET_OPTIMIZED_STYLES, SET_ZOOM, REFRESH,FIT 
+		REPAINT, SET_NODE_SIZE, SET_VISUAL_STYLE, SET_TEXT_VISIBILITY, SET_OPTIMIZED_STYLES, SET_ZOOM, FIT 
 	}
 	private GraphOperation currentOperation = GraphOperation.REPAINT;
 		
 	private final GraphProperties graphProperties;
 	private final PaintController paintController = new PaintController();
-	private Window mainWindow;
-	private MetricPanel mp; 
+	
+	private Window mainWindow=null;
+	private Messages messages=null;
+	private Configuration cfg=null;
+	
+	public Cytographer(final int width, final int height,Window window) {
+		Cytoscape.createNewSession();
+		String name = "Cytographer";
+		CyNetwork network = Cytoscape.createNetwork(name, false);			
+		CyNetworkView finalView= Cytoscape.createNetworkView(network);	
+		
+		if((SAIMApplication)getApplication()!= null)
+			messages = ((SAIMApplication)getApplication()).messages;
+
+		if((SAIMApplication)getApplication()!= null)
+			cfg = ((SAIMApplication)getApplication()).getConfig();
+		
+		graphProperties = new GraphProperties(network, finalView, name);
+		setMainWindow(window);
+		
+		// defaults
+		setSize(width,height);
+		setImmediate(true);
+		setTextVisible(true);
+	}
+	/**
+	 * 
+	 */
+	public Cytographer(final CyNetwork network, final CyNetworkView finalView, final String title, final int width, final int height,Window window) {
+		
+		if((SAIMApplication)getApplication()!= null)
+			messages = ((SAIMApplication)getApplication()).messages;
+
+		if((SAIMApplication)getApplication()!= null)
+			cfg = ((SAIMApplication)getApplication()).getConfig();
+		
+		graphProperties = new GraphProperties(network, finalView, title);
+		setMainWindow(window);
+		
+		// defaults
+		setSize(width,height);
+		setImmediate(true);
+		setTextVisible(true);
+	}
+	
 	/**
 	 * Gets the metrics output node / root node
 	 */
@@ -60,26 +105,27 @@ public class Cytographer extends AbstractComponent {
 				return n;
 		}return null;
 	}
+
 	public void applyLayoutAlgorithm(final CyLayoutAlgorithm loAlgorithm) {
 		graphProperties.applyLayoutAlgorithm(loAlgorithm);
 		repaintGraph();
 	}
-	/**
-	 * 
-	 */
-	public Cytographer(final CyNetwork network, final CyNetworkView finalView, final String title, final int width, final int height,Window mainWindow,MetricPanel mp) {
+	public void setSize(int w,int h ){
+		setWidth(w + "px"); //$NON-NLS-1$
+		setHeight(h + "px"); //$NON-NLS-1$
+		graphProperties.setWidth(w);
+		graphProperties.setHeight(h);
+	}
 
-		graphProperties = new GraphProperties(network, finalView, title);
-		graphProperties.setWidth(width);
-		graphProperties.setHeight(height);
-		this.mainWindow = mainWindow;
-		graphProperties.setMainWindow(mainWindow);	
-		this.mp = mp;
+	public void setMainWindow(Window window){
+		graphProperties.setMainWindow(window);
+		mainWindow=window;
 	}
 
 	public int  addNode(String name, int x, int y, GraphProperties.Shape shape){
 		return graphProperties.addANewNode(name, x, y,shape);
 	}
+
 	public void createAnEdge(int nodeAid, int nodeBid, String attribute) {
 		graphProperties.createAnEdge(nodeAid, nodeBid, attribute);
 	}
@@ -100,7 +146,6 @@ public class Cytographer extends AbstractComponent {
 		case SET_ZOOM:
 			paintController.setZoom(target, graphProperties);
 			break;
-		case REFRESH:
 		case REPAINT:
 		case FIT:
 			paintController.repaintGraph(target, graphProperties);
@@ -111,9 +156,11 @@ public class Cytographer extends AbstractComponent {
 		currentOperation = GraphOperation.REPAINT;
 		graphProperties.setUseFitting(false);
 	}
+
 	/**
 	 * Receive and handle events and other variable changes from the client.
 	 */
+
 	@Override
 	public void changeVariables(final Object source, final Map<String, Object> variables) {
 		super.changeVariables(source, variables);
@@ -159,13 +206,13 @@ public class Cytographer extends AbstractComponent {
 				else if(args[5].startsWith("Target")){
 					String nodeName = (graphProperties.getNodeNames().get(Integer.valueOf(args[0])));
 					// remove prefix
-					addProperty(nodeName.substring(nodeName.indexOf('.')+1),mp.getConfig().getTarget());
+					addProperty(nodeName.substring(nodeName.indexOf('.')+1),cfg.getTarget());
 					
 				}
 				else if(args[5].startsWith("Source")){
 					String nodeName = (graphProperties.getNodeNames().get(Integer.valueOf(args[0])));
 					// remove prefix
-					addProperty(nodeName.substring(nodeName.indexOf('.')+1),mp.getConfig().getSource());
+					addProperty(nodeName.substring(nodeName.indexOf('.')+1),cfg.getSource());
 				}	
 			}
 		}
@@ -178,10 +225,12 @@ public class Cytographer extends AbstractComponent {
 			graphProperties.setNodePos(id,x,y);
 		}
 	}
+
 	public void addDefaultProperty(String s, KBInfo info){
 			//TODO
 			//set defaults 
 	}
+
 	/**
 	 * Method to add Properties to according KBInfo. 
 	 * @param s URI of the property. May or may not be abbreviated.
@@ -201,7 +250,7 @@ public class Cytographer extends AbstractComponent {
 			info.properties.add(prop);
 		}
 
-		final Window sub = new Window(mp.getMessages().getString("Cytographer.definepreprocessingsubwindowname")+prop);
+		final Window sub = new Window(messages.getString("Cytographer.definepreprocessingsubwindowname")+prop);
 		sub.setModal(true);
 		sub.addComponent(new PreprocessingForm(info, prop));
 		sub.setResizable(false);
@@ -226,12 +275,12 @@ public class Cytographer extends AbstractComponent {
 		
 		final Window mywindow = new Window("");
 		
-		final TextField t = new TextField( mp.getMessages().getString("Cytographer.modalWindowTextField1Label"+name),args[3]);
-		final TextField tt = new TextField(mp.getMessages().getString("Cytographer.modalWindowTextField2Label"+name),args[4]);
+		final TextField t = new TextField( messages.getString("Cytographer.modalWindowTextField1Label"+name),args[3]);
+		final TextField tt = new TextField(messages.getString("Cytographer.modalWindowTextField2Label"+name),args[4]);
 		mywindow.addComponent(t);
 		mywindow.addComponent(tt);
-		t.addValidator( new MyDoubleValidator(mp.getMessages().getString("Cytographer.thresholdWarning"+name)));
-		tt.addValidator(new MyDoubleValidator(mp.getMessages().getString("Cytographer.thresholdWarning"+name)));
+		t.addValidator( new MyDoubleValidator(messages.getString("Cytographer.thresholdWarning"+name)));
+		tt.addValidator(new MyDoubleValidator(messages.getString("Cytographer.thresholdWarning"+name)));
 		t.setMaxLength(4);
 		tt.setMaxLength(4);
 		t.setImmediate(true);
@@ -251,7 +300,7 @@ public class Cytographer extends AbstractComponent {
 		layout.addComponent(btnok);
 		layout.addComponent(btncancel);
 		mywindow.addComponent(layout);
-		getApplication().getMainWindow().addWindow(mywindow);
+		mainWindow.addWindow(mywindow);
 		
 		btnok.setEnabled(true);
 	    btnok.setImmediate(true);
@@ -272,9 +321,9 @@ public class Cytographer extends AbstractComponent {
 			public void buttonClick(ClickEvent event) {
 				if(event.getButton() == btnok){
 					if(click())
-						getApplication().getMainWindow().removeWindow(mywindow); // close
+						mainWindow.removeWindow(mywindow); // close
 				}else if(event.getButton() == btncancel){
-					getApplication().getMainWindow().removeWindow(mywindow); // close
+					mainWindow.removeWindow(mywindow); // close
 				}				
 			}
 			
@@ -288,7 +337,7 @@ public class Cytographer extends AbstractComponent {
 					repaintGraph();
 					return true;
 				}else{
-					mainWindow.showNotification(mp.getMessages().getString("Cytographer.thresholdWarning"+name), Notification.TYPE_WARNING_MESSAGE);
+					mainWindow.showNotification(messages.getString("Cytographer.thresholdWarning"+name), Notification.TYPE_WARNING_MESSAGE);
 					return false;
 				}
 			}
@@ -298,6 +347,7 @@ public class Cytographer extends AbstractComponent {
 	    btnok.addListener(new MyListener());
 	    btncancel.addListener(new MyListener());
 	}
+
 	/**
 	 * Change texts visibilities
 	 * 
@@ -328,9 +378,10 @@ public class Cytographer extends AbstractComponent {
 		}
 	}
 
-
-	public void repaintGraph() {
-		
+	/**
+	 * Change window size.
+	 */
+	private void reSize(){
 		int hadjust = 100;
 		int wadjust = 450;
 		
@@ -339,26 +390,18 @@ public class Cytographer extends AbstractComponent {
 		int wg = graphProperties.getWidth();
 		int hg = graphProperties.getHeight();
 		
-		if(
-				wm > 0 && 
-				hm > 0 &&
-				wg != wm &&
-				hg != hm
-				
-				){
-			
-			
-			graphProperties.setWidth(wm);
-			graphProperties.setHeight(hm);
-			setWidth(wm + "px"); //$NON-NLS-1$
-			setHeight(hm + "px"); //$NON-NLS-1$
-		}
-		
+		if(wm > 0 &&  hm > 0 && wg != wm && hg != hm )
+			setSize(wm,hm);
+	}
+	/**
+	 * Change window size and repaint graph
+	 */
+	public void repaintGraph() {
+		reSize();		
 		currentOperation = GraphOperation.REPAINT;
 		graphProperties.setZoomFactor(0);
 		requestRepaint();
 	}
-
 
 	public Container getNodeAttributeContainerForSelectedNodes() {
 		return graphProperties.getNodeAttributeContainerForSelectedNodes();
@@ -387,18 +430,13 @@ public class Cytographer extends AbstractComponent {
 		graphProperties.setZoomFactor(graphProperties.getZoomFactor() - 1);
 		currentOperation = GraphOperation.SET_ZOOM;
 		requestRepaint();
-
 	}
 
-	public void refresh() {
-	
-		currentOperation = GraphOperation.REFRESH;
-		requestRepaint();
-	}
 	public void initNodeColors(int p){
 		paintController.initNodeColors(p);
 		repaintGraph();
 	}
+
 	class MyDoubleValidator extends DoubleValidator {
 		private static final long serialVersionUID = -5585916227598767457L;
 		public MyDoubleValidator(String msg) {

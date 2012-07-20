@@ -6,7 +6,6 @@ import java.util.Set;
 
 import org.vaadin.gwtgraphics.client.DrawingArea;
 import org.vaadin.gwtgraphics.client.Line;
-import org.vaadin.gwtgraphics.client.shape.Circle;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -35,7 +34,7 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 	
 	private static final double ZOOM_DOWN = 0.90;
 	private static final double ZOOM_UP = 1.10;
-	private static final long serialVersionUID = 5554800884802605342L;
+
 	public static final String CLASSNAME = "v-vaadingraph";
 
 	protected String paintableId;
@@ -57,7 +56,6 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 	private float startY;
 	private float startX;
 	private int zoomFactor = 0;
-	private float angle = 0;
 
 	private boolean onMove = false;
 	private boolean onLink = false;
@@ -67,11 +65,8 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 	private float centerY = graphHeight / 2f;
 
 	/**
-	 * The constructor should first call super() to initialize the component and
-	 * then handle any initialization relevant to Vaadin.
 	 */
 	public VCytographer() {
-		
 		panel = new FocusPanel();
 		panel.setSize(graphWidth + "px", graphHeight + "px");
 		panel.addKeyDownHandler(this);
@@ -92,6 +87,7 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 		initWidget(panel);
 		setStyleName(CLASSNAME);
 	}
+
 	/**
 	 * Called whenever an update is received from the server
 	 */
@@ -105,43 +101,23 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 		paintableId = uidl.getId();
 	
 		currentKeyModifiers = new HashSet<Integer>();
-		final String operation = uidl.getStringAttribute("operation");
-
+		final String o = uidl.getStringAttribute("operation");
 		
-		if ("REPAINT".equals(operation)) {
-	
-			style.setMetric(uidl.getStringAttribute("metric"));
-			style.setOperator(uidl.getStringAttribute("operator"));
-			style.setOutput(uidl.getStringAttribute("output"));
-			style.setSource(uidl.getStringAttribute("source"));
-			style.setTarget(uidl.getStringAttribute("target"));
-			repaint(uidl);
-		}
-		else if ("SET_NODE_SIZE".equals(operation)) {
+		if ("SET_NODE_SIZE".equals(o)) {
 			style.setNodeSize(uidl.getIntAttribute("ns") / 2);
 			graph.updateGraphProperties(style);
-//			paintGraph();
-		} else if ("SET_VISUAL_STYLE".equals(operation)) {
-			graph.updateGraphProperties(style);
-//			paintGraph();
-		} else if ("SET_TEXT_VISIBILITY".equals(operation)) {
+		} else if ("SET_TEXT_VISIBILITY".equals(o)) {
 			style.setTextsVisible(uidl.getBooleanAttribute("texts"));
 			graph.updateGraphProperties(style);
-//			paintGraph();
-		} 		
-		else if ("FIT".equals(uidl.getStringAttribute("operation"))) {
+		} else if ("FIT".equals(o)) {
 			repaint(uidl);
 			graph.refreshPos();
-		}
-//		else if ("SET_OPTIMIZED_STYLES".equals(operation))
-//			graph.paintGraph();
-//		else if ("UPDATE_NODE".equals(operation)) {
-//			graph.updateNode(uidl, uidl.getStringAttribute("node"));
-//		}
-		else if ("SET_ZOOM".equals(operation)) 
+		} else if ("SET_ZOOM".equals(o)) 
 			setZoom(uidl.getIntAttribute("zoom"));
-		else if ("REFRESH".equals(operation)) 
-			refresh(uidl);
+//		else if ("REFRESH".equals(o)) {
+//			style.parseGeneralStyleAttributesFromUidl(uidl);
+//			graph.refreshGraphFromUIDL(uidl);
+//		}
 		else 
 			repaint(uidl);		
 	}
@@ -156,11 +132,6 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 		initializeCanvas();
 		graph.repaintGraph(uidl);
 		graph.moveGraph(0, 0);
-	}
-
-	private void refresh(final UIDL uidl) {
-		style.parseGeneralStyleAttributesFromUidl(uidl);
-		graph.refreshGraphFromUIDL(uidl);
 	}
 
 	private void initializeCanvas() {
@@ -213,7 +184,6 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 
 	@Override
 	public void onMouseUp(final MouseUpEvent event) {
-
 		extractSelection();
 		removeSelectionBox();
 		graph.setMovedShape(null);
@@ -312,6 +282,7 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 	public void onNodeMouseUp(String[] values){		
 		applicationConnection.updateVariable(paintableId, "onNodeMouseUp", values, true);				
 	}
+
 	@Override
 	public void onMouseWheel(final MouseWheelEvent event) {
 		
@@ -341,10 +312,7 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 			n.moveNode(x,y);
 			graph.updateEdges(n, false);
 		}
-		angle += delta;
 	}
-
-	
 	
 	private void setZoom(final int newZoomFactor) {
 		if (newZoomFactor > zoomFactor) 

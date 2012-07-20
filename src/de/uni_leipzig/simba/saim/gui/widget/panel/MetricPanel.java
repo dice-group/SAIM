@@ -13,7 +13,6 @@ import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vaadin.cytographer.Cytographer;
-import org.vaadin.cytographer.CytographerActionToolbar;
 import org.vaadin.cytographer.GraphProperties;
 
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
@@ -27,13 +26,10 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 
 import csplugins.layout.algorithms.force.ForceDirectedLayout;
-import cytoscape.CyNetwork;
 import cytoscape.Cytoscape;
-import cytoscape.view.CyNetworkView;
 import cytoscape.visual.VisualPropertyType;
 import de.konrad.commons.sparql.PrefixHelper;
 import de.uni_leipzig.simba.saim.Messages;
@@ -67,8 +63,6 @@ public class MetricPanel extends Panel{
 	Button selfConfigButton, learnButton, startMapping, setMetric;
 	
 	@Getter private Cytographer cytographer;
-	private CyNetworkView cyNetworkView;
-	
 	
 	public MetricPanel(final Messages messages) {	
 		this.messages = messages;
@@ -78,6 +72,7 @@ public class MetricPanel extends Panel{
 	public void attach() {
 		if((SAIMApplication)getApplication()!= null)
 			config = ((SAIMApplication)getApplication()).getConfig();
+		
 		mainLayout = new VerticalLayout();
 		mainLayout.setSpacing(false);
 		mainLayout.setMargin(false);
@@ -114,7 +109,6 @@ public class MetricPanel extends Panel{
 		accordion.addTab(operatorsLayout,messages.getString("MetricPanel.operators"));	 //$NON-NLS-1$
 		// add Cytographer
 		cytographer = makeCytographer();
-		//layout.addComponent(new CytographerActionToolbar(cytographer));
 		layout.addComponent(cytographer);
 		
 		new Thread(){			
@@ -143,10 +137,10 @@ public class MetricPanel extends Panel{
 		for(String label : Operator.identifiers)
 			operatorsLayout.addComponent( new Label(label)); 	
 		
-		sourceLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.SOURCE, config,messages));
-		targetLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.TARGET, config,messages));
-		metricsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.METRIC, config,messages));
-		operatorsLayout.addListener(new AccordionLayoutClickListener(cytographer,cyNetworkView,GraphProperties.Shape.OPERATOR, config,messages));
+		sourceLayout.addListener(   new AccordionLayoutClickListener(cytographer,GraphProperties.Shape.SOURCE,   config));
+		targetLayout.addListener(   new AccordionLayoutClickListener(cytographer,GraphProperties.Shape.TARGET,   config));
+		metricsLayout.addListener(  new AccordionLayoutClickListener(cytographer,GraphProperties.Shape.METRIC,   config));
+		operatorsLayout.addListener(new AccordionLayoutClickListener(cytographer,GraphProperties.Shape.OPERATOR, config));
 		
 		this.checkButtons();
 	}
@@ -158,23 +152,12 @@ public class MetricPanel extends Panel{
 		final int NODESIZE = 100;
 		final double EDGE_LABEL_OPACITY = 0d;
 		
-		Cytoscape.createNewSession();	
 		Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().setDefaultBackgroundColor(Color.WHITE);
 		Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_COLOR,Color.BLACK);
 		Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_LABEL_OPACITY,EDGE_LABEL_OPACITY);
 		Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.NODE_SIZE, NODESIZE);
-		
-		String name = "MyName";
-		CyNetwork cyNetwork = Cytoscape.createNetwork(name, false);	
-		
-		cyNetworkView = Cytoscape.createNetworkView(cyNetwork);
-		
-		Window window = getApplication().getMainWindow();
-		cytographer = new Cytographer(cyNetwork, cyNetworkView, name, WIDTH, HEIGHT,window,this);
-		cytographer.setImmediate(true);
-		cytographer.setWidth(WIDTH + "px"); //$NON-NLS-1$
-		cytographer.setHeight(HEIGHT + "px"); //$NON-NLS-1$
-		cytographer.setTextVisible(true);		
+
+		cytographer = new Cytographer(WIDTH, HEIGHT,getApplication().getMainWindow());
 		cytographer.setNodeSize(NODESIZE, true);	
 		
 		String metricExpression = config.getMetricExpression();
@@ -185,7 +168,7 @@ public class MetricPanel extends Panel{
 			outp.param1 = config.getAcceptanceThreshold();
 			outp.param2 = config.getVerificationThreshold();
 			makeMetricRecursive(outp, -1); //$NON-NLS-1$
-			cyNetworkView.applyLayout(new ForceDirectedLayout());		
+			cytographer.applyLayoutAlgorithm(new ForceDirectedLayout());		
 			cytographer.repaintGraph();
 		}else{
 			cytographer.addNode(new Output().id, WIDTH/2, HEIGHT/2, GraphProperties.Shape.OUTPUT);
@@ -194,53 +177,6 @@ public class MetricPanel extends Panel{
 		return cytographer;		
 	}
 
-//	private Map<Integer,Node> blacklist = new HashMap<Integer,Node>();
-//	/**
-//	 * @param o the Output node
-//	 * @deprecated use makeMetricRecursive() instead.
-//	 */
-//	private void makeMetric(Output output)
-//	{
-//		Stack<Node> cNodes = new Stack<Node>();
-//		cNodes.push(output);
-//		
-//		while(!cNodes.isEmpty()){
-//			Integer nID = null;
-//			Node n = cNodes.pop();
-//			if(!blacklist.containsValue(n)){
-//				nID = addNode(n);
-//				blacklist.put(nID, n);
-//			}else{
-//				for(Integer id : blacklist.keySet()){
-//					if(blacklist.get(id).equals(n)){
-//						nID=id;
-//						break;						
-//					}
-//				}
-//			}
-//			
-//			cNodes.addAll(n.getChilds());
-//			for(Node c : n.getChilds()){
-//				Integer cID = null; 
-//				/* Need to support for adding multiple property nodes 
-//				 * the second or part does that.
-//				 * @TODO test test test!!!
-//				 */
-//				if(!blacklist.containsValue(c)||c.getMaxChilds()==0){
-//					cID = addNode(c);
-//					blacklist.put(cID, c);
-//				}else{
-//					for(Integer id : blacklist.keySet()){
-//						if(blacklist.get(id).equals(c)){
-//							cID=id;
-//							break;						
-//						}
-//					}
-//				}				
-//				addEdge(nID,cID);			
-//			}
-//		}
-//	}
 	/**
 	 * Recursive  function to create a graphical representation out of a output node.
 	 * @param n Call with the Output (root) node.
@@ -261,6 +197,7 @@ public class MetricPanel extends Panel{
 			makeMetricRecursive(c.getValue(), c.getKey());
 		}
 	}
+	
 	private int addNode(Node n){
 		Integer id = null;
 		// make node
@@ -289,6 +226,7 @@ public class MetricPanel extends Panel{
 		}
 		return id;
 	}
+	
 	private void addEdge(int nID,int cID){
 		cytographer.createAnEdge(nID, cID, new String(nID+"_to_"+cID));		
 	}
@@ -383,6 +321,7 @@ public class MetricPanel extends Panel{
 			}
 		}		
 	}
+
 	/**
 	 * Checks whether the Buttons (selfconfig, learning and startMapping) could be activated.
 	 */
@@ -400,24 +339,20 @@ public class MetricPanel extends Panel{
 		}
 	}
 
-
 	/**Listener to react on clicks in the accordion panel.*/
 	class AccordionLayoutClickListener implements LayoutClickListener
 	{
 		private static final long serialVersionUID = -3498649095113131161L;
 		private Cytographer cytographer;
-		private CyNetworkView cyNetworkView;
+	
 		private GraphProperties.Shape shape;
 		private Configuration config;
-		private final Messages messages;
 		
-		public AccordionLayoutClickListener(Cytographer cytographer, CyNetworkView cyNetworkView,GraphProperties.Shape shape, Configuration config,final Messages messages)
+		public AccordionLayoutClickListener(Cytographer cytographer,GraphProperties.Shape shape, Configuration config)
 		{
 			this.cytographer = cytographer;
-			this.cyNetworkView = cyNetworkView;
 			this.shape = shape;
 			this.config = config;
-			this.messages=messages;
 		}
 		
 		@Override
