@@ -74,10 +74,14 @@ public class LearnerConfigurationForm extends Form
 	            return intStepper;
 	        }
 	        else if("mutationRate".equals(pid)) { //$NON-NLS-1$
-	        	Slider slider = new Slider(0d, 1d, 1);
-	        	slider.setCaption(messages.getString("LearnerConfigurationForm.mutation")); //$NON-NLS-1$
+	        	ShowingValueSlider slider = new ShowingValueSlider(messages.getString("LearnerConfigurationForm.mutation"), 0d, 1d, 1);
 	        	slider.setWidth(elementsWidth);
-	        	slider.setOrientation(Slider.ORIENTATION_HORIZONTAL);
+	        	slider.setPropertyDataSource(item.getItemProperty(pid));
+	        	return slider;
+	        }
+	        else if("crossoverRate".equals(pid)) { //$NON-NLS-1$
+	        	ShowingValueSlider slider = new ShowingValueSlider(messages.getString("LearnerConfigurationForm.crossover"), 0d, 1d, 1);
+	        	slider.setWidth(elementsWidth);
 	        	slider.setPropertyDataSource(item.getItemProperty(pid));
 	        	return slider;
 	        }
