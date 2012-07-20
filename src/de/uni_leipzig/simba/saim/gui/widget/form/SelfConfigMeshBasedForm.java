@@ -52,18 +52,14 @@ public class SelfConfigMeshBasedForm extends Form {
 			 // Identify the fields by their Property ID. This is the name of the field of the corresponding bean.
 	        String pid = (String) propertyId;
 			if("beta".equals(pid)) {//$NON-NLS-1$
-				Slider slider = new Slider(0.1d, 2.0d, 1);
-	        	slider.setCaption(messages.getString("SelfConfigMeshBasedForm.beta"));  //$NON-NLS-1$
+				ShowingValueSlider slider = new ShowingValueSlider(messages.getString("SelfConfigMeshBasedForm.beta"), 0.1d, 2d, 1);
 	        	slider.setWidth(elementsWidth);
-	        	slider.setOrientation(Slider.ORIENTATION_HORIZONTAL);
 	        	slider.setPropertyDataSource(item.getItemProperty(pid));
 	        	return slider;
 			}
 			if("minCoverage".equals(pid)) {//$NON-NLS-1$
-				Slider slider = new Slider(0d, 1d, 1);
-	        	slider.setCaption(messages.getString("SelfConfigMeshBasedForm.mincoverage"));  //$NON-NLS-1$
+	        	ShowingValueSlider slider = new ShowingValueSlider(messages.getString("SelfConfigMeshBasedForm.mincoverage"), 0d, 1d, 1);
 	        	slider.setWidth(elementsWidth);
-	        	slider.setOrientation(Slider.ORIENTATION_HORIZONTAL);
 	        	slider.setPropertyDataSource(item.getItemProperty(pid));
 	        	return slider;
 			}
