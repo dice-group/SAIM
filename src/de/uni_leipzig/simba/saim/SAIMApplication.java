@@ -23,6 +23,11 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
+import csplugins.layout.algorithms.circularLayout.CircularLayoutAlgorithm;
+import csplugins.layout.algorithms.force.ForceDirectedLayout;
+import csplugins.layout.algorithms.hierarchicalLayout.HierarchicalLayoutAlgorithm;
+import cytoscape.layout.algorithms.GridNodeLayout;
+
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.ConfigUploader;
 import de.uni_leipzig.simba.saim.gui.widget.panel.MetricPanel;
@@ -115,7 +120,33 @@ public class SAIMApplication extends Application
 		MenuItem languageMenu = menuBar.addItem(messages.getString("language"), null, null); //$NON-NLS-1$
 		languageMenu.addItem(messages.getString("german"), null, new SetLanguageCommand("de"));		 //$NON-NLS-1$
 		languageMenu.addItem(messages.getString("english"), null, new SetLanguageCommand("en")).setEnabled(true); //$NON-NLS-1$
+		// layout algo.
+		MenuItem layoutalgo = menuBar.addItem("Layout algorithm", null, null); 
 		
+		layoutalgo.addItem("Force Directed", null, new MenuBar.Command()	{
+			public void menuSelected(MenuItem selectedItem) {
+				if(selectedItem.getText().equals("Force Directed"))
+					((MetricPanel)content).getCytographer().applyLayoutAlgorithm(new ForceDirectedLayout());
+			}
+		});	
+		layoutalgo.addItem("Hierarchical", null, new MenuBar.Command()	{
+			public void menuSelected(MenuItem selectedItem) {
+				if(selectedItem.getText().equals("Hierarchical"))
+					((MetricPanel)content).getCytographer().applyLayoutAlgorithm(new HierarchicalLayoutAlgorithm());
+			}
+		});		
+		layoutalgo.addItem("Grid", null, new MenuBar.Command()	{
+			public void menuSelected(MenuItem selectedItem) {
+				if(selectedItem.getText().equals("Grid"))
+					((MetricPanel)content).getCytographer().applyLayoutAlgorithm(new GridNodeLayout());
+			}
+		});	
+		layoutalgo.addItem("Circular", null, new MenuBar.Command()	{
+			public void menuSelected(MenuItem selectedItem) {
+				if(selectedItem.getText().equals("Circular"))
+					((MetricPanel)content).getCytographer().applyLayoutAlgorithm(new CircularLayoutAlgorithm());
+			}
+		});
 		// color
 		MenuItem colorMenu = menuBar.addItem("Color", null, null); 
 		for(Integer pattern = 1; pattern < 5;pattern++){
