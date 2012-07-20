@@ -114,7 +114,7 @@ public class MetricPanel extends Panel{
 		accordion.addTab(operatorsLayout,messages.getString("MetricPanel.operators"));	 //$NON-NLS-1$
 		// add Cytographer
 		cytographer = makeCytographer();
-		layout.addComponent(new CytographerActionToolbar(cytographer));
+		//layout.addComponent(new CytographerActionToolbar(cytographer));
 		layout.addComponent(cytographer);
 		
 		new Thread(){			

@@ -120,6 +120,29 @@ public class SAIMApplication extends Application
 		MenuItem languageMenu = menuBar.addItem(messages.getString("language"), null, null); //$NON-NLS-1$
 		languageMenu.addItem(messages.getString("german"), null, new SetLanguageCommand("de"));		 //$NON-NLS-1$
 		languageMenu.addItem(messages.getString("english"), null, new SetLanguageCommand("en")).setEnabled(true); //$NON-NLS-1$
+		
+		// zoom
+		menuBar.addItem("+", null,new MenuBar.Command()	{
+			public void menuSelected(MenuItem selectedItem) {
+				if(selectedItem.getText().equals("+")){//$NON-NLS-1$
+					((MetricPanel)content).getCytographer().zoomIn();
+				}
+			}
+		});	
+		menuBar.addItem("fit", null,new MenuBar.Command()	{
+			public void menuSelected(MenuItem selectedItem) {
+				if(selectedItem.getText().equals("fit"))//$NON-NLS-1$
+					((MetricPanel)content).getCytographer().fitToView();
+				
+			}
+		});			menuBar.addItem("-", null,new MenuBar.Command()	{
+			public void menuSelected(MenuItem selectedItem) {
+				if(selectedItem.getText().equals("-")){//$NON-NLS-1$
+					((MetricPanel)content).getCytographer().zoomOut();
+				}
+			}
+		});
+		
 		// layout algo.
 		MenuItem layoutalgo = menuBar.addItem("Layout algorithm", null, null); 
 		

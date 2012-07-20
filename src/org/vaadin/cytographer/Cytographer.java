@@ -43,7 +43,7 @@ public class Cytographer extends AbstractComponent {
 	private static final long serialVersionUID = 8483008141219579936L;
 	
 	public enum GraphOperation {
-		REPAINT, SET_NODE_SIZE, SET_VISUAL_STYLE, SET_TEXT_VISIBILITY, SET_OPTIMIZED_STYLES, SET_ZOOM, REFRESH 
+		REPAINT, SET_NODE_SIZE, SET_VISUAL_STYLE, SET_TEXT_VISIBILITY, SET_OPTIMIZED_STYLES, SET_ZOOM, REFRESH,FIT 
 	}
 	private GraphOperation currentOperation = GraphOperation.REPAINT;
 		
@@ -89,9 +89,6 @@ public class Cytographer extends AbstractComponent {
 		super.paintContent(target);	
 		target.addAttribute("operation", currentOperation.toString());
 		switch (currentOperation) {
-		case REPAINT:
-			paintController.repaintGraph(target, graphProperties);
-			break;
 		case SET_NODE_SIZE:
 			paintController.paintNodeSize(target, graphProperties);
 			break;
@@ -104,6 +101,8 @@ public class Cytographer extends AbstractComponent {
 			paintController.setZoom(target, graphProperties);
 			break;
 		case REFRESH:
+		case REPAINT:
+		case FIT:
 			paintController.repaintGraph(target, graphProperties);
 			break;
 		default:
@@ -133,7 +132,6 @@ public class Cytographer extends AbstractComponent {
 		}
 		if (variables.containsKey("zoomFactor")) {
 			graphProperties.setZoomFactor((Integer) variables.get("zoomFactor"));
-			
 		}
 		if (variables.containsKey("createdANode")) {
 			final Object[] nodeData = (Object[]) variables.get("createdANode");
@@ -330,9 +328,7 @@ public class Cytographer extends AbstractComponent {
 		}
 	}
 
-	// TODO
-	// graphProperties.setWidth ...
-	// won't save values
+
 	public void repaintGraph() {
 		
 		int hadjust = 100;
@@ -351,11 +347,11 @@ public class Cytographer extends AbstractComponent {
 				
 				){
 			
-//			System.out.println(wm + ":"+ wg);
-//			System.out.println(hm + ":"+ hg);
 			
 			graphProperties.setWidth(wm);
 			graphProperties.setHeight(hm);
+			setWidth(wm + "px"); //$NON-NLS-1$
+			setHeight(hm + "px"); //$NON-NLS-1$
 		}
 		
 		currentOperation = GraphOperation.REPAINT;
@@ -372,7 +368,7 @@ public class Cytographer extends AbstractComponent {
 		graphProperties.measureDimensions();
 		graphProperties.setUseFitting(true);
 		graphProperties.setZoomFactor(0);
-		currentOperation = GraphOperation.REPAINT;
+		currentOperation = GraphOperation.FIT;
 		requestRepaint();
 	}
 

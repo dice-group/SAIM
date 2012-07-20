@@ -128,7 +128,11 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 			style.setTextsVisible(uidl.getBooleanAttribute("texts"));
 			graph.updateGraphProperties(style);
 //			paintGraph();
-		} 
+		} 		
+		else if ("FIT".equals(uidl.getStringAttribute("operation"))) {
+			repaint(uidl);
+			graph.refreshPos();
+		}
 //		else if ("SET_OPTIMIZED_STYLES".equals(operation))
 //			graph.paintGraph();
 //		else if ("UPDATE_NODE".equals(operation)) {
@@ -310,8 +314,8 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 	}
 	@Override
 	public void onMouseWheel(final MouseWheelEvent event) {
-		// zoom inb idel
-		if(!applicationConnection.isLoadingIndicatorVisible()){
+		
+		if(!applicationConnection.hasActiveRequest()){
 			final int delta = event.getDeltaY();
 			if (currentKeyModifiers.contains(KeyCodes.KEY_ALT)) {
 				if (delta < 0) 
@@ -324,6 +328,8 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 				 else if (delta > 0) 
 					zoom(ZOOM_DOWN);
 			}
+			
+			graph.refreshPos();
 			graph.moveGraph(0, 0);
 		}
 	}
@@ -347,6 +353,9 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 		else
 			for (int i = 0; i < zoomFactor - newZoomFactor; i++) 
 				zoom(ZOOM_DOWN);
+		
+		graph.refreshPos();
+		graph.moveGraph(0, 0);
 	}
 	
 	private void zoom(final double factor) {
@@ -358,15 +367,6 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 	
 		for (final VNode n : graph.getPaintedShapes()) {
 			n.moveNode(((float) ((n.getX() - centerX) * factor) + centerX),((float) ((n.getY() - centerY) * factor) + centerY));
-			n.onMouseUp(null);
-			if (n.getView() instanceof Circle) {
-				/*
-				 * if (delta > 1) { ((Circle) n.getView()).setRadius((((Circle)
-				 * n.getView()).getRadius() + 1)); } else { ((Circle)
-				 * n.getView()).setRadius((((Circle) n.getView()).getRadius() -
-				 * 1)); }
-				 */
-			}
 			graph.updateEdges(n, false);
 		}
 		applicationConnection.updateVariable(paintableId, "zoomFactor", zoomFactor, true);
