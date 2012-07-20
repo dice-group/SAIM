@@ -1,6 +1,5 @@
 package org.vaadin.cytographer;
 
-import static org.junit.Assert.assertNotNull;
 import giny.model.Edge;
 import giny.model.Node;
 
@@ -29,6 +28,7 @@ public class PaintController {
 	private static final int MARGIN = 20;
 	private Map<String,String> colormap = new HashMap<String,String>();
 	// colors
+	private final int DEFAULTCOLORPATTERN = 1;
 	private String[] keys  = new String[]{"metric","operator","output","source","target"};
 	private final String resource = "de/uni_leipzig/simba/saim/colors/default.properties";
 	//
@@ -43,9 +43,14 @@ public class PaintController {
 	private Object getEdgeAppearance (VisualPropertyType vpt){
 		return Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().get(vpt);
 	}
+
 	private void initNodeColors(){
+		initNodeColors(DEFAULTCOLORPATTERN);
+	}
+	public void initNodeColors(int pattern){
 		colormap.clear();
 		InputStream in=getClass().getClassLoader().getResourceAsStream(resource);
+		
 		if(in != null){		
 			Properties properties = new Properties();
 			try {
@@ -57,10 +62,10 @@ public class PaintController {
 				in.close();
 			} catch (IOException e) {
 				e.printStackTrace();
-			}			
-			for(String key: keys){				
-				colormap.put(key, properties.get(key).toString());
 			}
+			
+			for(String key: keys)			
+				colormap.put(key, properties.get(new String(key+pattern)).toString());
 		}
 	}
 	/**

@@ -115,6 +115,21 @@ public class SAIMApplication extends Application
 		MenuItem languageMenu = menuBar.addItem(messages.getString("language"), null, null); //$NON-NLS-1$
 		languageMenu.addItem(messages.getString("german"), null, new SetLanguageCommand("de"));		 //$NON-NLS-1$
 		languageMenu.addItem(messages.getString("english"), null, new SetLanguageCommand("en")).setEnabled(true); //$NON-NLS-1$
+		
+		// color
+		MenuItem colorMenu = menuBar.addItem("Color", null, null); 
+		for(Integer pattern = 1; pattern < 5;pattern++){
+			final Integer p = pattern;
+			colorMenu.addItem(p.toString(), null, new MenuBar.Command()	{
+				public void menuSelected(MenuItem selectedItem) {
+					
+					if(selectedItem.getText().equals(p.toString())){
+						((MetricPanel)content).getCytographer().initNodeColors(p);
+						((MetricPanel)content).getCytographer().repaintGraph();
+					}
+				}
+			});	
+		}
 		return menuBar;
 	}
 

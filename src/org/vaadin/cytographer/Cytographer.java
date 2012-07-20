@@ -399,6 +399,10 @@ public class Cytographer extends AbstractComponent {
 		currentOperation = GraphOperation.REFRESH;
 		requestRepaint();
 	}
+	public void initNodeColors(int p){
+		paintController.initNodeColors(p);
+		repaintGraph();
+	}
 	class MyDoubleValidator extends DoubleValidator {
 		private static final long serialVersionUID = -5585916227598767457L;
 		public MyDoubleValidator(String msg) {

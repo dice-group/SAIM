@@ -66,8 +66,8 @@ public class MetricPanel extends Panel{
 	
 	Button selfConfigButton, learnButton, startMapping, setMetric;
 	
-	Cytographer cytographer;
-	CyNetworkView cyNetworkView;
+	@Getter private Cytographer cytographer;
+	private CyNetworkView cyNetworkView;
 	
 	
 	public MetricPanel(final Messages messages) {	
@@ -113,7 +113,7 @@ public class MetricPanel extends Panel{
 		accordion.addTab(metricsLayout,messages.getString("MetricPanel.metrics"));  //$NON-NLS-1$
 		accordion.addTab(operatorsLayout,messages.getString("MetricPanel.operators"));	 //$NON-NLS-1$
 		// add Cytographer
-		cytographer = getCytographer();
+		cytographer = makeCytographer();
 		layout.addComponent(new CytographerActionToolbar(cytographer));
 		layout.addComponent(cytographer);
 		
@@ -151,7 +151,7 @@ public class MetricPanel extends Panel{
 		this.checkButtons();
 	}
 	
-	private Cytographer getCytographer(){
+	private Cytographer makeCytographer(){
 		
 		final int HEIGHT = 450;
 		final int WIDTH = 800;
