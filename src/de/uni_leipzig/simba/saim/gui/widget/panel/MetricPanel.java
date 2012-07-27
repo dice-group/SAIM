@@ -54,13 +54,10 @@ public class MetricPanel extends Panel{
 	@Getter private final Messages messages;
 	@Getter private Configuration config;
 	
-	VerticalLayout mainLayout, sourceLayout, targetLayout, metricsLayout, operatorsLayout;
-
-	HorizontalLayout layout, buttonLayout;
-	
-	Set<String> sourceProps,targetProps;
-	
-	Button selfConfigButton, learnButton, startMapping, setMetric;
+	private VerticalLayout mainLayout, sourceLayout, targetLayout, metricsLayout, operatorsLayout;
+	private HorizontalLayout layout, buttonLayout;
+	private Set<String> sourceProps,targetProps;
+	private Button selfConfigButton, learnButton, startMapping, setMetric;
 	
 	@Getter private Cytographer cytographer;
 	
@@ -146,28 +143,17 @@ public class MetricPanel extends Panel{
 	}
 	
 	private Cytographer makeCytographer(){
-		
-		final int HEIGHT = 450;
-		final int WIDTH = 800;
-		final int NODESIZE = 100;
-		final double EDGE_LABEL_OPACITY = 0d;
-		
-		Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().setDefaultBackgroundColor(Color.WHITE);
-		Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_COLOR,Color.BLACK);
-		Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_LABEL_OPACITY,EDGE_LABEL_OPACITY);
-		Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.NODE_SIZE, NODESIZE);
 
+		final int HEIGHT = 450;
+		final int WIDTH = 800;		
 		cytographer = new Cytographer(WIDTH, HEIGHT,getApplication().getMainWindow());
-		cytographer.setNodeSize(NODESIZE, true);	
-		
+				
 		String metricExpression = config.getMetricExpression();
-		//metricExpression = "AND(levenshtein(x.rdfs:label,y.rdfs:label)|0.1,levenshtein(x.dbp:name,y.dbp:name)|1.0)";
 		if( metricExpression != null){
-		//	makeMetric( MetricParser.parse(metricExpression, "x"));
-			Output outp = MetricParser.parse(metricExpression, config.getSource().var.replaceAll("\\?", ""));
-			outp.param1 = config.getAcceptanceThreshold();
-			outp.param2 = config.getVerificationThreshold();
-			makeMetricRecursive(outp, -1); //$NON-NLS-1$
+			Output o = MetricParser.parse(metricExpression, config.getSource().var.replaceAll("\\?", ""));
+			o.param1 = config.getAcceptanceThreshold();
+			o.param2 = config.getVerificationThreshold();
+			makeMetricRecursive(o, -1); 
 			cytographer.applyLayoutAlgorithm(new ForceDirectedLayout());		
 			cytographer.repaintGraph();
 		}else{

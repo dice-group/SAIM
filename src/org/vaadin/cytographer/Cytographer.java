@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.vaadin.data.Container;
 import com.vaadin.data.validator.DoubleValidator;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
@@ -49,48 +48,49 @@ public class Cytographer extends AbstractComponent {
 	}
 	private GraphOperation currentOperation = GraphOperation.REPAINT;
 		
-	private final GraphProperties graphProperties;
+	private GraphProperties graphProperties;
 	private final PaintController paintController = new PaintController();
 	
 	private Window mainWindow=null;
 	private Messages messages=null;
 	private Configuration cfg=null;
 	
+	/**
+	 * 
+	 */
 	public Cytographer(final int width, final int height,Window window) {
+		
 		Cytoscape.createNewSession();
 		String name = "Cytographer";
 		CyNetwork network = Cytoscape.createNetwork(name, false);			
 		CyNetworkView finalView= Cytoscape.createNetworkView(network);	
-		
-		if((SAIMApplication)getApplication()!= null)
-			messages = ((SAIMApplication)getApplication()).messages;
 
-		if((SAIMApplication)getApplication()!= null)
-			cfg = ((SAIMApplication)getApplication()).getConfig();
-		
-		graphProperties = new GraphProperties(network, finalView, name);
-		setMainWindow(window);
-		
-		// defaults
-		setSize(width,height);
-		setImmediate(true);
-		setTextVisible(true);
+		init(network, finalView, name, width, height, window);
 	}
 	/**
 	 * 
 	 */
 	public Cytographer(final CyNetwork network, final CyNetworkView finalView, final String title, final int width, final int height,Window window) {
+
+		init(network, finalView, title, width, height, window);
+
+	}
+	/*
+	 * 
+	 */
+	private void init(final CyNetwork network, final CyNetworkView finalView, final String title, final int width, final int height,Window window){
 		
 		if((SAIMApplication)getApplication()!= null)
 			messages = ((SAIMApplication)getApplication()).messages;
 
 		if((SAIMApplication)getApplication()!= null)
 			cfg = ((SAIMApplication)getApplication()).getConfig();
-		
+
 		graphProperties = new GraphProperties(network, finalView, title);
 		setMainWindow(window);
-		
+
 		// defaults
+		paintController.initDefaults();
 		setSize(width,height);
 		setImmediate(true);
 		setTextVisible(true);
@@ -403,9 +403,9 @@ public class Cytographer extends AbstractComponent {
 		requestRepaint();
 	}
 
-	public Container getNodeAttributeContainerForSelectedNodes() {
-		return graphProperties.getNodeAttributeContainerForSelectedNodes();
-	}
+//	public Container getNodeAttributeContainerForSelectedNodes() {
+//		return graphProperties.getNodeAttributeContainerForSelectedNodes();
+//	}
 
 	public void fitToView() {
 		graphProperties.measureDimensions();
@@ -432,8 +432,8 @@ public class Cytographer extends AbstractComponent {
 		requestRepaint();
 	}
 
-	public void initNodeColors(int p){
-		paintController.initNodeColors(p);
+	public void setNodeColors(int p){
+		paintController.setNodeColors(p);
 		repaintGraph();
 	}
 

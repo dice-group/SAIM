@@ -26,33 +26,21 @@ import cytoscape.visual.VisualPropertyType;
 public class PaintController {
 
 	private static final int MARGIN = 20;
-	private Map<String,String> colormap = new HashMap<String,String>();
+
 	// colors
-	private final int DEFAULTCOLORPATTERN = 1;
+	private Map<Integer,Map<String,String>> colormaps = new HashMap<Integer,Map<String,String>>();
+	private Map<String,String> colormap = new HashMap<String,String>();
 	private String[] keys  = new String[]{"metric","operator","output","source","target"};
 	private final String resource = "de/uni_leipzig/simba/saim/colors/default.properties";
 	//
 	private Set<Integer> paintedNodes = new HashSet<Integer>();	
-	/**
-	 */
-	private Object getNodeAppearance (VisualPropertyType vpt){
-		return Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().get(vpt);
-	}
-	/**
-	 */
-	private Object getEdgeAppearance (VisualPropertyType vpt){
-		return Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().get(vpt);
-	}
-
-	private void initNodeColors(){
-		initNodeColors(DEFAULTCOLORPATTERN);
-	}
-	public void initNodeColors(int pattern){
-		colormap.clear();
+	
+	public void initDefaults(){
 		InputStream in=getClass().getClassLoader().getResourceAsStream(resource);
-		
+	
+		Properties properties =null;
 		if(in != null){		
-			Properties properties = new Properties();
+			properties = new Properties();
 			try {
 				properties.load(in);
 			} catch (IOException e) {
@@ -63,26 +51,57 @@ public class PaintController {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			for(Integer pattern = 1; pattern < 5;pattern++){
+				Map<String,String> cm = new HashMap<String,String>();
+				for(String key: keys)			
+					cm.put(key, properties.get(new String(key+pattern)).toString());
+				
+				colormaps.put(pattern, cm);
+			}
+		}
+		// default colors
+		setNodeColors(1);
+		if(properties != null){
 			
-			for(String key: keys)			
-				colormap.put(key, properties.get(new String(key+pattern)).toString());
+			final int NODESIZE = Integer.parseInt(properties.getProperty("nodesize"));
+			final double EDGE_LABEL_OPACITY = Double.parseDouble(properties.getProperty("edge_label_opacity"));
+			final int EDGE_LINE_WIDTH = Integer.parseInt(properties.getProperty("edge_line_width"));
+			final Color BACKGROUND_COLOR = getColor(properties.getProperty("background_color"));
+			final Color EDGE_COLOR = getColor(properties.getProperty("edge_color"));
+			final Color EDGE_SELECTION_COLOR = getColor(properties.getProperty("edge_selection_color"));
+			Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().setDefaultBackgroundColor(BACKGROUND_COLOR);
+			Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_LINE_WIDTH,EDGE_LINE_WIDTH);
+			Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_COLOR,EDGE_COLOR);
+			Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_LABEL_OPACITY,EDGE_LABEL_OPACITY);
+			Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.NODE_SIZE, NODESIZE);
+			Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().setDefaultEdgeSelectionColor(EDGE_SELECTION_COLOR);
 		}
 	}
+	
+	public void setNodeColors(int pattern){
+		colormap = colormaps.get(pattern);
+	}
+	
+	/**
+	 */
+	private Object getNodeAppearance (VisualPropertyType vpt){
+		return Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().get(vpt);
+	}
+	
+	/**
+	 */
+	private Object getEdgeAppearance (VisualPropertyType vpt){
+		return Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().get(vpt);
+	}
+
 	/**
 	 */
 	public void repaintGraph(final PaintTarget paintTarget, final GraphProperties graphProperties) throws PaintException {
 		
-		// add colors for node shapes
-		if(colormap.size() == 0){
-			initNodeColors();
-		}
-		if(colormap.size() != 0){
-			for(Entry<String, String> e : colormap.entrySet()){
+		if(colormap.size() != 0)
+			for(Entry<String, String> e : colormap.entrySet())
 				paintTarget.addAttribute(e.getKey(), e.getValue());
-			}
-		}
 		
-		//
 		paintTarget.addAttribute("title", graphProperties.getTitle());
 		paintTarget.addAttribute("gwidth", graphProperties.getWidth());
 		paintTarget.addAttribute("gheight", graphProperties.getHeight());
@@ -263,6 +282,22 @@ public class PaintController {
 		target.addAttribute("texts", graphProperties.isTextsVisible());
 	}
 
+	/**
+	 * @param rgb e.g.: "rgb(255,255,255)"
+	 * @return returns a Color object respective to the rgb parameter or Color.WHITE if something wrong
+	 */
+	private Color getColor(final String rgb) {
+		try{
+			String tmprgb=rgb.substring(rgb.lastIndexOf("(")+1, rgb.lastIndexOf(")"));
+			String colors[] =  tmprgb.split(",");
+		if(colors.length == 3)
+			return new Color(Integer.parseInt(colors[0]), Integer.parseInt(colors[1]), Integer.parseInt(colors[2]));
+		}catch(Exception e){
+			return Color.WHITE;
+		}
+		return Color.WHITE;
+	}
+	
 	private String getRGB(final Color bc) {
 		return "rgb(" + bc.getRed() + "," + bc.getGreen() + "," + bc.getBlue() + ")";
 	}
