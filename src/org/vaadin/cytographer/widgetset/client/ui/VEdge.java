@@ -172,9 +172,6 @@ public class VEdge  extends Group implements ClickHandler {
 		textShape = text;
 	}
 
-	public String getOrginalStrokeColor() {
-		return getOriginalStrokeColor();
-	}
 
 	public void setOriginalStrokeColor(final String originalStrokeColor) {
 		this.originalStrokeColor = originalStrokeColor;

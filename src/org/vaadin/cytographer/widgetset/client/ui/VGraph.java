@@ -328,9 +328,9 @@ public class VGraph extends VectorObject {
 				edge.getArrow2().setStrokeColor(vVisualStyle.getEdgeSelectionColor());
 				getSelectedEdges().add(edge);				
 			} else {
-				edge.getLine().setStrokeColor(edge.getOrginalStrokeColor());
-				edge.getArrow1().setStrokeColor(edge.getOrginalStrokeColor());
-				edge.getArrow2().setStrokeColor(edge.getOrginalStrokeColor());
+				edge.getLine().setStrokeColor(edge.getOriginalStrokeColor());
+				edge.getArrow1().setStrokeColor(edge.getOriginalStrokeColor());
+				edge.getArrow2().setStrokeColor(edge.getOriginalStrokeColor());
 				getSelectedEdges().remove(edge);
 			}
 		}
