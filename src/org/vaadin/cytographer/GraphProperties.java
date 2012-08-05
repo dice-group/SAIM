@@ -64,7 +64,7 @@ public class GraphProperties {
 	private final Map<String, Edge> edgeMap = new HashMap<String, Edge>();
 	private final Map<Node, List<Edge>> nodeToEdgesMap = new HashMap<Node, List<Edge>>();
 
-	@Getter @Setter private int width, height, cytoscapeViewWidth, cytoscapeViewHeight;	
+	@Getter @Setter private int width, height;
 	@Getter @Setter private int zoomFactor = 0;
 	@Getter @Setter private double nodeSize = -1;
 
@@ -76,7 +76,6 @@ public class GraphProperties {
 	
 	public void applyLayoutAlgorithm(final CyLayoutAlgorithm loAlgorithm) {
 		cyNetworkView.applyLayout(loAlgorithm);
-		//cytogerpager.repaintGraph();
 	}
 
 	public GraphProperties(final CyNetwork network, final CyNetworkView finalView, final String p_title) {
@@ -85,7 +84,6 @@ public class GraphProperties {
 		title = p_title;
 		edges = new ArrayList<Integer>(Arrays.asList(ArrayUtils.toObject(network.getEdgeIndicesArray())));
 		nodes = new ArrayList<Integer>(Arrays.asList(ArrayUtils.toObject(network.getNodeIndicesArray())));
-		measureDimensions();
 		contructNodeToEdgesMap();
 	}
 	public void setNodeMetadata(String node, List<Object> data){
@@ -144,8 +142,6 @@ public class GraphProperties {
 			if (y2 > maxY) 	maxY = y2;
 			if (y2 < minY)  minY = y2;
 		}
-		cytoscapeViewWidth = maxX - minX;
-		cytoscapeViewHeight = maxY - minY;
 	}
 
 	public void addSelectedNode(final String n) {

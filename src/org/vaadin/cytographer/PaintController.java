@@ -24,8 +24,9 @@ import cytoscape.visual.NodeAppearance;
 import cytoscape.visual.VisualPropertyType;
 
 public class PaintController {
-
-	private static final int MARGIN = 20;
+	
+	// margin for fit to view (depends on node size)
+	//private final int margin = 0;
 
 	// colors
 	private Map<Integer,Map<String,String>> colormaps = new HashMap<Integer,Map<String,String>>();
@@ -64,11 +65,13 @@ public class PaintController {
 		if(properties != null){
 			
 			final int NODESIZE = Integer.parseInt(properties.getProperty("nodesize"));
+			//margin = (NODESIZE)/2;			
 			final double EDGE_LABEL_OPACITY = Double.parseDouble(properties.getProperty("edge_label_opacity"));
 			final int EDGE_LINE_WIDTH = Integer.parseInt(properties.getProperty("edge_line_width"));
 			final Color BACKGROUND_COLOR = getColor(properties.getProperty("background_color"));
 			final Color EDGE_COLOR = getColor(properties.getProperty("edge_color"));
 			final Color EDGE_SELECTION_COLOR = getColor(properties.getProperty("edge_selection_color"));
+			
 			Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().setDefaultBackgroundColor(BACKGROUND_COLOR);
 			Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_LINE_WIDTH,EDGE_LINE_WIDTH);
 			Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_COLOR,EDGE_COLOR);
@@ -146,6 +149,16 @@ public class PaintController {
 		paintTarget.addAttribute("esc", getRGB(esc));
 		paintTarget.addAttribute("efo", efo);		
 				
+		int cytoscapeViewWidth=0, cytoscapeViewHeight=0, minX=0, minY=0;
+		if (graphProperties.isUseFitting()) {
+
+			minX = graphProperties.getMinX();
+			minY = graphProperties.getMinY();
+			
+			cytoscapeViewWidth  = graphProperties.getMaxX() - minX;
+			cytoscapeViewHeight = graphProperties.getMaxY() - minY;			
+		}
+		
 		paintedNodes = new HashSet<Integer>();
 		for (final int ei : graphProperties.getEdges()) {
 			final Edge e = graphProperties.getCyNetwork().getEdge(ei);
@@ -178,11 +191,18 @@ public class PaintController {
 			int x2 = (int) xx2;
 			int y2 = (int) yy2;
 
+//			if (graphProperties.isUseFitting()) {
+//				x1 = margin + (int) ((xx1 - graphProperties.getMinX()) / graphProperties.getCytoscapeViewWidth() * (graphProperties.getWidth() - 2 * margin));
+//				y1 = margin + (int) ((yy1 - graphProperties.getMinY()) / graphProperties.getCytoscapeViewHeight() * (graphProperties.getHeight() - 2 * margin));
+//				x2 = margin + (int) ((xx2 - graphProperties.getMinX()) / graphProperties.getCytoscapeViewWidth() * (graphProperties.getWidth() - 2 * margin));
+//				y2 = margin + (int) ((yy2 - graphProperties.getMinY()) / graphProperties.getCytoscapeViewHeight() * (graphProperties.getHeight() - 2 * margin));
+//			}
 			if (graphProperties.isUseFitting()) {
-				x1 = MARGIN + (int) ((xx1 - graphProperties.getMinX()) / graphProperties.getCytoscapeViewWidth() * (graphProperties.getWidth() - 2 * MARGIN));
-				y1 = MARGIN + (int) ((yy1 - graphProperties.getMinY()) / graphProperties.getCytoscapeViewHeight() * (graphProperties.getHeight() - 2 * MARGIN));
-				x2 = MARGIN + (int) ((xx2 - graphProperties.getMinX()) / graphProperties.getCytoscapeViewWidth() * (graphProperties.getWidth() - 2 * MARGIN));
-				y2 = MARGIN + (int) ((yy2 - graphProperties.getMinY()) / graphProperties.getCytoscapeViewHeight() * (graphProperties.getHeight() - 2 * MARGIN));
+				
+				x1 = (int) ((xx1 - minX) / cytoscapeViewWidth * (graphProperties.getWidth()));
+				y1 = (int) ((yy1 - minY) / cytoscapeViewHeight * (graphProperties.getHeight()));
+				x2 = (int) ((xx2 - minX) / cytoscapeViewWidth * (graphProperties.getWidth()));
+				y2 = (int) ((yy2 - minY) / cytoscapeViewHeight * (graphProperties.getHeight()));
 			}
 
 			paintTarget.addAttribute("node1x", x1);
