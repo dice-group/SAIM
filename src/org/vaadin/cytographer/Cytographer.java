@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.vaadin.Application;
 import com.vaadin.data.validator.DoubleValidator;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
@@ -58,36 +59,36 @@ public class Cytographer extends AbstractComponent {
 	/**
 	 * 
 	 */
-	public Cytographer(final int width, final int height,Window window) {
+	public Cytographer(final int width, final int height,Application app) {
 		
 		Cytoscape.createNewSession();
 		String name = "Cytographer";
 		CyNetwork network = Cytoscape.createNetwork(name, false);			
 		CyNetworkView finalView= Cytoscape.createNetworkView(network);	
 
-		init(network, finalView, name, width, height, window);
+		init(network, finalView, name, width, height, app);
 	}
+	
 	/**
 	 * 
 	 */
-	public Cytographer(final CyNetwork network, final CyNetworkView finalView, final String title, final int width, final int height,Window window) {
+	public Cytographer(final CyNetwork network, final CyNetworkView finalView, final String title, final int width, final int height,Application app) {
 
-		init(network, finalView, title, width, height, window);
+		init(network, finalView, title, width, height, app);
 
 	}
+	
 	/*
 	 * 
 	 */
-	private void init(final CyNetwork network, final CyNetworkView finalView, final String title, final int width, final int height,Window window){
-		
-		if((SAIMApplication)getApplication()!= null)
-			messages = ((SAIMApplication)getApplication()).messages;
-
-		if((SAIMApplication)getApplication()!= null)
-			cfg = ((SAIMApplication)getApplication()).getConfig();
+	private void init(final CyNetwork network, final CyNetworkView finalView, final String title, final int width, final int height,Application app){
+				
+		messages = ((SAIMApplication)app).messages;
+		cfg = ((SAIMApplication)app).getConfig();
 
 		graphProperties = new GraphProperties(network, finalView, title);
-		setMainWindow(window);
+		
+		setMainWindow(app.getMainWindow());
 
 		// defaults
 		paintController.initDefaults();
@@ -110,6 +111,7 @@ public class Cytographer extends AbstractComponent {
 		graphProperties.applyLayoutAlgorithm(loAlgorithm);
 		repaintGraph();
 	}
+	
 	public void setSize(int w,int h ){
 		setWidth(w + "px"); //$NON-NLS-1$
 		setHeight(h + "px"); //$NON-NLS-1$
@@ -160,7 +162,6 @@ public class Cytographer extends AbstractComponent {
 	/**
 	 * Receive and handle events and other variable changes from the client.
 	 */
-
 	@Override
 	public void changeVariables(final Object source, final Map<String, Object> variables) {
 		super.changeVariables(source, variables);
@@ -200,16 +201,16 @@ public class Cytographer extends AbstractComponent {
 			final String[] args = (String[]) variables.get("doubleClick");
 					
 			if(args.length == 6){
-				if(args[5].startsWith("Operator") || args[5].startsWith("Output")){
+				if(args[5].equals("Operator") || args[5].equals("Output")){
 					makeModalWindow(args,args[5]);
 				}
-				else if(args[5].startsWith("Target")){
+				else if(args[5].equals("Target")){
 					String nodeName = (graphProperties.getNodeNames().get(Integer.valueOf(args[0])));
 					// remove prefix
 					addProperty(nodeName.substring(nodeName.indexOf('.')+1),cfg.getTarget());
 					
 				}
-				else if(args[5].startsWith("Source")){
+				else if(args[5].equals("Source")){
 					String nodeName = (graphProperties.getNodeNames().get(Integer.valueOf(args[0])));
 					// remove prefix
 					addProperty(nodeName.substring(nodeName.indexOf('.')+1),cfg.getSource());

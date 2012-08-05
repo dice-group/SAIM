@@ -146,7 +146,7 @@ public class MetricPanel extends Panel{
 
 		final int HEIGHT = 450;
 		final int WIDTH = 800;		
-		cytographer = new Cytographer(WIDTH, HEIGHT,getApplication().getMainWindow());
+		cytographer = new Cytographer(WIDTH, HEIGHT,getApplication());
 				
 		String metricExpression = config.getMetricExpression();
 		if( metricExpression != null){
