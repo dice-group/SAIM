@@ -13,6 +13,8 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
@@ -24,6 +26,8 @@ import cytoscape.visual.NodeAppearance;
 import cytoscape.visual.VisualPropertyType;
 
 public class PaintController {
+	
+	private static final Logger LOGGER = Logger.getLogger(PaintController.class);
 	
 	// margin for fit to view (depends on node size)
 	//private final int margin = 0;
@@ -37,6 +41,9 @@ public class PaintController {
 	private Set<Integer> paintedNodes = new HashSet<Integer>();	
 	
 	public void initDefaults(){
+
+		if(LOGGER.isDebugEnabled()) LOGGER.debug("initDefaults...");
+		
 		InputStream in=getClass().getClassLoader().getResourceAsStream(resource);
 	
 		Properties properties =null;
@@ -71,6 +78,7 @@ public class PaintController {
 			final Color BACKGROUND_COLOR = getColor(properties.getProperty("background_color"));
 			final Color EDGE_COLOR = getColor(properties.getProperty("edge_color"));
 			final Color EDGE_SELECTION_COLOR = getColor(properties.getProperty("edge_selection_color"));
+			final int EDGE_FONT_SIZE = Integer.parseInt(properties.getProperty("edge_font_size"));
 			
 			Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().setDefaultBackgroundColor(BACKGROUND_COLOR);
 			Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_LINE_WIDTH,EDGE_LINE_WIDTH);
@@ -78,6 +86,7 @@ public class PaintController {
 			Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_LABEL_OPACITY,EDGE_LABEL_OPACITY);
 			Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.NODE_SIZE, NODESIZE);
 			Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().setDefaultEdgeSelectionColor(EDGE_SELECTION_COLOR);
+			Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_FONT_SIZE,EDGE_FONT_SIZE);
 		}
 	}
 	
@@ -100,6 +109,8 @@ public class PaintController {
 	/**
 	 */
 	public void repaintGraph(final PaintTarget paintTarget, final GraphProperties graphProperties) throws PaintException {
+		
+		if(LOGGER.isDebugEnabled()) LOGGER.debug("repaintGraph...");
 		
 		if(colormap.size() != 0)
 			for(Entry<String, String> e : colormap.entrySet())
@@ -161,6 +172,7 @@ public class PaintController {
 		
 		paintedNodes = new HashSet<Integer>();
 		for (final int ei : graphProperties.getEdges()) {
+			
 			final Edge e = graphProperties.getCyNetwork().getEdge(ei);
 			final Node node1 = e.getSource();
 			final Node node2 = e.getTarget();
@@ -224,11 +236,8 @@ public class PaintController {
 				paintTarget.addAttribute("_n1bc", getRGB((Color) n1a.get(VisualPropertyType.NODE_BORDER_COLOR)));
 				paintTarget.addAttribute("_n1fc", getRGB((Color) n1a.get(VisualPropertyType.NODE_FILL_COLOR)));
 				paintTarget.addAttribute("_n1bw", ((Number) n1a.get(VisualPropertyType.NODE_LINE_WIDTH)).intValue());
-				if (graphProperties.getNodeSize() > 0) {
-					paintTarget.addAttribute("_n1s", ns.intValue());
-				} else {
-					paintTarget.addAttribute("_n1s", ((Number) n1a.get(VisualPropertyType.NODE_SIZE)).intValue());
-				}
+				
+				paintTarget.addAttribute("_n1s", (graphProperties.getNodeSize() > 0) ? ns.intValue():((Number) n1a.get(VisualPropertyType.NODE_SIZE)).intValue());
 
 				paintTarget.addAttribute("_n2bc", getRGB((Color) n2a.get(VisualPropertyType.NODE_BORDER_COLOR)));
 				paintTarget.addAttribute("_n2fc", getRGB((Color) n2a.get(VisualPropertyType.NODE_FILL_COLOR)));

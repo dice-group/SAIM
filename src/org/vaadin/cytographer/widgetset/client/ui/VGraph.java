@@ -11,12 +11,15 @@ import org.vaadin.gwtgraphics.client.Group;
 import org.vaadin.gwtgraphics.client.Shape;
 import org.vaadin.gwtgraphics.client.VectorObject;
 import org.vaadin.gwtgraphics.client.shape.Rectangle;
+import org.vaadin.gwtgraphics.client.shape.Text;
 
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
 
 public class VGraph extends VectorObject {
-
+	
+	private final boolean DEBUG = false;
+	
 	private Map<String, VEdge> edges = new HashMap<String, VEdge>();
 	private Map<String, VNode> nodes = new HashMap<String, VNode>();
 	private Map<VNode, Set<VEdge>> shapeToEdgesMap = new HashMap<VNode, Set<VEdge>>();
@@ -32,6 +35,11 @@ public class VGraph extends VectorObject {
 
 	private final int gwidth;
 	private final int gheight;
+	
+	public Set<VEdge> getEdgesToShape(VNode vnode){
+		Set<VEdge> edges =  shapeToEdgesMap.get(vnode);
+		return edges;		 
+	 }
 
 	public VGraph(final VCytographer cg, final VVisualStyle s, final VFocusDrawingArea c, final int w, final int h) {
 		
@@ -49,17 +57,20 @@ public class VGraph extends VectorObject {
 
 	public void refreshGraphFromUIDL(final UIDL uidl) {
 		
-		//VConsole.log("VGraph.refreshGraphFromUIDL() ...");
+		if(DEBUG)VConsole.log("VGraph.refreshGraphFromUIDL() ...");
+		
 		
 		for (int i = 0; i < uidl.getChildCount(); i++) {
 			final UIDL child = uidl.getChildUIDL(i);
-			final String name = child.getStringAttribute("name");
-			if (name == null || name.isEmpty()) {
+			final String edgeID = child.getStringAttribute("name");
+			
+			if(DEBUG)VConsole.log("edgeID: " + edgeID);
+			
+			if (edgeID == null || edgeID.isEmpty()) 
 				continue;
-			}
+			
 			final String node1id = child.getStringAttribute("node1");
 			final String node2id = child.getStringAttribute("node2");
-
 			
 			final VNode node1 = nodes.get(node1id);
 			VNode node2 = null;
@@ -71,26 +82,32 @@ public class VGraph extends VectorObject {
 			if(node2 != null)
 				node2.refreshNodeData(child, vVisualStyle);
 
-			final VEdge edge = edges.get(name);
+			final VEdge edge = edges.get(edgeID);
 			if(edge != null)
 				edge.refreshEdgeData(child, vVisualStyle);
 		}
 		paintGraph();
 	}
-
+	
 	public void parseGraphFromUIDL(final UIDL uidl, final VVisualStyle style) {
 		
-		//VConsole.log("VGraph.parseGraphFromUIDL() ...");
+		if(DEBUG)VConsole.log("VGraph.parseGraphFromUIDL() ...");
 		
 		edges = new HashMap<String, VEdge>();
 		nodes = new HashMap<String, VNode>();
 		shapeToEdgesMap = new HashMap<VNode, Set<VEdge>>();
-
+		
+		// all operators
+		Set<VNode> op_set = new HashSet<VNode>();
+		
 		for (int i = 0; i < uidl.getChildCount(); i++) {
 			final UIDL child = uidl.getChildUIDL(i);
 			
-			final String name = child.getStringAttribute("name");
-			if (name == null || name.isEmpty()) 
+			final String edgeID = child.getStringAttribute("name");
+			
+			if(DEBUG)VConsole.log("edgeID: " + edgeID);
+			
+			if (edgeID == null || edgeID.isEmpty()) 
 				continue;
 			
 			final String node1id = child.getStringAttribute("node1");
@@ -118,49 +135,76 @@ public class VGraph extends VectorObject {
 				nodes.put(node2id, node2);
 			}
 			if (node1 != null && node2 != null) {
-				final VEdge edge = VEdge.createAnEdge(child, vCytographer, this, name, node1, node2, style);
+				final VEdge edge = VEdge.createAnEdge(child, vCytographer, this, edgeID, node1, node2, style);
 				createEdgeConnections(edge);
-				edges.put(name, edge);
-			}		
+				edges.put(edgeID, edge);
+			}	
 			
-			String smeta1 = child.getStringAttribute("meta1");			
-			if(smeta1!=null){
-				String[] meta1 = smeta1.substring(1, child.getStringAttribute("meta1").length()-1).split(",");
-				for(int ii=0;ii<meta1.length;ii++)
-					meta1[ii]=meta1[ii].trim();
-				
-				if(node1 != null && shape1.equals("OPERATOR")){
-					VOperator vp = (VOperator)node1;
-					vp.updateValues(meta1[0],meta1[1]);
-				}
-				if(node1 != null && shape1.equals("OUTPUT")){
-					VOutput vp = (VOutput)node1;
-					vp.updateValues(meta1[0],meta1[1]);
-				}
+			updateMetadataForNodes(child,shape1,node1,"meta1");
+			updateMetadataForNodes(child,shape2,node2,"meta2");
+			
+			if((node1 instanceof VOperator)){
+				op_set.add(node1);
 			}
-			
-			String smeta2 = child.getStringAttribute("meta2");
-			if(smeta2!=null){
-				String[] meta2 = smeta2.substring(1, child.getStringAttribute("meta2").length()-1).split(",");
-				for(int ii=0;ii<meta2.length;ii++)
-					meta2[ii]=meta2[ii].trim();	
+			if((node2 instanceof VOperator)){
+				op_set.add(node2);
+			}
+		}
+				
+		// make labels to edges for operators	
+		if(DEBUG)VConsole.log("operator count: " + op_set.size());
+		// find all edges of an operator		
+		for(VNode node : op_set){
 
-				if( node2 != null && shape2.equals("OPERATOR")){
-					VOperator vp = (VOperator)node2;
-					vp.updateValues(meta2[0],meta2[1]);				
-				}
-				if( node2 != null && shape2.equals("OUTPUT")){
-					VOutput vp = (VOutput)node2;
-					vp.updateValues(meta2[0],meta2[1]);				
+			Set<VEdge> op_edges  = getEdgesToShape(node);
+			if(op_edges != null && op_edges.size()>0){
+
+				if(DEBUG)VConsole.log("edge count: " + op_edges.size());
+				// add values to edges of an operator
+				boolean addedValue1 = false;
+				for(VEdge e : op_edges){
+
+					if(e.getFirstNode().equals(node) ){
+						if(DEBUG)VConsole.log("getFirstNode OP");
+
+						if(!addedValue1){
+							((Text)e.getText()).setText(((VOperator)e.getFirstNode()).getValue1());
+							addedValue1 = true;
+							e.getText().setVisible(true);
+						}else{
+							((Text)e.getText()).setText(((VOperator)e.getFirstNode()).getValue2());
+							addedValue1 = false;
+							e.getText().setVisible(true);
+						}						
+					}
 				}
 			}
 		}
 		paintGraph();
 	}
+	
+	// request from parseGraphFromUIDL(..) method
+	private void updateMetadataForNodes(UIDL child, String shape, VNode node,String stringAttribute){
+		String smeta2 = child.getStringAttribute(stringAttribute);
+		if(smeta2!=null){
+			String[] meta2 = smeta2.substring(1, child.getStringAttribute(stringAttribute).length()-1).split(",");
+			for(int ii=0;ii<meta2.length;ii++)
+				meta2[ii]=meta2[ii].trim();	
+
+			if( node != null && shape.equals("OPERATOR")){
+				VOperator vp = (VOperator)node;
+				vp.updateValues(meta2[0],meta2[1]);	
+			}
+			if( node != null && shape.equals("OUTPUT")){
+				VOutput vp = (VOutput)node;
+				vp.updateValues(meta2[0],meta2[1]);				
+			}
+		}
+	}
 
 	public void paintGraph(final Shape... updatedShapes) {
 		
-		//VConsole.log("VGraph.paintGraph() ...");
+		if(DEBUG)VConsole.log("VGraph.paintGraph() ...");
 		
 		if (updatedShapes == null || updatedShapes.length == 0) {
 			vFocusDrawingArea.clear();
@@ -189,6 +233,7 @@ public class VGraph extends VectorObject {
 					paintedShapes.add(n2);
 				}
 			}
+			
 			// paint nodes that doesn't have edges
 			for (final Map.Entry<String, VNode> entry : nodes.entrySet()) {
 				final VNode n = entry.getValue();
@@ -197,12 +242,11 @@ public class VGraph extends VectorObject {
 					paintedShapes.add(n);
 				}
 			}
-		} else {
+		} else
 			for (final Shape s : updatedShapes) {
 				vFocusDrawingArea.remove(s);
 				vFocusDrawingArea.add(s);
 			}
-		}
 	}
 
 	public void updateGraphProperties(final VVisualStyle style) {
@@ -212,8 +256,9 @@ public class VGraph extends VectorObject {
 			updateEdges(n, true);
 		}
 	}
+	
 	public void moveGraph(final float x, final float y) {		
-		//VConsole.log("VGraph.moveGraph() ...");		
+		if(DEBUG) VConsole.log("VGraph.moveGraph() ...");		
 		for (final VNode vnode : getPaintedShapes()) {
 			vnode.moveNode(vnode.getX()-x,vnode.getY()- y);
 			updateEdges(vnode, false);
@@ -382,19 +427,22 @@ public class VGraph extends VectorObject {
 	
 	public void removeNode(final VNode node) {
 		
-		//VConsole.log("VGraph.removeNode");	
+		if(DEBUG) VConsole.log("VGraph.removeNode");	
 		
 		vFocusDrawingArea.remove(node);
 		paintedShapes.remove(node);
+		
 		if (nodes.remove(node.getID().toString()) == null) 
-			VConsole.log("node not found" + node.getName());		
+			if(DEBUG) VConsole.log("node not found" + node.getName());	
+		
 		selectedShapes.remove(node);
 
 		final Set<VEdge> edgs = shapeToEdgesMap.get(node);
 		for (final VEdge edge : edgs) {
-			if (edges.remove(edge.getName()) == null) {
-				VConsole.log("edge not found " + edge.toString());
-			}
+			
+			if (edges.remove(edge.getName()) == null) 
+				if(DEBUG) VConsole.log("edge not found " + edge.toString());
+			
 			vFocusDrawingArea.remove(edge);
 			selectedEdges.remove(edge);
 		}

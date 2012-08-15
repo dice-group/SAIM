@@ -9,10 +9,12 @@ import org.vaadin.gwtgraphics.client.shape.Text;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.vaadin.terminal.gwt.client.UIDL;
-//import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.VConsole;
 
-public class VEdge  extends Group implements ClickHandler {
+public class VEdge extends Group implements ClickHandler {
 
+	private final boolean DEBUG = false;
+	
 	private final VGraph graph;
 	// two nodes
 	private final VNode node1, node2;
@@ -22,21 +24,37 @@ public class VEdge  extends Group implements ClickHandler {
 	private String originalStrokeColor;
 	private final VCytographer cytographer;
 	
-	private Line line = null;
+	private Line line   = new Line(0,0,0,0);
 	private Line arrow1 = new Line(0,0,0,0);
 	private Line arrow2 = new Line(0,0,0,0);
 	
-	public Line getLine(){
-		return line;
+	public VEdge(final VCytographer cg, final VGraph g, final VNode node1, final VNode node2, final Shape text, final String name) {
+		
+		// set edge position
+		line.setX1(Math.round(node1.getX()));
+		line.setY1(Math.round(node1.getY()));
+		line.setX2(Math.round(node2.getX()));
+		line.setY2(Math.round(node2.getY()));
+		
+		add(line);		
+		makeArrow(node1,node2);
+		add(arrow1);
+		add(arrow2);
+		
+		this.cytographer = cg;
+		this.graph = g;
+		this.node1 = node1;
+		this.node2 = node2;
+				
+		this.textShape = text;
+		textShape.setVisible(false);
+			
+		this.name = name;
+		addClickHandler(this);
 	}
-	public Line getArrow1(){
-		return arrow1;
-	}
-	public Line getArrow2(){
-		return arrow2;
-	}
+
 	public void makeArrow(VNode node2, VNode node1){
-	
+		
 		final int arrowSize = 5;		
 		// middle
 		final float toX = (( node1.getX() + node2.getX())/2);
@@ -53,24 +71,7 @@ public class VEdge  extends Group implements ClickHandler {
 		arrow2.setX1((int)(toX));               arrow2.setY1((int)(toY));		
 		arrow2.setX2((int)(toX-hdx-hdy));       arrow2.setY2((int)(toY-hdy+hdx));	
 	}
-
-	public VEdge(final VCytographer cytographer, final VGraph graph, final VNode node1, final VNode node2, final Shape text,final String name) {
-		
-		line = new Line((int) node1.getX(), (int) node1.getY(), (int) node2.getX(), (int) node2.getY());
-		add(line);		
-		makeArrow(node1,node2);
-		add(arrow1);
-		add(arrow2);
-		
-		this.cytographer = cytographer;
-		this.graph = graph;
-		this.node1 = node1;
-		this.node2 = node2;
-		this.textShape = text;
-		this.name = name;
-		addClickHandler(this);
-	}
-
+	
 	public void refreshEdgeData(final UIDL child, final VVisualStyle style) {
 		// set edge text
 		((Text) textShape).setFontSize(style.getEdgeFontSize());
@@ -109,14 +110,12 @@ public class VEdge  extends Group implements ClickHandler {
 		}
 	}
 
-	public void setStrokeDashArray(final String dasharray) {
-		SVGUtil.setAttributeNS(getElement(), "stroke-dasharray", dasharray);
-	}
 	@Override
 	public void onClick(final ClickEvent event) {
 		graph.setEdgeSelected((VEdge) event.getSource(), !graph.getSelectedEdges().contains(event.getSource()));
 		cytographer.nodeOrEdgeSelectionChanged();
 	}
+
 	// static method to make an edge
 	public static VEdge createAnEdge(final UIDL child, final VCytographer cytographer, final VGraph graph, final String name, final VNode node1, final VNode node2, final VVisualStyle style) {
 	
@@ -154,8 +153,24 @@ public class VEdge  extends Group implements ClickHandler {
 		}
 		return edge;
 	}
-		
+	
 	//getter setter
+	public Line getLine(){
+		return line;
+	}
+	
+	public Line getArrow1(){
+		return arrow1;
+	}
+	
+	public Line getArrow2(){
+		return arrow2;
+	}
+	
+	public void setStrokeDashArray(final String dasharray) {
+		SVGUtil.setAttributeNS(getElement(), "stroke-dasharray", dasharray);
+	}
+	
 	public VNode getFirstNode() {
 		return node1;
 	}
@@ -172,7 +187,6 @@ public class VEdge  extends Group implements ClickHandler {
 		textShape = text;
 	}
 
-
 	public void setOriginalStrokeColor(final String originalStrokeColor) {
 		this.originalStrokeColor = originalStrokeColor;
 	}
@@ -182,11 +196,11 @@ public class VEdge  extends Group implements ClickHandler {
 	}
 
 	@Override
-	public String toString() {
-		return textShape.getTitle();
+	public String toString() {    
+		return textShape.getTitle();	
 	}
-
-	public String getName() {
-		return name;
+	
+	public String getName() {  
+		return name;	
 	}
 }
