@@ -14,7 +14,6 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
@@ -35,10 +34,9 @@ import de.uni_leipzig.simba.saim.core.metric.Property;
 import de.uni_leipzig.simba.saim.core.metric.Property.Origin;
 
 public class GraphProperties {
-	private static Logger logger = Logger.getLogger(GraphProperties.class);
-	static{
-		logger.setLevel(Level.OFF);
-	}
+	
+	private static Logger LOGGER = Logger.getLogger(GraphProperties.class);
+
 	private Random rand = new Random();
 
 	@Getter private final String title;
@@ -93,7 +91,7 @@ public class GraphProperties {
 			nodeMap.get(Integer.valueOf(node)).param2=Double.valueOf(data.get(1).toString()).doubleValue();
 			nodeMetadata.put(node, data);	
 		}else{
-			logger.error("parameter list size is smaller than 2");
+			LOGGER.error("parameter list size is smaller than 2");
 		}
 	}
 	public List<Object> getNodeMetadata(String node){
@@ -113,8 +111,8 @@ public class GraphProperties {
 	}
 
 	private void addEdgeIntoMap(final Node node, final Edge e) {
-		if(logger.isDebugEnabled())
-			logger.debug("addEdgeIntoMap:" + node.getIdentifier() + " " + e.getIdentifier());
+		if(LOGGER.isDebugEnabled())
+			LOGGER.debug("addEdgeIntoMap:" + node.getIdentifier() + " " + e.getIdentifier());
 
 		List<Edge> edges = nodeToEdgesMap.get(node);
 		if (edges == null) {

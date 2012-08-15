@@ -111,7 +111,8 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 			graph.updateGraphProperties(style);
 		} else if ("FIT".equals(o)) {
 			repaint(uidl);
-			graph.refreshPos();
+			//graph.refreshPos();
+			applicationConnection.updateVariable(paintableId, "fit", "", true);	
 		} else if ("SET_ZOOM".equals(o)) 
 			setZoom(uidl.getIntAttribute("zoom"));
 //		else if ("REFRESH".equals(o)) {
@@ -335,7 +336,7 @@ MouseMoveHandler, MouseWheelHandler, KeyDownHandler, KeyUpHandler {
 	
 		for (final VNode n : graph.getPaintedShapes()) {
 			n.moveNode(((float) ((n.getX() - centerX) * factor) + centerX),((float) ((n.getY() - centerY) * factor) + centerY));
-			graph.updateEdges(n, false);
+			//graph.updateEdges(n, false);
 		}
 		applicationConnection.updateVariable(paintableId, "zoomFactor", zoomFactor, true);
 	}

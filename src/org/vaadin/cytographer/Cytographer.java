@@ -22,6 +22,7 @@ import com.vaadin.ui.Window.CloseListener;
 import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.Reindeer;
 
+import org.apache.log4j.Logger;
 import org.vaadin.cytographer.widgetset.client.ui.VCytographer;
 
 import cytoscape.CyNetwork;
@@ -36,13 +37,31 @@ import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.metric.Node;
 import de.uni_leipzig.simba.saim.core.metric.Output;
 import de.uni_leipzig.simba.saim.gui.widget.form.PreprocessingForm;
+/*
 
+
+
+
+
+DON'T USE A STATIC LOGGER IN THIS CLASS.
+WITH A STATIC LOGGER YOU CAN'T BUILD THE CLIENTSIDE WIDGET!
+
+
+more info:
+https://vaadin.com/de/forum/-/message_boards/view_message/342436
+
+
+
+
+*/
 /**
  * Server side component for the VCytographer widget.
  */
 @ClientWidget(VCytographer.class)
 public class Cytographer extends AbstractComponent {
+	
 	private static final long serialVersionUID = 8483008141219579936L;
+	private final Logger LOGGER = Logger.getLogger(Cytographer.class);
 	
 	public enum GraphOperation {
 		REPAINT, SET_NODE_SIZE, SET_VISUAL_STYLE, SET_TEXT_VISIBILITY, SET_OPTIMIZED_STYLES, SET_ZOOM, FIT 
@@ -82,7 +101,7 @@ public class Cytographer extends AbstractComponent {
 	 * 
 	 */
 	private void init(final CyNetwork network, final CyNetworkView finalView, final String title, final int width, final int height,Application app){
-				
+		
 		messages = ((SAIMApplication)app).messages;
 		cfg = ((SAIMApplication)app).getConfig();
 
@@ -108,8 +127,10 @@ public class Cytographer extends AbstractComponent {
 	}
 
 	public void applyLayoutAlgorithm(final CyLayoutAlgorithm loAlgorithm) {
+		
 		graphProperties.applyLayoutAlgorithm(loAlgorithm);
-		repaintGraph();
+		//repaintGraph();
+		requestRepaint();		
 	}
 	
 	public void setSize(int w,int h ){
@@ -128,6 +149,13 @@ public class Cytographer extends AbstractComponent {
 		return graphProperties.addANewNode(name, x, y,shape);
 	}
 
+	/**
+	 * Creates an edge for known nodes. 
+	 * 
+	 * @param nodeAid a node id 
+	 * @param nodeBid a node id 
+	 * @param attribute an edge id
+	 */
 	public void createAnEdge(int nodeAid, int nodeBid, String attribute) {
 		graphProperties.createAnEdge(nodeAid, nodeBid, attribute);
 	}
@@ -135,6 +163,10 @@ public class Cytographer extends AbstractComponent {
 	@Override
 	public void paintContent(final PaintTarget target) throws PaintException {
 		super.paintContent(target);	
+		
+		if(LOGGER.isDebugEnabled())
+			LOGGER.debug("paintContent: "+currentOperation.toString());
+		
 		target.addAttribute("operation", currentOperation.toString());
 		switch (currentOperation) {
 		case SET_NODE_SIZE:
@@ -165,6 +197,9 @@ public class Cytographer extends AbstractComponent {
 	@Override
 	public void changeVariables(final Object source, final Map<String, Object> variables) {
 		super.changeVariables(source, variables);
+		
+		if(LOGGER.isDebugEnabled())
+			LOGGER.debug("changeVariables: "+variables.toString());
 		
 		if (variables.containsKey("selectedEdges")) {
 			graphProperties.clearSelectedEdges();
@@ -197,6 +232,8 @@ public class Cytographer extends AbstractComponent {
 		if (variables.containsKey("removedEdge")) {
 			graphProperties.removeEdge((String) variables.get("removedEdge"));
 		}
+		
+		// double click on a node
 		if (variables.containsKey("doubleClick")) {
 			final String[] args = (String[]) variables.get("doubleClick");
 					
@@ -218,6 +255,7 @@ public class Cytographer extends AbstractComponent {
 			}
 		}
 		
+		// refresh positions on mouse up
 		if (variables.containsKey("onNodeMouseUp")) {
 			final String[] args = (String[]) variables.get("onNodeMouseUp");	
 			Integer id = new Integer(args[0]);
@@ -225,6 +263,10 @@ public class Cytographer extends AbstractComponent {
 			Double y = Double.parseDouble(args[2]);
 			graphProperties.setNodePos(id,x,y);
 		}
+		
+		// zoom out after fit
+		if (variables.containsKey("fit")) 
+			zoomOut();
 	}
 
 	public void addDefaultProperty(String s, KBInfo info){
@@ -262,6 +304,9 @@ public class Cytographer extends AbstractComponent {
 
 		final Button btnok = new Button("Ok");	
 		 btnok.addListener(new ClickListener(){
+
+			private static final long serialVersionUID = -5798219584876778441L;
+
 			@Override
 			public void buttonClick(ClickEvent event) {
 				getApplication().getMainWindow().removeWindow(sub); // close
