@@ -1,6 +1,5 @@
 package de.uni_leipzig.simba.saim.gui.widget.panel;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,8 +28,6 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
 import csplugins.layout.algorithms.force.ForceDirectedLayout;
-import cytoscape.Cytoscape;
-import cytoscape.visual.VisualPropertyType;
 import de.konrad.commons.sparql.PrefixHelper;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
@@ -63,6 +60,7 @@ public class MetricPanel extends Panel{
 	
 	public MetricPanel(final Messages messages) {	
 		this.messages = messages;
+		this.setImmediate(true);
 	}
 	
 	@Override
