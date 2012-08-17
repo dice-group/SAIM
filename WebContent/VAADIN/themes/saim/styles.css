@@ -65,7 +65,7 @@ background-color:#00ff00;
 	margin: 2px;
 }
 
-.gwt-MenuItem-selected {
+.gwt-MenuItem-selected, .v-label:hover {
 	background-color: #000;
 	color: #fff;
 }
