@@ -269,6 +269,7 @@ public class GraphProperties {
 			nodeB.removeChild(nodeA);
 
 	}
+
 	public void createAnEdge(int nodeIdA, int nodeIdB, String attribute) {
 
 		if(nodeIdA == nodeIdB)
@@ -277,18 +278,21 @@ public class GraphProperties {
 		de.uni_leipzig.simba.saim.core.metric.Node nodeA = nodeMap.get(nodeIdA);
 		de.uni_leipzig.simba.saim.core.metric.Node nodeB = nodeMap.get(nodeIdB);
 
-		if(!nodeA.isValidParentOf(nodeB)&&nodeB.isValidParentOf(nodeA))
-		{
+		if(!nodeA.isValidParentOf(nodeB) && nodeB.isValidParentOf(nodeA)){
 			// implicit direction is clearly meant the other way around, reverse it
+			System.out.println(" implicit direction is clearly meant the other way around, reverse it");
 			createAnEdge(nodeIdB, nodeIdA, attribute);
 			return;
 		}
-		if(!nodeA.isValidParentOf(nodeB)&&!nodeB.isValidParentOf(nodeA))
-		{
-			mainWindow.showNotification("Edges between the types "+nodeA.getClass().getSimpleName()+" and "+ nodeB.getClass().getSimpleName() +" are not allowed.", Notification.TYPE_WARNING_MESSAGE);
+		
+		if(!nodeA.isValidParentOf(nodeB) && !nodeB.isValidParentOf(nodeA)){
+		
+			mainWindow.showNotification(
+					"Edges between the types "+nodeA.getClass().getSimpleName()+" and "+ nodeB.getClass().getSimpleName() +" are not allowed.",
+					Notification.TYPE_WARNING_MESSAGE);
 		}
-		else if(nodeA.acceptsChild(nodeB))
-		{		
+		else if(nodeA.acceptsChild(nodeB)){		
+			
 			nodeA.addChild(nodeB);	
 
 			final CyNode node1 = Cytoscape.getCyNode(nodeIdA+"", false);
@@ -304,14 +308,19 @@ public class GraphProperties {
 				addEdgeIntoMap(node1, edge);
 				addEdgeIntoMap(node2, edge);
 
-			} else {
-				throw new IllegalStateException("Edge creation failed since node not found");
+			} 
+			else throw new IllegalStateException("Edge creation failed since node not found");
+			
+		}else{
+			
+			if(nodeB.acceptsChild(nodeA)){
+				System.out.println("B accepts child A");
+				createAnEdge(nodeIdB, nodeIdA, attribute);
 			}
-		}
-		else
-		{
-			mainWindow.showNotification("Edge from "+nodeA.id+" to "+ nodeB.id +" not allowed: "+nodeA.acceptsChildWithReason(nodeB),
-					Notification.TYPE_WARNING_MESSAGE);
+			else
+				mainWindow.showNotification(
+						"Edge from "+nodeA.id+" to "+ nodeB.id +" not allowed: "+nodeA.acceptsChildWithReason(nodeB),
+						Notification.TYPE_WARNING_MESSAGE);
 		}
 	}
 
