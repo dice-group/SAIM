@@ -3,6 +3,8 @@ package de.uni_leipzig.simba.saim.gui.widget.form;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.vaadin.jonatan.contexthelp.ContextHelp;
 
@@ -112,10 +114,11 @@ public class KBInfoForm extends Form
 		presetComboBox.setRequired(false);
 		presetComboBox.setWidth("100%"); //$NON-NLS-1$
 		presetComboBox.setNewItemsAllowed(false);
-		for (String preset : presetToKB.keySet())
-		{
+		
+		for (String preset : presetToKB.keySet()){
 			presetComboBox.addItem(preset);
 		}
+		
 		presetComboBox.addListener(new ValueChangeListener()
 		{
 			@Override
@@ -241,11 +244,12 @@ public class KBInfoForm extends Form
 	{
 		presetToKB.clear();
 		presetComboBox.removeAllItems();
-		for (Entry<String, KBInfo> kb : DefaultEndpointLoader
-				.getDefaultEndpoints().entrySet())
-		{
-			presetToKB.put(kb.getKey(), kb.getValue());
-			presetComboBox.addItem(kb.getKey());
+		
+		Set<String> sortedKeys =  new TreeSet<String>();
+		sortedKeys.addAll(DefaultEndpointLoader.getDefaultEndpoints().keySet());
+		for(String key : sortedKeys){
+			presetToKB.put(key, DefaultEndpointLoader.getDefaultEndpoints().get(key));
+			presetComboBox.addItem(key);
 		}
 	}
 

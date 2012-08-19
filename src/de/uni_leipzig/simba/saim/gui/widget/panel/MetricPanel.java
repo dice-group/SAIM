@@ -1,11 +1,14 @@
 package de.uni_leipzig.simba.saim.gui.widget.panel;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeSet;
 
 import lombok.Getter;
 
@@ -216,8 +219,8 @@ public class MetricPanel extends Panel{
 	}
 	
 	private void getAllProps() {
-		sourceProps = new HashSet<String>();
-		targetProps = new HashSet<String>();
+		sourceProps = new TreeSet<String>();
+		targetProps = new TreeSet<String>();
 //		Configuration config = Configuration.getInstance();
 //		if(config.isLocal) {
 //			logger.info("Local data - using specified properties");
@@ -240,8 +243,7 @@ public class MetricPanel extends Panel{
 					}
 				}
 				selfConfigButton.setEnabled(true);
-			}			
-			return;
+			}
 	}
 	
 	/**
