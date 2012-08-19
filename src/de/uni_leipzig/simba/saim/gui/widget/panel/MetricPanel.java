@@ -1,10 +1,7 @@
 package de.uni_leipzig.simba.saim.gui.widget.panel;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -129,10 +126,15 @@ public class MetricPanel extends Panel{
 			}
 		}.start();
 //		metricsLayout.addComponent( new Label(messages.getString("MetricPanel.0"))); 
-//		operatorsLayout.addComponent( new Label(messages.getString("MetricPanel.8"))); 		
-		for(String label : Measure.identifiers)
+//		operatorsLayout.addComponent( new Label(messages.getString("MetricPanel.8"))); 
+		Set<String> sorted = new TreeSet<String>();
+		sorted.addAll( Measure.identifiers);
+		for(String label : sorted)
 			metricsLayout.addComponent( new Label(label)); 
-		for(String label : Operator.identifiers)
+		
+		sorted.clear();
+		sorted.addAll(Operator.identifiers);
+		for(String label : sorted)
 			operatorsLayout.addComponent( new Label(label)); 	
 		
 		sourceLayout.addListener(   new AccordionLayoutClickListener(cytographer,GraphProperties.Shape.SOURCE,   config));
