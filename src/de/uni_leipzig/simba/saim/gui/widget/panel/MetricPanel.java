@@ -51,8 +51,8 @@ public class MetricPanel extends Panel{
 	@Getter private final Messages messages;
 	@Getter private Configuration config;
 	
-	private VerticalLayout mainLayout, sourceLayout, targetLayout, metricsLayout, operatorsLayout;
-	private HorizontalLayout layout, buttonLayout;
+	private VerticalLayout sourceLayout, targetLayout;
+	private HorizontalLayout buttonLayout;
 	private Set<String> sourceProps,targetProps;
 	private Button selfConfigButton, learnButton, startMapping, setMetric;
 	
@@ -60,22 +60,25 @@ public class MetricPanel extends Panel{
 	
 	public MetricPanel(final Messages messages) {	
 		this.messages = messages;
-		this.setImmediate(true);
 	}
 	
 	@Override
 	public void attach() {
+		
 		if((SAIMApplication)getApplication()!= null)
 			config = ((SAIMApplication)getApplication()).getConfig();
 		
-		mainLayout = new VerticalLayout();
+		VerticalLayout mainLayout = new VerticalLayout();
 		mainLayout.setSpacing(false);
 		mainLayout.setMargin(false);
+		
 		final VerticalLayout accordionLayout = new VerticalLayout();
-		layout = new HorizontalLayout();
+		HorizontalLayout layout = new HorizontalLayout();
+		
 		layout.addComponent(accordionLayout);
 		layout.setSpacing(false);
 		layout.setMargin(false);
+		
 		setContent(mainLayout);
 		mainLayout.addComponent(layout);
 		final ProgressIndicator progress = new ProgressIndicator();
@@ -93,6 +96,7 @@ public class MetricPanel extends Panel{
 
 		accordionPanel.addComponent(accordion);
 		
+		VerticalLayout metricsLayout, operatorsLayout;
 		sourceLayout =  new VerticalLayout();
 		targetLayout =  new VerticalLayout();
 		metricsLayout =  new VerticalLayout();
@@ -121,6 +125,7 @@ public class MetricPanel extends Panel{
 					final Label check = new Label(t);
 					targetLayout.addComponent(check);
 				}
+				accordionLayout.setImmediate(true);
 				accordionLayout.removeComponent(progress);
 				progress.setEnabled(false);
 			}
