@@ -110,26 +110,42 @@ public class MetricPanel extends Panel{
 		cytographer = makeCytographer();
 		layout.addComponent(cytographer);
 		
-		new Thread(){			
-			@Override
-			public void run(){
-				//	performPropertyMapping();
-				getAllProps();
+//		new Thread(){			
+//			@Override
+//			public void run(){
+//				//	performPropertyMapping();
+//				getAllProps();
+//
+//				for(String s : sourceProps) {
+//					final Label check = new Label(s);
+//					sourceLayout.addComponent(check); 
+//				}
+//						
+//				for(String t : targetProps) {
+//					final Label check = new Label(t);
+//					targetLayout.addComponent(check);
+//				}
+//				accordionLayout.setImmediate(true);
+//				accordionLayout.removeComponent(progress);
+//				progress.setEnabled(false);
+//			}
+//		}.start();
+		
+		getAllProps();
+		for(String s : sourceProps) {
+			final Label check = new Label(s);
+			sourceLayout.addComponent(check); 
+		}
 
-				for(String s : sourceProps) {
-					final Label check = new Label(s);
-					sourceLayout.addComponent(check); 
-				}
-						
-				for(String t : targetProps) {
-					final Label check = new Label(t);
-					targetLayout.addComponent(check);
-				}
-				accordionLayout.setImmediate(true);
-				accordionLayout.removeComponent(progress);
-				progress.setEnabled(false);
-			}
-		}.start();
+		for(String t : targetProps) {
+			final Label check = new Label(t);
+			targetLayout.addComponent(check);
+		}
+		accordionLayout.removeComponent(progress);
+		progress.setEnabled(false);
+		
+		
+		
 //		metricsLayout.addComponent( new Label(messages.getString("MetricPanel.0"))); 
 //		operatorsLayout.addComponent( new Label(messages.getString("MetricPanel.8"))); 
 		Set<String> sorted = new TreeSet<String>();
