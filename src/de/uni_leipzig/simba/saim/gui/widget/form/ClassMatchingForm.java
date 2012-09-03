@@ -20,7 +20,7 @@ public class ClassMatchingForm extends Form
 	 * 
 	 */
 	private static final long serialVersionUID = -7897392568006310314L;
-	protected final ComboBox field; 
+	protected ComboBox field; 
 //	protected final TextField target; 
 	protected final ClassChooser chooser;
 	KBInfo info;
@@ -32,6 +32,10 @@ public class ClassMatchingForm extends Form
 		setLayout(layout);
 		field = new ComboBox(caption);
 		field.setWidth("100%"); //$NON-NLS-1$
+		field.setTextInputAllowed(true);
+		field.setInvalidAllowed(true);
+		field.setNewItemsAllowed(true);
+		field.setImmediate(true);
 		setDefault(info);
 		chooser = new ClassChooser(info.endpoint, info.id, info.graph);
 		
