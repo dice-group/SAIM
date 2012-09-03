@@ -163,7 +163,8 @@ public class KBInfoForm extends Form
 		url.setReadOnly(false);
 		url.setImmediate(true);
 		url.setTextInputAllowed(true);
-
+		url.setInvalidAllowed(true);
+		url.setNewItemsAllowed(true);
 		for (String endpoint : Endpoints.endpointArray)
 		{
 			url.addItem(endpoint);
