@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.vaadin.teemu.wizards.Wizard;
 import cern.colt.Arrays;
 import com.vaadin.Application;
+import com.vaadin.service.ApplicationContext.TransactionListener;
 import com.vaadin.terminal.FileResource;
 import com.vaadin.terminal.ParameterHandler;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
@@ -33,28 +34,36 @@ import de.uni_leipzig.simba.saim.gui.widget.ConfigUploader;
 import de.uni_leipzig.simba.saim.gui.widget.panel.MetricPanel;
 import de.uni_leipzig.simba.saim.gui.widget.window.EndpointWindow;
 
+/**
+ * Central Application class.
+ * Sets up main window and 
+ */
 @SuppressWarnings("serial")
-public class SAIMApplication extends Application
+public class SAIMApplication extends Application implements TransactionListener
 {
-	public final Messages messages;
+	public Messages messages;
 	private static final long	serialVersionUID	= -7665596682464881860L;
-//	private SAIMApplication application = null; 
-	@Getter private final Window mainWindow;
+	@Getter private  Window mainWindow;
 	private VerticalLayout mainLayout;
 	private Wizard wizard;
 	Window sub;
 	Configuration config = new Configuration();
 	Panel content;	
 	static final Logger logger = Logger.getLogger(SAIMApplication.class);
-//	public  Application getInstance() {return application;}
+
 	private MenuBar menuBar = null;
 
-	public SAIMApplication()
+	private static ThreadLocal<SAIMApplication> currentApplication = 
+			new ThreadLocal<SAIMApplication> ();
+	
+	@Override
+	public void init()
 	{	
+		 getContext ().addTransactionListener ( this );
 		// reproduce failure on headless environments
 //		System.setProperty("java.awt.headless", "true"); 
 		logger.debug("SAIMApplication()");
-		//messages = new Messages(Locale.getDefault());
+//		messages = new Messages(Locale.getDefault());
 		messages = new Messages(Locale.ENGLISH);
 		mainWindow = new Window();
 		ParameterHandler parameterHandler = new ParameterHandler()
@@ -90,7 +99,7 @@ public class SAIMApplication extends Application
 		mainLayout.addComponent(content);
 		wizard = new Wizard();	
 		setTheme("saim");
-//		application=this;
+		setMainWindow(mainWindow);		
 	}
 
 	private void setLanguage(String language)
@@ -100,12 +109,15 @@ public class SAIMApplication extends Application
 		refresh();
 	}
 
+	/**
+	 * Builds the menu bar.
+	 * @return MenuBar.
+	 */
 	protected MenuBar buildMenuBar()
 	{
 		final MenuBar menuBar = new MenuBar();
 		menuBar.setWidth("100%"); //$NON-NLS-1$
-		//menuBar.setStyleName("margin1em");
-
+	
 		MenuItem fileMenu = menuBar.addItem(messages.getString("file"), null, null); //$NON-NLS-1$
 		fileMenu.addItem(messages.getString("startnewconfig"), null, new StartCommand(this));
 		
@@ -193,10 +205,6 @@ public class SAIMApplication extends Application
 		return layout;
 	}
 
-	@Override
-	public void init() {		
-		setMainWindow(mainWindow);		
-	}
 
 	MenuBar.Command importLIMESCommand = new MenuBar.Command()
 	{
@@ -245,76 +253,7 @@ public class SAIMApplication extends Application
 		return config;
 	}
 
-	//	/**
-	//	 * Show a component instead of the wizard. Finishes the Wizard.
-	//	 * @param c
-	//	 * @deprecated
-	//	 */
-	//	public void showComponent(Component c) {
-	//		mainWindow.removeWindow(sub);
-	//		wizard.finish();
-	//		mainWindow.removeAllComponents();
-	//		mainWindow.addComponent(buildMainMenu());
-	//		mainWindow.addComponent(c);
-	//	}
-	//	/**
-	//	 * Return view to the beginning: showing wizard.
-	//	 * @deprecated
-	//	 */
-	//	public void returnToBegin() {
-	//		mainWindow.removeAllComponents();
-	//		mainWindow.addComponent(buildMainMenu());
-	//
-	//		
-	//		mainLayout.addComponent(new StartPanel());
-	//		mainLayout.addComponent(wizard);
-	//
-	//	}
-	//
-	//	/**
-	//	 * @deprecated
-	//	 * @param oldStep
-	//	 * @param newStep
-	//	 */
-	//	public void setStep(WizardStep oldStep, WizardStep newStep) {
-	//		List<WizardStep> olderSteps = new LinkedList<WizardStep>();
-	//		boolean found = false;
-	//		for(WizardStep s:wizard.getSteps()) {
-	//			if(s == oldStep) {
-	//				found = true;
-	//				continue;
-	//			}
-	//			if(found) {
-	//				olderSteps.add(s);
-	//			}			
-	//		}
-	//		wizard.addStep(newStep);
-	//		wizard.activateStep(newStep);
-	//		for(WizardStep os : olderSteps) {
-	//			wizard.removeStep(os);
-	//		}
-	//	}
-	//	/**
-	//	 * @deprecated
-	//	 * @param oldStep
-	//	 */
-	//	public void removeOlderSteps(WizardStep oldStep) {
-	//		List<WizardStep> olderSteps = new LinkedList<WizardStep>();
-	//		boolean found = false;
-	//		for(WizardStep s:wizard.getSteps()) {
-	//			if(s == oldStep) {
-	//				found = true;
-	//				continue;
-	//			}
-	//			if(found) {
-	//				olderSteps.add(s);
-	//			}			
-	//		}
-	//		for(WizardStep os : olderSteps) {
-	//			wizard.removeStep(os);
-	//		}
-	//	}
-	//	
+	
 	/**
 	 * Method is called if any action was taken in a subwindow that needs the main content to update.
 	 */
@@ -357,4 +296,32 @@ public class SAIMApplication extends Application
 		System.out.println(f.getAbsolutePath());
 		return f;
 	}
+
+	@Override
+	public void transactionStart ( Application application, Object o )
+    {
+        if ( application == SAIMApplication.this )
+        {
+            currentApplication.set ( this );
+        }
+    }
+	@Override
+    public void transactionEnd ( Application application, Object o )
+    {
+        if ( application == SAIMApplication.this )
+        {
+            currentApplication.set ( null );
+            currentApplication.remove ();
+        }
+    }
+	
+	/**
+	 * For access in non-UI classes.
+	 * @TODO Heavy testing
+	 * @return SAIMApplication instance
+	 */
+    public static SAIMApplication getInstance()
+    {
+        return currentApplication.get ();
+    }
 }
