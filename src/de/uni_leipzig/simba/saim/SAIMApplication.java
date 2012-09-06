@@ -31,6 +31,7 @@ import cytoscape.layout.algorithms.GridNodeLayout;
 
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.ConfigUploader;
+import de.uni_leipzig.simba.saim.gui.widget.form.EndPointUploader;
 import de.uni_leipzig.simba.saim.gui.widget.panel.MetricPanel;
 import de.uni_leipzig.simba.saim.gui.widget.window.EndpointWindow;
 
@@ -42,7 +43,7 @@ import de.uni_leipzig.simba.saim.gui.widget.window.EndpointWindow;
 public class SAIMApplication extends Application implements TransactionListener
 {
 	public Messages messages;
-	private static final long	serialVersionUID	= -7665596682464881860L;
+	private static final long serialVersionUID = -7665596682464881860L;
 	@Getter private  Window mainWindow;
 	private VerticalLayout mainLayout;
 	private Wizard wizard;
@@ -126,7 +127,9 @@ public class SAIMApplication extends Application implements TransactionListener
 
 		fileMenu.addItem(messages.getString("importlimes"), null, importLIMESCommand).setEnabled(true);		 //$NON-NLS-1$
 		fileMenu.addItem(messages.getString("exportlimes"), null, exportLIMESCommand).setEnabled(true); //$NON-NLS-1$
-
+		
+		/**@TODO for uploading dumped endpoints.*/
+//		fileMenu.addItem("Upload Endpoint", null, uploadEndpointCommand);
 		
 
 		MenuItem languageMenu = menuBar.addItem(messages.getString("language"), null, null); //$NON-NLS-1$
@@ -184,7 +187,7 @@ public class SAIMApplication extends Application implements TransactionListener
 		});
 		// color
 		MenuItem colorMenu = menuBar.addItem(messages.getString("menubar_color"), null, null); //$NON-NLS-1$
-		for(Integer pattern = 1; pattern < 5;pattern++){
+		for(Integer pattern = 1; pattern < 5; pattern++){
 			final Integer p = pattern;
 			colorMenu.addItem((messages.getString("menubar_color"+p.toString())), null, new MenuBar.Command()	{//$NON-NLS-1$
 				public void menuSelected(MenuItem selectedItem) {
@@ -238,6 +241,18 @@ public class SAIMApplication extends Application implements TransactionListener
 		}  
 	};
 
+	
+	MenuBar.Command uploadEndpointCommand = new MenuBar.Command() {		
+		@Override
+		public void menuSelected(MenuItem selectedItem) {
+			sub = new Window("Endpoint Upload");
+			sub.setWidth("700px"); //$NON-NLS-1$
+			sub.setModal(true);
+			sub.addComponent(new EndPointUploader());
+			getMainWindow().addWindow(sub);
+		}
+	};
+	
 	private class SetLanguageCommand implements MenuBar.Command
 	{
 		private final String language;
