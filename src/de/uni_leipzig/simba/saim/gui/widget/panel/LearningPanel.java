@@ -12,6 +12,7 @@ import com.vaadin.ui.VerticalLayout;
 
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.genetics.util.Pair;
+import de.uni_leipzig.simba.learning.query.LabelBasedPropertyMapper;
 import de.uni_leipzig.simba.learning.query.PropertyMapper;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
@@ -78,7 +79,8 @@ public class LearningPanel extends PerformPanel
 	private boolean performPropertyMapping() {
 		Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
 		if(!config.propertyMapping.wasSet()) {
-			PropertyMapper propMapper = new PropertyMapper();
+//			PropertyMapper propMapper = new PropertyMapper();
+			LabelBasedPropertyMapper propMapper = new LabelBasedPropertyMapper();
 			String classSource = config.getSource().getClassOfendpoint();
 			String classTarget = config.getTarget().getClassOfendpoint();
 			if(classSource != null && classTarget != null) {

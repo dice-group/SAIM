@@ -32,6 +32,7 @@ import de.konrad.commons.sparql.PrefixHelper;
 import de.konrad.commons.sparql.SPARQLHelper;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.io.KBInfo;
+import de.uni_leipzig.simba.learning.query.LabelBasedPropertyMapper;
 import de.uni_leipzig.simba.learning.query.PropertyMapper;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
@@ -393,7 +394,8 @@ public class PropertyMatchingPanel extends Panel
 	 */
 	private Mapping performAutomaticPropertyMapping() {
 		Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
-		PropertyMapper propMap = new PropertyMapper();
+//		PropertyMapper propMap = new PropertyMapper();
+		LabelBasedPropertyMapper propMap = new LabelBasedPropertyMapper();
 		return propMap.getPropertyMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().getClassOfendpoint(), config.getTarget().getClassOfendpoint());
 	}
 

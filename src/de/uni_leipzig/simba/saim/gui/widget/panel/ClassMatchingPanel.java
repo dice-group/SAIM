@@ -25,7 +25,8 @@ import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
 
 import de.uni_leipzig.simba.data.Mapping;
-import de.uni_leipzig.simba.learning.query.ClassMapper;
+//import de.uni_leipzig.simba.learning.query.ClassMapper;
+import de.uni_leipzig.simba.learning.query.LabelBasedClassMapper;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
@@ -116,7 +117,8 @@ public class ClassMatchingPanel extends Panel
 
 					Mapping classMatching = null;
 
-					ClassMapper classMapper = new ClassMapper(10);
+//					ClassMapper classMapper = new ClassMapper(10);
+					LabelBasedClassMapper mapper = new LabelBasedClassMapper();
 					if(CACHING)
 					{	
 						if(cache == null) 
@@ -135,7 +137,8 @@ public class ClassMatchingPanel extends Panel
 					if(classMatching==null)
 					{
 						logger.info("Class Mapping Cache miss.");
-						classMatching = classMapper.getMappingClasses(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id);
+//						classMatching = classMapper.getMappingClasses(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id);
+						classMatching = mapper.getEntityMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id).reverseSourceTarget();
 						if(CACHING)
 						{
 							cache = CacheManager.getInstance().getCache("classmatching");
