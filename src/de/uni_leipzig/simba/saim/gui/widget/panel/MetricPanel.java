@@ -2,7 +2,9 @@ package de.uni_leipzig.simba.saim.gui.widget.panel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
@@ -196,7 +198,7 @@ public class MetricPanel extends Panel{
 		if(n.getClass()==Output.class) {
 			parentId = addNode(n);
 		}
-		HashMap<Integer, Node> cList = new HashMap<Integer, Node>();
+		Map<Integer, Node> cList = new Hashtable<Integer, Node>();
 		for(Node c : n.getChilds()) {
 				cList.put(addNode(c), c);
 		}
