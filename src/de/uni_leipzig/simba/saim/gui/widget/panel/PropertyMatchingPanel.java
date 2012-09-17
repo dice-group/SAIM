@@ -1,5 +1,6 @@
 package de.uni_leipzig.simba.saim.gui.widget.panel;
 
+import java.awt.Checkbox;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -56,6 +57,7 @@ public class PropertyMatchingPanel extends Panel
 	private final ProgressIndicator progress = new ProgressIndicator();
 	private Label progressLabel;
 	private boolean listenerActive = true;
+	Checkbox simpleAlgorithm; 
 	// to display computed ones
 	HorizontalLayout selectionLayout = new HorizontalLayout();
 	ListSelect select;
@@ -105,7 +107,15 @@ public class PropertyMatchingPanel extends Panel
 			progress.setVisible(false);
 			progressLabel.setVisible(false);
 		}
-		
+		/**
+		 * Method tries to getpropertyMapping
+		 */
+		private Mapping performAutomaticPropertyMapping() {
+			Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
+//			PropertyMapper propMap = new PropertyMapper();
+			LabelBasedPropertyMapper propMap = new LabelBasedPropertyMapper();
+			return propMap.getPropertyMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().getClassOfendpoint(), config.getTarget().getClassOfendpoint());
+		}
 		private Map<String, HashMap<String, Double>> mockPropertyMap()
 		{
 			Map<String, HashMap<String, Double>> map = new HashMap<String, HashMap<String, Double>>();
@@ -224,52 +234,59 @@ public class PropertyMatchingPanel extends Panel
 	public void attach()
 	{
 		super.attach();
-		getAllProperties();
-		//		List<String> sourcePropertiesFull = new LinkedList<String>();
-		//		List<String> targetPropertiesFull = new LinkedList<String>();
-		//		sourceProperties = new LinkedList<String>();
-		//		targetProperties = new LinkedList<String>();
-		//		if(Configuration.getInstance().isLocal) {
-		//			for(String prop : Configuration.getInstance().getSource().properties) {
-		//				sourcePropertiesFull.add(prop);
-		//			}
-		//			
-		//			for(String prop : Configuration.getInstance().getTarget().properties) {
-		//				targetPropertiesFull.add(prop);
-		//			}
-		//		} else {
-		//			sourcePropertiesFull = allPropertiesFromKBInfo(source);
-		//			targetPropertiesFull = allPropertiesFromKBInfo(target);
-		//		}		
-		//		// abbreviate
-		//		for(String prop : sourcePropertiesFull) {
-		//			String s_abr=PrefixHelper.abbreviate(prop);
-		//			sourceProperties.add(s_abr);
-		//		}
-		//		
-		//		for(String prop : targetPropertiesFull) {
-		//			String s_abr=PrefixHelper.abbreviate(prop);
-		//			targetProperties.add(s_abr);
-		//		}
-		table.setWidth("100%"); //$NON-NLS-1$
-		addComponent(table);		
-		closeImageResource = new ClassResource("img/no_crystal_clear_16.png",getApplication());		 //$NON-NLS-1$
-		/* Define the names and data types of columns.
-		 * The "default value" parameter is meaningless here. */		
-		table.addContainerProperty(messages.getString("sourceproperty"), PropertyComboBox.class,  null); //$NON-NLS-1$
-		table.addContainerProperty(messages.getString("targetproperty"), PropertyComboBox.class,  null); //$NON-NLS-1$
-		table.addContainerProperty("", Button.class,  null); //$NON-NLS-1$
-		//table.setColumnWidth("",48);
+	
+		new Thread() {
+			@Override
+			public void run() {
+					getAllProperties();
+					//		List<String> sourcePropertiesFull = new LinkedList<String>();
+					//		List<String> targetPropertiesFull = new LinkedList<String>();
+					//		sourceProperties = new LinkedList<String>();
+					//		targetProperties = new LinkedList<String>();
+					//		if(Configuration.getInstance().isLocal) {
+					//			for(String prop : Configuration.getInstance().getSource().properties) {
+					//				sourcePropertiesFull.add(prop);
+					//			}
+					//			
+					//			for(String prop : Configuration.getInstance().getTarget().properties) {
+					//				targetPropertiesFull.add(prop);
+					//			}
+					//		} else {
+					//			sourcePropertiesFull = allPropertiesFromKBInfo(source);
+					//			targetPropertiesFull = allPropertiesFromKBInfo(target);
+					//		}		
+					//		// abbreviate
+					//		for(String prop : sourcePropertiesFull) {
+					//			String s_abr=PrefixHelper.abbreviate(prop);
+					//			sourceProperties.add(s_abr);
+					//		}
+					//		
+					//		for(String prop : targetPropertiesFull) {
+					//			String s_abr=PrefixHelper.abbreviate(prop);
+					//			targetProperties.add(s_abr);
+					//		}
+					table.setWidth("100%"); //$NON-NLS-1$
+					addComponent(table);		
+					closeImageResource = new ClassResource("img/no_crystal_clear_16.png",getApplication());		 //$NON-NLS-1$
+					/* Define the names and data types of columns.
+					 * The "default value" parameter is meaningless here. */		
+					table.addContainerProperty(messages.getString("sourceproperty"), PropertyComboBox.class,  null); //$NON-NLS-1$
+					table.addContainerProperty(messages.getString("targetproperty"), PropertyComboBox.class,  null); //$NON-NLS-1$
+					table.addContainerProperty("", Button.class,  null); //$NON-NLS-1$
+					//table.setColumnWidth("",48);
 
-		/* Add a few items in the table. */
+					/* Add a few items in the table. */
 
-		//		Button closeButton = new Button();
-		//		closeButton.setWidth("16px");
-		//		closeButton.setHeight("16px");		
-		//		closeButton.setIcon(resource);
-		Object[] row = createTableRow();
-		table.addItem(row,row);
-		//addComponent(new PropertyComboBox(mockAllPropertiesFromKBInfo(null)));
+					//		Button closeButton = new Button();
+					//		closeButton.setWidth("16px");
+					//		closeButton.setHeight("16px");		
+					//		closeButton.setIcon(resource);
+					Object[] row = createTableRow();
+					table.addItem(row,row);
+					//addComponent(new PropertyComboBox(mockAllPropertiesFromKBInfo(null)));
+
+			}
+		}.start();
 
 	}
 
@@ -389,15 +406,7 @@ public class PropertyMatchingPanel extends Panel
 		}
 	}
 
-	/**
-	 * Method tries to getpropertyMapping
-	 */
-	private Mapping performAutomaticPropertyMapping() {
-		Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
-//		PropertyMapper propMap = new PropertyMapper();
-		LabelBasedPropertyMapper propMap = new LabelBasedPropertyMapper();
-		return propMap.getPropertyMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().getClassOfendpoint(), config.getTarget().getClassOfendpoint());
-	}
+
 
 	/**
 	 * Show computed Property mapping in select, activate Button to use them all.
@@ -412,7 +421,8 @@ public class PropertyMatchingPanel extends Panel
 		for(String key : map.keySet()) {
 			for(Entry<String, Double> e : map.get(key).entrySet())
 			{				
-				select.addItem(new ClassMatchItem(key, e.getKey(), e.getValue()));
+				if(e.getValue()>0)
+					select.addItem(new ClassMatchItem(key, e.getKey(), e.getValue()));
 			}
 		}
 		select.setImmediate(true);
@@ -502,6 +512,12 @@ public class PropertyMatchingPanel extends Panel
 		private String sourceClass;
 		private String targetClass;
 		private double similarity;
+		/**
+		 * Class to wrap arorund ClassMateches.
+		 * @param sourceClass
+		 * @param targetClass
+		 * @param similarity
+		 */
 		public ClassMatchItem(String sourceClass, String targetClass, double similarity) {
 			this.sourceClass=sourceClass;
 			this.targetClass=targetClass;
