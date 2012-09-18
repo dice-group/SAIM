@@ -137,68 +137,61 @@ public class SAIMApplication extends Application implements TransactionListener
 		languageMenu.addItem(messages.getString("english"), null, new SetLanguageCommand("en")).setEnabled(true); //$NON-NLS-1$
 		
 		// zoom
-		menuBar.addItem(messages.getString("menubar_zoom_in"), null,new MenuBar.Command()	{
-			public void menuSelected(MenuItem selectedItem) {
-				if(selectedItem.getText().equals(messages.getString("menubar_zoom_in"))){//$NON-NLS-1$
-					((MetricPanel)content).getCytographer().zoomIn();
-				}
-			}
-		});	
-		menuBar.addItem(messages.getString("menubar_zoom_fit"), null,new MenuBar.Command()	{
-			public void menuSelected(MenuItem selectedItem) {
-				if(selectedItem.getText().equals(messages.getString("menubar_zoom_fit")))//$NON-NLS-1$
-					((MetricPanel)content).getCytographer().fitToView();
-				
-			}
-		});			menuBar.addItem(messages.getString("menubar_zoom_out"), null,new MenuBar.Command()	{
-			public void menuSelected(MenuItem selectedItem) {
-				if(selectedItem.getText().equals(messages.getString("menubar_zoom_out"))){//$NON-NLS-1$
-					((MetricPanel)content).getCytographer().zoomOut();
-				}
-			}
-		});
-		
-		// layout algo.
-		MenuItem layoutalgo = menuBar.addItem(messages.getString("menubar_layout_algorithm"), null, null); //$NON-NLS-1$
-		
-		layoutalgo.addItem(messages.getString("menubar_layout_algorithm_force_directed"), null, new MenuBar.Command()	{//$NON-NLS-1$
-			public void menuSelected(MenuItem selectedItem) {
-				if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_force_directed")))//$NON-NLS-1$
-					((MetricPanel)content).getCytographer().applyLayoutAlgorithm(new ForceDirectedLayout());
-			}
-		});	
-		layoutalgo.addItem(messages.getString("menubar_layout_algorithm_hierarchical"), null, new MenuBar.Command()	{//$NON-NLS-1$
-			public void menuSelected(MenuItem selectedItem) {
-				if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_hierarchical")));//$NON-NLS-1$
-					((MetricPanel)content).getCytographer().applyLayoutAlgorithm(new HierarchicalLayoutAlgorithm());
-			}
-		});		
-		layoutalgo.addItem(messages.getString("menubar_layout_algorithm_grid"), null, new MenuBar.Command()	{//$NON-NLS-1$
-			public void menuSelected(MenuItem selectedItem) {
-				if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_grid")))//$NON-NLS-1$
-					((MetricPanel)content).getCytographer().applyLayoutAlgorithm(new GridNodeLayout());
-			}
-		});	
-		layoutalgo.addItem(messages.getString("menubar_layout_algorithm_circular"), null, new MenuBar.Command()	{//$NON-NLS-1$
-			public void menuSelected(MenuItem selectedItem) {
-				if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_circular")))//$NON-NLS-1$
-					((MetricPanel)content).getCytographer().applyLayoutAlgorithm(new CircularLayoutAlgorithm());
-			}
-		});
-		// color
-		MenuItem colorMenu = menuBar.addItem(messages.getString("menubar_color"), null, null); //$NON-NLS-1$
-		for(Integer pattern = 1; pattern < 5; pattern++){
-			final Integer p = pattern;
-			colorMenu.addItem((messages.getString("menubar_color"+p.toString())), null, new MenuBar.Command()	{//$NON-NLS-1$
-				public void menuSelected(MenuItem selectedItem) {
-					
-					if(selectedItem.getText().equals(messages.getString("menubar_color"+p.toString()))){//$NON-NLS-1$
-						((MetricPanel)content).getCytographer().setNodeColors(p);
-						((MetricPanel)content).getCytographer().repaintGraph();
+				menuBar.addItem(messages.getString("menubar_zoom_in"), null,new MenuBar.Command()	{
+					public void menuSelected(MenuItem selectedItem) {
+						if(selectedItem.getText().equals(messages.getString("menubar_zoom_in"))){//$NON-NLS-1$
+							((MetricPanel)content).getSaimcytopro().zoomIn(true);
+						}
 					}
-				}
-			});	
-		}
+				});	
+				menuBar.addItem(messages.getString("menubar_zoom_fit"), null,new MenuBar.Command()	{
+					public void menuSelected(MenuItem selectedItem) {
+						if(selectedItem.getText().equals(messages.getString("menubar_zoom_fit"))){//$NON-NLS-1$
+						
+							((MetricPanel)content).getSaimcytopro().fitToView();
+						}
+					}
+				});		
+				menuBar.addItem(messages.getString("menubar_zoom_out"), null,new MenuBar.Command()	{
+					public void menuSelected(MenuItem selectedItem) {
+						if(selectedItem.getText().equals(messages.getString("menubar_zoom_out"))){//$NON-NLS-1$
+							((MetricPanel)content).getSaimcytopro().zoomIn(false);
+						}
+					}
+				});
+				
+				// layout algo.
+				MenuItem layoutalgo = menuBar.addItem(messages.getString("menubar_layout_algorithm"), null, null); //$NON-NLS-1$
+				
+				layoutalgo.addItem(messages.getString("menubar_layout_algorithm_force_directed"), null, new MenuBar.Command()	{//$NON-NLS-1$
+					public void menuSelected(MenuItem selectedItem) {
+						if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_force_directed"))){//$NON-NLS-1$
+							((MetricPanel)content).getSaimcytopro().applyLayoutAlgorithm(new ForceDirectedLayout(),true);
+						}
+					}
+				});	
+				layoutalgo.addItem(messages.getString("menubar_layout_algorithm_hierarchical"), null, new MenuBar.Command()	{//$NON-NLS-1$
+					public void menuSelected(MenuItem selectedItem) {
+						if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_hierarchical"))){//$NON-NLS-1$
+						((MetricPanel)content).getSaimcytopro().applyLayoutAlgorithm(new HierarchicalLayoutAlgorithm(),true);
+						}
+					}
+				});		
+				layoutalgo.addItem(messages.getString("menubar_layout_algorithm_grid"), null, new MenuBar.Command()	{//$NON-NLS-1$
+					public void menuSelected(MenuItem selectedItem) {
+						if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_grid"))){//$NON-NLS-1$
+							((MetricPanel)content).getSaimcytopro().applyLayoutAlgorithm(new GridNodeLayout(),true);
+						}
+					}
+				});	
+				layoutalgo.addItem(messages.getString("menubar_layout_algorithm_circular"), null, new MenuBar.Command()	{//$NON-NLS-1$
+					public void menuSelected(MenuItem selectedItem) {
+						if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_circular"))){//$NON-NLS-1$
+							((MetricPanel)content).getSaimcytopro().applyLayoutAlgorithm(new CircularLayoutAlgorithm(),true);
+						}
+					}
+				});
+				
 		return menuBar;
 	}
 
