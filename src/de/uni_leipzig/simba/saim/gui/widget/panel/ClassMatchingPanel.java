@@ -17,6 +17,8 @@ import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -25,7 +27,7 @@ import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
 
 import de.uni_leipzig.simba.data.Mapping;
-//import de.uni_leipzig.simba.learning.query.ClassMapper;
+import de.uni_leipzig.simba.learning.query.DefaultClassMapper;
 import de.uni_leipzig.simba.learning.query.LabelBasedClassMapper;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
@@ -41,11 +43,24 @@ public class ClassMatchingPanel extends Panel
 	private final Messages messages;
 	public static final boolean CACHING	= true;
 	Configuration config;// = Configuration.getInstance();
-	final ComboBox suggestionComboBox = new ComboBox();
+	
+	Label suggestionLabel;
+	ProgressIndicator progress;
+	Refresher refresher;
+	SuggestionsRefreshListener listener;
+	
+	ComboBox suggestionComboBox = new ComboBox();
+	ValueChangeListener comboListener;
+	Button computeStringBased;
+	Button computeLinkBased;
+	
 	public ClassMatchingForm sourceClassForm;
 	public ClassMatchingForm targetClassForm;
 	Cache cache = null;
 	static final Logger logger = LoggerFactory.getLogger(ClassMatchingPanel.class);
+	
+	Thread computer;
+	
 	public void close()
 	{
 		if(cache != null)
@@ -68,13 +83,23 @@ public class ClassMatchingPanel extends Panel
 	public void attach() {
 		setContent(new VerticalLayout());
 		this.config=((SAIMApplication)getApplication()).getConfig();
-		//FormLayout layout = new FormLayout(); // have the label to the right of the combobox and not on top
+
+		// Buttons
+		computeStringBased = new Button("String based");
+		computeLinkBased = new Button("Link based");
+		computeStringBased.addListener(new ComputeButtonClickListener(true));
+		computeLinkBased.addListener(new ComputeButtonClickListener(false));
+		HorizontalLayout bLayout = new HorizontalLayout();
+		bLayout.addComponent(computeStringBased);
+		bLayout.addComponent(computeLinkBased);		
+		getContent().addComponent(bLayout);
+		
 		final HorizontalLayout layout = new HorizontalLayout();
 		layout.setSpacing(false);
-		layout.setWidth("100%");		 //$NON-NLS-1$
-		final ProgressIndicator progress = new ProgressIndicator();
+		layout.setWidth("100%");	
+		progress = new ProgressIndicator();
 		progress.setSizeUndefined();
-		final Label suggestionLabel = new Label(messages.getString("suggestions"));		 //$NON-NLS-1$
+		suggestionLabel = new Label(messages.getString("suggestions"));		 //$NON-NLS-1$
 		suggestionLabel.setSizeUndefined();		
 		layout.addComponent(suggestionLabel);
 		layout.addComponent(progress);
@@ -85,40 +110,65 @@ public class ClassMatchingPanel extends Panel
 		layout.setExpandRatio(suggestionComboBox, 1f);
 		suggestionComboBox.setVisible(false);
 		this.addComponent(layout);
-		{
-			suggestionComboBox.setEnabled(false);
+		
+		suggestionComboBox.setEnabled(false);
+		comboListener = new ValueChangeListener() {								
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				//get Value
+				@SuppressWarnings("unchecked")
+				Entry<Double, Pair<String>> entry = (Entry<Double, Pair<String>>) suggestionComboBox.getValue();
+				sourceClassForm.addItem(entry.getValue().getA(),true);
+				targetClassForm.addItem(entry.getValue().getB(),true);
+
+				sourceClassForm.requestRepaint();
+				targetClassForm.requestRepaint();
+			}
+		};
 			// set listener in the thread because the programmatical select must not trigger a select in the class forms because
 			// the user may have already entered something there
-			suggestionComboBox.addListener(new ValueChangeListener() {								
-				@Override
-				public void valueChange(ValueChangeEvent event) {
-					//get Value
-					@SuppressWarnings("unchecked")
-					Entry<Double, Pair<String>> entry = (Entry<Double, Pair<String>>) suggestionComboBox.getValue();
-					sourceClassForm.addItem(entry.getValue().getA(),true);
-					targetClassForm.addItem(entry.getValue().getB(),true);
+//			suggestionComboBox.addListener(new ValueChangeListener() {								
+//				@Override
+//				public void valueChange(ValueChangeEvent event) {
+//					//get Value
+//					@SuppressWarnings("unchecked")
+//					Entry<Double, Pair<String>> entry = (Entry<Double, Pair<String>>) suggestionComboBox.getValue();
+//					sourceClassForm.addItem(entry.getValue().getA(),true);
+//					targetClassForm.addItem(entry.getValue().getB(),true);
+//
+//					sourceClassForm.requestRepaint();
+//					targetClassForm.requestRepaint();
+//				}
+//			});
 
-					sourceClassForm.requestRepaint();
-					targetClassForm.requestRepaint();
-				}
-			});
-			new Thread()
+			sourceClassForm = new ClassMatchingForm(messages.getString("ClassMatchingPanel.sourceclass"), config.getSource());
+			targetClassForm = new ClassMatchingForm(messages.getString("ClassMatchingPanel.targetclass"), config.getTarget());
+
+			HorizontalLayout hori = new HorizontalLayout();
+			hori.setWidth("100%"); //$NON-NLS-1$
+
+			sourceClassForm.setRequired(true);
+			targetClassForm.setRequired(true);
+
+			hori.addComponent(sourceClassForm);
+			hori.addComponent(targetClassForm);
+			this.getContent().addComponent(hori);
+			// add Listener to set Items in the ClassMatchingForm
+			
+			refresher = new Refresher();
+			listener = new SuggestionsRefreshListener();
+			refresher.addListener(listener);
+			addComponent(refresher);
+
+			
+			computer = new Thread()
 			{
 				
 				@SuppressWarnings("unchecked")
 				@Override
 				public void run()
 				{
-				//	Configuration config = Configuration.getInstance();
-					Refresher refresher = new Refresher();
-					SuggestionsRefreshListener listener = new SuggestionsRefreshListener();
-					refresher.addListener(listener);
-					addComponent(refresher);
-
 					Mapping classMatching = null;
-
-//					ClassMapper classMapper = new ClassMapper(10);
-					LabelBasedClassMapper mapper = new LabelBasedClassMapper();
 					if(CACHING)
 					{	
 						if(cache == null) 
@@ -137,8 +187,10 @@ public class ClassMatchingPanel extends Panel
 					if(classMatching==null)
 					{
 						logger.info("Class Mapping Cache miss.");
-//						classMatching = classMapper.getMappingClasses(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id);
-						classMatching = mapper.getEntityMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id).reverseSourceTarget();
+						LabelBasedClassMapper mapper = new LabelBasedClassMapper();
+						classMatching = mapper.getEntityMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id);
+//						DefaultClassMapper classMapper = new DefaultClassMapper(10);
+//						classMatching = classMapper.getEntityMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id).reverseSourceTarget();
 						if(CACHING)
 						{
 							cache = CacheManager.getInstance().getCache("classmatching");
@@ -150,82 +202,132 @@ public class ClassMatchingPanel extends Panel
 							cache.flush();							
 						}
 					}
-					if(classMatching.map.size()==0)
-					{
-						suggestionLabel.setCaption(messages.getString("ClassMatchingPanel.nosuggestionsfound"));
-					}
-					else
-					{
-						suggestionComboBox.removeAllItems();
-						SortedMapping sorter = new SortedMapping(classMatching);
-						for(Entry<Double, Pair<String>> e: sorter.sort().descendingMap().entrySet()) {
-							// need to swap a and b
-							String b = e.getValue().getA();
-							e.getValue().setA(e.getValue().getB());
-							e.getValue().setB(b);
-							suggestionComboBox.addItem(e);
-							suggestionComboBox.select(e);
-						}
-						//					for(String class1 : sugg.map.keySet())
-						//						for(Entry<String, Double> class2 : sugg.map.get(class1).entrySet()) {
-						//							suggestionComboBox.addItem(class1+" - "+class2.getKey()+" : "+class2.getValue());
-						//						}
-
-						suggestionComboBox.setVisible(true);
-						suggestionComboBox.setEnabled(true);
-						suggestionComboBox.setNullSelectionAllowed(false);					
-						suggestionComboBox.setTextInputAllowed(false);
-						{
-							Entry<Double, Pair<String>> entry = (Entry<Double, Pair<String>>) suggestionComboBox.getItemIds().iterator().next(); 
-							suggestionComboBox.select(entry);
-							sourceClassForm.addItem(entry.getValue().getA(),false);
-							targetClassForm.addItem(entry.getValue().getB(),false);
-						}
-
-
-						// set listener in the thread because the programmatical select must not trigger a select in the class forms because
-						// the user may have already entered something there
-						suggestionComboBox.addListener(new ValueChangeListener() {								
-							@Override
-							public void valueChange(ValueChangeEvent event) {
-								//get Value								
-								Entry<Double, Pair<String>> entry = (Entry<Double, Pair<String>>) suggestionComboBox.getValue();
-								sourceClassForm.addItem(entry.getValue().getA(),true);
-								targetClassForm.addItem(entry.getValue().getB(),true);
-
-								sourceClassForm.requestRepaint();
-								targetClassForm.requestRepaint();
-							}
-						});
-//						System.out.println("suggested enabled: "+suggestionComboBox.size()+" items");					 //$NON-NLS-1$ //$NON-NLS-2$
-					}
+					anzeigen(classMatching);
 					progress.setEnabled(false);
-					removeComponent(progress);
-					listener.running=false;					
+//					removeComponent(progress);
+//					listener.running=false;					
 				}
-			}.start();
-			sourceClassForm = new ClassMatchingForm(messages.getString("ClassMatchingPanel.sourceclass"), config.getSource());
-			targetClassForm = new ClassMatchingForm(messages.getString("ClassMatchingPanel.targetclass"), config.getTarget());
-
-			HorizontalLayout hori = new HorizontalLayout();
-			hori.setWidth("100%"); //$NON-NLS-1$
-
-			sourceClassForm.setRequired(true);
-			targetClassForm.setRequired(true);
-
-			hori.addComponent(sourceClassForm);
-			hori.addComponent(targetClassForm);
-			this.getContent().addComponent(hori);
-			// add Listener to set Items in the ClassMatchingForm
-
-		}
+			};
+			computer.start();
+		
 		setupContextHelp();
 	}
+	
+	public synchronized void anzeigen(Mapping classMapping) {
+		suggestionLabel.setCaption(classMapping.size() + " matches found:");
+		logger.info("Show Match" + classMapping);
+		suggestionComboBox.removeListener(comboListener);
+		suggestionComboBox.removeAllItems();
+		if(classMapping==null || classMapping.map.size()==0)
+		{
+			
+		}
+		else
+		{
+			if(suggestionComboBox != null)
+				suggestionComboBox.removeAllItems();
+			else
+				suggestionComboBox = new ComboBox();
+			SortedMapping sorter = new SortedMapping(classMapping);
+			for(Entry<Double, Pair<String>> e: sorter.sort().descendingMap().entrySet()) {
+				// need to swap a and b
+//				String b = e.getValue().getA();
+//				e.getValue().setA(e.getValue().getB());
+//				e.getValue().setB(b);
+				suggestionComboBox.addItem(e);
+				suggestionComboBox.select(e);
+			}
+			//					for(String class1 : sugg.map.keySet())
+			//						for(Entry<String, Double> class2 : sugg.map.get(class1).entrySet()) {
+			//							suggestionComboBox.addItem(class1+" - "+class2.getKey()+" : "+class2.getValue());
+			//						}
 
+			suggestionComboBox.setVisible(true);
+			suggestionComboBox.setEnabled(true);
+			suggestionComboBox.setNullSelectionAllowed(false);					
+			suggestionComboBox.setTextInputAllowed(false);
+			{
+				Entry<Double, Pair<String>> entry = (Entry<Double, Pair<String>>) suggestionComboBox.getItemIds().iterator().next(); 
+				suggestionComboBox.select(entry);
+				sourceClassForm.addItem(entry.getValue().getA(),false);
+				targetClassForm.addItem(entry.getValue().getB(),false);
+			}
+
+			suggestionComboBox.addListener(comboListener);
+
+			// set listener in the thread because the programmatical select must not trigger a select in the class forms because
+//			// the user may have already entered something there
+//			suggestionComboBox.addListener(new ValueChangeListener() {								
+//				@Override
+//				public void valueChange(ValueChangeEvent event) {
+//					//get Value								
+//					Entry<Double, Pair<String>> entry = (Entry<Double, Pair<String>>) suggestionComboBox.getValue();
+//					sourceClassForm.addItem(entry.getValue().getA(),true);
+//					targetClassForm.addItem(entry.getValue().getB(),true);
+//
+//					sourceClassForm.requestRepaint();
+//					targetClassForm.requestRepaint();
+//				}
+//			});
+//			System.out.println("suggested enabled: "+suggestionComboBox.size()+" items");					 //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
+	/**
+	 * 
+	 * @author Lyko
+	 *
+	 */
+	public class ComputeButtonClickListener implements Button.ClickListener {
+		boolean simple = true;		
+		public ComputeButtonClickListener(boolean simple) {
+			this.simple=simple;
+		}		
+		@Override
+		public void buttonClick(ClickEvent event) {
+			if(computer != null) {
+				computer.stop();
+				computer = new ComputeClassMapping(simple);
+				computer.start();
+			}
+		}		
+	}
+	
 	public class SuggestionsRefreshListener implements RefreshListener
 	{
 		boolean running = true; 
 		private static final long serialVersionUID = -8765221895426102605L;		    
 		@Override public void refresh(final Refresher source)	{if(!running) {removeComponent(source);source.setEnabled(false);}}
 	}	
+	
+	public class ComputeClassMapping extends Thread {		
+		boolean stringBased = true;		
+		public ComputeClassMapping(boolean stringBased) {
+			this.stringBased = stringBased;
+		}		
+		@Override
+		public void run() {
+			progress.setEnabled(true);
+			//	Configuration config = Configuration.getInstance();
+//			Refresher refresher = new Refresher();
+//			SuggestionsRefreshListener listener = new SuggestionsRefreshListener();
+			refresher.addListener(listener);
+			addComponent(refresher);
+
+			Mapping classMatching = null;
+
+			if(stringBased) {
+				LabelBasedClassMapper mapper = new LabelBasedClassMapper();
+				classMatching = mapper.getEntityMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id);
+			} else {
+				DefaultClassMapper classMapper = new DefaultClassMapper(10);
+				classMatching = classMapper.getEntityMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id).reverseSourceTarget();
+			}
+			anzeigen(classMatching);
+			progress.setEnabled(false);
+//			removeComponent(progress);
+//			listener.running=false;					
+		
+		}
+	}
 }

@@ -117,7 +117,7 @@ public class SPARQLHelper
 			if(!resultSetToList(querySelect(PrefixHelper.addPrefixes(queryForOWLThing),endpoint,graph)).isEmpty())
 			{return Collections.singletonList(OWL.Thing.toString());}
 		}
-		System.err.println("no owl:Thing found for endpoint "+endpoint+", using fallback.");
+//		System.err.println("no owl:Thing found for endpoint "+endpoint+", using fallback.");
 		// bad endpoint, use fallback: classes (instances of owl:Class) which don't have superclasses
 		{
 			String queryForParentlessClasses =
@@ -127,7 +127,7 @@ public class SPARQLHelper
 
 			if(!classes.isEmpty()) {return classes;}
 		}
-		System.err.println("no root owl:Class instance for endpoint "+endpoint+", using fallback fallback.");
+//		System.err.println("no root owl:Class instance for endpoint "+endpoint+", using fallback fallback.");
 		// very bad endpoint, use fallback fallback: objects of type property which don't have superclasses
 		{
 		String query =
