@@ -246,6 +246,8 @@ public class ClassMatchingPanel extends Panel
 			suggestionComboBox.setEnabled(true);
 			suggestionComboBox.setNullSelectionAllowed(false);					
 			suggestionComboBox.setTextInputAllowed(false);
+			suggestionComboBox.addListener(comboListener);
+			
 			{
 				Entry<Double, Pair<String>> entry = (Entry<Double, Pair<String>>) suggestionComboBox.getItemIds().iterator().next(); 
 				suggestionComboBox.select(entry);
@@ -253,8 +255,7 @@ public class ClassMatchingPanel extends Panel
 				targetClassForm.addItem(entry.getValue().getB(),false);
 			}
 
-			suggestionComboBox.addListener(comboListener);
-
+			
 			// set listener in the thread because the programmatical select must not trigger a select in the class forms because
 //			// the user may have already entered something there
 //			suggestionComboBox.addListener(new ValueChangeListener() {								
@@ -317,9 +318,11 @@ public class ClassMatchingPanel extends Panel
 			Mapping classMatching = null;
 
 			if(stringBased) {
+				//FIXME are returned in the right order
 				LabelBasedClassMapper mapper = new LabelBasedClassMapper();
 				classMatching = mapper.getEntityMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id);
 			} else {
+				//FIXME are returned in the wrong order: call reverseSourceTarget().
 				DefaultClassMapper classMapper = new DefaultClassMapper(10);
 				classMatching = classMapper.getEntityMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id).reverseSourceTarget();
 			}
