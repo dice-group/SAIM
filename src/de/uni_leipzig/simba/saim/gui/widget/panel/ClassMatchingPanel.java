@@ -58,7 +58,7 @@ public class ClassMatchingPanel extends Panel
 	public ClassMatchingForm targetClassForm;
 	Cache cache = null;
 	static final Logger logger = LoggerFactory.getLogger(ClassMatchingPanel.class);
-	
+	/** Thread computing auto matches. Maybe replaced on a user interaction with another one.*/
 	Thread computer;
 	
 	public void close()
@@ -70,7 +70,9 @@ public class ClassMatchingPanel extends Panel
 			cache = null;
 		}
 	}
-	
+	/**
+	 * Sets Up the ContextHelp.
+	 */
 	protected void setupContextHelp()
 	{
 		ContextHelp contextHelp = new ContextHelp();
@@ -84,7 +86,7 @@ public class ClassMatchingPanel extends Panel
 		setContent(new VerticalLayout());
 		this.config=((SAIMApplication)getApplication()).getConfig();
 
-		// Buttons
+		// Buttons to call a new computation of suggestions
 		computeStringBased = new Button("String based");
 		computeLinkBased = new Button("Link based");
 		computeStringBased.addListener(new ComputeButtonClickListener(true));
@@ -160,7 +162,10 @@ public class ClassMatchingPanel extends Panel
 			refresher.addListener(listener);
 			addComponent(refresher);
 
-			
+			/*FIXME some what redundant code: we may enhance the ComputeClassMapping with 
+			 * caching mechanisms: need to memorize if the mapping is based on strings or 
+			 * the other algorithm
+			 */
 			computer = new Thread()
 			{
 				
@@ -202,7 +207,7 @@ public class ClassMatchingPanel extends Panel
 							cache.flush();							
 						}
 					}
-					anzeigen(classMatching);
+					display(classMatching);
 					progress.setEnabled(false);
 //					removeComponent(progress);
 //					listener.running=false;					
@@ -213,7 +218,11 @@ public class ClassMatchingPanel extends Panel
 		setupContextHelp();
 	}
 	
-	public synchronized void anzeigen(Mapping classMapping) {
+	/**
+	 * Method to display auto suggestions.
+	 * @param classMapping
+	 */
+	public synchronized void display(Mapping classMapping) {
 		suggestionLabel.setCaption(classMapping.size() + " matches found:");
 		logger.info("Show Match" + classMapping);
 		suggestionComboBox.removeListener(comboListener);
@@ -326,7 +335,7 @@ public class ClassMatchingPanel extends Panel
 				DefaultClassMapper classMapper = new DefaultClassMapper(10);
 				classMatching = classMapper.getEntityMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id).reverseSourceTarget();
 			}
-			anzeigen(classMatching);
+			display(classMatching);
 			progress.setEnabled(false);
 //			removeComponent(progress);
 //			listener.running=false;					
