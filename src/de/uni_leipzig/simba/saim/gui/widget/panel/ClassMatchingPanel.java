@@ -88,8 +88,8 @@ public class ClassMatchingPanel extends Panel
 		this.config=((SAIMApplication)getApplication()).getConfig();
 
 		// Buttons to call a new computation of suggestions
-		computeStringBased = new Button("String based");
-		computeLinkBased = new Button("Link based");
+		computeStringBased = new Button(messages.getString("ClassMatchingPanel.0")); //$NON-NLS-1$
+		computeLinkBased = new Button(messages.getString("ClassMatchingPanel.1")); //$NON-NLS-1$
 		computeStringBased.addListener(new ComputeButtonClickListener(true));
 		computeLinkBased.addListener(new ComputeButtonClickListener(false));
 		HorizontalLayout bLayout = new HorizontalLayout();
@@ -99,7 +99,7 @@ public class ClassMatchingPanel extends Panel
 		
 		final HorizontalLayout layout = new HorizontalLayout();
 		layout.setSpacing(false);
-		layout.setWidth("100%");	
+		layout.setWidth("100%");	 //$NON-NLS-1$
 		progress = new ProgressIndicator();
 		progress.setSizeUndefined();
 		suggestionLabel = new Label("");//messages.getString("suggestions"));		 //$NON-NLS-1$
@@ -128,8 +128,8 @@ public class ClassMatchingPanel extends Panel
 				targetClassForm.requestRepaint();
 			}
 		};
-		sourceClassForm = new ClassMatchingForm(messages.getString("ClassMatchingPanel.sourceclass"), config.getSource());
-		targetClassForm = new ClassMatchingForm(messages.getString("ClassMatchingPanel.targetclass"), config.getTarget());
+		sourceClassForm = new ClassMatchingForm(messages.getString("ClassMatchingPanel.sourceclass"), config.getSource()); //$NON-NLS-1$
+		targetClassForm = new ClassMatchingForm(messages.getString("ClassMatchingPanel.targetclass"), config.getTarget()); //$NON-NLS-1$
 
 		HorizontalLayout hori = new HorizontalLayout();
 		hori.setWidth("100%"); //$NON-NLS-1$
@@ -200,8 +200,8 @@ public class ClassMatchingPanel extends Panel
 	 */
 	public void display(Mapping classMapping) {
 		
-		suggestionLabel.setCaption(classMapping.map.size() + " matches found:");
-		logger.info("Show Match" + classMapping);
+		suggestionLabel.setCaption(classMapping.map.size() + messages.getString("ClassMatchingPanel.5")); //$NON-NLS-1$
+		logger.info("Show Match" + classMapping); //$NON-NLS-1$
 		suggestionComboBox.removeListener(comboListener);
 		suggestionComboBox.removeAllItems();
 		if(classMapping!=null && classMapping.map.size()>0) {
@@ -285,13 +285,13 @@ public class ClassMatchingPanel extends Panel
 			if(CACHING)
 			{	
 				if(cache == null) 
-					{cache = CacheManager.getInstance().getCache("classmatching");}
+					{cache = CacheManager.getInstance().getCache("classmatching");} //$NON-NLS-1$
 			
 				try {
 					if(cache.isKeyInCache(parameters)) {
 						classMapping = new Mapping();
 						classMapping.map = ((HashMap<String,HashMap<String,Double>>) cache.get(parameters).getValue());
-						logger.info("Class Mapping Cache hit: "+"loading map of size "+classMapping.map.size());
+						logger.info("Class Mapping Cache hit: "+"loading map of size "+classMapping.map.size()); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				}catch(Exception e){}
 			}			
@@ -306,11 +306,11 @@ public class ClassMatchingPanel extends Panel
 					classMapping = classMapper.getEntityMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id).reverseSourceTarget();
 				}
 				if(CACHING)	{
-					cache = CacheManager.getInstance().getCache("classmatching");
+					cache = CacheManager.getInstance().getCache("classmatching"); //$NON-NLS-1$
 					if(cache.getStatus()==net.sf.ehcache.Status.STATUS_UNINITIALISED)
 						{cache.initialise();}					
 //					List<Object> parameters = Arrays.asList(new Object[] {config.getSource().endpoint,config.getTarget().endpoint,config.getSource().id,config.getTarget().id});
-					logger.info("Cache saving class matching map of size " + classMapping.map.size());
+					logger.info("Cache saving class matching map of size " + classMapping.map.size()); //$NON-NLS-1$
 					cache.put(new Element(parameters, classMapping.map));
 					cache.flush();							
 				}
