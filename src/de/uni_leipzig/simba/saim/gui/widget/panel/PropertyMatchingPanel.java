@@ -1,6 +1,5 @@
 package de.uni_leipzig.simba.saim.gui.widget.panel;
 
-import java.awt.Checkbox;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -57,7 +56,7 @@ public class PropertyMatchingPanel extends Panel
 	private final ProgressIndicator progress = new ProgressIndicator();
 	private Label progressLabel;
 	private boolean listenerActive = true;
-	Checkbox simpleAlgorithm; 
+	Button simpleAlgorithm; 
 	// to display computed ones
 	HorizontalLayout selectionLayout = new HorizontalLayout();
 	ListSelect select;
@@ -88,6 +87,7 @@ public class PropertyMatchingPanel extends Panel
 		progress.setIndeterminate(true);
 		progressLayout.addComponent(progressLabel);
 		progressLayout.addComponent(progress);
+
 		propMapper.start();
 	}
 
