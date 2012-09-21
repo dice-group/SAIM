@@ -63,8 +63,7 @@ public class PropertyMatchingPanel extends Panel
 	Button useAll;
 	
 	
-	public PropertyMatchingPanel(final Messages messages)
-	{
+	public PropertyMatchingPanel(final Messages messages) {
 		this.messages=messages;
 		progressLabel = new Label(messages.getString("generatingpropertymatching"));	 //$NON-NLS-1$
 		mainLayout = new VerticalLayout();
@@ -115,6 +114,7 @@ public class PropertyMatchingPanel extends Panel
 //			PropertyMapper propMap = new PropertyMapper();
 			LabelBasedPropertyMapper propMap = new LabelBasedPropertyMapper();
 			return propMap.getPropertyMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().getClassOfendpoint(), config.getTarget().getClassOfendpoint());
+//			return new Mapping();
 		}
 		private Map<String, HashMap<String, Double>> mockPropertyMap()
 		{
@@ -266,7 +266,7 @@ public class PropertyMatchingPanel extends Panel
 					//			targetProperties.add(s_abr);
 					//		}
 					table.setWidth("100%"); //$NON-NLS-1$
-					addComponent(table);		
+					mainLayout.addComponent(table);		
 					closeImageResource = new ClassResource("img/no_crystal_clear_16.png",getApplication());		 //$NON-NLS-1$
 					/* Define the names and data types of columns.
 					 * The "default value" parameter is meaningless here. */		
@@ -330,6 +330,7 @@ public class PropertyMatchingPanel extends Panel
 	}
 
 	private void getAllProperties() {
+		logger.info("Started getAllProperties()");
 		sourceProperties = new LinkedList<String>();
 		targetProperties = new LinkedList<String>();
 		Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
@@ -362,7 +363,14 @@ public class PropertyMatchingPanel extends Panel
 				}
 			} catch(Exception e){logger.info("PropertyMapping cache exception:"+e.getMessage());} //$NON-NLS-1$
 			if(propListSource == null || propListSource.size()==0) {
-				propListSource = SPARQLHelper.properties(info.endpoint, info.graph, className);
+				logger.info("Have to query properties of source...");
+				try {
+					propListSource = SPARQLHelper.properties(info.endpoint, info.graph, className);
+				} catch(Exception e) {
+					propListSource = new LinkedList<String>();
+					getWindow().showNotification("Error while querying properties of endpoint: "+info.endpoint);
+				}
+				logger.info("Found these source properties...\n"+propListSource+"\n save them in cache...");
 				cache.put(new Element(parameters, propListSource));
 				cache.flush();	
 			}
@@ -378,10 +386,18 @@ public class PropertyMatchingPanel extends Panel
 				}
 			} catch(Exception e){logger.info("PropertyMapping cache exception:"+e.getMessage());} //$NON-NLS-1$
 			if(propListTarget == null || propListTarget.size()==0) {
-				propListTarget = SPARQLHelper.properties(info.endpoint, info.graph, className);
-				if(cache.getStatus()==net.sf.ehcache.Status.STATUS_UNINITIALISED) {cache.initialise();}					
-				cache.put(new Element(parameters, propListTarget));
-				cache.flush();	
+				try {
+					logger.info("Have to query properties of target...");
+					propListTarget = SPARQLHelper.properties(info.endpoint, info.graph, className);
+					logger.info("Found these target properties...\n"+propListTarget+"\n save them in cache...");
+					if(cache.getStatus()==net.sf.ehcache.Status.STATUS_UNINITIALISED) {cache.initialise();}					
+					cache.put(new Element(parameters, propListTarget));
+					cache.flush();
+				} catch(Exception e) {
+					e.printStackTrace();
+					propListTarget = new LinkedList<String>();
+					getWindow().showNotification("Error while querying properties of endpoint: "+info.endpoint);
+				}	
 			}
 
 		}
