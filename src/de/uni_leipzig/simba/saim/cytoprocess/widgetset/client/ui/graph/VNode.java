@@ -103,7 +103,7 @@ public class VNode {
 		Shape shape = null;
 		switch (nodeViewShape) {
 		case RECTANGLE:
-			shape = (Shape) vcytoprocess.rectangle(x, y, vs.nodeSize, vs.nodeSize);
+			shape = (Shape) vcytoprocess.rectangle(x, y, vs.nodeSize, vs.nodeSize/2);
 			break;
 		case DIAMOND:
 			shape = (Shape) vcytoprocess.diamond(x, y, vs.nodeSize, vs.nodeSize);
