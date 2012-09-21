@@ -288,6 +288,13 @@ public class VGraph {
 		vnode.shape.addMouseDownHandler(nh);
 		vnode.shape.addClickHandler(nh);
 		vnode.shape.addDoubleClickHandler(nh);
+		
+		vnode.label.addMouseUpHandler(nh);
+		vnode.label.addMouseMoveHandler(nh);
+		vnode.label.addMouseDownHandler(nh);
+		vnode.label.addClickHandler(nh);
+		vnode.label.addDoubleClickHandler(nh);
+
 	}
 
 	private VEdge createVEdge(final UIDL nodeChild, VNode src, VNode tar) {
@@ -471,8 +478,11 @@ class NodeHandler implements ContextListener, MouseDownHandler, MouseUpHandler,
 	@Override
 	public void onMouseMove(MouseMoveEvent event) {
 
-		if (vccytoprocess.isMousePressed()
-				&& vccytoprocess.mouseButton == ProcessingJs.LEFT) {
+		if ( 
+				vccytoprocess.getSelectedObject() == this &&
+				vccytoprocess.isMousePressed() && 
+				vccytoprocess.mouseButton == ProcessingJs.LEFT
+				) {
 
 			int x = event.getClientX();
 			int y = event.getClientY();
@@ -490,6 +500,7 @@ class NodeHandler implements ContextListener, MouseDownHandler, MouseUpHandler,
 	public void onMouseUp(MouseUpEvent event) {
 		moveX = 0;
 		moveY = 0;
+		vccytoprocess.setSelectedObject(null);
 	}
 
 	// MouseDownHandler
@@ -502,7 +513,7 @@ class NodeHandler implements ContextListener, MouseDownHandler, MouseUpHandler,
 		if (event.getNativeButton() == NativeEvent.BUTTON_LEFT) {
 			moveX = event.getClientX();
 			moveY = event.getClientY();
-
+			vccytoprocess.setSelectedObject(this);
 			vccytoprocess.vgraph.nodeBringToFront(vnodeid);
 		}
 	}

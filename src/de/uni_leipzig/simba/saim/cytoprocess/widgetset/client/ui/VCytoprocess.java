@@ -38,6 +38,8 @@ public class VCytoprocess extends VProcessingSVGextended {
 	public boolean LOG = false;
 	
 	private VVisualStyle vvisualStyle;
+	
+	private Object selectedObject = null;
 	/**	 
 	 * 
 	*/
@@ -167,6 +169,8 @@ public class VCytoprocess extends VProcessingSVGextended {
 		if(LOG)VConsole.log("mousePressed ...");
 		moveX = mouseX;
 		moveY = mouseY;
+		if(getSelectedObject() == null)
+			setSelectedObject(this);
 	}
 	
 	@Override
@@ -174,12 +178,13 @@ public class VCytoprocess extends VProcessingSVGextended {
 		if(LOG)VConsole.log("mouseReleased ...");
 		moveX = 0;
 		moveY = 0;
+		setSelectedObject(null);
 	}
 	
 	@Override
 	public void mouseMoved() {
 
-		if(mousePressed &&  mouseButton == ProcessingJs.LEFT){
+		if(getSelectedObject() == this && mousePressed &&  mouseButton == ProcessingJs.LEFT){
 			if(LOG)VConsole.log("mouse moved and mouse pressed ...");
 			
 			int x = mouseX;
@@ -214,6 +219,7 @@ public class VCytoprocess extends VProcessingSVGextended {
 		scaleUp();
 		vgraph.updateEdgePositions();
 	}
+	
 	public void scaleOut(){
 		scaleDown();
 		vgraph.updateEdgePositions();
@@ -233,33 +239,18 @@ public class VCytoprocess extends VProcessingSVGextended {
 		super.fitShapes((int)radius);
 		vgraph.updatePositions();
 	}
+	
 	/**
 	 * Override this. Called on key typing.
 	 */
 	public void keyTyped() {
-		switch(key){
-		
-//		case 'q': 
-//			rectangle(mouseX, mouseY, round(radius*2), round(radius*2));
-//			break;
-//			
-//		case 'w':
-//			circle(mouseX, mouseY,  round(radius));
-//			break;
-//			
-//		case 'e':
-//			diamond(mouseX, mouseY,  round(radius*2),round(radius*2));
-//			break;
-//			
-//		case 'r':
-//			hexagon(mouseX,mouseY, round(radius));
-//			break;	
-			
+		switch(key){		
 		case 'f' :
 			fitShapes();
 			break;
 		}
 	}
+	
 	/**
 	 * sends the client to delete the node
 	 * 
@@ -274,6 +265,7 @@ public class VCytoprocess extends VProcessingSVGextended {
 				true
 				);
 	}
+	
 	/**
 	 * sends the client to delete the edge
 	 * 
@@ -345,6 +337,14 @@ public class VCytoprocess extends VProcessingSVGextended {
 				new String[] {edgeid+"", x+"",y+""},
 				true
 				);
+	}
+	
+	public Object getSelectedObject(){
+		return selectedObject;
+	}
+	
+	public void setSelectedObject(Object selectedObject){
+		this.selectedObject = selectedObject;
 	}
 //	public void sendDone() {
 //		
