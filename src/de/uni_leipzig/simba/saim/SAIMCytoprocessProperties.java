@@ -13,7 +13,7 @@ import de.uni_leipzig.simba.saim.cytoprocess.CytoprocessProperties;
  */
 public class SAIMCytoprocessProperties {
 	
-	public final static String MEASURE_COLOR = "meansureColor";
+	public final static String MEASURE_COLOR = "measureColor";
 	public final static String OPERATOR_COLOR = "operatorColor";
 	public final static String SOURCE_COLOR = "sourceColor";
 	public final static String TARGET_COLOR = "targetColor";
