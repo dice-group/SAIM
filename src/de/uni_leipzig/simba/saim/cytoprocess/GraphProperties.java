@@ -16,6 +16,7 @@ import cytoscape.Cytoscape;
 import cytoscape.data.Semantics;
 import cytoscape.layout.CyLayoutAlgorithm;
 import cytoscape.view.CyNetworkView;
+import cytoscape.visual.VisualPropertyType;
 /**
  * 
  * @author rspeck
@@ -45,6 +46,46 @@ public class GraphProperties {
 	}
 	public void applyLayoutAlgorithm(final CyLayoutAlgorithm loAlgorithm) {
 		cyNetworkView.applyLayout(loAlgorithm);
+
+		// fit to view
+		int margin = 0;
+		Object o = Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().get(VisualPropertyType.NODE_SIZE);
+		if(o instanceof Double)
+			margin = ((Double)o).intValue()/2;
+		if(o instanceof Integer)
+			margin = ((Integer)o)/2;
+		
+		int maxX = Integer.MIN_VALUE, minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, maxY = Integer.MIN_VALUE;
+		
+		int[] ids = getCyNetwork().getNodeIndicesArray();
+		for(int id : ids){
+		
+			int x = Double.valueOf(getCyNetworkView().getNodeView(id).getXPosition()).intValue();
+			int y = Double.valueOf(getCyNetworkView().getNodeView(id).getYPosition()).intValue();
+
+			if (x > maxX)	maxX = x;
+			if (x < minX) 	minX = x;
+			if (y > maxY) 	maxY = y;
+			if (y < minY) 	minY = y;
+		}
+		int viewWidth  = maxX - minX;
+		int viewHeight = maxY - minY;	
+
+		for(int id : ids){
+			if(viewWidth > 0){
+				float d = Double.valueOf(getCyNetworkView().getNodeView(id).getXPosition()).intValue() - minX;
+				if(d == 0)
+					d = 0.1f;
+				getCyNetworkView().getNodeView(id).setXPosition(( d / viewWidth  * (width - 2 * margin)) + margin);
+			}
+
+			if(viewHeight > 0){
+				float d = Double.valueOf(getCyNetworkView().getNodeView(id).getYPosition()).intValue() - minY;
+				if(d == 0)
+					d = 0.1f;
+				getCyNetworkView().getNodeView(id).setYPosition(( d / viewHeight * (height - 2 * margin)) + margin);
+			}
+		}
 	}
 
 	/**
