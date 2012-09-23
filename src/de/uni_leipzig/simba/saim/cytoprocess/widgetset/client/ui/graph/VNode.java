@@ -33,6 +33,8 @@ public class VNode {
 	public Double value1 = null;
 	public Text label2 = null;
 	public Double value2 = null;
+	
+	private final boolean LOG = false;
 
 	/**
 	 */
@@ -53,7 +55,7 @@ public class VNode {
 	}
 
 	public void addValue1(VCytoprocess vcypro, String name, Double value) {
-		VConsole.log("VNode: addValue1");
+		if(LOG)VConsole.log("VNode: addValue1");
 
 		if (label1 == null) {
 
@@ -71,7 +73,7 @@ public class VNode {
 	}
 
 	public void addValue2(VCytoprocess vcypro, String name, Double value) {
-		VConsole.log("VNode: addValue2");
+		if(LOG)VConsole.log("VNode: addValue2");
 
 		if (label2 == null) {
 
