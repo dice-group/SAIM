@@ -5,7 +5,7 @@
 		<description>
 		Vaadin production mode</description>
 		<param-name>productionMode</param-name>
-		<param-value>true</param-value>
+		<param-value>false</param-value>
 	</context-param>
 	<servlet>
 		<servlet-name>SAIM</servlet-name>
@@ -15,6 +15,8 @@
 			Vaadin application class to start</description>
 			<param-name>application</param-name>
 			<param-value>de.uni_leipzig.simba.saim.SAIMApplication</param-value>
+			<!--<param-value>de.uni_leipzig.simba.saim.cytoprocess.TestApplication</param-value>-->
+			
 		</init-param>
 		<init-param>
 			<description>
