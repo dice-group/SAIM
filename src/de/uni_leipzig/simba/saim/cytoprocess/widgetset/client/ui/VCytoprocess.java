@@ -236,7 +236,7 @@ public class VCytoprocess extends VProcessingSVGextended {
 
 	@Override
 	public void fitShapes(){
-		super.fitShapes((int)radius);
+		super.fitShapes((int)radius/2);
 		vgraph.updatePositions();
 	}
 	
@@ -346,14 +346,14 @@ public class VCytoprocess extends VProcessingSVGextended {
 	public void setSelectedObject(Object selectedObject){
 		this.selectedObject = selectedObject;
 	}
-//	public void sendDone() {
-//		
-//		applicationConnection.updateVariable(
-//				uidl_id,
-//				"sendDone", 
-//				"",
-//				true
-//				);
-//	}
+	public void requestDone() {
+		
+		applicationConnection.updateVariable(
+				uidl_id,
+				"requestDone", 
+				"",
+				true
+				);
+	}
 	
 }

@@ -1,6 +1,11 @@
 package de.uni_leipzig.simba.saim.cytoprocess;
 
+
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+
 
 import org.apache.log4j.Logger;
 import org.vaadin.contrib.component.svg.processing.Processing;
@@ -29,11 +34,8 @@ public class Cytoprocess extends Processing {
 	public enum GraphOperation {
 		REPAINT, 
 		ADD_EDGE,
-		DELETE_NODE,
 		REFRESH_NODE_POSTIONS,
-		DELETE_EDGE,
 		UPDATE_NODE, 
-	//	UPDATE_EDGE,
 		FIT_TO_VIEW, // is used as operation on client side
 		ZOOMIN,
 		ZOOMOUT,
@@ -44,6 +46,9 @@ public class Cytoprocess extends Processing {
 	protected GraphOperation currentGraphOperation = GraphOperation.NOTHING;
 	protected final GraphProperties graphProperties;
 	protected final PaintController paintController = new PaintController();
+	
+	protected final Map<String,Set<Integer>> operationMap = new HashMap<String,Set<Integer>>();
+	
 	
 	/**
 	 * 
@@ -59,6 +64,9 @@ public class Cytoprocess extends Processing {
 		graphProperties.setWidth(width);
 		graphProperties.setHeight(height);
 		
+		operationMap.put("deleteNodes" , new HashSet<Integer>());
+		operationMap.put("deleteEdges" , new HashSet<Integer>());
+		
 	}
 
 	@Override
@@ -73,7 +81,7 @@ public class Cytoprocess extends Processing {
 		case REPAINT:
 			if(LOGGER.isDebugEnabled())LOGGER.debug("REPAINT ...");
 			
-			paintController.repaint(target, graphProperties);
+			paintController.repaint(target, graphProperties,operationMap);
 			break;
 			
 		case ADD_EDGE:
@@ -82,24 +90,12 @@ public class Cytoprocess extends Processing {
 			paintController.addEdge(target, graphProperties);
 			break;
 		
-		case DELETE_NODE:
-			if(LOGGER.isDebugEnabled())LOGGER.debug("DELETE_NODE ...");
-			
-			paintController.deleteNode(target, graphProperties);
-			break;
-		
 		case REFRESH_NODE_POSTIONS:
 			if(LOGGER.isDebugEnabled())LOGGER.debug("REFRESH_NODE_POSTIONS ...");
 			
 			paintController.refreshNodePositions(target, graphProperties);
 			break;
 		
-		case DELETE_EDGE:
-			if(LOGGER.isDebugEnabled())LOGGER.debug("DELETE_EDGE ...");
-			
-			paintController.deleteEdge(target, graphProperties);
-			break;
-			
 		case UPDATE_NODE:
 			if(LOGGER.isDebugEnabled())LOGGER.debug("UPDATE_NODE ...");
 			
@@ -110,6 +106,7 @@ public class Cytoprocess extends Processing {
 		target.endTag("cytoprocess");
 	}
 
+	// Handles client requests
 	@Override
 	public void changeVariables(final Object source, final Map<String, Object> variables) {
 		super.changeVariables(source, variables);
@@ -171,19 +168,15 @@ public class Cytoprocess extends Processing {
 			//graphProperties.idsToUpdate.add(id);
 			//edgeDoubleClick(id+"",x,y);
 		}
+		if (variables.containsKey("requestDone")) 
+			currentGraphOperation = GraphOperation.NOTHING;
 	}
 
 	public void deleteEdge(int id){
-		graphProperties.idsToUpdate.clear();
-		graphProperties.idsToUpdate.add(id);
-		currentGraphOperation = GraphOperation.DELETE_EDGE;
-		requestRepaint();
+		operationMap.get("deleteEdges").add(id);
 	}
 	public void deleteNode(int id){
-		graphProperties.idsToUpdate.clear();
-		graphProperties.idsToUpdate.add(id);
-		currentGraphOperation = GraphOperation.DELETE_NODE;
-		requestRepaint();
+		operationMap.get("deleteNodes").add(id);
 	}
 	
 	/** delegate to GraphProperties.addNode(...) **/
@@ -216,6 +209,9 @@ public class Cytoprocess extends Processing {
 //	public void cleanGraph(){
 //		// TODO
 //	}
+	public void applyLayoutAlgorithm(final CyLayoutAlgorithm loAlgorithm) {
+		applyLayoutAlgorithm(loAlgorithm,false);
+	}
 	
 	public void applyLayoutAlgorithm(final CyLayoutAlgorithm loAlgorithm,boolean update) {
 		graphProperties.applyLayoutAlgorithm(loAlgorithm);

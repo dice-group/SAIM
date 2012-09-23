@@ -122,6 +122,11 @@ public class SAIMCytoprocess extends Cytoprocess {
 				LOGGER.error("Node to remove not found!");
 			
 			super.deleteEdge(id);
+			
+			if(nodeA instanceof Operator)
+				setOperatorEdgeLabels(Integer.valueOf(edge.getSource().getRootGraphIndex()));
+			
+			repaintGraph();
 		}
 	}
 	/**
@@ -150,6 +155,7 @@ public class SAIMCytoprocess extends Cytoprocess {
 			
 			super.deleteNode(id);
 			
+			repaintGraph();
 		}else
 			if(LOGGER.isDebugEnabled())LOGGER.debug("node not found!");
 	}
@@ -433,41 +439,35 @@ public class SAIMCytoprocess extends Cytoprocess {
 		return label;
 	}
 
-	//TODO
 	public void setOperatorEdgeLabels(Integer operatorID){
 		
 		if(operatorID == null) return;
 		if(LOGGER.isDebugEnabled())LOGGER.debug("setOperatorEdgeLabels ...");
+		
 		Node n = nodeMap.get(operatorID);
 		if(n != null && n instanceof Operator){
 			
 			Operator operator = (Operator)n;
 			giny.model.Node ginyOperator = graphProperties.getNode(operatorID);
-
-			// TODO! 
-			if(operator.getChilds().size() == 2){
+			if(operator.getChilds().size() > 0){
+				
 				Node childA = operator.getChilds().get(0);			
-				Node childB = operator.getChilds().get(1);
-				
-				if(LOGGER.isDebugEnabled())LOGGER.debug("operator: " + operator.id);
-				if(LOGGER.isDebugEnabled())LOGGER.debug("childA: " + childA.id);
-				if(LOGGER.isDebugEnabled())LOGGER.debug("childB: " + childB.id);
-				
-
 				Integer childAID = getIDtoNode(childA);
-				Integer childBID = getIDtoNode(childB);
-
 				giny.model.Node ginyChildA = graphProperties.getNode(childAID);
-				giny.model.Node ginyChildB = graphProperties.getNode(childBID);
-				
 				//int[] edgeids = graphProperties.getCyNetwork().getAdjacentEdgeIndicesArray(operatorID, false, false, true);
-				
 				@SuppressWarnings("unchecked")
 				List<giny.model.Edge> edgeListA = graphProperties.getCyNetwork().edgesList(ginyOperator, ginyChildA);
+				Cytoscape.getEdgeAttributes().setAttribute(String.valueOf(edgeListA.get(0).getRootGraphIndex()), "label", String.valueOf(operator.param1));
+			}
+			
+			if(operator.getChilds().size() == 2){
+				
+				Node childB = operator.getChilds().get(1);
+				Integer childBID = getIDtoNode(childB);
+				giny.model.Node ginyChildB = graphProperties.getNode(childBID);
+				//int[] edgeids = graphProperties.getCyNetwork().getAdjacentEdgeIndicesArray(operatorID, false, false, true);
 				@SuppressWarnings("unchecked")
 				List<giny.model.Edge> edgeListB = graphProperties.getCyNetwork().edgesList(ginyOperator, ginyChildB);
-			
-				Cytoscape.getEdgeAttributes().setAttribute(String.valueOf(edgeListA.get(0).getRootGraphIndex()), "label", String.valueOf(operator.param1));
 				Cytoscape.getEdgeAttributes().setAttribute(String.valueOf(edgeListB.get(0).getRootGraphIndex()), "label", String.valueOf(operator.param2));
 			}
 		}

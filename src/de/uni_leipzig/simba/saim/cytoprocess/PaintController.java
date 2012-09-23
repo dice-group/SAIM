@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -42,27 +43,6 @@ public class PaintController {
 		target.endTag("updateNode");		
 	}
 
-	public void deleteEdge(final PaintTarget target, GraphProperties graphProperties) throws PaintException{
-		int id = graphProperties.idsToUpdate.get(0);
-		graphProperties.idsToUpdate.remove(0);
-		
-		target.startTag("deleteEdge");
-		boolean removed = graphProperties.getCyNetwork().removeEdge(id, true);
-		
-		target.addAttribute("edgeID", id);
-		target.addAttribute("edgeRemoved", removed);
-		
-		target.endTag("deleteEdge");
-	}
-	
-//	/**
-//	 * addNode
-//	 */
-//	public void addNode(final PaintTarget target, GraphProperties graphProperties) throws PaintException{
-//		target.startTag("node");
-//		addNode(target, graphProperties,Integer.parseInt(edgeSource.getIdentifier()));
-//		target.endTag("node");
-//	}
 	/**
 	 * refreshNodePositions
 	 */
@@ -77,28 +57,6 @@ public class PaintController {
 			target.endTag("node");
 		}
 		target.endTag("refreshNodePositions");
-	}
-	
-	/**
-	 * deletes the node in idsToUpdate and all edges
-	 */
-	public void deleteNode(final PaintTarget target, GraphProperties graphProperties) throws PaintException{
-		int id = graphProperties.idsToUpdate.get(0);
-		graphProperties.idsToUpdate.remove(0);
-				
-		int[] edges = graphProperties.getCyNetwork().getAdjacentEdgeIndicesArray(id, true, true, true);		
-		boolean removed = graphProperties.getCyNetwork().removeNode(id, true);
-		
-		List<String> sEdges = new ArrayList<String>();
-		for(int i = 0; i < edges.length; sEdges.add(String.valueOf(edges[i++])));
-		for(int i = 0; i < edges.length && removed; graphProperties.getCyNetwork().removeEdge(edges[i++], true));
-			
-		target.startTag("deleteNode");
-		target.addAttribute("nodeID", id);
-		target.addAttribute("removed", removed);
-		if(removed && edges.length > 0)
-			target.addAttribute("edges", sEdges.toString());
-		target.endTag("deleteNode");
 	}
 	
 	public void addEdge(final PaintTarget target, GraphProperties graphProperties) throws PaintException{
@@ -120,7 +78,7 @@ public class PaintController {
 		
 	}
 
-	public void repaint(final PaintTarget target, GraphProperties graphProperties) throws PaintException{
+	public void repaint(final PaintTarget target, GraphProperties graphProperties,Map<String,Set<Integer>> operationMap) throws PaintException{
 		if(LOGGER.isDebugEnabled()) LOGGER.debug("repaintGraph...");
 		
 		final Color EDGE_COLOR        = (Color) getEdgeAppearance(VisualPropertyType.EDGE_COLOR);
@@ -139,7 +97,7 @@ public class PaintController {
 		final Color DefaultNodeSelectionColor = Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().getDefaultNodeSelectionColor();
 		final Color DefaultEdgeSelectionColor = Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().getDefaultEdgeSelectionColor();
 		final float EDGE_LABEL_OPACITY        = Float.valueOf(String.valueOf(getEdgeAppearance(VisualPropertyType.EDGE_LABEL_OPACITY)));
-		final int   EDGE_LINE_WIDTH           = Integer.valueOf(String.valueOf(getEdgeAppearance(VisualPropertyType.EDGE_LINE_WIDTH)));
+		final int   EDGE_LINE_WIDTH           = Double.valueOf(String.valueOf(getEdgeAppearance(VisualPropertyType.EDGE_LINE_WIDTH))).intValue();
 		
 		// settings
 		target.startTag("settings");
@@ -208,6 +166,39 @@ public class PaintController {
 				target.endTag("node");
 			}
 		}
+		
+		// delete Node
+		Set<Integer> deleteNodes = operationMap.get("deleteNodes");
+		for(int id : deleteNodes){		
+			int[] edges = graphProperties.getCyNetwork().getAdjacentEdgeIndicesArray(id, true, true, true);		
+			boolean removed = graphProperties.getCyNetwork().removeNode(id, true);
+			
+			List<String> sEdges = new ArrayList<String>();
+			for(int i = 0; i < edges.length; sEdges.add(String.valueOf(edges[i++])));
+			for(int i = 0; i < edges.length && removed; graphProperties.getCyNetwork().removeEdge(edges[i++], true));
+				
+			target.startTag("deleteNode");
+			target.addAttribute("nodeID", id);
+			target.addAttribute("removed", removed);
+			if(removed && edges.length > 0)
+				target.addAttribute("edges", sEdges.toString());
+			target.endTag("deleteNode");
+			}
+		deleteNodes.clear();
+		
+		// delete Edge
+		Set<Integer> deleteEdges = operationMap.get("deleteEdges");
+		for(int id : deleteEdges){		
+		
+			target.startTag("deleteEdge");
+			boolean removed = graphProperties.getCyNetwork().removeEdge(id, true);
+			
+			target.addAttribute("edgeID", id);
+			target.addAttribute("edgeRemoved", removed);
+			
+			target.endTag("deleteEdge");
+		}
+		deleteEdges.clear();		
 	}
 	
 

@@ -107,6 +107,9 @@ public class VGraph {
 		}
 		if (LOG)
 			VConsole.log("parseUIDLtoUpdateNode done. ");
+		
+		
+		vcytoprocess.requestDone();
 	}
 
 	/** delete edge */
@@ -127,6 +130,8 @@ public class VGraph {
 		}
 		if (LOG)
 			VConsole.log("parseUIDLtoDeleteEdge done. ");
+		
+		
 	}
 
 	/** refresh node positions */
@@ -169,6 +174,7 @@ public class VGraph {
 
 		if (LOG)
 			VConsole.log("parseUIDLtoRefreshNodePositions done.");
+		vcytoprocess.requestDone();
 	}
 
 	/**
@@ -200,6 +206,7 @@ public class VGraph {
 		}
 		if (LOG)
 			VConsole.log("parseUIDLtoDeleteNode done.");
+		
 	}
 
 	/** adds an edge */
@@ -226,6 +233,7 @@ public class VGraph {
 		}
 		if (LOG)
 			VConsole.log("parseUIDLtoEdge done.");
+		vcytoprocess.requestDone();
 	}
 
 	/** parse whole graph */
@@ -264,10 +272,14 @@ public class VGraph {
 					VConsole.log("parseUIDL node ...");
 				createVNode(cytoChild);
 			}
+						
 		}
+		
+		this.parseUIDLtoDeleteNode(child);
+		this.parseUIDLtoDeleteEdge(child);
 		if (LOG)
 			VConsole.log("parseUIDL done.");
-
+		vcytoprocess.requestDone();
 	}
 
 	// private
@@ -277,6 +289,9 @@ public class VGraph {
 		EdgeHandler eh = new EdgeHandler(vcytoprocess, vedge.id);
 		vedge.line.addMouseDownHandler(eh);
 		vedge.line.addDoubleClickHandler(eh);
+		
+		vedge.label.addMouseDownHandler(eh);
+		vedge.label.addDoubleClickHandler(eh);
 	}
 
 	private void addNode(VNode vnode) {
@@ -294,7 +309,6 @@ public class VGraph {
 		vnode.label.addMouseDownHandler(nh);
 		vnode.label.addClickHandler(nh);
 		vnode.label.addDoubleClickHandler(nh);
-
 	}
 
 	private VEdge createVEdge(final UIDL nodeChild, VNode src, VNode tar) {
