@@ -1,6 +1,5 @@
 package de.uni_leipzig.simba.saim.gui.widget.Listener;
 
-import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 
@@ -11,7 +10,12 @@ import de.uni_leipzig.simba.saim.gui.widget.panel.selfconfiguration.GenericSelfC
 /**Listener for SelfConfig button.*/
 public class SelfConfigClickListener extends MetricPanelListeners implements Button.ClickListener
 {		
-	public SelfConfigClickListener(SAIMApplication application, final Messages messages) {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public SelfConfigClickListener(SAIMApplication application, Messages messages) {
 		super(application, messages);
 	}
 
