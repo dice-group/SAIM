@@ -437,16 +437,28 @@ public class PropertyMatchingPanel extends Panel
 		}
 	}
 
-
-
+	//TODO quick fix to support multiple computations
+	UseComputedClickListener useComputedListener;
+	Property.ValueChangeListener selectListener = new Property.ValueChangeListener() {			
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				ClassMatchItem item = (ClassMatchItem) select.getValue();
+				addSingleMatchToTable(item.getSourceClass(), item.getTargetClass());
+			}
+		};
 	/**
 	 * Show computed Property mapping in select, activate Button to use them all.
 	 * @param map
 	 */
 	private synchronized void displayPropertyMapping(Map<String, HashMap<String, Double>> map)
 	{
+		
 		logger.info("Displaying property Mapping"); //$NON-NLS-1$
-		useAll.addListener(new UseComputedClickListener(map));
+		select.removeListener(selectListener);
+		useAll.removeListener(useComputedListener);
+		select.removeAllItems();
+		useComputedListener = new UseComputedClickListener(map);
+		useAll.addListener(useComputedListener);
 		if(map.size()>0)
 			useAll.setEnabled(true);
 		for(String key : map.keySet()) {
@@ -457,15 +469,8 @@ public class PropertyMatchingPanel extends Panel
 			}
 		}
 		select.setImmediate(true);
-		select.setNullSelectionAllowed(false);
-
-		select.addListener(new Property.ValueChangeListener() {			
-			@Override
-			public void valueChange(ValueChangeEvent event) {
-				ClassMatchItem item = (ClassMatchItem) select.getValue();
-				addSingleMatchToTable(item.getSourceClass(), item.getTargetClass());
-			}
-		});
+		select.setNullSelectionAllowed(false);		
+		select.addListener(selectListener);
 	}
 
 	/**
@@ -583,7 +588,7 @@ public class PropertyMatchingPanel extends Panel
 			progress.setEnabled(true);
 			progress.setVisible(true);
 			progressLabel.setVisible(true);
-			
+		
 			Map<String,HashMap<String,Double>> map = performAutomaticPropertyMapping().map;
 			
 			displayPropertyMapping(map);
@@ -604,6 +609,19 @@ public class PropertyMatchingPanel extends Panel
 		 */
 		private Mapping performAutomaticPropertyMapping() {
 			Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
+			List<Object> parameters = Arrays.asList(new Object[] {config.getSource().endpoint, config.getTarget().endpoint, 
+					config.getSource().getClassOfendpoint(), config.getTarget().getClassOfendpoint(), stringBased});
+			Cache mappingCache = null;
+			if(CACHING) {
+				mappingCache = CacheManager.getInstance().getCache("automaticpropertymapping"); //$NON-NLS-1$
+				//			if(mappingCache.getStatus()==net.sf.ehcache.Status.STATUS_UNINITIALISED) {mappingCache.initialise();}					
+				if(mappingCache.isKeyInCache(parameters))
+				{		
+					logger.info("Property Mapping Cache hit"); //$NON-NLS-1$
+					return (Mapping) mappingCache.get(parameters).getValue();
+				}
+			}
+			
 			PropertyMapper propMap;
 			if(stringBased) {
 				logger.info("Starting string based PropertyMapper");
@@ -612,7 +630,15 @@ public class PropertyMatchingPanel extends Panel
 				logger.info("Starting default PropertyMapper");
 				propMap = new DefaultPropertyMapper();
 			}
-			return propMap.getPropertyMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().getClassOfendpoint(), config.getTarget().getClassOfendpoint());		
+			Mapping m = propMap.getPropertyMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().getClassOfendpoint(), config.getTarget().getClassOfendpoint());
+			if(CACHING) {
+				mappingCache = CacheManager.getInstance().getCache("automaticpropertymapping"); //$NON-NLS-1$
+				if(mappingCache.getStatus()==net.sf.ehcache.Status.STATUS_UNINITIALISED) {mappingCache.initialise();}
+				logger.info("Saving automatic computed Property mapping to cache...");
+				mappingCache.put(new Element(parameters, m));
+				mappingCache.flush();
+			}
+			return m;
 		}
 	}
 	

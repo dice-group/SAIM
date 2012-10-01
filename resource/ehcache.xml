@@ -16,6 +16,11 @@
 		eternal="true"
         maxElementsInMemory="1000">
 </cache>
+<cache name="automaticpropertymapping"
+ diskPersistent="true"
+		eternal="true"
+        maxElementsInMemory="1000">
+</cache>
 <!-- 
 <cache name="metric"
  diskPersistent="true"
