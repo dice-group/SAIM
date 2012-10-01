@@ -32,6 +32,7 @@ import de.konrad.commons.sparql.PrefixHelper;
 import de.konrad.commons.sparql.SPARQLHelper;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.io.KBInfo;
+import de.uni_leipzig.simba.learning.query.DefaultPropertyMapper;
 import de.uni_leipzig.simba.learning.query.LabelBasedPropertyMapper;
 import de.uni_leipzig.simba.learning.query.PropertyMapper;
 import de.uni_leipzig.simba.saim.Messages;
@@ -57,6 +58,10 @@ public class PropertyMatchingPanel extends Panel
 	private Label progressLabel;
 	private boolean listenerActive = true;
 	Button simpleAlgorithm; 
+	// to perform automatic mappings
+	Thread propMapper;
+	Button computeStringBasedMapping;
+	Button computeDefaultPropertyMapping;
 	// to display computed ones
 	HorizontalLayout selectionLayout = new HorizontalLayout();
 	ListSelect select;
@@ -75,6 +80,15 @@ public class PropertyMatchingPanel extends Panel
 		useAll.setEnabled(false);
 		mainLayout.addComponent(selectionLayout);
 		
+		// Buttons to control property mapping
+		computeStringBasedMapping = new Button("Compute String Based PropertyMapping");
+		computeDefaultPropertyMapping = new Button("Compute Default PropertyMapping");
+		computeStringBasedMapping.addListener(new ControlPropertyMappingListener(true));
+		computeDefaultPropertyMapping.addListener(new ControlPropertyMappingListener(false));
+		HorizontalLayout buttonLayout = new HorizontalLayout();
+		buttonLayout.addComponent(computeStringBasedMapping);
+		buttonLayout.addComponent(computeDefaultPropertyMapping);
+		mainLayout.addComponent(buttonLayout);
 		
 		setContent(mainLayout);
 		getContent().setWidth("100%"); //$NON-NLS-1$
@@ -87,44 +101,45 @@ public class PropertyMatchingPanel extends Panel
 		progressLayout.addComponent(progressLabel);
 		progressLayout.addComponent(progress);
 
+		propMapper = new PropertyMappingThread(true);
 		propMapper.start();
 	}
 
 	Cache cache = null;
-
-	Thread propMapper = new Thread()
-	{
-		@Override
-		public void run()
-		{
-			progress.setVisible(true);
-			progressLabel.setVisible(true);
-			Map<String,HashMap<String,Double>> map = performAutomaticPropertyMapping().map;
-			//			try{Thread.sleep(4000);} catch (InterruptedException e) {e.printStackTrace();}
-			//			Map<String,HashMap<String,Double>> map = mockPropertyMap();
-			displayPropertyMapping(map);
-			progress.setVisible(false);
-			progressLabel.setVisible(false);
-		}
-		/**
-		 * Method tries to getpropertyMapping
-		 */
-		private Mapping performAutomaticPropertyMapping() {
-			Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
-//			PropertyMapper propMap = new PropertyMapper();
-			LabelBasedPropertyMapper propMap = new LabelBasedPropertyMapper();
-			return propMap.getPropertyMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().getClassOfendpoint(), config.getTarget().getClassOfendpoint());
-//			return new Mapping();
-		}
-		private Map<String, HashMap<String, Double>> mockPropertyMap()
-		{
-			Map<String, HashMap<String, Double>> map = new HashMap<String, HashMap<String, Double>>();
-			HashMap<String,Double> value = new HashMap<String,Double>();
-			value.put("rdfs:label",0.337); //$NON-NLS-1$
-			map.put("rdfs:label",value); //$NON-NLS-1$
-			return map;
-		}
-	};
+	
+//	Thread propMapper = new Thread()
+//	{
+//		@Override
+//		public void run()
+//		{
+//			progress.setVisible(true);
+//			progressLabel.setVisible(true);
+//			Map<String,HashMap<String,Double>> map = performAutomaticPropertyMapping().map;
+//			//			try{Thread.sleep(4000);} catch (InterruptedException e) {e.printStackTrace();}
+//			//			Map<String,HashMap<String,Double>> map = mockPropertyMap();
+//			displayPropertyMapping(map);
+//			progress.setVisible(false);
+//			progressLabel.setVisible(false);
+//		}
+//		/**
+//		 * Method tries to getpropertyMapping
+//		 */
+//		private Mapping performAutomaticPropertyMapping() {
+//			Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
+////			PropertyMapper propMap = new PropertyMapper();
+//			LabelBasedPropertyMapper propMap = new LabelBasedPropertyMapper();
+//			return propMap.getPropertyMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().getClassOfendpoint(), config.getTarget().getClassOfendpoint());
+////			return new Mapping();
+//		}
+//		private Map<String, HashMap<String, Double>> mockPropertyMap()
+//		{
+//			Map<String, HashMap<String, Double>> map = new HashMap<String, HashMap<String, Double>>();
+//			HashMap<String,Double> value = new HashMap<String,Double>();
+//			value.put("rdfs:label",0.337); //$NON-NLS-1$
+//			map.put("rdfs:label",value); //$NON-NLS-1$
+//			return map;
+//		}
+//	};
 
 	private Object columnValue(Object o)
 	{
@@ -428,7 +443,7 @@ public class PropertyMatchingPanel extends Panel
 	 * Show computed Property mapping in select, activate Button to use them all.
 	 * @param map
 	 */
-	private void displayPropertyMapping(Map<String, HashMap<String, Double>> map)
+	private synchronized void displayPropertyMapping(Map<String, HashMap<String, Double>> map)
 	{
 		logger.info("Displaying property Mapping"); //$NON-NLS-1$
 		useAll.addListener(new UseComputedClickListener(map));
@@ -517,6 +532,87 @@ public class PropertyMatchingPanel extends Panel
 		@Override
 		public void buttonClick(ClickEvent event) {
 			addMapToTable(propertyMap);		
+		}
+	}
+	
+	/**
+	 * React on Button clicks to compute automatic property mapping, either string based or with the default mechanism.
+	 * @author Lyko
+	 *
+	 */
+	class ControlPropertyMappingListener implements Button.ClickListener {
+		boolean stringBased = true;
+		public ControlPropertyMappingListener(boolean stringBased) {
+			this.stringBased = stringBased;
+		}
+		@Override
+		public void buttonClick(ClickEvent event) {
+			if(propMapper != null) {
+				propMapper.stop();
+			}
+			propMapper = new PropertyMappingThread(stringBased);
+			propMapper.start();
+		}
+		
+	}
+	
+	/**
+	 * Thread that performs automatic property mappings.
+	 * @author Lyko
+	 *
+	 */
+	class PropertyMappingThread extends Thread {
+		
+		boolean stringBased = true;
+		
+		public PropertyMappingThread(boolean stringBased) {
+			this.stringBased = stringBased;
+		}
+		
+		@Override
+		public void run()
+		{
+			//disable button
+			if(stringBased) {
+				computeStringBasedMapping.setEnabled(false);
+				computeDefaultPropertyMapping.setEnabled(true);
+			} else {
+				computeDefaultPropertyMapping.setEnabled(false);
+				computeStringBasedMapping.setEnabled(true);
+			}
+			progress.setEnabled(true);
+			progress.setVisible(true);
+			progressLabel.setVisible(true);
+			
+			Map<String,HashMap<String,Double>> map = performAutomaticPropertyMapping().map;
+			
+			displayPropertyMapping(map);
+			{
+			progress.setEnabled(false);
+			progress.setVisible(false);
+			progressLabel.setVisible(false);
+			}
+			//enable button
+			if(stringBased) {
+				computeStringBasedMapping.setEnabled(true);
+			} else {
+				computeDefaultPropertyMapping.setEnabled(true);
+			}
+		}
+		/**
+		 * Method tries to getpropertyMapping
+		 */
+		private Mapping performAutomaticPropertyMapping() {
+			Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
+			PropertyMapper propMap;
+			if(stringBased) {
+				logger.info("Starting string based PropertyMapper");
+				propMap = new LabelBasedPropertyMapper();				
+			} else {
+				logger.info("Starting default PropertyMapper");
+				propMap = new DefaultPropertyMapper();
+			}
+			return propMap.getPropertyMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().getClassOfendpoint(), config.getTarget().getClassOfendpoint());		
 		}
 	}
 	
