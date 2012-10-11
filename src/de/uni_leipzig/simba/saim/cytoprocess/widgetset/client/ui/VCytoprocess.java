@@ -185,14 +185,26 @@ public class VCytoprocess extends VProcessingSVGextended {
 	public void mouseMoved() {
 
 		if(getSelectedObject() == this && mousePressed &&  mouseButton == ProcessingJs.LEFT){
-			if(LOG)VConsole.log("mouse moved and mouse pressed ...");
 			
 			int x = mouseX;
 			int y = mouseY;
+			
 			move(moveX - x, moveY - y);
+			
 			moveX = x;
 			moveY = y;
 		}	
+		else if(getSelectedObject() instanceof Integer && mousePressed &&  mouseButton == ProcessingJs.LEFT){
+			
+			int id = Integer.valueOf(String.valueOf(getSelectedObject()));
+			int x = mouseX;
+			int y = mouseY;
+			
+			vgraph.moveNode(
+					id, 
+					vgraph.nodes.get(id).getX() - x, 
+					vgraph.nodes.get(id).getY() - y);
+		}
 	}
 
 	@Override
@@ -346,6 +358,7 @@ public class VCytoprocess extends VProcessingSVGextended {
 	public void setSelectedObject(Object selectedObject){
 		this.selectedObject = selectedObject;
 	}
+	
 	public void requestDone() {
 		
 		applicationConnection.updateVariable(
@@ -355,5 +368,4 @@ public class VCytoprocess extends VProcessingSVGextended {
 				true
 				);
 	}
-	
 }

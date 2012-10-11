@@ -34,7 +34,7 @@ public class VGraph {
 	/* id to edge */
 	private Map<Integer, VEdge> edges = new HashMap<Integer, VEdge>();
 	/* id to node */
-	private Map<Integer, VNode> nodes = new HashMap<Integer, VNode>();
+	public Map<Integer, VNode> nodes = new HashMap<Integer, VNode>();
 	public boolean LOG = false;
 
 	/**
@@ -378,15 +378,21 @@ public class VGraph {
 		if (LOG)
 			VConsole.log("updateNodeValues ...");
 
-		if (nodeChild.hasAttribute("label1")
-				&& nodeChild.hasAttribute("value1"))
-			node.addValue1(vcytoprocess,
+		if (
+				nodeChild.hasAttribute("label1")&& 
+				nodeChild.hasAttribute("value1")
+				)			
+			node.addValue1(
+					vcytoprocess,
 					nodeChild.getStringAttribute("label1"),
 					nodeChild.getDoubleAttribute("value1"));
 
-		if (nodeChild.hasAttribute("label2")
-				&& nodeChild.hasAttribute("value2"))
-			node.addValue2(vcytoprocess,
+		if (
+				nodeChild.hasAttribute("label2") &&
+				nodeChild.hasAttribute("value2")
+				)
+			node.addValue2(
+					vcytoprocess,
 					nodeChild.getStringAttribute("label2"),
 					nodeChild.getDoubleAttribute("value2"));
 
@@ -493,7 +499,8 @@ class NodeHandler implements ContextListener, MouseDownHandler, MouseUpHandler,
 	public void onMouseMove(MouseMoveEvent event) {
 
 		if ( 
-				vccytoprocess.getSelectedObject() == this &&
+				vccytoprocess.getSelectedObject() != null &&
+				Integer.valueOf(String.valueOf(vccytoprocess.getSelectedObject())) == vnodeid &&
 				vccytoprocess.isMousePressed() && 
 				vccytoprocess.mouseButton == ProcessingJs.LEFT
 				) {
@@ -527,7 +534,7 @@ class NodeHandler implements ContextListener, MouseDownHandler, MouseUpHandler,
 		if (event.getNativeButton() == NativeEvent.BUTTON_LEFT) {
 			moveX = event.getClientX();
 			moveY = event.getClientY();
-			vccytoprocess.setSelectedObject(this);
+			vccytoprocess.setSelectedObject(vnodeid);
 			vccytoprocess.vgraph.nodeBringToFront(vnodeid);
 		}
 	}
