@@ -145,10 +145,13 @@ public class SAIMCytoprocess extends Cytoprocess {
 		
 		Node n = nodeMap.remove(id);
 		
-		if(n != null){			
+		if(n != null){		
 			for(Node node : nodeMap.values())
-				if(node.getChilds().contains(n))
-					node.removeChild(n);
+				for(Node child : node.getChilds())
+					if(child.hashCode() == n.hashCode()){
+						node.removeChild(child);
+						break;
+					}
 	
 			while(n.getChilds().size()>0)
 				n.removeChild(n.getChilds().get(0));
@@ -488,13 +491,13 @@ public class SAIMCytoprocess extends Cytoprocess {
 	}
 	
 	public void setOperatorValues(int nodeid, Double value1, Double value2){
-		String label1 = messages.getString("Cytographer.modalWindowTextField1LabelOperator");
-		String label2 = messages.getString("Cytographer.modalWindowTextField2LabelOperator");
+		//String label1 = messages.getString("Cytographer.modalWindowTextField1LabelOperator");
+		//String label2 = messages.getString("Cytographer.modalWindowTextField2LabelOperator");
 		//TODO add an other label for operator values to messsage class maybe?
 //		String label1 = "edge 1";
 //		String label2 = "edge 2";
 		
-		setNodeValues(nodeid,label1, value1, label2, value2);		
+		//setNodeValues(nodeid,label1, value1, label2, value2);		
 	}
 
 	public void setOutputValues(int nodeid, Double value1, Double value2){
