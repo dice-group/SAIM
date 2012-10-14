@@ -1,11 +1,5 @@
 package de.uni_leipzig.simba.saim.gui.widget.panel;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -27,18 +21,14 @@ import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
-import csplugins.layout.algorithms.force.ForceDirectedLayout;
 import de.konrad.commons.sparql.PrefixHelper;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.SAIMCytoprocess;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.metric.Measure;
-import de.uni_leipzig.simba.saim.core.metric.MetricParser;
 import de.uni_leipzig.simba.saim.core.metric.Node;
 import de.uni_leipzig.simba.saim.core.metric.Operator;
-import de.uni_leipzig.simba.saim.core.metric.Output;
-import de.uni_leipzig.simba.saim.core.metric.Property;
 import de.uni_leipzig.simba.saim.cytoprocess.CytoprocessProperties;
 import de.uni_leipzig.simba.saim.gui.widget.Listener.LearnClickListener;
 import de.uni_leipzig.simba.saim.gui.widget.Listener.SelfConfigClickListener;
@@ -112,27 +102,6 @@ public class MetricPanel extends Panel{
 		saimcytopro = makeCytographer();
 		layout.addComponent(saimcytopro);
 		
-//		new Thread(){			
-//			@Override
-//			public void run(){
-//				//	performPropertyMapping();
-//				getAllProps();
-//
-//				for(String s : sourceProps) {
-//					final Label check = new Label(s);
-//					sourceLayout.addComponent(check); 
-//				}
-//						
-//				for(String t : targetProps) {
-//					final Label check = new Label(t);
-//					targetLayout.addComponent(check);
-//				}
-//				accordionLayout.setImmediate(true);
-//				accordionLayout.removeComponent(progress);
-//				progress.setEnabled(false);
-//			}
-//		}.start();
-		
 		getAllProps();
 		for(String s : sourceProps) {
 			final Label check = new Label(s);
@@ -145,9 +114,7 @@ public class MetricPanel extends Panel{
 		}
 		accordionLayout.removeComponent(progress);
 		progress.setEnabled(false);
-		
-		
-		
+				
 //		metricsLayout.addComponent( new Label(messages.getString("MetricPanel.0"))); 
 //		operatorsLayout.addComponent( new Label(messages.getString("MetricPanel.8"))); 
 		Set<String> sorted = new TreeSet<String>();
@@ -188,7 +155,6 @@ public class MetricPanel extends Panel{
 		return saimcytopro;		
 	}
 
-
 	private void getAllProps() {
 		sourceProps = new TreeSet<String>();
 		targetProps = new TreeSet<String>();
@@ -222,34 +188,35 @@ public class MetricPanel extends Panel{
 	 * @return
 	 */
 	public Layout getButtonLayout() {
-		this.setMetric = new Button(messages.getString("MetricPanel.setmetricbutton"));
-		setMetric.setEnabled(true);
-		setMetric.addListener(new ClickListener() {			
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 2349781868228639555L;
-
-			@Override
-			public void buttonClick(ClickEvent event) {
-				setMetricFromGraph();
-			}
-		});
+		
+//		setMetric = new Button(messages.getString("MetricPanel.setmetricbutton"));
+//		setMetric.setEnabled(true);
+//		setMetric.addListener(new ClickListener() {			
+//			 /**
+//			 * 
+//			 */
+//			private static final long serialVersionUID = 2349781868228639555L;
+//
+//			@Override
+//			public void buttonClick(ClickEvent event) {
+//				setMetricFromGraph();
+//			}
+//		});
 		
 		selfConfigButton = new Button(messages.getString("MetricPanel.startselfconfigbutton")); //$NON-NLS-1$
 		selfConfigButton.setEnabled(false);
 		selfConfigButton.addListener(new SelfConfigClickListener((SAIMApplication) getApplication(), messages));
 		
-		this.learnButton = new Button(messages.getString("MetricPanel.learnmetricbutton")); //$NON-NLS-1$
-		learnButton.setEnabled(false);
-		learnButton.addListener(new LearnClickListener((SAIMApplication) getApplication(), messages));
+		learnButton = new Button(messages.getString("MetricPanel.learnmetricbutton")); //$NON-NLS-1$
+		learnButton.setEnabled(true);
+		learnButton.addListener(new LearnClickListener((SAIMApplication) getApplication(), messages,this));
 		
-		this.startMapping = new Button(messages.getString("MetricPanel.startmappingbutton")); //$NON-NLS-1$
-		startMapping.setEnabled(false);
-		startMapping.addListener(new StartMappingListener((SAIMApplication) getApplication(), messages));
+		startMapping = new Button(messages.getString("MetricPanel.startmappingbutton")); //$NON-NLS-1$
+		startMapping.setEnabled(true);
+		startMapping.addListener(new StartMappingListener((SAIMApplication) getApplication(), messages,this));
 		
 		buttonLayout = new HorizontalLayout();
-		buttonLayout.addComponent(setMetric);
+		//buttonLayout.addComponent(setMetric);
 		buttonLayout.addComponent(selfConfigButton);
 		buttonLayout.addComponent(learnButton);
 		buttonLayout.addComponent(startMapping);
@@ -259,9 +226,10 @@ public class MetricPanel extends Panel{
 	/**
 	 * Method to set Metric from the graph.
 	 */
-	protected void setMetricFromGraph() {
+	public boolean setMetricFromGraph() {
 		if(!saimcytopro.getMetric().isComplete()) {
 			getApplication().getMainWindow().showNotification(messages.getString("MetricPanel.settingnotablenotcomplete")); //$NON-NLS-1$
+			return false;
 		} else {
 			Node node =  saimcytopro.getMetric();
 			String expr = saimcytopro.getMetric().toString();
@@ -271,10 +239,11 @@ public class MetricPanel extends Panel{
 				config.setAcceptanceThreshold(node.param1);
 				config.setVerificationThreshold(node.param2);
 				getApplication().getMainWindow().showNotification("Setting: "+expr+ "with thresholds "+node.param1+" / "+node.param2); //$NON-NLS-1$
-				checkButtons();
+				return checkButtons();
 			}
 			else {
 				getApplication().getMainWindow().showNotification(messages.getString("MetricPanel.settingnotablenothreholds")); //$NON-NLS-1$
+				return false;
 			}
 		}		
 	}
@@ -282,7 +251,7 @@ public class MetricPanel extends Panel{
 	/**
 	 * Checks whether the Buttons (selfconfig, learning and startMapping) could be activated.
 	 */
-	public void checkButtons() {
+	public boolean checkButtons() {
 		if((SAIMApplication)getApplication()!=null) {
 			Configuration config = ((SAIMApplication)getApplication()).getConfig();
 			if( config.getSource() != null && config.getSource().properties != null && config.getSource().properties.size()>0 &&
@@ -291,9 +260,11 @@ public class MetricPanel extends Panel{
 				if(config.getMetricExpression() != null && config.getMetricExpression().length()>0) {
 					learnButton.setEnabled(true);
 					startMapping.setEnabled(true);
+					return true;
 				}
 			}		
 		}
+		return false;
 	}
 
 	/**Listener to react on clicks in the accordion panel.*/
