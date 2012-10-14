@@ -3,6 +3,7 @@ package de.uni_leipzig.simba.saim.cytoprocess.widgetset.client.ui;
 import java.util.Iterator;
 
 import org.vaadin.contrib.processing.svg.gwt.client.ProcessingJs;
+import org.vaadin.gwtgraphics.client.Line;
 
 import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -33,13 +34,16 @@ public class VCytoprocess extends VProcessingSVGextended {
 	private boolean isLinkingTo = false;
 	
 	// edge source
-	private int likedNodeid = Integer.MAX_VALUE;
-
-	public boolean LOG = false;
+	private int linkedNodeid = Integer.MAX_VALUE;
+	public Integer linkedNodeid_B = null;
+	public Line linkLine;
+	
+	public boolean LOG = true;
 	
 	private VVisualStyle vvisualStyle;
 	
 	private Object selectedObject = null;
+	
 	/**	 
 	 * 
 	*/
@@ -171,8 +175,18 @@ public class VCytoprocess extends VProcessingSVGextended {
 		moveY = mouseY;
 		if(getSelectedObject() == null)
 			setSelectedObject(this);
+		
+		if (isLinkingTo() && linkedNodeid_B != null){
+			linkTo(linkedNodeid_B);
+			linkedNodeid_B = null;
+		}
+		
 	}
+	@Override
+	public void mouseClicked(){
+		if(LOG)VConsole.log("mouseClicked ...");
 	
+	}
 	@Override
 	public void mouseReleased(){
 		if(LOG)VConsole.log("mouseReleased ...");
@@ -183,28 +197,33 @@ public class VCytoprocess extends VProcessingSVGextended {
 	
 	@Override
 	public void mouseMoved() {
-
-		if(getSelectedObject() == this && mousePressed &&  mouseButton == ProcessingJs.LEFT){
-			
-			int x = mouseX;
-			int y = mouseY;
-			
+		
+		int x = mouseX;
+		int y = mouseY;
+		
+		if(getSelectedObject() == this && mousePressed &&  mouseButton == ProcessingJs.LEFT && !isLinkingTo){
 			move(moveX - x, moveY - y);
-			
-			moveX = x;
-			moveY = y;
 		}	
-		else if(getSelectedObject() instanceof Integer && mousePressed &&  mouseButton == ProcessingJs.LEFT){
+		else if(getSelectedObject() instanceof Integer && mousePressed &&  mouseButton == ProcessingJs.LEFT && !isLinkingTo){
 			
 			int id = Integer.valueOf(String.valueOf(getSelectedObject()));
-			int x = mouseX;
-			int y = mouseY;
 			
 			vgraph.moveNode(
 					id, 
 					vgraph.nodes.get(id).getX() - x, 
 					vgraph.nodes.get(id).getY() - y);
 		}
+		else if(isLinkingTo){
+			
+			if (linkLine != null) 
+				remove(linkLine);
+
+			linkLine = line(vgraph.nodes.get(linkedNodeid).getX(),vgraph.nodes.get(linkedNodeid).getY(), mouseX, mouseY);
+			
+		}
+		moveX = x;
+		moveY = y;
+		
 	}
 
 	@Override
@@ -300,7 +319,7 @@ public class VCytoprocess extends VProcessingSVGextended {
 	 * @param nodeid
 	 */
 	public void setlinkNode(int nodeid){
-		likedNodeid = nodeid;
+		linkedNodeid = nodeid;
 		isLinkingTo = true;
 	}
 	
@@ -318,16 +337,22 @@ public class VCytoprocess extends VProcessingSVGextended {
 	 */
 	public void linkTo(final int nodeid) {		
 		
-		if(isLinkingTo && nodeid != likedNodeid ){
+		if(isLinkingTo && nodeid != linkedNodeid ){
 			applicationConnection.updateVariable(
 					uidl_id,
 					"linkTo", 
-					new String[] {nodeid+"",likedNodeid+"", new String("newEdge")},
+					new String[] {nodeid+"",linkedNodeid+"", new String("newEdge")},
 					true
 					);
 			
 			isLinkingTo = false;
-			likedNodeid = Integer.MAX_VALUE;
+			linkedNodeid = Integer.MAX_VALUE;
+			
+			//
+			if (linkLine != null) {
+				remove(linkLine);
+				linkLine = null;
+			}
 		}
 	}
 	

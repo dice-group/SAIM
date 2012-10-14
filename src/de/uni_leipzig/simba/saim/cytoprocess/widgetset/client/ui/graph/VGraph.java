@@ -15,6 +15,8 @@ import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.Command;
@@ -303,12 +305,14 @@ public class VGraph {
 		vnode.shape.addMouseDownHandler(nh);
 		vnode.shape.addClickHandler(nh);
 		vnode.shape.addDoubleClickHandler(nh);
+		vnode.shape.addMouseOverHandler(nh);
 		
 		vnode.label.addMouseUpHandler(nh);
 		vnode.label.addMouseMoveHandler(nh);
 		vnode.label.addMouseDownHandler(nh);
 		vnode.label.addClickHandler(nh);
 		vnode.label.addDoubleClickHandler(nh);
+		vnode.label.addMouseOverHandler(nh);
 	}
 
 	private VEdge createVEdge(final UIDL nodeChild, VNode src, VNode tar) {
@@ -475,23 +479,31 @@ class EdgeHandler implements ContextListener, MouseDownHandler,
  * 
  */
 class NodeHandler implements ContextListener, MouseDownHandler, MouseUpHandler,
-		ClickHandler, MouseMoveHandler, DoubleClickHandler {
+		ClickHandler, MouseMoveHandler, DoubleClickHandler,MouseOverHandler {
 
 	protected Map<String, Command> commandMap;
 	protected VCytoprocess vccytoprocess;
 	private int vnodeid;
 	private int moveX = 0, moveY = 0;
-
+	public boolean LOG = true;
+	
 	public NodeHandler(VCytoprocess vccytoprocess, int vnodeid) {
 		this.vccytoprocess = vccytoprocess;
 		this.vnodeid = vnodeid;
 	}
-
+	
+	// MouseOverHandler
+	@Override
+	public void onMouseOver(MouseOverEvent event) {
+		if(LOG)VConsole.log("onMouseOver ...");
+		if (vccytoprocess.isLinkingTo())
+			vccytoprocess.linkedNodeid_B = vnodeid;
+	}
+	
 	// DoubleClickHandler
 	@Override
 	public void onDoubleClick(DoubleClickEvent event) {
-		vccytoprocess.nodeDoubleClick(vnodeid, event.getClientX(),
-				event.getClientY());
+		vccytoprocess.nodeDoubleClick(vnodeid, event.getClientX(), event.getClientY());
 	}
 
 	// MouseMoveHandler
@@ -542,6 +554,7 @@ class NodeHandler implements ContextListener, MouseDownHandler, MouseUpHandler,
 	// ClickHandler
 	@Override
 	public void onClick(ClickEvent event) {
+		if(LOG)VConsole.log("onClick ...");
 		if (vccytoprocess.isLinkingTo())
 			vccytoprocess.linkTo(vnodeid);
 	}
@@ -584,5 +597,4 @@ class NodeHandler implements ContextListener, MouseDownHandler, MouseUpHandler,
 			}
 		});
 	}
-
 }
