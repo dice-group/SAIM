@@ -3,19 +3,21 @@ package de.uni_leipzig.simba.saim.gui.widget.form;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Panel;
-import com.vaadin.ui.Select;
-import com.vaadin.ui.Upload;
+
+import com.vaadin.ui.*;
 import com.vaadin.ui.Upload.FailedEvent;
 import com.vaadin.ui.Upload.SucceededEvent;
-import com.vaadin.ui.VerticalLayout;
+
+import de.uni_leipzig.simba.cache.HybridCache;
+import de.uni_leipzig.simba.io.KBInfo;
+import de.uni_leipzig.simba.query.FileQueryModule;
+import com.vaadin.ui.Upload.FailedEvent;
+import com.vaadin.ui.Upload.SucceededEvent;
+
 import de.uni_leipzig.simba.cache.HybridCache;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.query.FileQueryModule;
 import de.uni_leipzig.simba.saim.core.FileStore;
-//import de.uni_leipzig.simba.saim.util.FileUploadHelper;
 /**
  * @BUG: Writes an empty line at the end
  * @author Lyko
