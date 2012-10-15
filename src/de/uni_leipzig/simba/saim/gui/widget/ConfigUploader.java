@@ -1,16 +1,16 @@
 package de.uni_leipzig.simba.saim.gui.widget;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -41,6 +41,7 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver
 	private static final String DEFAULT_LIMES_XML = "examples/dbpedia-linkedmdb.xml";
 	Button add;
 	ExampleLoader loader;
+	Logger logger = Logger.getLogger("ConfigUploader.class");
 	public ConfigUploader(Messages messages)
 	{
 		//this.messages=messages;
@@ -163,11 +164,13 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver
 				try {
 					URL url;String path;
 					if(cR.sourceInfo.type.equalsIgnoreCase("CSV")) {
+						logger.info("Trying to get resource..."+"examples/"+cR.sourceInfo.endpoint);
 						url = getClass().getClassLoader().getResource("examples/"+cR.sourceInfo.endpoint);//dbpedia-linkedmdb.xml");
 						path = new File(url.toURI()).getAbsolutePath();
 						cR.sourceInfo.endpoint = path;
 					}
 					if(cR.targetInfo.type.equalsIgnoreCase("CSV")) {
+						logger.info("Trying to get resource..."+"examples/"+cR.targetInfo.endpoint);
 						url = getClass().getClassLoader().getResource("examples/"+cR.targetInfo.endpoint);//dbpedia-linkedmdb.xml");
 						path = new File(url.toURI()).getAbsolutePath();
 						cR.targetInfo.endpoint = path;

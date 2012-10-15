@@ -447,6 +447,7 @@ public class PropertyMatchingPanel extends Panel
 			}
 		};
 	/**
+	 * TODO causing java.util.ConcurrentModificationExceptions !!!
 	 * Show computed Property mapping in select, activate Button to use them all.
 	 * @param map
 	 */
@@ -590,8 +591,8 @@ public class PropertyMatchingPanel extends Panel
 			progressLabel.setVisible(true);
 		
 			Map<String,HashMap<String,Double>> map = performAutomaticPropertyMapping().map;
-			
-			displayPropertyMapping(map);
+			if(map != null)
+				displayPropertyMapping(map);
 			{
 			progress.setEnabled(false);
 			progress.setVisible(false);
@@ -630,15 +631,23 @@ public class PropertyMatchingPanel extends Panel
 				logger.info("Starting default PropertyMapper");
 				propMap = new DefaultPropertyMapper();
 			}
-			Mapping m = propMap.getPropertyMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().getClassOfendpoint(), config.getTarget().getClassOfendpoint());
-			if(CACHING) {
-				mappingCache = CacheManager.getInstance().getCache("automaticpropertymapping"); //$NON-NLS-1$
-				if(mappingCache.getStatus()==net.sf.ehcache.Status.STATUS_UNINITIALISED) {mappingCache.initialise();}
-				logger.info("Saving automatic computed Property mapping to cache...");
-				mappingCache.put(new Element(parameters, m));
-				mappingCache.flush();
+			try {
+				Mapping m = propMap.getPropertyMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().getClassOfendpoint(), config.getTarget().getClassOfendpoint());
+				
+				if(CACHING) {
+					mappingCache = CacheManager.getInstance().getCache("automaticpropertymapping"); //$NON-NLS-1$
+					if(mappingCache.getStatus()==net.sf.ehcache.Status.STATUS_UNINITIALISED) {mappingCache.initialise();}
+					logger.info("Saving automatic computed Property mapping to cache...");
+					mappingCache.put(new Element(parameters, m));
+					mappingCache.flush();
+				}
+				return m;
+			}catch(Exception e) {
+				getWindow().showNotification("Error performing property mapping: "+e.getMessage());
+				e.printStackTrace();
+				logger.info("Error performing property mapping: "+e.getMessage());
+				return null;
 			}
-			return m;
 		}
 	}
 	

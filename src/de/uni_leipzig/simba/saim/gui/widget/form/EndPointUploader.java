@@ -1,15 +1,9 @@
 package de.uni_leipzig.simba.saim.gui.widget.form;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.RDFReader;
-import com.vaadin.data.Item;
 import com.vaadin.ui.*;
 import com.vaadin.ui.Upload.FailedEvent;
 import com.vaadin.ui.Upload.SucceededEvent;
@@ -18,7 +12,6 @@ import de.uni_leipzig.simba.cache.HybridCache;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.query.FileQueryModule;
 import de.uni_leipzig.simba.saim.core.FileStore;
-import de.uni_leipzig.simba.saim.util.FileUploadHelper;
 /**
  * @BUG: Writes an empty line at the end
  * @author Lyko
