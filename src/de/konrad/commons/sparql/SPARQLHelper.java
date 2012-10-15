@@ -121,7 +121,7 @@ public class SPARQLHelper
 		// bad endpoint, use fallback: classes (instances of owl:Class) which don't have superclasses
 		{
 			String queryForParentlessClasses =
-					"SELECT distinct(?class) WHERE {?class a owl:Class. OPTIONAL {?class rdfs:subClassOf ?superClass.} FILTER (!BOUND(?superClass))}";
+					"SELECT distinct(?class) WHERE {{?class a owl:class} UNION {?class a rdfs:class}. OPTIONAL {?class rdfs:subClassOf ?superClass.} FILTER (!BOUND(?superClass))}";
 
 			List<String> classes = resultSetToList(querySelect(PrefixHelper.addPrefixes(queryForParentlessClasses), endpoint, graph));
 
