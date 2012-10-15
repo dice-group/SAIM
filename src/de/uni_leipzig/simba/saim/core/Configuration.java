@@ -199,7 +199,7 @@ public class Configuration
 	{
 		try{
 			Document document = null;
-			document = new SAXBuilder().build(getClass().getClassLoader().getResourceAsStream("template.xml"));
+			document = new SAXBuilder().build(getClass().getClassLoader().getResourceAsStream("template.xml.template"));
 			Element rootElement = document.getRootElement();
 			{			// Prefixes
 				Map<String,String> prefixes = new HashMap<String,String>(source.prefixes);
