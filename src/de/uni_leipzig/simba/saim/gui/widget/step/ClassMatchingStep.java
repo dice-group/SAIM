@@ -106,7 +106,7 @@ public class ClassMatchingStep implements WizardStep
 	@Override
 	public boolean onBack()
 	{
-		panel.close();
+		panel.close();		
 		return true;
 	}
 

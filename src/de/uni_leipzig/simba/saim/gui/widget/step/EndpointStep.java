@@ -14,14 +14,14 @@ public class EndpointStep implements WizardStep
 {
 	private final Messages messages;		
 	
-	EndpointPanel panel;
+	final EndpointPanel panel;
 	SAIMApplication app;
 	public EndpointStep(SAIMApplication app)
 	{
 		this.app = app;
 		this.messages=app.messages;
 		panel = new EndpointPanel(messages);
-		panel.setHeight("400px");
+		panel.setHeight("400px");		
 	}
 	
 	@Override
@@ -30,11 +30,22 @@ public class EndpointStep implements WizardStep
 	@Override
 	public Component getContent()
 	{
-		panel.addComponent(new Label("Test"));
+		panel.addComponent(new Label("Test"));		
+		tryRestoreFromConfig();
 		panel.requestRepaintAll();
 		return panel; // = new EndpointPanel(messages);
 	}
 
+	private void tryRestoreFromConfig()
+	{
+//		Configuration config = app.getConfig();
+//		if(config.isLocal) {return;}
+//		KBInfo source = config.getSource();
+//		if(source!=null) {panel.kbSource.setValuesFromKBInfo(source);}
+//		KBInfo target = config.getTarget();		
+//		if(target!=null) {panel.kbTarget.setValuesFromKBInfo(target);}
+	}
+	
 	@Override
 	public boolean onAdvance()
 	{
@@ -42,12 +53,12 @@ public class EndpointStep implements WizardStep
 		if(config.isLocal)
 			return true;
 		else
-			if(panel.kbISource.isValid() && panel.kbITarget.isValid())
+			if(panel.kbSource.isValid() && panel.kbTarget.isValid())
 			{
 				// Proceed			
-				KBInfo source = panel.kbISource.getKBInfo();
+				KBInfo source = panel.kbSource.getKBInfo();
 				source.var = "?src";
-				KBInfo target = panel.kbITarget.getKBInfo();
+				KBInfo target = panel.kbTarget.getKBInfo();
 				target.var = "?dest";
 				config.setSourceEndpoint(source);
 				config.setTargetEndpoint(target);

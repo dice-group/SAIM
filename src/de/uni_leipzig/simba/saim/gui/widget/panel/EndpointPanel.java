@@ -17,8 +17,8 @@ public class EndpointPanel extends Panel implements PropertyChangeListener
 	 */
 	private static final long serialVersionUID = -5883644284527880143L;
 	private final Messages messages;
-	public KBInfoForm kbISource;
-	public KBInfoForm kbITarget;
+	public KBInfoForm kbSource = null;
+	public KBInfoForm kbTarget = null;
 	Configuration config;
 
 	public EndpointPanel(final Messages messages)
@@ -27,30 +27,33 @@ public class EndpointPanel extends Panel implements PropertyChangeListener
 	}
 
 	@Override
-	public void attach() {
+	public void attach()
+	{		
 		config = ((SAIMApplication)getApplication()).getConfig();
+		if(kbSource==null) {kbSource = new KBInfoForm(messages.getString("EndpointPanel.configuresourceendpoint"), config.getSource(),messages);} //$NON-NLS-1$
+		if(kbTarget==null) {kbTarget = new KBInfoForm(messages.getString("EndpointPanel.configuretargetendpoint"), config.getTarget(),messages);} //$NON-NLS-1$
+		
 		HorizontalLayout layout = new HorizontalLayout();
 		layout.setSpacing(true);
 		this.setContent(layout);
 		config.addPropertyChangeListener(this);
-		kbISource = new KBInfoForm(messages.getString("EndpointPanel.configuresourceendpoint"), config.getSource(),messages); //$NON-NLS-1$
-		kbITarget = new KBInfoForm(messages.getString("EndpointPanel.configuretargetendpoint"), config.getTarget(),messages); //$NON-NLS-1$
-		this.addComponent(kbISource);
-		this.addComponent(kbITarget);
+		
+		this.addComponent(kbSource);
+		this.addComponent(kbTarget);
 	}
 
 	public void close()
 	{
 
-		kbISource.close();
-		kbITarget.close();
+		kbSource.close();
+		kbTarget.close();
 	}
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if(evt.getPropertyName().equals(Configuration.SETTING_CONFIG)) {
-			kbISource.setValuesFromKBInfo(config.getSource());
-			kbITarget.setValuesFromKBInfo(config.getTarget());
+			kbSource.setValuesFromKBInfo(config.getSource());
+			kbTarget.setValuesFromKBInfo(config.getTarget());
 		}
 	}
 }

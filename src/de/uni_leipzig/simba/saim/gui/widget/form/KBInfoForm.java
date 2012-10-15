@@ -31,7 +31,7 @@ import de.uni_leipzig.simba.saim.gui.validator.PageSizeValidator;
 public class KBInfoForm extends Form
 {
 	private final Messages messages;
-	
+
 	protected final static String		WIDTH			= "35em";									//$NON-NLS-1$
 	protected final ComboBox			presetComboBox;
 	protected final ComboBox			url;
@@ -53,7 +53,7 @@ public class KBInfoForm extends Form
 		validator.close();
 	}
 
-	
+
 
 	/**
 	 * Constructor to set default values of the fields.
@@ -77,21 +77,21 @@ public class KBInfoForm extends Form
 		this.setCaption(title);
 		this.setWidth(WIDTH);
 		// Have a button bar in the footer.
-				HorizontalLayout buttonBar = new HorizontalLayout();
-				// buttonBar.setHeight("25px");
-				getFooter().addComponent(buttonBar);
-				// Add an Ok (commit), Reset (discard), and Cancel buttons
-				setValidationVisible(true);
-				buttonBar.addComponent(new Button(messages.getString("reset"), this, "reset")); //$NON-NLS-1$ //$NON-NLS-2$
-				getLayout().setMargin(true);
-				
-				for (TextField field : textFields)
-				{
-					field.setWidth("100%"); //$NON-NLS-1$
-				}
+		HorizontalLayout buttonBar = new HorizontalLayout();
+		// buttonBar.setHeight("25px");
+		getFooter().addComponent(buttonBar);
+		// Add an Ok (commit), Reset (discard), and Cancel buttons
+		setValidationVisible(true);
+		buttonBar.addComponent(new Button(messages.getString("reset"), this, "reset")); //$NON-NLS-1$ //$NON-NLS-2$
+		getLayout().setMargin(true);
 
-				setupContextHelp();
-			
+		for (TextField field : textFields)
+		{
+			field.setWidth("100%"); //$NON-NLS-1$
+		}
+
+		setupContextHelp();
+
 
 		if (defaultValues != null)
 		{
@@ -104,7 +104,7 @@ public class KBInfoForm extends Form
 		}
 		presets();	setupContextHelp();
 		addFormFields();
-	
+
 	}
 
 	protected void presets()
@@ -113,11 +113,11 @@ public class KBInfoForm extends Form
 		presetComboBox.setRequired(false);
 		presetComboBox.setWidth("100%"); //$NON-NLS-1$
 		presetComboBox.setNewItemsAllowed(false);
-		
+
 		for (String preset : presetToKB.keySet()){
 			presetComboBox.addItem(preset);
 		}
-		
+
 		presetComboBox.addListener(new ValueChangeListener()
 		{
 			@Override
@@ -154,7 +154,7 @@ public class KBInfoForm extends Form
 		addField(messages.getString("presets"), presetComboBox); //$NON-NLS-1$
 
 		addField(messages.getString("endpointurl"), url); //$NON-NLS-1$
-		
+
 		url.addValidator(validator);
 		url.setRequired(true);
 		url.setRequiredError(messages.getString("endpointurlmaynotbeempty")); //$NON-NLS-1$
@@ -244,7 +244,7 @@ public class KBInfoForm extends Form
 	{
 		presetToKB.clear();
 		presetComboBox.removeAllItems();
-		
+
 		Set<String> sortedKeys =  new TreeSet<String>();
 		sortedKeys.addAll(DefaultEndpointLoader.getDefaultEndpoints().keySet());
 		for(String key : sortedKeys){
@@ -256,10 +256,13 @@ public class KBInfoForm extends Form
 	public void setValuesFromKBInfo(KBInfo info)
 	{
 		this.kbInfo = info;
-		url.addItem(kbInfo.endpoint);
-		url.setValue(kbInfo.endpoint);
-		graph.setValue(kbInfo.graph);
-		id.setValue(kbInfo.id);
+		if(info.endpoint!=null)
+		{
+			url.addItem(kbInfo.endpoint);
+			url.setValue(kbInfo.endpoint);
+		} else url.setValue("");
+		if(info.graph!=null)	{graph.setValue(kbInfo.graph);} else {graph.setValue("");}
+		if(info.id!=null)	{id.setValue(kbInfo.id);} else {id.setValue("");}
 		pageSize.setValue(kbInfo.pageSize);
 	}
 
