@@ -1,3 +1,6 @@
+"DBLP-SemanticWebResearcher";"examples/dblp-semanticwebresearcher.xml"
+"DBPedia-Drugbank complex";"examples/dbpedia-drugbank-complex.xml"
+"Europeana-Deduplication";"examples/europeana-deduplication.xml"
 "DBLP-ACM (local)";"examples/PublicationData.xml"
 "DBLP-Google Scholar (local)";"examples/DBLP-Scholar.xml"
 "DailyMed-Drugbank (local)";"examples/dailymed-drugbank.xml"
