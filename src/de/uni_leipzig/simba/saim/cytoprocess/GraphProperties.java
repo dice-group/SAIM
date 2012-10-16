@@ -23,7 +23,7 @@ import cytoscape.visual.VisualPropertyType;
  *
  */
 public class GraphProperties {
-	private static final Logger LOGGER = Logger.getLogger(GraphProperties.class);
+	private static transient final Logger LOGGER = Logger.getLogger(GraphProperties.class);
 
 	private CyNetwork cyNetwork;
 

@@ -48,7 +48,7 @@ public class PropertyMatchingPanel extends Panel
 	private final Messages messages;
 	private static final boolean CACHING = true;
 	private final Layout mainLayout;
-	private static final Logger logger = LoggerFactory.getLogger(PropertyMatchingPanel.class);
+	private static transient final Logger logger = LoggerFactory.getLogger(PropertyMatchingPanel.class);
 	private List<Object[]> rows = new Vector<Object[]>();
 	private ClassResource closeImageResource;
 	private Table table = new Table();

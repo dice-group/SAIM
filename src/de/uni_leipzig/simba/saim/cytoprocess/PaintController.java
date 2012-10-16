@@ -25,7 +25,7 @@ import cytoscape.visual.VisualPropertyType;
  */
 public class PaintController {
 	
-	private static final Logger LOGGER = Logger.getLogger(PaintController.class);
+	private static transient final Logger LOGGER = Logger.getLogger(PaintController.class);
 	
 	
 	public void fitToView(final PaintTarget target, GraphProperties graphProperties) throws PaintException{

@@ -57,7 +57,7 @@ public class ClassMatchingPanel extends Panel
 	public ClassMatchingForm sourceClassForm;
 	public ClassMatchingForm targetClassForm;
 	Cache cache = null;
-	static final Logger logger = LoggerFactory.getLogger(ClassMatchingPanel.class);
+	static transient final Logger logger = LoggerFactory.getLogger(ClassMatchingPanel.class);
 	/** Thread computing auto matches. Maybe replaced on a user interaction with another one.*/
 	Thread computer;
 	

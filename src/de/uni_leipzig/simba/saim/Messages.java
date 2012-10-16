@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 /** The property files are expected to be encoded in UTF8 contrary to the Java definition and displayed with a small hack.*/
 public class Messages
 {
-	private static final Logger logger = Logger.getLogger(Messages.class);
+	private static transient final Logger logger = Logger.getLogger(Messages.class);
 
 	private static final String	BUNDLE_NAME	= "de.uni_leipzig.simba.saim.messages"; //$NON-NLS-1$
 	private ResourceBundle	RESOURCE_BUNDLE;

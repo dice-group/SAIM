@@ -14,7 +14,7 @@ public class EndpointStep implements WizardStep
 {
 	private final Messages messages;		
 	
-	final EndpointPanel panel;
+	final transient EndpointPanel panel;
 	SAIMApplication app;
 	public EndpointStep(SAIMApplication app)
 	{

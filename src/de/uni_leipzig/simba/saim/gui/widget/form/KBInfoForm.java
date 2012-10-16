@@ -202,7 +202,7 @@ public class KBInfoForm extends Form
 		addField(messages.getString("graph"), graph); //$NON-NLS-1$
 		addField(messages.getString("pagesize"), pageSize); //$NON-NLS-1$
 		pageSize.addValidator(new PageSizeValidator(messages
-				.getString("pagesizeneedstobeaninteger"))); //$NON-NLS-1$
+				.getString("pagesizeneedstobeapositiveintegerorminusone"))); //$NON-NLS-1$
 	}
 
 	protected void setupContextHelp()

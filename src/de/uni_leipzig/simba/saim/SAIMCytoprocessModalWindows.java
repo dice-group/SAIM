@@ -27,7 +27,7 @@ import de.uni_leipzig.simba.saim.gui.widget.form.PreprocessingForm;
  */
 public class SAIMCytoprocessModalWindows {
 
-	private static final Logger LOGGER = Logger.getLogger(SAIMCytoprocessModalWindows.class);
+	private static transient final Logger LOGGER = Logger.getLogger(SAIMCytoprocessModalWindows.class);
 	
 	//SAIMApplication
 	private final Messages messages;

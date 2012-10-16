@@ -48,9 +48,9 @@ public class SAIMApplication extends Application implements TransactionListener
 	private VerticalLayout mainLayout;
 	private Wizard wizard;
 	Window sub;
-	Configuration config = new Configuration();
+	transient Configuration config = new Configuration();
 	Panel content;	
-	static final Logger logger = Logger.getLogger(SAIMApplication.class);
+	static transient final Logger logger = Logger.getLogger(SAIMApplication.class);
 
 	private MenuBar menuBar = null;
 

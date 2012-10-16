@@ -38,7 +38,7 @@ public class MeshBasedSelfConfigPanel extends SelfConfigExecutionPanel{
 	 * 
 	 */
 	private static final long serialVersionUID = -457009966196619211L;
-	private static final Logger logger = LoggerFactory.getLogger(MeshBasedSelfConfigPanel.class);
+	private static transient final Logger logger = LoggerFactory.getLogger(MeshBasedSelfConfigPanel.class);
 	
 	MeshBasedSelfConfigurator bsc;
 	List<SimpleClassifier> classifiers;
