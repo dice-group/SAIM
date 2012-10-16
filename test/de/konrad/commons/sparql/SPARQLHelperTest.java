@@ -22,10 +22,14 @@ package de.konrad.commons.sparql;
 import static de.konrad.commons.sparql.SPARQLHelper.querySelect;
 import static de.konrad.commons.sparql.SPARQLHelper.resultSetToList;
 import static de.konrad.commons.sparql.SPARQLHelper.rootClasses;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Map;
 
 import org.junit.Test;
+
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.core.DefaultEndpointLoader;
 import de.uni_leipzig.simba.saim.gui.validator.EndpointURLValidator;
@@ -33,6 +37,21 @@ import de.uni_leipzig.simba.saim.gui.validator.EndpointURLValidator;
 /** @author Konrad Höffner */
 public class SPARQLHelperTest
 {
+	Collection<KBInfo> workingKBs = null; 
+
+	public void initWorkingKBs()
+	{
+		workingKBs = new LinkedList<KBInfo>();
+		EndpointURLValidator validator = new EndpointURLValidator();
+		for(KBInfo kb: DefaultEndpointLoader.getDefaultEndpoints().values())
+			if(validator.isValid(kb.endpoint)) {workingKBs.add(kb);}			
+	}
+	
+	private Collection<KBInfo> getWorkingKBs()
+	{
+		if(workingKBs==null) initWorkingKBs();
+		return workingKBs;
+	}
 	//static String[] testObjects = {"Comune di Marcedusa@en","556^^http://www.w3.org/2001/XMLSchema#integer","http://www4.wiwiss.fu-berlin.de/flickrwrappr/photos/Marcedusa"}; 
 
 	@Test
@@ -46,13 +65,12 @@ public class SPARQLHelperTest
 	{
 		//		assertTrue(rootClasses(TestingDefaults.sparqlEndpoint, null).equals(Collections.singletonList(OWL.Thing.toString())));
 		//		assertTrue(rootClasses(TestingDefaults.sparqlEndpoint, null).equals(Collections.singletonList(OWL.Thing.toString())));
-		//		assertTrue(rootClasses("http://linkedgeodata.org/sparql", "http://linkedgeodata.org").contains("http://linkedgeodata.org/ontology/Way"));
-		Map<String,KBInfo> endpoints = DefaultEndpointLoader.getDefaultEndpoints();
-		EndpointURLValidator validator = new EndpointURLValidator();
-		for(KBInfo kb: endpoints.values())
+		//		assertTrue(rootClasses("http://linkedgeodata.org/sparql", "http://linkedgeodata.org").contains("http://linkedgeodata.org/ontology/Way"));		
+		for(KBInfo kb : getWorkingKBs())
 		{
 			String endpoint = kb.endpoint;
-			if(validator.isValid(endpoint))
+			if(!endpoint.equals("http://linkedgeodata.org/sparql")) continue; // TODO: remove
+
 			{
 				try{
 					assertTrue("could not get root classes for endpoint "+kb.endpoint,!rootClasses(kb.endpoint,kb.graph).isEmpty());
@@ -89,10 +107,19 @@ public class SPARQLHelperTest
 				SPARQLHelper.DBPEDIA_ENDPOINT, null).next().getLiteral("o").getInt())==341);
 	}
 
+	
 	@Test
 	public void testProperties()
 	{
-		fail("not implemented yet");
+		testProperties("http://live.dbpedia.org/sparql","","http://dbpedia.org/ontology/Country");
+		testProperties("http://linkedgeodata.org/sparql","","http://linkedgeodata.org/ontology/Country");
+	}
+	
+	public void testProperties(String endpoint, String graph, String clazz)
+	{
+		Collection<String> properties = SPARQLHelper.properties(endpoint, graph, clazz);
+		assertTrue(!properties.isEmpty());
+//		System.out.println(properties);
 	}
 
 	//	@Test

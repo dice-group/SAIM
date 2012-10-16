@@ -92,7 +92,7 @@ public class SPARQLHelper
 	//		}
 	//	}
 	//
-		
+
 	/** @return the last part of a RDF resource url, e.g. http://dbpedia.org/ontology/City -> City,
 	 * http://example.org/ontology#something -> something*/
 	public static String lastPartOfURL(String url)
@@ -117,30 +117,30 @@ public class SPARQLHelper
 			if(!resultSetToList(querySelect(PrefixHelper.addPrefixes(queryForOWLThing),endpoint,graph)).isEmpty())
 			{return Collections.singletonList(OWL.Thing.toString());}
 		}
-//		System.err.println("no owl:Thing found for endpoint "+endpoint+", using fallback.");
+		//		System.err.println("no owl:Thing found for endpoint "+endpoint+", using fallback.");
 		// bad endpoint, use fallback: classes (instances of owl:Class) which don't have superclasses
 		{
 			String queryForParentlessClasses =
-					"SELECT distinct(?class) WHERE {{?class a owl:class} UNION {?class a rdfs:class}. OPTIONAL {?class rdfs:subClassOf ?superClass.} FILTER (!BOUND(?superClass))}";
+					"SELECT distinct(?class) WHERE {{?class a owl:Class} UNION {?class a rdfs:Class}. OPTIONAL {?class rdfs:subClassOf ?superClass.} FILTER (!BOUND(?superClass))}";
 
 			List<String> classes = resultSetToList(querySelect(PrefixHelper.addPrefixes(queryForParentlessClasses), endpoint, graph));
 
 			if(!classes.isEmpty()) {return classes;}
 		}
-//		System.err.println("no root owl:Class instance for endpoint "+endpoint+", using fallback fallback.");
+		//		System.err.println("no root owl:Class instance for endpoint "+endpoint+", using fallback fallback.");
 		// very bad endpoint, use fallback fallback: objects of type property which don't have superclasses
 		{
-		String query =
-				"SELECT distinct(?class) WHERE {?x a ?class. OPTIONAL {?class rdfs:subClassOf ?superClass.} FILTER (!BOUND(?superClass))}";
-		List<String> classes = resultSetToList(querySelect(PrefixHelper.addPrefixes(query), endpoint, graph));
-		
-		// we only want classes of instances
-		classes.remove("http://www.w3.org/1999/02/22-rdf-syntax-ns#Property");
-		classes.remove("http://www.w3.org/2000/01/rdf-schema#Class");
-		classes.remove("http://www.w3.org/2002/07/owl#DatatypeProperty");
-		classes.remove("http://www.w3.org/2002/07/owl#DatatypeProperty");
-		
-		return classes;
+			String query =
+					"SELECT distinct(?class) WHERE {?x a ?class. OPTIONAL {?class rdfs:subClassOf ?superClass.} FILTER (!BOUND(?superClass))}";
+			List<String> classes = resultSetToList(querySelect(PrefixHelper.addPrefixes(query), endpoint, graph));
+
+			// we only want classes of instances
+			classes.remove("http://www.w3.org/1999/02/22-rdf-syntax-ns#Property");
+			classes.remove("http://www.w3.org/2000/01/rdf-schema#Class");
+			classes.remove("http://www.w3.org/2002/07/owl#DatatypeProperty");
+			classes.remove("http://www.w3.org/2002/07/owl#DatatypeProperty");
+
+			return classes;
 		}
 	}
 
@@ -149,20 +149,32 @@ public class SPARQLHelper
 		if(uriString.startsWith("http://")) return "<"+uriString+">";
 		return uriString;
 	}
-	
+
 	/**
 	 * Get all Properties of the given knowledge base
 	 * @param endpoint
-	 * @param graph
+	 * @param graph can be null (recommended as e.g. rdf:label doesn't have to be in the graph)
 	 * @return
-	 */
-	public static List<String> properties(String endpoint, String graph, String className) {
+	 */	
+	public static List<String> properties(String endpoint, String graph, String className)
+	{		
 		Logger logger = Logger.getLogger("SAIM");
+		// try it with rdf:Property first  				
+		String classRestriction = (className==null||className.isEmpty())?"":"?s a "+wrapIfNecessary(className)+".\n";		
+		// get all properties which have at least once instance of the class restriction as a subject 
+		String q = "SELECT DISTINCT ?p \n" +
+				"{"+classRestriction+
+				"?p a rdf:Property}\n";		
+		List<String> rdfProperties = resultSetToList(querySelect(PrefixHelper.addPrefixes(q), endpoint, graph));
+		if(!rdfProperties.isEmpty()) return rdfProperties;
+		
+		// endpoint doesn't have properties marked as rdf:Property
+
 		String query1 = "SELECT DISTINCT ?s \n" +
 				"WHERE { ?s rdf:type "+wrapIfNecessary(className)+".\n"+
 				"?s ?p ?o. }\n"+
 				"LIMIT 5";
-		
+
 		List<String> subList = resultSetToList(querySelect(PrefixHelper.addPrefixes(query1), endpoint, graph));
 		logger.info("Got "+subList.size()+" subjects of type "+className+" from "+endpoint);
 		String subQuery = "SELECT DISTINCT ?p WHERE {\n";
@@ -176,12 +188,12 @@ public class SPARQLHelper
 		if(subList.size()>0) {return resultSetToList(querySelect(PrefixHelper.addPrefixes(subQuery), endpoint, graph));}	
 		else {
 			String query = "\nSELECT ?s ?p "+//(COUNT(?s) AS ?count)\n"+
-			//		"FROM "+wrapIfNecessary(graph)+"\n"+
+					//		"FROM "+wrapIfNecessary(graph)+"\n"+
 					"WHERE { ?s rdf:type "+wrapIfNecessary(className)+".\n"+
-				    "	?s ?p ?o\n"+
-				//	"} GROUP BY ?p \n"+
-				//    "ORDER BY DESC(?count)";
-				"} LIMIT 30";
+					"	?s ?p ?o\n"+
+					//	"} GROUP BY ?p \n"+
+					//    "ORDER BY DESC(?count)";
+					"} LIMIT 30";
 			Logger.getLogger("SAIM").info("Query "+endpoint+" with query:\n"+query);
 			ResultSet rs = querySelect(PrefixHelper.addPrefixes(query), endpoint, graph);
 			List<String> props = new Vector<String>();
@@ -192,9 +204,9 @@ public class SPARQLHelper
 			}
 			return props;
 		}
-//		return resultSetToList(querySelect(PrefixHelper.addPrefixes(query), endpoint, graph));		
+		//		return resultSetToList(querySelect(PrefixHelper.addPrefixes(query), endpoint, graph));		
 	}
-	
+
 	//
 	//	public static ResultSet query(String endpoint, String graph, String query)
 	//	{

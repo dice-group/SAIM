@@ -1,6 +1,7 @@
 package de.uni_leipzig.simba.saim.gui.validator;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import com.vaadin.data.Validator;
@@ -19,7 +20,7 @@ public class EndpointURLValidator implements Validator
 	protected static Map<String,EndpointStatus> validateCache = new HashMap<String,EndpointStatus>();
 	final Component component;
 
-	public EndpointURLValidator() {this(null,null);}
+	public EndpointURLValidator() {this(null,new Messages(Locale.getDefault()));}
 	public EndpointURLValidator(Component component,final Messages messages)
 	{
 		this.component = component;
@@ -46,7 +47,8 @@ public class EndpointURLValidator implements Validator
 		String s = (String)value;
 		if(s.contains(".csv"))
 			return;
-		if(!(s.startsWith("http://"))) {throw new InvalidValueException(messages.getString("endpointurldoesnotstartwithhttp"));}
+		if(!(s.startsWith("http://")))
+		{throw new InvalidValueException(messages.getString("endpointurldoesnotstartwithhttp"));}
 
 		else
 		{
