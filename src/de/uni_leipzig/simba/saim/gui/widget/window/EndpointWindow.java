@@ -1,5 +1,7 @@
 package de.uni_leipzig.simba.saim.gui.widget.window;
 
+import java.io.Serializable;
+
 import org.vaadin.teemu.wizards.Wizard;
 import org.vaadin.teemu.wizards.event.WizardCancelledEvent;
 import org.vaadin.teemu.wizards.event.WizardCompletedEvent;
@@ -20,15 +22,15 @@ import de.uni_leipzig.simba.saim.gui.widget.step.PropertyMatchingStep;
  * @author Lyko
  *
  */
-public class EndpointWindow extends Window
+public class EndpointWindow extends Window implements Serializable
 {	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2991623255901308493L;
-	Layout mainLayout;
-	Wizard wizard;
-	SAIMApplication app;
+	transient Layout mainLayout;
+	transient Wizard wizard;
+	transient SAIMApplication app;
 	
 	public EndpointWindow(SAIMApplication app)
 	{

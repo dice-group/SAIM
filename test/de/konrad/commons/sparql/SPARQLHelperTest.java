@@ -111,7 +111,8 @@ public class SPARQLHelperTest
 	@Test
 	public void testProperties()
 	{
-		testProperties("http://live.dbpedia.org/sparql","","http://dbpedia.org/ontology/Country");
+		testProperties("http://dbpedia.org/sparql","http://dbpedia.org","<http://www.w3.org/2002/07/owl#Thing>");
+		testProperties("http://dbpedia.org/sparql","","http://dbpedia.org/ontology/Country>");
 		testProperties("http://linkedgeodata.org/sparql","","http://linkedgeodata.org/ontology/Country");
 	}
 	
@@ -119,7 +120,7 @@ public class SPARQLHelperTest
 	{
 		Collection<String> properties = SPARQLHelper.properties(endpoint, graph, clazz);
 		assertTrue(!properties.isEmpty());
-//		System.out.println(properties);
+		System.out.println(properties);
 	}
 
 	//	@Test

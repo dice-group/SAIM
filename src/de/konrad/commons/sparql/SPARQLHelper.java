@@ -1,9 +1,13 @@
 package de.konrad.commons.sparql;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.query.ARQ;
@@ -16,7 +20,11 @@ import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.Syntax;
 import com.hp.hpl.jena.vocabulary.OWL;
 
-//
+import de.uni_leipzig.simba.io.KBInfo;
+import de.uni_leipzig.simba.util.AdvancedKBInfo;
+import de.uni_leipzig.simba.util.AdvancedMemoryCache;
+import de.uni_leipzig.simba.util.GetAllSparqlQueryModule;
+
 //import java.io.File;
 //import java.io.IOException;
 //import java.util.Collection;
@@ -93,6 +101,17 @@ public class SPARQLHelper
 	//	}
 	//
 
+	public static String formatPrefixes(Map<String,String> prefixes)
+	{
+		if(prefixes.isEmpty()) return "";
+		StringBuffer prefixSPARQLString = new StringBuffer();
+		for(String key:	prefixes.keySet())
+		{
+			prefixSPARQLString.append("PREFIX "+key+": <"+prefixes.get(key)+">"+'\n');
+		}
+		return prefixSPARQLString.substring(0, prefixSPARQLString.length()-1);
+	}
+
 	/** @return the last part of a RDF resource url, e.g. http://dbpedia.org/ontology/City -> City,
 	 * http://example.org/ontology#something -> something*/
 	public static String lastPartOfURL(String url)
@@ -157,55 +176,88 @@ public class SPARQLHelper
 	 * @return
 	 */	
 	public static List<String> properties(String endpoint, String graph, String className)
-	{		
-		Logger logger = Logger.getLogger("SAIM");
-		// try it with rdf:Property first  				
-		String classRestriction = (className==null||className.isEmpty())?"":"?s a "+wrapIfNecessary(className)+".\n";		
-		// get all properties which have at least once instance of the class restriction as a subject 
-		String q = "SELECT DISTINCT ?p \n" +
-				"{"+classRestriction+
-				"?p a rdf:Property}\n";		
-		List<String> rdfProperties = resultSetToList(querySelect(PrefixHelper.addPrefixes(q), endpoint, graph));
-		if(!rdfProperties.isEmpty()) return rdfProperties;
-		
-		// endpoint doesn't have properties marked as rdf:Property
-
-		String query1 = "SELECT DISTINCT ?s \n" +
-				"WHERE { ?s rdf:type "+wrapIfNecessary(className)+".\n"+
-				"?s ?p ?o. }\n"+
-				"LIMIT 5";
-
-		List<String> subList = resultSetToList(querySelect(PrefixHelper.addPrefixes(query1), endpoint, graph));
-		logger.info("Got "+subList.size()+" subjects of type "+className+" from "+endpoint);
-		String subQuery = "SELECT DISTINCT ?p WHERE {\n";
-		int i = 0;
-		for(String s : subList) {
-			subQuery += wrapIfNecessary(s)+" ?p ?o"+i+".\n";
-			i++;
-		}
-		subQuery+="}";
-		logger.info("May execute: "+subQuery);
-		if(subList.size()>0) {return resultSetToList(querySelect(PrefixHelper.addPrefixes(subQuery), endpoint, graph));}	
-		else {
-			String query = "\nSELECT ?s ?p "+//(COUNT(?s) AS ?count)\n"+
-					//		"FROM "+wrapIfNecessary(graph)+"\n"+
-					"WHERE { ?s rdf:type "+wrapIfNecessary(className)+".\n"+
-					"	?s ?p ?o\n"+
-					//	"} GROUP BY ?p \n"+
-					//    "ORDER BY DESC(?count)";
-					"} LIMIT 30";
-			Logger.getLogger("SAIM").info("Query "+endpoint+" with query:\n"+query);
-			ResultSet rs = querySelect(PrefixHelper.addPrefixes(query), endpoint, graph);
-			List<String> props = new Vector<String>();
-			while(rs.hasNext()) {
-				QuerySolution qS = rs.next();
-				if(!props.contains(qS.get("?p").toString()))
-					props.add(qS.get("?p").toString());
+	{
+		if(className!=null)
+			{
+			className=className.trim();
+			className=className.replaceAll("<", "");
+			className=className.replaceAll(">", "");
 			}
-			return props;
-		}
-		//		return resultSetToList(querySelect(PrefixHelper.addPrefixes(query), endpoint, graph));		
+		if("owl:Thing".equals(className)||"http://www.w3.org/2002/07/owl#Thing".equals(className))
+		{className=null;}
+		KBInfo info = className!=null?
+				new AdvancedKBInfo("", endpoint, "s", graph, "rdf:type", className):new AdvancedKBInfo("", endpoint, "s", graph);
+				try{return Arrays.asList(commonProperties(info, 0.8, 20, 50));}
+				catch (Exception e) {throw new RuntimeException("error getting the properties for endpoint "+endpoint,e);}
 	}
+
+	//	/**
+	//	 * Get all Properties of the given knowledge base
+	//	 * @param endpoint
+	//	 * @param graph can be null (recommended as e.g. rdf:label doesn't have to be in the graph)
+	//	 * @return
+	//	 */	
+	//	public static List<String> properties(String endpoint, String graph, String className)
+	//	{
+	//		final int SUBJECT_SAMPLE_SIZE = 10;		
+	//		Logger logger = Logger.getLogger(SPARQLHelper.class);
+	//		logger.setLevel(Level.TRACE);
+	//		String classRestriction = (className==null||className.isEmpty())?"":"?s ?p ?o. ?s a "+wrapIfNecessary(className)+".\n";
+	//		long start,end;
+	//		//		// ********************************************* rdf:Property ************************************************
+	//		start = System.currentTimeMillis();
+	//		// try it with rdf:Property first  							
+	//		// get all properties which have at least once instance of the class restriction as a subject 
+	//		String q = "SELECT DISTINCT ?p \n" +
+	//				"{"+classRestriction+
+	//				"?p a rdf:Property}\n";
+	//		logger.trace(q);
+	//		List<String> rdfProperties = resultSetToList(querySelect(PrefixHelper.addPrefixes(q), endpoint, graph));
+	//		end = System.currentTimeMillis();
+	//		logger.trace(end-start+" ms with rdf:Property, class restriction="+classRestriction);
+	//
+	//		if(!rdfProperties.isEmpty()) return rdfProperties;
+	//
+	//		// endpoint doesn't have properties marked as rdf:Property
+	//		// ********************************************* subject sample ************************************************
+	//		String query1 = "SELECT DISTINCT ?s \n" +
+	//				"{"+classRestriction+ 
+	//				"?s ?p ?o. }\n"+
+	//				"LIMIT "+SUBJECT_SAMPLE_SIZE;
+	//		start = System.currentTimeMillis();
+	//		List<String> subjectList = resultSetToList(querySelect(PrefixHelper.addPrefixes(query1), endpoint, graph));
+	//		end = System.currentTimeMillis();		
+	//		logger.info("Got "+subjectList.size()+" subjects of type "+className+" from "+endpoint+", took "+(end-start)+" ms with subject sample size "+SUBJECT_SAMPLE_SIZE);
+	//
+	//		String subQuery = "SELECT DISTINCT ?p WHERE {\n";
+	//		int i = 0;
+	//		for(String s : subjectList) {
+	//			subQuery += wrapIfNecessary(s)+" ?p ?o"+i+".\n";
+	//			i++;
+	//		}
+	//		subQuery+="}";
+	//		logger.info("May execute: "+subQuery);
+	//		if(subjectList.size()>0) {return resultSetToList(querySelect(PrefixHelper.addPrefixes(subQuery), endpoint, graph));}	
+	//		else {
+	//			String query = "\nSELECT ?s ?p "+//(COUNT(?s) AS ?count)\n"+
+	//					//		"FROM "+wrapIfNecessary(graph)+"\n"+
+	//					"WHERE { ?s rdf:type "+wrapIfNecessary(className)+".\n"+
+	//					"	?s ?p ?o\n"+
+	//					//	"} GROUP BY ?p \n"+
+	//					//    "ORDER BY DESC(?count)";
+	//					"} LIMIT 30";
+	//			Logger.getLogger("SAIM").info("Query "+endpoint+" with query:\n"+query);
+	//			ResultSet rs = querySelect(PrefixHelper.addPrefixes(query), endpoint, graph);
+	//			List<String> props = new Vector<String>();
+	//			while(rs.hasNext()) {
+	//				QuerySolution qS = rs.next();
+	//				if(!props.contains(qS.get("?p").toString()))
+	//					props.add(qS.get("?p").toString());
+	//			}
+	//			return props;
+	//		}
+	//		//		return resultSetToList(querySelect(PrefixHelper.addPrefixes(query), endpoint, graph));		
+	//	}
 
 	//
 	//	public static ResultSet query(String endpoint, String graph, String query)
@@ -538,4 +590,32 @@ public class SPARQLHelper
 	//
 	//	//{return new Instance[]{new Instance("error: timeout ("+TIMEOUT+") or other sparql error for sparql query\n \""+query+"\",\nmessage: "+e.getMessage())};}
 	//
+
+	protected static final Map<String,AdvancedMemoryCache> samples = new HashMap<String,AdvancedMemoryCache>();
+
+
+	protected static AdvancedMemoryCache getSample(KBInfo kb, int sampleSize)
+	{
+		String hashString = Integer.toString(kb.hashCode());                            
+		if(!samples.containsKey(hashString)) {samples.put(hashString,generateSample(kb,sampleSize));}
+		return samples.get(hashString);
+	}
+
+	protected static AdvancedMemoryCache generateSample(KBInfo kb,int sampleSize)
+	{
+		GetAllSparqlQueryModule queryModule = new GetAllSparqlQueryModule(kb,sampleSize);
+		AdvancedMemoryCache cache = new AdvancedMemoryCache();
+		try
+		{
+			queryModule.fillCache(cache,false);
+		}
+		catch(Exception e) {throw new RuntimeException(e);}             
+		return cache;
+	}
+
+	public static String[] commonProperties(KBInfo kb, double threshold, Integer limit, Integer sampleSize) throws Exception
+	{
+		return getSample(kb,sampleSize).getCommonProperties(threshold,limit);
+	}
+
 }
