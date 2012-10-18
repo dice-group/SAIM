@@ -26,7 +26,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.Map;
 
 import org.junit.Test;
 
@@ -44,7 +43,8 @@ public class SPARQLHelperTest
 		workingKBs = new LinkedList<KBInfo>();
 		EndpointURLValidator validator = new EndpointURLValidator();
 		for(KBInfo kb: DefaultEndpointLoader.getDefaultEndpoints().values())
-			if(validator.isValid(kb.endpoint)) {workingKBs.add(kb);}			
+			if(validator.isValid(kb.endpoint)) {workingKBs.add(kb);}
+		assertTrue(workingKBs.size()>0);
 	}
 	
 	private Collection<KBInfo> getWorkingKBs()
@@ -57,7 +57,7 @@ public class SPARQLHelperTest
 	@Test
 	public void testSubClassesOf()
 	{
-		System.out.println(SPARQLHelper.subclassesOf("http://dbpedia.org/ontology/Building", SPARQLHelper.DBPEDIA_ENDPOINT, null));
+		System.out.println(SPARQLHelper.subclassesOf(SPARQLHelper.DBPEDIA_ENDPOINT, null,"http://dbpedia.org/ontology/Building"));
 	}
 
 	@Test

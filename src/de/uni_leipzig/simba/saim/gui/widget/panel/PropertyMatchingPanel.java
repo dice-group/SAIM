@@ -2,17 +2,18 @@ package de.uni_leipzig.simba.saim.gui.widget.panel;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.Vector;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -166,7 +167,7 @@ public class PropertyMatchingPanel extends Panel
 
 	/**	returns all properties (not just the ones from the property matching) that instances of the knowledge base of the 
 	 * class restriction specified in the KBInfo have. <b>May break if the class restriction is not set.</b>*/
-	private List<String> allPropertiesFromKBInfo(KBInfo kb)
+	private Set<String> allPropertiesFromKBInfo(KBInfo kb)
 	{
 		return SPARQLHelper.properties(
 				kb.endpoint,
@@ -362,8 +363,8 @@ public class PropertyMatchingPanel extends Panel
 			}
 			return;
 		}
-		List<String> propListSource = null;
-		List<String> propListTarget = null;
+		Set<String> propListSource = null;
+		Set<String> propListTarget = null;
 		KBInfo info = config.getSource();
 		String className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8); //$NON-NLS-1$
 		if(CACHING) {
@@ -373,7 +374,7 @@ public class PropertyMatchingPanel extends Panel
 			try{
 				if(cache.isKeyInCache(parameters))
 				{		
-					propListSource = (List<String>) cache.get(parameters).getValue();
+					propListSource = (Set<String>) cache.get(parameters).getValue();
 					logger.info("Property List Cache hit: "+info.endpoint); //$NON-NLS-1$
 				}
 			} catch(Exception e){logger.info("PropertyMapping cache exception:"+e.getMessage());} //$NON-NLS-1$
@@ -382,7 +383,7 @@ public class PropertyMatchingPanel extends Panel
 				try {
 					propListSource = SPARQLHelper.properties(info.endpoint, info.graph, className);
 				} catch(Exception e) {
-					propListSource = new LinkedList<String>();
+					propListSource = new HashSet<String>();
 					getWindow().showNotification("Error while querying properties of endpoint: "+info.endpoint);
 				}
 				logger.info("Found these source properties...\n"+propListSource+"\n save them in cache...");
@@ -396,7 +397,7 @@ public class PropertyMatchingPanel extends Panel
 			try{
 				if(cache.isKeyInCache(parameters))
 				{		
-					propListTarget = (List<String>) cache.get(parameters).getValue();
+					propListTarget = (Set<String>) cache.get(parameters).getValue();
 					logger.info("Property List Cache hit: "+info.endpoint); //$NON-NLS-1$
 				}
 			} catch(Exception e){logger.info("PropertyMapping cache exception:"+e.getMessage());} //$NON-NLS-1$
@@ -410,7 +411,7 @@ public class PropertyMatchingPanel extends Panel
 					cache.flush();
 				} catch(Exception e) {
 					e.printStackTrace();
-					propListTarget = new LinkedList<String>();
+					propListTarget = new HashSet<String>();
 					getWindow().showNotification("Error while querying properties of endpoint: "+info.endpoint);
 				}	
 			}

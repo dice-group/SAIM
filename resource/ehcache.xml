@@ -21,6 +21,21 @@
 		eternal="true"
         maxElementsInMemory="1000">
 </cache>
+<cache name="properties"
+ diskPersistent="true"
+		eternal="true"
+        maxElementsInMemory="1000">
+</cache>
+<cache name="subclasses"
+ diskPersistent="true"
+		eternal="true"
+        maxElementsInMemory="10000">
+</cache>
+<cache name="rootclasses"
+ diskPersistent="true"
+		eternal="true"
+        maxElementsInMemory="1000">
+</cache>
 <!-- 
 <cache name="metric"
  diskPersistent="true"

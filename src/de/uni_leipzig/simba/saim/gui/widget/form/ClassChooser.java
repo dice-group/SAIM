@@ -4,9 +4,11 @@ import static de.konrad.commons.sparql.SPARQLHelper.lastPartOfURL;
 import static de.konrad.commons.sparql.SPARQLHelper.rootClasses;
 import static de.konrad.commons.sparql.SPARQLHelper.subclassesOf;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
@@ -19,9 +21,6 @@ import com.vaadin.ui.Tree.ExpandListener;
 /** Lets the user choose a class from a given SPARQL endpoint. Queries the endpoint for classes and presents them as a tree. */
 public class ClassChooser extends Panel
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7664923698708644130L;
 	protected static final boolean PRELOAD = false;
 	protected final String endpoint,graph;
@@ -55,8 +54,7 @@ public class ClassChooser extends Panel
 				TreeRefreshListener listener = new TreeRefreshListener();
 				refresher.addListener(listener);
 				addComponent(refresher);
-				System.out.println("x");
-				List<String> rootClasses = rootClasses(endpoint, graph);
+				Set<String> rootClasses = rootClasses(endpoint, graph);
 
 				for(String clazz: rootClasses)
 				{
@@ -66,7 +64,6 @@ public class ClassChooser extends Panel
 				listener.running=false;
 				tree.setImmediate(true);
 
-				System.out.println("y");
 				progress.setEnabled(false);
 				ClassChooser.this.removeComponent(progress);
 				
@@ -101,7 +98,7 @@ public class ClassChooser extends Panel
 			List<String> subClasses;
 			try
 			{
-				subClasses  = subclassesOf(node.url, endpoint, graph);
+				subClasses  = new ArrayList<String>(subclassesOf(endpoint, graph,node.url));
 				System.out.println(subClasses);
 				Collections.sort(subClasses); // sorting in java and not in the SPARQL query because the sort order may be different for the short short
 				for(String subClass: subClasses)

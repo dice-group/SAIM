@@ -3,11 +3,15 @@ package de.konrad.commons.sparql;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.Set;
 
-import org.apache.log4j.Level;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
+
 import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.query.ARQ;
@@ -61,6 +65,7 @@ import de.uni_leipzig.simba.util.GetAllSparqlQueryModule;
 //// TODO: move all sparql stuff into aksw commons
 public class SPARQLHelper
 {
+	private final static Logger logger = Logger.getLogger(SPARQLHelper.class.getName());
 	//	protected static transient final Logger log = Logger.getLogger(SPARQLHelper.class.toString());
 	//	public static final String GEONAMES_ENDPOINT_INTERNAL = "http://lgd.aksw.org:8900/sparql";
 	public static final String DBPEDIA_ENDPOINT_OFFICIAL = "http://dbpedia.org/sparql";
@@ -119,7 +124,22 @@ public class SPARQLHelper
 		return url.substring(Math.max(url.lastIndexOf('#'),url.lastIndexOf('/'))+1);
 	}
 
-	public static List<String> subclassesOf(String clazz,String endpoint, String graph)
+	public static Set<String> subclassesOf(String endpoint, String graph,String clazz)
+	{
+		Cache cache = CacheManager.getInstance().getCache("subclasses");
+		List<String> key = Arrays.asList(new String[] {endpoint,graph,clazz});
+		Element element;
+		if(cache.isKeyInCache(key))	{element = cache.get(key);}
+		else
+		{
+			element = new Element(key, subClassesOfUncached(endpoint,graph,clazz));
+			cache.put(element);
+		}
+		cache.flush();
+		return (Set<String>)element.getValue();
+	}
+	
+	public static Set<String> subClassesOfUncached(String endpoint, String graph,String clazz)
 	{
 		final int MAX_CHILDREN = 100;
 		String query = "SELECT distinct(?class) WHERE { ?class rdfs:subClassOf "+wrapIfNecessary(clazz)+". } LIMIT "+MAX_CHILDREN;
@@ -128,13 +148,29 @@ public class SPARQLHelper
 	}
 
 	/** returns the root classes of a SPARQL endpoint's ontology ({owl:Thing} normally).  */
-	public static List<String> rootClasses(String endpoint, String graph)
+	public static Set<String> rootClasses(String endpoint, String graph)
+	{
+		Cache cache = CacheManager.getInstance().getCache("rootclasses");
+		List<String> key = Arrays.asList(new String[] {endpoint,graph});
+		Element element;
+		if(cache.isKeyInCache(key))	{element = cache.get(key);}
+		else
+		{
+			element = new Element(key, rootClassesUncached(endpoint,graph));
+			cache.put(element);
+		}
+		cache.flush();
+		return (Set<String>)element.getValue();
+	}
+	
+	/** returns the root classes of a SPARQL endpoint's ontology ({owl:Thing} normally).  */
+	public static Set<String> rootClassesUncached(String endpoint, String graph)
 	{
 		{
 			// if owl:Thing exists and has at least one subclass, so use owl:Thing
 			String queryForOWLThing = "SELECT ?class WHERE {?class rdfs:subClassOf owl:Thing} limit 1";
 			if(!resultSetToList(querySelect(PrefixHelper.addPrefixes(queryForOWLThing),endpoint,graph)).isEmpty())
-			{return Collections.singletonList(OWL.Thing.toString());}
+			{return Collections.singleton(OWL.Thing.toString());}
 		}
 		//		System.err.println("no owl:Thing found for endpoint "+endpoint+", using fallback.");
 		// bad endpoint, use fallback: classes (instances of owl:Class) which don't have superclasses
@@ -142,7 +178,7 @@ public class SPARQLHelper
 			String queryForParentlessClasses =
 					"SELECT distinct(?class) WHERE {{?class a owl:Class} UNION {?class a rdfs:Class}. OPTIONAL {?class rdfs:subClassOf ?superClass.} FILTER (!BOUND(?superClass))}";
 
-			List<String> classes = resultSetToList(querySelect(PrefixHelper.addPrefixes(queryForParentlessClasses), endpoint, graph));
+			Set<String> classes = resultSetToList(querySelect(PrefixHelper.addPrefixes(queryForParentlessClasses), endpoint, graph));
 
 			if(!classes.isEmpty()) {return classes;}
 		}
@@ -151,7 +187,7 @@ public class SPARQLHelper
 		{
 			String query =
 					"SELECT distinct(?class) WHERE {?x a ?class. OPTIONAL {?class rdfs:subClassOf ?superClass.} FILTER (!BOUND(?superClass))}";
-			List<String> classes = resultSetToList(querySelect(PrefixHelper.addPrefixes(query), endpoint, graph));
+			Set<String> classes = resultSetToList(querySelect(PrefixHelper.addPrefixes(query), endpoint, graph));
 
 			// we only want classes of instances
 			classes.remove("http://www.w3.org/1999/02/22-rdf-syntax-ns#Property");
@@ -170,25 +206,63 @@ public class SPARQLHelper
 	}
 
 	/**
+	 */
+	static final Set<String> blackset = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(new String[]
+			{"http://dbpedia.org/property/wikiPageUsesTemplate","http://dbpedia.org/property/wikiPageExternalLink"}))); 
+
+
+	public static Set<String> properties(String endpoint, String graph, String className)
+	{
+		Cache cache = CacheManager.getInstance().getCache("properties");
+		List<String> key = Arrays.asList(new String[] {endpoint,graph,className});
+		Element element;
+		if(cache.isKeyInCache(key))	{element = cache.get(key);}
+		else
+		{
+			element = new Element(key, propertiesUncached(endpoint,graph,className));
+			cache.put(element);
+		}
+		cache.flush();
+		return (Set<String>)element.getValue();
+	}
+
+	/**
 	 * Get all Properties of the given knowledge base
 	 * @param endpoint
 	 * @param graph can be null (recommended as e.g. rdf:label doesn't have to be in the graph)
 	 * @return
 	 */	
-	public static List<String> properties(String endpoint, String graph, String className)
+	public static Set<String> propertiesUncached(String endpoint, String graph, String className)
 	{
+		if(className.isEmpty()) {className=null;}
 		if(className!=null)
-			{
+		{
 			className=className.trim();
 			className=className.replaceAll("<", "");
 			className=className.replaceAll(">", "");
-			}
+		}
 		if("owl:Thing".equals(className)||"http://www.w3.org/2002/07/owl#Thing".equals(className))
 		{className=null;}
 		KBInfo info = className!=null?
 				new AdvancedKBInfo("", endpoint, "s", graph, "rdf:type", className):new AdvancedKBInfo("", endpoint, "s", graph);
-				try{return Arrays.asList(commonProperties(info, 0.8, 20, 50));}
+				try
+				{				
+					Set<String> properties = new HashSet<String>(Arrays.asList(commonProperties(info, 0.8, 20, 50)));
+					if(className!=null) {properties.addAll(getPropertiesWithDomain(endpoint,graph,className));}
+					properties.removeAll(blackset);
+					return properties;
+				}
 				catch (Exception e) {throw new RuntimeException("error getting the properties for endpoint "+endpoint,e);}
+	}
+
+	static Set<String> getPropertiesWithDomain(String endpoint, String graph, String clazz)
+	{
+		long start = System.currentTimeMillis();
+		String query = PrefixHelper.addPrefixes("select ?p where {?p rdfs:domain "+wrapIfNecessary(clazz)+"}");
+		Set<String> properties = resultSetToList(querySelect(query, endpoint, graph));
+		long end = System.currentTimeMillis();
+		logger.trace(properties.size()+" properties with domain "+clazz+" from endpoint "+endpoint+" in "+(end-start)+" ms.");
+		return properties;		
 	}
 
 	//	/**
@@ -399,9 +473,9 @@ public class SPARQLHelper
 	//	}
 	//
 
-	public static List<String> resultSetToList(ResultSet rs)
+	public static Set<String> resultSetToList(ResultSet rs)
 	{
-		List<String> list = new Vector<String>();
+		Set<String> list = new HashSet<String>();
 		while(rs.hasNext())
 		{
 			QuerySolution qs = rs.nextSolution();
