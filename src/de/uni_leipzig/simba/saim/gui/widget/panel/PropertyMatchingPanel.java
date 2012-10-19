@@ -2,18 +2,20 @@ package de.uni_leipzig.simba.saim.gui.widget.panel;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
+
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -29,6 +31,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+
 import de.konrad.commons.sparql.PrefixHelper;
 import de.konrad.commons.sparql.SPARQLHelper;
 import de.uni_leipzig.simba.data.Mapping;
@@ -213,8 +216,8 @@ public class PropertyMatchingPanel extends Panel
 
 	private Object[] createTableRow()
 	{
-		PropertyComboBox sourceBox = new PropertyComboBox(sourceProperties);		
-		PropertyComboBox targetBox = new PropertyComboBox(targetProperties);
+		PropertyComboBox sourceBox = new PropertyComboBox(sourceProperties,messages);		
+		PropertyComboBox targetBox = new PropertyComboBox(targetProperties,messages);
 		//Embedded closeImage = new Embedded("",closeImageResource);
 		//		CSSInject css = new CSSInject();
 		//		css.setValue(".center {margin-left:auto;margin-right:auto;}");
