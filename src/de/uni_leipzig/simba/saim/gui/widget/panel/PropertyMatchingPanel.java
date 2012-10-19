@@ -67,20 +67,20 @@ public class PropertyMatchingPanel extends Panel
 	HorizontalLayout selectionLayout = new HorizontalLayout();
 	ListSelect select;
 	Button useAll;
-	
-	
+
+
 	public PropertyMatchingPanel(final Messages messages) {
 		this.messages=messages;
 		progressLabel = new Label(messages.getString("generatingpropertymatching"));	 //$NON-NLS-1$
 		mainLayout = new VerticalLayout();
-		
+
 		select = new ListSelect(messages.getString("PropertyMatchingPanel.computed")); //$NON-NLS-1$
 		useAll  = new Button(messages.getString("PropertyMatchingPanel.useButton")); //$NON-NLS-1$
 		selectionLayout.addComponent(select);
 		selectionLayout.addComponent(useAll);
 		useAll.setEnabled(false);
 		mainLayout.addComponent(selectionLayout);
-		
+
 		// Buttons to control property mapping
 		computeStringBasedMapping = new Button("Compute String Based PropertyMapping");
 		computeDefaultPropertyMapping = new Button("Compute Default PropertyMapping");
@@ -90,7 +90,7 @@ public class PropertyMatchingPanel extends Panel
 		buttonLayout.addComponent(computeStringBasedMapping);
 		buttonLayout.addComponent(computeDefaultPropertyMapping);
 		mainLayout.addComponent(buttonLayout);
-		
+
 		setContent(mainLayout);
 		getContent().setWidth("100%"); //$NON-NLS-1$
 		/* Create the table with a caption. */
@@ -107,40 +107,40 @@ public class PropertyMatchingPanel extends Panel
 	}
 
 	Cache cache = null;
-	
-//	Thread propMapper = new Thread()
-//	{
-//		@Override
-//		public void run()
-//		{
-//			progress.setVisible(true);
-//			progressLabel.setVisible(true);
-//			Map<String,HashMap<String,Double>> map = performAutomaticPropertyMapping().map;
-//			//			try{Thread.sleep(4000);} catch (InterruptedException e) {e.printStackTrace();}
-//			//			Map<String,HashMap<String,Double>> map = mockPropertyMap();
-//			displayPropertyMapping(map);
-//			progress.setVisible(false);
-//			progressLabel.setVisible(false);
-//		}
-//		/**
-//		 * Method tries to getpropertyMapping
-//		 */
-//		private Mapping performAutomaticPropertyMapping() {
-//			Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
-////			PropertyMapper propMap = new PropertyMapper();
-//			LabelBasedPropertyMapper propMap = new LabelBasedPropertyMapper();
-//			return propMap.getPropertyMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().getClassOfendpoint(), config.getTarget().getClassOfendpoint());
-////			return new Mapping();
-//		}
-//		private Map<String, HashMap<String, Double>> mockPropertyMap()
-//		{
-//			Map<String, HashMap<String, Double>> map = new HashMap<String, HashMap<String, Double>>();
-//			HashMap<String,Double> value = new HashMap<String,Double>();
-//			value.put("rdfs:label",0.337); //$NON-NLS-1$
-//			map.put("rdfs:label",value); //$NON-NLS-1$
-//			return map;
-//		}
-//	};
+
+	//	Thread propMapper = new Thread()
+	//	{
+	//		@Override
+	//		public void run()
+	//		{
+	//			progress.setVisible(true);
+	//			progressLabel.setVisible(true);
+	//			Map<String,HashMap<String,Double>> map = performAutomaticPropertyMapping().map;
+	//			//			try{Thread.sleep(4000);} catch (InterruptedException e) {e.printStackTrace();}
+	//			//			Map<String,HashMap<String,Double>> map = mockPropertyMap();
+	//			displayPropertyMapping(map);
+	//			progress.setVisible(false);
+	//			progressLabel.setVisible(false);
+	//		}
+	//		/**
+	//		 * Method tries to getpropertyMapping
+	//		 */
+	//		private Mapping performAutomaticPropertyMapping() {
+	//			Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
+	////			PropertyMapper propMap = new PropertyMapper();
+	//			LabelBasedPropertyMapper propMap = new LabelBasedPropertyMapper();
+	//			return propMap.getPropertyMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().getClassOfendpoint(), config.getTarget().getClassOfendpoint());
+	////			return new Mapping();
+	//		}
+	//		private Map<String, HashMap<String, Double>> mockPropertyMap()
+	//		{
+	//			Map<String, HashMap<String, Double>> map = new HashMap<String, HashMap<String, Double>>();
+	//			HashMap<String,Double> value = new HashMap<String,Double>();
+	//			value.put("rdfs:label",0.337); //$NON-NLS-1$
+	//			map.put("rdfs:label",value); //$NON-NLS-1$
+	//			return map;
+	//		}
+	//	};
 
 	private Object columnValue(Object o)
 	{
@@ -250,56 +250,56 @@ public class PropertyMatchingPanel extends Panel
 	public void attach()
 	{
 		super.attach();
-	
+
 		new Thread() {
 			@Override
 			public void run() {
-					getAllProperties();
-					//		List<String> sourcePropertiesFull = new LinkedList<String>();
-					//		List<String> targetPropertiesFull = new LinkedList<String>();
-					//		sourceProperties = new LinkedList<String>();
-					//		targetProperties = new LinkedList<String>();
-					//		if(Configuration.getInstance().isLocal) {
-					//			for(String prop : Configuration.getInstance().getSource().properties) {
-					//				sourcePropertiesFull.add(prop);
-					//			}
-					//			
-					//			for(String prop : Configuration.getInstance().getTarget().properties) {
-					//				targetPropertiesFull.add(prop);
-					//			}
-					//		} else {
-					//			sourcePropertiesFull = allPropertiesFromKBInfo(source);
-					//			targetPropertiesFull = allPropertiesFromKBInfo(target);
-					//		}		
-					//		// abbreviate
-					//		for(String prop : sourcePropertiesFull) {
-					//			String s_abr=PrefixHelper.abbreviate(prop);
-					//			sourceProperties.add(s_abr);
-					//		}
-					//		
-					//		for(String prop : targetPropertiesFull) {
-					//			String s_abr=PrefixHelper.abbreviate(prop);
-					//			targetProperties.add(s_abr);
-					//		}
-					table.setWidth("100%"); //$NON-NLS-1$
-					mainLayout.addComponent(table);		
-					closeImageResource = new ClassResource("img/no_crystal_clear_16.png",getApplication());		 //$NON-NLS-1$
-					/* Define the names and data types of columns.
-					 * The "default value" parameter is meaningless here. */		
-					table.addContainerProperty(messages.getString("sourceproperty"), PropertyComboBox.class,  null); //$NON-NLS-1$
-					table.addContainerProperty(messages.getString("targetproperty"), PropertyComboBox.class,  null); //$NON-NLS-1$
-					table.addContainerProperty("", Button.class,  null); //$NON-NLS-1$
-					//table.setColumnWidth("",48);
+				getAllProperties();
+				//		List<String> sourcePropertiesFull = new LinkedList<String>();
+				//		List<String> targetPropertiesFull = new LinkedList<String>();
+				//		sourceProperties = new LinkedList<String>();
+				//		targetProperties = new LinkedList<String>();
+				//		if(Configuration.getInstance().isLocal) {
+				//			for(String prop : Configuration.getInstance().getSource().properties) {
+				//				sourcePropertiesFull.add(prop);
+				//			}
+				//			
+				//			for(String prop : Configuration.getInstance().getTarget().properties) {
+				//				targetPropertiesFull.add(prop);
+				//			}
+				//		} else {
+				//			sourcePropertiesFull = allPropertiesFromKBInfo(source);
+				//			targetPropertiesFull = allPropertiesFromKBInfo(target);
+				//		}		
+				//		// abbreviate
+				//		for(String prop : sourcePropertiesFull) {
+				//			String s_abr=PrefixHelper.abbreviate(prop);
+				//			sourceProperties.add(s_abr);
+				//		}
+				//		
+				//		for(String prop : targetPropertiesFull) {
+				//			String s_abr=PrefixHelper.abbreviate(prop);
+				//			targetProperties.add(s_abr);
+				//		}
+				table.setWidth("100%"); //$NON-NLS-1$
+				mainLayout.addComponent(table);		
+				closeImageResource = new ClassResource("img/no_crystal_clear_16.png",getApplication());		 //$NON-NLS-1$
+				/* Define the names and data types of columns.
+				 * The "default value" parameter is meaningless here. */		
+				table.addContainerProperty(messages.getString("sourceproperty"), PropertyComboBox.class,  null); //$NON-NLS-1$
+				table.addContainerProperty(messages.getString("targetproperty"), PropertyComboBox.class,  null); //$NON-NLS-1$
+				table.addContainerProperty("", Button.class,  null); //$NON-NLS-1$
+				//table.setColumnWidth("",48);
 
-					/* Add a few items in the table. */
+				/* Add a few items in the table. */
 
-					//		Button closeButton = new Button();
-					//		closeButton.setWidth("16px");
-					//		closeButton.setHeight("16px");		
-					//		closeButton.setIcon(resource);
-					Object[] row = createTableRow();
-					table.addItem(row,row);
-					//addComponent(new PropertyComboBox(mockAllPropertiesFromKBInfo(null)));
+				//		Button closeButton = new Button();
+				//		closeButton.setWidth("16px");
+				//		closeButton.setHeight("16px");		
+				//		closeButton.setIcon(resource);
+				Object[] row = createTableRow();
+				table.addItem(row,row);
+				//addComponent(new PropertyComboBox(mockAllPropertiesFromKBInfo(null)));
 
 			}
 		}.start();
@@ -367,66 +367,15 @@ public class PropertyMatchingPanel extends Panel
 		Set<String> propListTarget = null;
 		KBInfo info = config.getSource();
 		String className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8); //$NON-NLS-1$
-		if(CACHING) {
-			cache = CacheManager.getInstance().getCache("propertymapping"); //$NON-NLS-1$
-			//			if(cache.getStatus()==net.sf.ehcache.Status.STATUS_UNINITIALISED) {cache.initialise();}					
-			List<Object> parameters = Arrays.asList(new Object[] {info.endpoint, info.graph, className});
-			try{
-				if(cache.isKeyInCache(parameters))
-				{		
-					propListSource = (Set<String>) cache.get(parameters).getValue();
-					logger.info("Property List Cache hit: "+info.endpoint); //$NON-NLS-1$
-				}
-			} catch(Exception e){logger.info("PropertyMapping cache exception:"+e.getMessage());} //$NON-NLS-1$
-			if(propListSource == null || propListSource.size()==0) {
-				logger.info("Have to query properties of source...");
-				try {
-					propListSource = SPARQLHelper.properties(info.endpoint, info.graph, className);
-				} catch(Exception e) {
-					propListSource = new HashSet<String>();
-					getWindow().showNotification("Error while querying properties of endpoint: "+info.endpoint);
-				}
-				logger.info("Found these source properties...\n"+propListSource+"\n save them in cache...");
-				cache.put(new Element(parameters, propListSource));
-				cache.flush();	
-			}
-			// target
-			info = config.getTarget();
-			className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8); //$NON-NLS-1$
-			parameters = Arrays.asList(new Object[] {info.endpoint, info.graph, className});
-			try{
-				if(cache.isKeyInCache(parameters))
-				{		
-					propListTarget = (Set<String>) cache.get(parameters).getValue();
-					logger.info("Property List Cache hit: "+info.endpoint); //$NON-NLS-1$
-				}
-			} catch(Exception e){logger.info("PropertyMapping cache exception:"+e.getMessage());} //$NON-NLS-1$
-			if(propListTarget == null || propListTarget.size()==0) {
-				try {
-					logger.info("Have to query properties of target...");
-					propListTarget = SPARQLHelper.properties(info.endpoint, info.graph, className);
-					logger.info("Found these target properties...\n"+propListTarget+"\n save them in cache...");
-					if(cache.getStatus()==net.sf.ehcache.Status.STATUS_UNINITIALISED) {cache.initialise();}					
-					cache.put(new Element(parameters, propListTarget));
-					cache.flush();
-				} catch(Exception e) {
-					e.printStackTrace();
-					propListTarget = new HashSet<String>();
-					getWindow().showNotification("Error while querying properties of endpoint: "+info.endpoint);
-				}	
-			}
+		info = config.getSource();
+		className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8); //$NON-NLS-1$
+		propListSource = SPARQLHelper.properties(info.endpoint, info.graph, className);
+		logger.info("Got "+propListSource.size()+ " source props"); //$NON-NLS-1$ //$NON-NLS-2$
+		info = config.getTarget();
+		className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8); //$NON-NLS-1$
+		propListTarget = SPARQLHelper.properties(info.endpoint, info.graph, className);
+		logger.info("Got "+propListTarget.size()+ " target props"); //$NON-NLS-1$ //$NON-NLS-2$
 
-		}
-		else {
-			info = config.getSource();
-			className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8); //$NON-NLS-1$
-			propListSource = SPARQLHelper.properties(info.endpoint, info.graph, className);
-			logger.info("Got "+propListSource.size()+ " source props"); //$NON-NLS-1$ //$NON-NLS-2$
-			info = config.getTarget();
-			className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8); //$NON-NLS-1$
-			propListTarget = SPARQLHelper.properties(info.endpoint, info.graph, className);
-			logger.info("Got "+propListTarget.size()+ " target props"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
 		for(String prop : propListSource) {
 			String s_abr=PrefixHelper.abbreviate(prop);
 			sourceProperties.add(s_abr);
@@ -441,12 +390,12 @@ public class PropertyMatchingPanel extends Panel
 	//TODO quick fix to support multiple computations
 	UseComputedClickListener useComputedListener;
 	Property.ValueChangeListener selectListener = new Property.ValueChangeListener() {			
-			@Override
-			public void valueChange(ValueChangeEvent event) {
-				ClassMatchItem item = (ClassMatchItem) select.getValue();
-				addSingleMatchToTable(item.getSourceClass(), item.getTargetClass());
-			}
-		};
+		@Override
+		public void valueChange(ValueChangeEvent event) {
+			ClassMatchItem item = (ClassMatchItem) select.getValue();
+			addSingleMatchToTable(item.getSourceClass(), item.getTargetClass());
+		}
+	};
 	/**
 	 * TODO causing java.util.ConcurrentModificationExceptions !!!
 	 * Show computed Property mapping in select, activate Button to use them all.
@@ -454,7 +403,7 @@ public class PropertyMatchingPanel extends Panel
 	 */
 	private synchronized void displayPropertyMapping(Map<String, HashMap<String, Double>> map)
 	{
-		
+
 		logger.info("Displaying property Mapping"); //$NON-NLS-1$
 		select.removeListener(selectListener);
 		useAll.removeListener(useComputedListener);
@@ -507,7 +456,7 @@ public class PropertyMatchingPanel extends Panel
 		table.addItem(row,row);
 		listenerActive=true;
 	}
-	
+
 	/**
 	 * Called on next button click.
 	 */
@@ -524,7 +473,7 @@ public class PropertyMatchingPanel extends Panel
 			}			
 		}
 	}
-	
+
 	/**
 	 * Listener to add all computed property matches to the table.
 	 * @author Lyko
@@ -535,18 +484,15 @@ public class PropertyMatchingPanel extends Panel
 		public UseComputedClickListener(Map<String, HashMap<String, Double>> propertyMap) {
 			this.propertyMap = propertyMap;
 		}
-		
+
 		@Override
 		public void buttonClick(ClickEvent event) {
 			addMapToTable(propertyMap);		
 		}
 	}
-	
-	/**
-	 * React on Button clicks to compute automatic property mapping, either string based or with the default mechanism.
-	 * @author Lyko
-	 *
-	 */
+
+	/** React on Button clicks to compute automatic property mapping, either string based or with the default mechanism.
+	 *  @author Lyko */
 	class ControlPropertyMappingListener implements Button.ClickListener {
 		boolean stringBased = true;
 		public ControlPropertyMappingListener(boolean stringBased) {
@@ -560,22 +506,22 @@ public class PropertyMatchingPanel extends Panel
 			propMapper = new PropertyMappingThread(stringBased);
 			propMapper.start();
 		}
-		
+
 	}
-	
+
 	/**
 	 * Thread that performs automatic property mappings.
 	 * @author Lyko
 	 *
 	 */
 	class PropertyMappingThread extends Thread {
-		
+
 		boolean stringBased = true;
-		
+
 		public PropertyMappingThread(boolean stringBased) {
 			this.stringBased = stringBased;
 		}
-		
+
 		@Override
 		public void run()
 		{
@@ -590,14 +536,14 @@ public class PropertyMatchingPanel extends Panel
 			progress.setEnabled(true);
 			progress.setVisible(true);
 			progressLabel.setVisible(true);
-		
+
 			Map<String,HashMap<String,Double>> map = performAutomaticPropertyMapping().map;
 			if(map != null)
 				displayPropertyMapping(map);
 			{
-			progress.setEnabled(false);
-			progress.setVisible(false);
-			progressLabel.setVisible(false);
+				progress.setEnabled(false);
+				progress.setVisible(false);
+				progressLabel.setVisible(false);
 			}
 			//enable button
 			if(stringBased) {
@@ -623,7 +569,7 @@ public class PropertyMatchingPanel extends Panel
 					return (Mapping) mappingCache.get(parameters).getValue();
 				}
 			}
-			
+
 			PropertyMapper propMap;
 			if(stringBased) {
 				logger.info("Starting string based PropertyMapper");
@@ -634,7 +580,7 @@ public class PropertyMatchingPanel extends Panel
 			}
 			try {
 				Mapping m = propMap.getPropertyMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().getClassOfendpoint(), config.getTarget().getClassOfendpoint());
-				
+
 				if(CACHING) {
 					mappingCache = CacheManager.getInstance().getCache("automaticpropertymapping"); //$NON-NLS-1$
 					if(mappingCache.getStatus()==net.sf.ehcache.Status.STATUS_UNINITIALISED) {mappingCache.initialise();}
@@ -651,7 +597,7 @@ public class PropertyMatchingPanel extends Panel
 			}
 		}
 	}
-	
+
 	/**
 	 * Bean for a single class match.
 	 * @author Lyko
@@ -672,7 +618,7 @@ public class PropertyMatchingPanel extends Panel
 			this.similarity=similarity;
 		}
 		public ClassMatchItem(String sourceClass, String targetClass) {
-			
+
 		}
 		public String getSourceClass() {
 			return sourceClass;
