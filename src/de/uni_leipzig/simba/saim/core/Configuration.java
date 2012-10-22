@@ -5,15 +5,12 @@ import java.beans.PropertyChangeSupport;
 import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.log4j.Logger;
-
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-
 import de.konrad.commons.sparql.PrefixHelper;
 import de.uni_leipzig.simba.genetics.util.PropertyMapping;
 import de.uni_leipzig.simba.io.ConfigReader;
@@ -25,13 +22,14 @@ import de.uni_leipzig.simba.saim.core.metric.Output;
 public class Configuration
 {
 	private Logger logger = Logger.getLogger("SAIM");
-	public Output metric = null; 
+	protected Output metric = null;
+		
+	
 //	private static Configuration instance = new Configuration();	
 	private PropertyChangeSupport changes = new PropertyChangeSupport( this ); 
 	public static final String SETTING_CONFIG = "setting from xml";
 	private String id = null;
 	private String name;
-
 //	private double acceptanceThreshold=0.5d;
 //	private double reviewThreshold=0.4d;
 	int granularity=2;
@@ -74,7 +72,7 @@ public class Configuration
 	}
 	public double getAcceptanceThreshold() {
 		if(metric == null || metric.param1==null) {
-			logger.warn("Not able to set threshold");
+			logger.warn("Not able to get threshold");
 			return 0.3d;
 		}
 		return metric.param1;
@@ -85,7 +83,7 @@ public class Configuration
 		metric.param1 = acceptanceThreshold;
 	}
 	public double getVerificationThreshold() {
-		if( metric.param2 == null)
+		if( metric == null ||metric.param2 == null)
 			return getAcceptanceThreshold()-0.1d;
 		else
 			return metric.param2;
@@ -191,9 +189,7 @@ public class Configuration
 			element.addContent(restrictionElement);
 			restrictionElement.setText(property);
 		}
-
 	}
-
 
 	public void saveToXML(String filename)
 	{
