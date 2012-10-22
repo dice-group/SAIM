@@ -18,7 +18,6 @@ import de.uni_leipzig.simba.io.KBInfo;
 /**
  * Form to define preprocessing functions for properties.
  * @author Lyko
- *
  */
 public class PreprocessingForm extends Form{
 	KBInfo info;

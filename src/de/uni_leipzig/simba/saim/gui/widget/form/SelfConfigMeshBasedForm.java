@@ -19,7 +19,6 @@ import de.uni_leipzig.simba.saim.Messages;
  */
 public class SelfConfigMeshBasedForm extends Form {
 	/**
-	 * 
 	 */
 	private static final long serialVersionUID = 3184156595397084333L;
 	private final Messages messages;
@@ -41,7 +40,6 @@ public class SelfConfigMeshBasedForm extends Form {
 	/**
 	 * Used to generate items of the form for the MeshBasedSelfConfigForm form.
 	 * @author Lyko
-	 *
 	 */
 	class SelfConfigMeshBasedFormFieldFactory implements FormFieldFactory {
 		private static final long serialVersionUID = 52534782115538460L;

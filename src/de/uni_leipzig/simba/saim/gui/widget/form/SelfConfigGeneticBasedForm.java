@@ -42,12 +42,10 @@ public class SelfConfigGeneticBasedForm extends Form {
 	/**
 	 * Class to construc fields.	
 	 * @author Lyko
-	 *
 	 */
 	class SelfConfigGeneticBasedFormFieldFactory implements FormFieldFactory {
 
 		/**
-		 * 
 		 */
 		private static final long serialVersionUID = 1990806900381737931L;
 

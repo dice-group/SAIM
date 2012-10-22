@@ -4,15 +4,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vaadin.jonatan.contexthelp.ContextHelp;
-
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -25,7 +22,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
-
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.learning.query.DefaultClassMapper;
 import de.uni_leipzig.simba.learning.query.LabelBasedClassMapper;
@@ -232,7 +228,6 @@ public class ClassMatchingPanel extends Panel
 	/**
 	 * Listener for buttons to compute mappings again.
 	 * @author Lyko
-	 *
 	 */
 	public class ComputeButtonClickListener implements Button.ClickListener {
 		boolean simple = true;		
@@ -259,7 +254,6 @@ public class ClassMatchingPanel extends Panel
 	/**
 	 * Thread to compute class mappings. 
 	 * @author Lyko
-	 *
 	 */
 	public class ComputeClassMapping extends Thread {		
 		boolean stringBased = true;		

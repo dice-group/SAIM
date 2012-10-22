@@ -16,7 +16,6 @@ import de.uni_leipzig.simba.saim.core.Configuration;
 /**
  * Deprecated class was used to set metric manually
  * @author Lyko
- *
  */
 public class ManualMetricForm extends Form{
 	private static final long serialVersionUID = 4168159525103296182L;
@@ -47,7 +46,6 @@ public class ManualMetricForm extends Form{
 	
 	public class ThresHoldValidator extends DoubleValidator {
 		/**
-		 * 
 		 */
 		private static final long serialVersionUID = 8944911362399424017L;
 		public ThresHoldValidator() {
@@ -69,7 +67,6 @@ public class ManualMetricForm extends Form{
 	
 	public class MetricValidator implements Validator {	
 		/**
-		 * 
 		 */
 		private static final long serialVersionUID = -7980511305640285584L;
 

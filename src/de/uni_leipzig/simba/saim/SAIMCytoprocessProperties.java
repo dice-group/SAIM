@@ -7,9 +7,7 @@ import java.util.Properties;
 
 import de.uni_leipzig.simba.saim.cytoprocess.CytoprocessProperties;
 /**
- * 
  * @author rspeck
- *
  */
 public class SAIMCytoprocessProperties {
 	

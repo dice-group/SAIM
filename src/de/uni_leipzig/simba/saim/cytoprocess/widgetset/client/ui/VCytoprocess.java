@@ -13,9 +13,7 @@ import com.vaadin.terminal.gwt.client.VConsole;
 import de.uni_leipzig.simba.saim.cytoprocess.widgetset.client.ui.graph.VGraph;
 import de.uni_leipzig.simba.saim.cytoprocess.widgetset.client.ui.graph.VVisualStyle;
 /**
- * 
  * @author rspeck
- *
  */
 public class VCytoprocess extends VProcessingSVGextended {
 
@@ -45,7 +43,6 @@ public class VCytoprocess extends VProcessingSVGextended {
 	private Object selectedObject = null;
 	
 	/**	 
-	 * 
 	*/
 	public VCytoprocess() {
 		if(LOG)VConsole.log("VCytoprocess ...");
@@ -54,7 +51,6 @@ public class VCytoprocess extends VProcessingSVGextended {
 	}
 	
 	/** This method will be called only once during initializing after updateFromUIDL(...) was called
-	 * 
 	 * */
 	@Override
 	public void setup() {
@@ -284,7 +280,6 @@ public class VCytoprocess extends VProcessingSVGextended {
 	
 	/**
 	 * sends the client to delete the node
-	 * 
 	 * @param nodeid
 	 */
 	public void deleteNode(final int nodeid) {
@@ -299,7 +294,6 @@ public class VCytoprocess extends VProcessingSVGextended {
 	
 	/**
 	 * sends the client to delete the edge
-	 * 
 	 * @param nodeid
 	 */
 	public void deleteEdge(final int edgeid) {
@@ -315,7 +309,6 @@ public class VCytoprocess extends VProcessingSVGextended {
 	/**
 	 * sets a tmp node named likedNode and and a flag isLinkingTo to true. 
 	 * Used to make an edge on client side.
-	 * 
 	 * @param nodeid
 	 */
 	public void setlinkNode(int nodeid){

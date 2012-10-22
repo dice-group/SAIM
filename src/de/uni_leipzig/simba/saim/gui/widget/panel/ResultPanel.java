@@ -16,7 +16,6 @@ import de.uni_leipzig.simba.saim.gui.widget.window.SerializationWindow;
 public class ResultPanel extends Panel
 {
 	/**
-	 * 
 	 */
 	private static final long serialVersionUID = -7935224905304705467L;
 	private final Messages messages;
@@ -52,7 +51,6 @@ public class ResultPanel extends Panel
 	class DownLoadButtonClickListener implements Button.ClickListener
 	{
 		/**
-		 * 
 		 */
 		private static final long serialVersionUID = -2521504101562533617L;
 

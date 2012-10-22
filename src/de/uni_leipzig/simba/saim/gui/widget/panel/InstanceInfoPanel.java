@@ -1,18 +1,15 @@
 package de.uni_leipzig.simba.saim.gui.widget.panel;
 
-
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-
 import de.uni_leipzig.simba.data.Instance;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 /**
  * Panel to display information available for two instances.
  * @author Lyko
- *
  */
 public class InstanceInfoPanel extends Panel {
 	private static final long serialVersionUID = 1L;

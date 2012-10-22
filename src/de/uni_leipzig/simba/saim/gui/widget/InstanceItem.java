@@ -14,7 +14,6 @@ import de.uni_leipzig.simba.data.Instance;
 public class InstanceItem implements Item
 {
 	/**
-	 * 
 	 */
 	private static final long serialVersionUID = -588945056441225096L;
 	public final Instance instance;

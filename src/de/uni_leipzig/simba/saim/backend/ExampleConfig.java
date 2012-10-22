@@ -5,7 +5,6 @@ import java.io.Serializable;
 /**
  * An example config as of now has only 2 fields: name and fileParth;
  * @author Lyko
- *
  */
 public class ExampleConfig implements Serializable {
 	private static final long serialVersionUID = 1L;

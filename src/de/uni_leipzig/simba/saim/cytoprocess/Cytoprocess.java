@@ -21,9 +21,7 @@ import cytoscape.Cytoscape;
 import cytoscape.layout.CyLayoutAlgorithm;
 import cytoscape.view.CyNetworkView;
 /**
- * 
  * @author rspeck
- *
  */
 @ClientWidget(VCytoprocess.class)
 public class Cytoprocess extends Processing {
@@ -51,7 +49,6 @@ public class Cytoprocess extends Processing {
 	
 	
 	/**
-	 * 
 	 */
 	public Cytoprocess(int width, int height){
 		String name = "Cytoprocess";

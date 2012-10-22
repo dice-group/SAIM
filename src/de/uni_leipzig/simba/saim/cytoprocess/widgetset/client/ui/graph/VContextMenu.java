@@ -6,9 +6,7 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PopupPanel;
 /**
- * 
  * @author rspeck
- *
  */
 public class VContextMenu extends PopupPanel {
 

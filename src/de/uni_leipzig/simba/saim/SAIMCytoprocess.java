@@ -27,9 +27,7 @@ import de.uni_leipzig.simba.saim.core.metric.Property.Origin;
 import de.uni_leipzig.simba.saim.cytoprocess.Cytoprocess;
 import de.uni_leipzig.simba.saim.cytoprocess.PaintController;
 /**
- * 
  * @author rspeck
- *
  */
 public class SAIMCytoprocess extends Cytoprocess {
 

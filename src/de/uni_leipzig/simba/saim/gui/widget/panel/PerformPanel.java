@@ -4,7 +4,6 @@ import com.vaadin.ui.Panel;
 
 public abstract class PerformPanel extends Panel{
 	/**
-	 * 
 	 */
 	private static final long serialVersionUID = -7297618651638896173L;
 

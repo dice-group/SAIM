@@ -25,9 +25,7 @@ import com.vaadin.terminal.gwt.client.VConsole;
 
 import de.uni_leipzig.simba.saim.cytoprocess.widgetset.client.ui.VCytoprocess;
 /**
- * 
  * @author rspeck
- *
  */
 public class VGraph {
 
@@ -40,7 +38,6 @@ public class VGraph {
 	public boolean LOG = false;
 
 	/**
-	 * 
 	 * @param VCytoprocess
 	 */
 	public VGraph(VCytoprocess vcypro) {
@@ -408,9 +405,7 @@ public class VGraph {
 }
 
 /**
- * 
  * @author rspeck
- * 
  */
 class EdgeHandler implements ContextListener, MouseDownHandler,
 		DoubleClickHandler {
@@ -474,9 +469,7 @@ class EdgeHandler implements ContextListener, MouseDownHandler,
 }
 
 /**
- * 
  * @author rspeck
- * 
  */
 class NodeHandler implements ContextListener, MouseDownHandler, MouseUpHandler,
 		ClickHandler, MouseMoveHandler, DoubleClickHandler,MouseOverHandler {

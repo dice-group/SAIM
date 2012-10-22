@@ -6,7 +6,6 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
-
 import de.konrad.commons.sparql.PrefixHelper;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.gui.widget.form.ClassChooser.ClassNode;
@@ -17,7 +16,6 @@ import de.uni_leipzig.simba.saim.gui.widget.form.ClassChooser.ClassNode;
 public class ClassMatchingForm extends Form
 {	
 	/**
-	 * 
 	 */
 	private static final long serialVersionUID = -7897392568006310314L;
 	protected ComboBox field; 
@@ -41,7 +39,6 @@ public class ClassMatchingForm extends Form
 		
 		chooser.tree.addListener(new ItemClickListener() {	
 			/**
-			 * 
 			 */
 			private static final long serialVersionUID = -4408783618595964107L;
 

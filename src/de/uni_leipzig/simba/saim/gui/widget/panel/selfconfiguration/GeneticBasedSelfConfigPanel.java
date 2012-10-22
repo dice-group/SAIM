@@ -24,7 +24,6 @@ import de.uni_leipzig.simba.saim.gui.widget.form.SelfConfigGeneticBasedForm;
  * Shows form to configure the the genetic based learning approach, and starts 
  * learning process. Extends PerformPanel to stop learning action on close().
  * @author Lyko
- *
  */
 public class GeneticBasedSelfConfigPanel extends SelfConfigExecutionPanel {
 	private static final long serialVersionUID = -6889241029277079008L;

@@ -14,12 +14,10 @@ import de.uni_leipzig.simba.saim.core.Configuration;
 /**
  * Form for setting acceptance thresholds.
  * @author Lyko
- *
  */
 public class ThresholdForm extends Form {
 
 	/**
-	 * 
 	 */
 	private static final long serialVersionUID = 108894012576028115L;
 	private final Messages messages;
@@ -37,7 +35,6 @@ public class ThresholdForm extends Form {
 	
 	class ThresholdFormFieldFactory implements FormFieldFactory {		
 		/**
-		 * 
 		 */
 		private static final long serialVersionUID = 7097223897721929002L;
 
@@ -70,7 +67,6 @@ public class ThresholdForm extends Form {
 	/**
 	 * Bean used by class ThresholdForm to remember settings.
 	 * @author Lyko
-	 *
 	 */
 	public class ThresholdBean {
 		private double acceptanceThreshold;

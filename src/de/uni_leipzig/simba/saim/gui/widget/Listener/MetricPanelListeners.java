@@ -9,7 +9,6 @@ import de.uni_leipzig.simba.saim.gui.widget.panel.PerformPanel;
 /**
  * Class with common methods of the metricPanel Buttons ClickListeners
  * @author Lyko
- *
  */
 public class MetricPanelListeners
 {
@@ -37,7 +36,6 @@ public class MetricPanelListeners
 		Window sub = new Window();
 		sub.addListener(new CloseListener() {			
 			/**
-			 * 
 			 */
 			private static final long serialVersionUID = 5880054040870696798L;
 

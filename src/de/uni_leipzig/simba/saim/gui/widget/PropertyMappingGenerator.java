@@ -20,7 +20,6 @@ import de.uni_leipzig.simba.saim.SAIMApplication;
 
 public class PropertyMappingGenerator extends Panel {
 	/**
-	 * 
 	 */
 	private static final long serialVersionUID = -2569976837556090479L;
 	VerticalLayout layout = new VerticalLayout();
@@ -94,7 +93,6 @@ public class PropertyMappingGenerator extends Panel {
 	private class addPropertyMatchListener implements Button.ClickListener {
 
 		/**
-		 * 
 		 */
 		private static final long serialVersionUID = 1931071630998923715L;
 

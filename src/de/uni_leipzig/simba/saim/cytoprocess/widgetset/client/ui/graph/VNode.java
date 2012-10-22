@@ -8,9 +8,7 @@ import com.vaadin.terminal.gwt.client.VConsole;
 
 import de.uni_leipzig.simba.saim.cytoprocess.widgetset.client.ui.VCytoprocess;
 /**
- * 
  * @author rspeck
- *
  */
 public class VNode {
 

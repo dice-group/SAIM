@@ -19,7 +19,6 @@ import de.uni_leipzig.simba.util.DataCleaner;
  * Class to load from a persistent storage. As of now we use a simple file holding the informations.
  * We use this extra class to load to support an easy integration of an database. 
  * @author Lyko
- *
  */
 public class ExampleLoader {
 	private final String storageFile = "example.list";

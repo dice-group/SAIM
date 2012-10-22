@@ -9,11 +9,8 @@ import org.vaadin.gwtgraphics.client.shape.Circle;
 import org.vaadin.gwtgraphics.client.shape.Path;
 
 /**
- * 
  * Extended Vaadin ProcessingSVG component.
- * 
  * @author rspeck
- *
  */
 public class VProcessingSVGextended extends VProcessingSVG{
 	
@@ -24,7 +21,6 @@ public class VProcessingSVGextended extends VProcessingSVG{
 	private float scaleFactor = 2.0f; 
 	private boolean scaledUp = false;
 	/**
-	 * 
 	 */
 	public VProcessingSVGextended(){
 		super();
@@ -55,7 +51,6 @@ public class VProcessingSVGextended extends VProcessingSVG{
 	
 	/**
 	 * Moves all Shape objects
-	 * 
 	 * @param x
 	 * @param y
 	 */
@@ -78,7 +73,6 @@ public class VProcessingSVGextended extends VProcessingSVG{
 	
 	/**
 	 * Draw a diamond.
-	 *
 	 * @param x
 	 *            X-coordinate of the center of the diamond
 	 * @param y
@@ -125,7 +119,6 @@ public class VProcessingSVGextended extends VProcessingSVG{
 	
 	/**
 	 * Draw a hexagon.
-	 *
 	 * @param x
 	 *            X-coordinate of the center of the hexagon
 	 * @param y
@@ -168,7 +161,6 @@ public class VProcessingSVGextended extends VProcessingSVG{
 	}
 	/**
 	 * Draw a circle.
-	 *
 	 * @param x
 	 *            X-coordinate
 	 * @param y
@@ -201,7 +193,6 @@ public class VProcessingSVGextended extends VProcessingSVG{
 	
 	/**
 	 * Draw a rectangle.
-	 *
 	 * @param x
 	 *            X-coordinate of the center of the rectangle
 	 * @param y
@@ -259,7 +250,6 @@ public class VProcessingSVGextended extends VProcessingSVG{
 	}
 	/**
 	 * Fits all Shape objects to the canvas size
-	 * 
 	 */
 	public void fitShapes(final int margin){
 		
@@ -342,7 +332,6 @@ public class VProcessingSVGextended extends VProcessingSVG{
 	
 	/**
 	 * Set background color (RGB).
-	 *
 	 * @param color
 	 *            RGB color rgb(" + color + "," + color + "," + color + ")
 	 */
@@ -355,7 +344,6 @@ public class VProcessingSVGextended extends VProcessingSVG{
 	}
 	/**
 	 * Set stroke color (RGB)
-	 *
 	 * @param c
 	 *              RGB color rgb(" + color + "," + color + "," + color + ")
 	 */
@@ -365,7 +353,6 @@ public class VProcessingSVGextended extends VProcessingSVG{
 	}
 	/**
 	 * Set the fill color (RGB)
-	 *
 	 * @param c
 	 *              RGB color rgb(" + color + "," + color + "," + color + ")
 	 */

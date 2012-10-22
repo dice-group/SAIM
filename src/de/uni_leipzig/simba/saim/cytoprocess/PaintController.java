@@ -19,9 +19,7 @@ import com.vaadin.terminal.PaintTarget;
 import cytoscape.Cytoscape;
 import cytoscape.visual.VisualPropertyType;
 /**
- * 
  * @author rspeck
- *
  */
 public class PaintController {
 	

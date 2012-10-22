@@ -26,7 +26,6 @@ import de.uni_leipzig.simba.saim.core.Configuration;
 public class SerializationWindow extends Window
 {
 	/**
-	 * 
 	 */
 	private static final long serialVersionUID = 949091830343396212L;
 	private final Messages messages;
@@ -86,7 +85,6 @@ public class SerializationWindow extends Window
 	
 	private class SerializerSelectListener implements ValueChangeListener {
 		/**
-		 * 
 		 */
 		private static final long serialVersionUID = -4905589098233429238L;
 

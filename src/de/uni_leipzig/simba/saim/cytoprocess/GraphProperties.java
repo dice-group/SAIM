@@ -18,9 +18,7 @@ import cytoscape.layout.CyLayoutAlgorithm;
 import cytoscape.view.CyNetworkView;
 import cytoscape.visual.VisualPropertyType;
 /**
- * 
  * @author rspeck
- *
  */
 public class GraphProperties {
 	private static transient final Logger LOGGER = Logger.getLogger(GraphProperties.class);
@@ -90,7 +88,6 @@ public class GraphProperties {
 
 	/**
 	 * Adds an edge.
-	 * 
 	 * @param 
 	 * @return
 	 */
@@ -136,8 +133,6 @@ public class GraphProperties {
 
 	/**
 	 * Adds a node. Node with same label are allowed.
-	 * 
-	 * 
 	 * @param name node label
 	 * @param x position	
 	 * @param y	position

@@ -11,7 +11,6 @@ import de.uni_leipzig.simba.saim.gui.widget.panel.selfconfiguration.GenericSelfC
 public class SelfConfigClickListener extends MetricPanelListeners implements Button.ClickListener
 {		
 	/**
-	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 

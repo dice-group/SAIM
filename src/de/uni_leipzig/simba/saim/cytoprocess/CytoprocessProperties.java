@@ -9,9 +9,7 @@ import java.util.Properties;
 import cytoscape.Cytoscape;
 import cytoscape.visual.VisualPropertyType;
 /**
- * 
  * @author rspeck
- *
  */
 public class CytoprocessProperties {
 

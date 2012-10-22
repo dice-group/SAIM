@@ -14,7 +14,6 @@ import com.vaadin.data.Property;
 public class ItemUnion implements Item
 {
 	/**
-	 * 
 	 */
 	private static final long serialVersionUID = 8975349959967352635L;
 	// todo: wenn zwei den gleiche namen haben darf keins wegfallen

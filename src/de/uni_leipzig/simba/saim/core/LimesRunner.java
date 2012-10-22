@@ -14,7 +14,6 @@ import de.uni_leipzig.simba.mapper.SetConstraintsMapperFactory;
 public class LimesRunner implements Serializable {
 	
 	/**
-	 * 
 	 */
 	private static final long serialVersionUID = -7235467719847804816L;
 

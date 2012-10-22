@@ -21,9 +21,7 @@ import de.uni_leipzig.simba.saim.core.metric.Operator;
 import de.uni_leipzig.simba.saim.core.metric.Output;
 import de.uni_leipzig.simba.saim.gui.widget.form.PreprocessingForm;
 /**
- * 
  * @author rspeck
- *
  */
 public class SAIMCytoprocessModalWindows {
 

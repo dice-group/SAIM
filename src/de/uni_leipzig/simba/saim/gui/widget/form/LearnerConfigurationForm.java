@@ -17,7 +17,6 @@ import de.uni_leipzig.simba.saim.Messages;
 public class LearnerConfigurationForm extends Form
 {
 	/**
-	 * 
 	 */
 	private static final long serialVersionUID = -3980421724099685985L;
 	private final Messages messages;
@@ -41,11 +40,9 @@ public class LearnerConfigurationForm extends Form
 	/**
 	 * We use a factory to build Form Fields.
 	 * @author Lyko
-	 *
 	 */
 	class LearnerCofigurationFormFieldFactory implements FormFieldFactory {
 	    /**
-		 * 
 		 */
 		private static final long serialVersionUID = 8475635563877784242L;
 

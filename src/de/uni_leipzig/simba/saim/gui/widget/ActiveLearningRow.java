@@ -9,7 +9,6 @@ import com.vaadin.ui.Panel;
 public class ActiveLearningRow extends Panel
 {	
 	/**
-	 * 
 	 */
 	private static final long serialVersionUID = 2052322391116723973L;
 

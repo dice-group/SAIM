@@ -25,7 +25,6 @@ import de.uni_leipzig.simba.saim.gui.widget.panel.ResultPanel;
 /**
  * Implements the idea of a generic Execution window for SelfConfigurators.
  * @author Lyko
- *
  */
 public abstract class SelfConfigExecutionPanel extends PerformPanel{
 	private static final long serialVersionUID = 1L;
@@ -164,7 +163,6 @@ public abstract class SelfConfigExecutionPanel extends PerformPanel{
 	/**
 	 * Listener to show mapping computed by self configurators.
 	 * @author Lyko
-	 *
 	 */
 	class ShowPseudoMappingClickListener implements ClickListener {
 		private static final long serialVersionUID = -5605524411526653096L;

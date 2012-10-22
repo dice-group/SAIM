@@ -5,7 +5,6 @@ import java.util.HashMap;
 /**
  * Bean to automatically build form for genetic learner configuration.
  * @author Lyko
- *
  */
 public class LearnerConfigurationBean {
 	private int generations;

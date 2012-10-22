@@ -11,7 +11,6 @@ import de.uni_leipzig.simba.selfconfig.ReferencePseudoMeasures;
 /**
  * Bean to generate form for Genetic-based self-configurations.
  * @author Lyko
- *
  */
 public class SelfConfigGeneticBasedBean {
 	private double beta;

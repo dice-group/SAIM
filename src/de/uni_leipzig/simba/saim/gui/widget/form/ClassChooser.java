@@ -10,6 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.vaadin.ui.Panel;
@@ -22,6 +24,7 @@ import com.vaadin.ui.Tree.ExpandListener;
 public class ClassChooser extends Panel
 {
 	private static final long serialVersionUID = -7664923698708644130L;
+	private static final Logger log = Logger.getLogger(ClassChooser.class); 
 	protected static final boolean PRELOAD = false;
 	protected final String endpoint,graph;
 	protected final Tree tree;
@@ -43,6 +46,10 @@ public class ClassChooser extends Panel
 		progress.setImmediate(true);
 		progress.setIndeterminate(true);
 		addComponent(progress);
+		final Refresher refresher = new Refresher();
+		refresher.setRefreshInterval(100);
+		final TreeRefreshListener listener = new TreeRefreshListener();
+		refresher.addListener(listener);
 
 		new Thread()
 		{
@@ -50,32 +57,37 @@ public class ClassChooser extends Panel
 			@Override
 			public void run()
 			{
-				final Refresher refresher = new Refresher();
-				TreeRefreshListener listener = new TreeRefreshListener();
-				refresher.addListener(listener);
-				addComponent(refresher);
+				
+//				addComponent(refresher);
 				Set<String> rootClasses = rootClasses(endpoint, graph);
-
+				
+				ClassNode lastNode = null; 
 				for(String clazz: rootClasses)
 				{
-					System.out.println(clazz);
-					tree.addItem(new ClassNode(clazz));
-				}
-				listener.running=false;
+					log.trace(clazz);
+					lastNode = new ClassNode(clazz); 
+					tree.addItem(lastNode);
+				}							
+				
 				tree.setImmediate(true);
-
+				
 				progress.setEnabled(false);
 				ClassChooser.this.removeComponent(progress);
 				
-				tree.addListener(new ExpandListener()
+				ExpandListener expandListener = new ExpandListener()
 				{			
 					@Override
 					public void nodeExpand(ExpandEvent event)
 					{
-						System.out.println("expanding node "+event.getItemId());
+						log.debug("expanding node "+event.getItemId());
 						expandNode((ClassNode) event.getItemId(),PRELOAD?1:0);				
 					}
-				});
+				};				
+				tree.addListener(expandListener);
+
+				// TODO BUG: does not get expanded (or just not shown)
+				if(rootClasses.size()==1) {expandListener.nodeExpand(new ExpandEvent(ClassChooser.this, lastNode));} // owl:Thing				
+				listener.running=false;
 			}
 		}.start();
 		//		
@@ -99,14 +111,15 @@ public class ClassChooser extends Panel
 			try
 			{
 				subClasses  = new ArrayList<String>(subclassesOf(endpoint, graph,node.url));
-				System.out.println(subClasses);
+				log.trace(subClasses);
 				Collections.sort(subClasses); // sorting in java and not in the SPARQL query because the sort order may be different for the short short
+				tree.expandItem(node);
 				for(String subClass: subClasses)
 				{
 
-					ClassNode subNode = new ClassNode(subClass);
+					ClassNode subNode = new ClassNode(subClass);					
 					tree.addItem(subNode);
-					tree.setParent(subNode,node);
+					tree.setParent(subNode,node);					
 					subNodes.add(subNode);
 				}						
 			}

@@ -31,11 +31,9 @@ import de.uni_leipzig.simba.selfconfig.SimpleClassifier;
  * Displays self configuration panel. Loads data as in Configuration specified and runs the 
  * MeshBasedSelfConfigurator.
  * @author Lyko
- *
  */
 public class MeshBasedSelfConfigPanel extends SelfConfigExecutionPanel{
 	/**
-	 * 
 	 */
 	private static final long serialVersionUID = -457009966196619211L;
 	private static transient final Logger logger = LoggerFactory.getLogger(MeshBasedSelfConfigPanel.class);
@@ -164,7 +162,6 @@ public class MeshBasedSelfConfigPanel extends SelfConfigExecutionPanel{
 	/**Implements Listener for generateMetrik Button*/
 	class GenerateMetricButtonClickListener implements Button.ClickListener {
 		/**
-		 * 
 		 */
 		private static final long serialVersionUID = -7458046435037113584L;
 		Layout l;

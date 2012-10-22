@@ -22,12 +22,10 @@ import de.uni_leipzig.simba.saim.gui.widget.form.LearnerConfigurationForm;
 /**
  * Panel for Learner Configuration.
  * @author Lyko
- *
  */
 public class LearningPanel extends PerformPanel
 {
 	/**
-	 * 
 	 */
 	private static final long serialVersionUID = 1906531007896945738L;
 	private final Messages messages;
@@ -139,12 +137,10 @@ public class LearningPanel extends PerformPanel
 	/**
 	 * Reacts on selection of a learner.
 	 * @author Lyko
-	 *
 	 */
 	public class LearnerSelectListener implements ValueChangeListener
 	{
 		/**
-		 * 
 		 */
 		private static final long serialVersionUID = 4295499822581706211L;
 		private final Messages messages;

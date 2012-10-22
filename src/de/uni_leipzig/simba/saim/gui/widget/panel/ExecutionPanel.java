@@ -19,7 +19,6 @@ import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
 public class ExecutionPanel extends PerformPanel implements PropertyChangeListener
 {
 	/**
-	 * 
 	 */
 	private static final long serialVersionUID = -6418644523043046619L;
 	private final Messages messages;

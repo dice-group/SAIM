@@ -9,7 +9,6 @@ import de.konrad.commons.sparql.PrefixHelper;
 
 public class InstanceMatch  implements Serializable{
 	/**
-	 * 
 	 */
 	private static final long serialVersionUID = -1683632585316114100L;
 	public static final int SEED = 23;

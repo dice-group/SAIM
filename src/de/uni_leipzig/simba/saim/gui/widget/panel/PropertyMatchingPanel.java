@@ -480,7 +480,6 @@ public class PropertyMatchingPanel extends Panel
 	/**
 	 * Listener to add all computed property matches to the table.
 	 * @author Lyko
-	 *
 	 */
 	class UseComputedClickListener implements Button.ClickListener {
 		Map<String, HashMap<String, Double>> propertyMap;
@@ -515,7 +514,6 @@ public class PropertyMatchingPanel extends Panel
 	/**
 	 * Thread that performs automatic property mappings.
 	 * @author Lyko
-	 *
 	 */
 	class PropertyMappingThread extends Thread {
 

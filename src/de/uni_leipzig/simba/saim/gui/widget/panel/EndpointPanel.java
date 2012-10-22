@@ -13,7 +13,6 @@ import de.uni_leipzig.simba.saim.Messages;
 public class EndpointPanel extends Panel implements PropertyChangeListener
 {
 	/**
-	 * 
 	 */
 	private static final long serialVersionUID = -5883644284527880143L;
 	private final Messages messages;

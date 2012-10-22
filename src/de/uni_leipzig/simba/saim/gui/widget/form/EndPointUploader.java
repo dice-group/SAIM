@@ -21,7 +21,6 @@ import de.uni_leipzig.simba.saim.core.FileStore;
 /**
  * @BUG: Writes an empty line at the end
  * @author Lyko
- *
  */
 public class EndPointUploader extends CustomComponent implements Upload.SucceededListener, 
 	Upload.FailedListener, Upload.Receiver{

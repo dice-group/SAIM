@@ -23,11 +23,9 @@ import de.uni_leipzig.simba.saim.gui.widget.form.LearnerConfigurationBean;
 /**
  * Panel used for metric genetic learner.
  * @author Lyko
- *
  */
 public class MetricLearnPanel extends  PerformPanel{
 	/**
-	 * 
 	 */
 	private static final long serialVersionUID = -2043563912763885666L;
 	public static Logger logger = Logger.getLogger("LIMES");
@@ -78,7 +76,6 @@ public class MetricLearnPanel extends  PerformPanel{
 
 	public class TerminateButtonClickListener implements Button.ClickListener {
 		/**
-		 * 
 		 */
 		private static final long serialVersionUID = 6943435309453349530L;
 		Layout l;

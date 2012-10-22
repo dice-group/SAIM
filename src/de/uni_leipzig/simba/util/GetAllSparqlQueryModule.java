@@ -49,7 +49,6 @@ public class GetAllSparqlQueryModule extends SparqlQueryModule
 	}
 
 	/** Reads from a SPARQL endpoint and writes the results in a cache
-	 *
 	 * @param cache The cache in which the content on the SPARQL endpoint is
 	 * to be written
 	 */

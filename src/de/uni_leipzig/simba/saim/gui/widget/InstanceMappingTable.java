@@ -208,7 +208,6 @@ public class InstanceMappingTable implements Serializable
 	/**Listener reacts on clicks on the info image*/
 	class InfoIconClickListener implements ClickListener {
 		/**
-		 * 
 		 */
 		private static final long serialVersionUID = 5370196171933436788L;
 		InstanceMatch row; 

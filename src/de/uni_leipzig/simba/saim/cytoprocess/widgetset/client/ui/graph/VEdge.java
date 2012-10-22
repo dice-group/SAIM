@@ -6,9 +6,7 @@ import org.vaadin.gwtgraphics.client.shape.Text;
 import de.uni_leipzig.simba.saim.cytoprocess.widgetset.client.ui.VCytoprocess;
 import de.uni_leipzig.simba.saim.cytoprocess.widgetset.client.ui.graph.VNode;
 /**
- * 
  * @author rspeck
- *
  */
 public class VEdge {
 

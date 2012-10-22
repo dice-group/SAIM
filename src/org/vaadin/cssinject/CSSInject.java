@@ -28,7 +28,6 @@ public class CSSInject extends AbstractComponent {
 	/**
 	 * Instantiate a new CSSInject with the given CSS string. The CSS will be
 	 * applied once the CSSInject component is attached to the application.
-	 * 
 	 * @param styles
 	 */
 	public CSSInject(String styles) {
@@ -39,7 +38,6 @@ public class CSSInject extends AbstractComponent {
 	 * Set the CSS string for this CSSInject. This will be added to the Window
 	 * where the CSSInject is attached as a STYLE element in the HEAD of the
 	 * document.
-	 * 
 	 * @param text
 	 */
 	public void setValue(String text) {
@@ -49,7 +47,6 @@ public class CSSInject extends AbstractComponent {
 
 	/**
 	 * Get the CSS string currently set to this CSSInject component.
-	 * 
 	 * @return
 	 */
 	public String getValue() {
@@ -60,7 +57,6 @@ public class CSSInject extends AbstractComponent {
 	 * Attach a separate CSS stylesheet to the Window where this CSSInject
 	 * instance is attached to. The stylesheet will be added to the document's
 	 * HEAD element as a LINK element with the given resource as the href.
-	 * 
 	 * @param stylesheet
 	 */
 	public Resource addStyleSheet(Resource stylesheet) {
@@ -75,7 +71,6 @@ public class CSSInject extends AbstractComponent {
 
 	/**
 	 * Remove the given stylesheet resource.
-	 * 
 	 * @param styleSheet
 	 * @return
 	 */
@@ -94,7 +89,6 @@ public class CSSInject extends AbstractComponent {
 	 * relative to the theme you use, e.g. if your theme folder is in
 	 * <code>VAADIN/themes/mytheme</code>, then the stylesheet url will be
 	 * <code>VAADIN/themes/mytheme/stylesheetUrl</code>.
-	 * 
 	 * @param styleSheetUrl
 	 */
 	public Resource addThemeStyleSheet(String styleSheetUrl) {

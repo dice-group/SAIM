@@ -20,12 +20,10 @@ import de.uni_leipzig.simba.saim.gui.widget.step.PropertyMatchingStep;
 /**
  * Window used to define the endpoints.
  * @author Lyko
- *
  */
 public class EndpointWindow extends Window implements Serializable
 {	
 	/**
-	 * 
 	 */
 	private static final long serialVersionUID = -2991623255901308493L;
 	transient Layout mainLayout;
@@ -70,7 +68,6 @@ public class EndpointWindow extends Window implements Serializable
 	
 	public class EndpointWindowCloseListener implements CloseListener {
 		/**
-		 * 
 		 */
 		private static final long serialVersionUID = 7712910111369830002L;
 

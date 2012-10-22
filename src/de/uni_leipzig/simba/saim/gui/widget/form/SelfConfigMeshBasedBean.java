@@ -8,7 +8,6 @@ import de.uni_leipzig.simba.selfconfig.MeshBasedSelfConfigurator;
 /**
  * Bean used by the form to configure the MeshBased SelfConfigurator;
  * @author Lyko
- *
  */
 public class SelfConfigMeshBasedBean {
 	private int classifierName;
