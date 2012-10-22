@@ -1,7 +1,6 @@
 package de.uni_leipzig.simba.saim.gui.widget.form;
 
 import org.vaadin.risto.stepper.IntStepper;
-
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.Component;
@@ -10,9 +9,7 @@ import com.vaadin.ui.Form;
 import com.vaadin.ui.FormFieldFactory;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.Slider;
-
 import de.uni_leipzig.simba.saim.Messages;
-
 /**
  * Configurator for the Meshbased selfconfigurator.
  * @author Lyko
@@ -36,7 +33,7 @@ public class SelfConfigMeshBasedForm extends Form {
 		setItemDataSource(item);
 		this.setWriteThrough(true);
 	}
-	
+
 	/**
 	 * Used to generate items of the form for the MeshBasedSelfConfigForm form.
 	 * @author Lyko
@@ -89,13 +86,13 @@ public class SelfConfigMeshBasedForm extends Form {
 				s.setItemCaption(0, "MeshBased SelfConfigurator");
 				s.setItemCaption(1, "Linear MeshBased Selfconfigurator");
 				s.setItemCaption(2, "Disjunctive MeshBased Selfconfigurator");
-			
+
 				s.setNullSelectionAllowed(false);
 				s.select(id);
 				return s;
 			}
 			return null;//unknown field.
 		}
-		
+
 	}
 }

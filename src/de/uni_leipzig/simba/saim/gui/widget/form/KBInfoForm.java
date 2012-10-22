@@ -4,9 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-
 import org.vaadin.jonatan.contexthelp.ContextHelp;
-
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.ui.Button;
@@ -15,14 +13,12 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
-
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.core.DefaultEndpointLoader;
 import de.uni_leipzig.simba.saim.core.Endpoints;
 import de.uni_leipzig.simba.saim.gui.validator.EndpointURLValidator;
 import de.uni_leipzig.simba.saim.gui.validator.PageSizeValidator;
-
 /**
  * Allows the user to manually set the properties of a knowledge base, which are
  * endpoint URL, graph URI, page size, restrictions
@@ -37,9 +33,9 @@ public class KBInfoForm extends Form
 	protected final ComboBox			url;
 	protected final TextField			id;
 	protected final TextField			graph;
-	protected final TextField			pageSize;	
+	protected final TextField			pageSize;
 	protected final TextField			textFields[];
-	protected final Button				next;		
+	protected final Button				next;
 	protected final Component			components[];
 	KBInfo								kbInfo;
 
@@ -69,7 +65,7 @@ public class KBInfoForm extends Form
 		id				= new TextField(messages.getString("idnamespace")); //$NON-NLS-1$
 		graph			= new TextField(messages.getString("graph"));		//$NON-NLS-1$
 		pageSize		= new TextField("Page size", "-1");				//$NON-NLS-1$ //$NON-NLS-2$
-		textFields	= new TextField[] { graph, id, pageSize };		
+		textFields	= new TextField[] { graph, id, pageSize };
 		next			= new Button(messages.getString("ok"));			//$NON-NLS-1$
 		components	= new Component[] { url, graph,pageSize, next};
 		validator = new EndpointURLValidator(url,messages);
@@ -214,7 +210,7 @@ public class KBInfoForm extends Form
 		contextHelp.addHelpForComponent(id,
 				messages.getString("contexthelp.idnamespace")); //$NON-NLS-1$
 		contextHelp.addHelpForComponent(graph,
-				messages.getString("contexthelp.graph")); //$NON-NLS-1$				
+				messages.getString("contexthelp.graph")); //$NON-NLS-1$
 		contextHelp.addHelpForComponent(pageSize,
 				messages.getString("contexthelp.pagesize")); //$NON-NLS-1$
 		// contextHelp.setFollowFocus(true);

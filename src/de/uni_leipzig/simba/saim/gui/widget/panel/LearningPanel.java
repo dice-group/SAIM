@@ -1,7 +1,6 @@
 package de.uni_leipzig.simba.saim.gui.widget.panel;
 
 import java.util.Map.Entry;
-
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.Layout;
@@ -9,7 +8,6 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.genetics.util.Pair;
 import de.uni_leipzig.simba.learning.query.LabelBasedPropertyMapper;
@@ -32,30 +30,30 @@ public class LearningPanel extends PerformPanel
 	private final Layout mainLayout = new VerticalLayout();
 	private PerformPanel learnerPanel = null;
 	private Select learnerSelect;
-	private Panel propMappingPanel;	
+	private Panel propMappingPanel;
 	@SuppressWarnings("unused")
 	private LearnerConfigurationForm configForm;
 	private LearnerConfigurationBean learnerConfigBean = new LearnerConfigurationBean();
 	SAIMApplication application;
-	
+
 	public LearningPanel(SAIMApplication application, final Messages messages) {
 		this.application = application;
 		this.messages=messages;
 	}
-	
+
 	@Override
 	public void attach() {
 		generateLearnerSelect();
-		setContent(mainLayout); 
+		setContent(mainLayout);
 		performPropertyMapping();
 		propMappingPanel = new Panel();
 		fillpropMappingPanel();
 		mainLayout.addComponent(configForm = new LearnerConfigurationForm(learnerConfigBean,messages));
 		mainLayout.addComponent(propMappingPanel);
 		mainLayout.addComponent(learnerSelect);
-		
+
 	}
-	
+
 	/**
 	 * Generate Selection List of Learner.
 	 */
@@ -68,7 +66,7 @@ public class LearningPanel extends PerformPanel
 		learnerSelect.setEnabled(true);
 		learnerSelect.setImmediate(true);
 	}
-	
+
 	/**
 	 * If no PropertyMapping was set. Try to calculate.
 	 * @return true if we can calculate.
@@ -97,9 +95,9 @@ public class LearningPanel extends PerformPanel
 			}
 		} else {
 			return true;
-		}					
+		}
 	}
-	
+
 	/**
 	 * To show Property Mapping.
 	 */
@@ -108,11 +106,11 @@ public class LearningPanel extends PerformPanel
 		VerticalLayout vertl = new VerticalLayout();
 		if(config.propertyMapping.wasSet()) {
 			String caption = "Property Mapping:";
-			this.propMappingPanel.setCaption(caption);			
+			this.propMappingPanel.setCaption(caption);
 			propMappingPanel.setContent(vertl);
 		} else {
 			String caption = "No Property defined and unable to calculate - using default:";
-			this.propMappingPanel.setCaption(caption);		
+			this.propMappingPanel.setCaption(caption);
 			config.propertyMapping.setDefault(config.getSource(), config.getTarget());
 			System.out.println(	config.propertyMapping);
 			propMappingPanel.setContent(vertl);
@@ -133,7 +131,7 @@ public class LearningPanel extends PerformPanel
 		t.setPageLength(Math.min(count, 5));
 		vertl.addComponent(t);
 	}
-	
+
 	/**
 	 * Reacts on selection of a learner.
 	 * @author Lyko
@@ -157,7 +155,7 @@ public class LearningPanel extends PerformPanel
 			mainLayout.removeAllComponents();
 			mainLayout.addComponent(learnerPanel);
 			learnerPanel.start();
-		}		
+		}
 	}
 
 
@@ -173,6 +171,6 @@ public class LearningPanel extends PerformPanel
 	public void start() {
 		generateLearnerSelect();
 	}
-	
-	
+
+
 }

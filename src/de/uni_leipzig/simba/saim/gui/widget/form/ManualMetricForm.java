@@ -1,14 +1,12 @@
 package de.uni_leipzig.simba.saim.gui.widget.form;
 
 import org.apache.log4j.Logger;
-
 import com.vaadin.data.Validator;
 import com.vaadin.data.validator.DoubleValidator;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
-
 import de.uni_leipzig.simba.controller.Parser;
 import de.uni_leipzig.simba.genetics.util.Pair;
 import de.uni_leipzig.simba.saim.SAIMApplication;
@@ -29,31 +27,31 @@ public class ManualMetricForm extends Form{
 		setLayout(perform);
 		HorizontalLayout okbar = new HorizontalLayout();
 		okbar.setHeight("25px");
-		
+
 		setDefaultValues();
 		addValidators();
-		
+
 		this.addField("metric", metricTextField);
 		this.addField("threshold", thresholdTextField);
 		getFooter().addComponent(okbar);
 	}
-	
+
 
 	private void addValidators() {
 		thresholdTextField.addValidator(new ThresHoldValidator());
 		metricTextField.addValidator(new MetricValidator());
 	}
-	
+
 	public class ThresHoldValidator extends DoubleValidator {
 		/**
 		 */
 		private static final long serialVersionUID = 8944911362399424017L;
 		public ThresHoldValidator() {
 			this("A Threshold must be a value between 1 and 0.");
-		}		
+		}
 		public ThresHoldValidator(String errorMessage) {
 			super(errorMessage);
-		}		
+		}
 		@Override
 	    protected boolean isValidString(String value) {
 	        try {
@@ -64,8 +62,8 @@ public class ManualMetricForm extends Form{
 	        }
 	    }
 	}
-	
-	public class MetricValidator implements Validator {	
+
+	public class MetricValidator implements Validator {
 		/**
 		 */
 		private static final long serialVersionUID = -7980511305640285584L;
@@ -73,7 +71,7 @@ public class ManualMetricForm extends Form{
 		@Override
 		public void validate(Object value) throws InvalidValueException {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
@@ -84,7 +82,7 @@ public class ManualMetricForm extends Form{
 			}
 		}
 	}
-	
+
 	/**Recursive function using LIMES Parser to test whether all properties of the metric expression are set.*/
 	public boolean testPropertiesAreSet(String expr, double threshold) {
 		logger.info("testing if properties are set...");
@@ -103,14 +101,14 @@ public class ManualMetricForm extends Form{
 				logger.info("Property "+parser.getTerm1()+" not defined.");
 				this.setComponentError(new UserError("Property "+parser.getTerm2()+" not defined."));
 			}
-			
+
 			return false;
 		} else {
 			logger.info("recursive calls");
 			return testPropertiesAreSet(parser.getTerm1(), parser.threshold1) && testPropertiesAreSet(parser.getTerm2(), parser.threshold2);
 		}
 	}
-	
+
 	public void setDefaultValues() {
 		if((SAIMApplication)getApplication() != null) {
 			Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
@@ -126,11 +124,11 @@ public class ManualMetricForm extends Form{
 					metric += ")";
 					metricTextField.setValue(metric);
 					thresholdTextField.setValue("0.5d");
-				}			
+				}
 			} else {
 				metricTextField.setValue(config.getMetricExpression());
 				thresholdTextField.setValue(config.getAcceptanceThreshold());
 			}
-		}		
+		}
 	}
 }

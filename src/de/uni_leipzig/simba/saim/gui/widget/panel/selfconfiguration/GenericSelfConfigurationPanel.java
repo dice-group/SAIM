@@ -5,7 +5,6 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
-
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.gui.widget.panel.PerformPanel;
@@ -33,31 +32,31 @@ public class GenericSelfConfigurationPanel extends PerformPanel{
 		configuratorSelect = getConfigurationSelection();
 		mainLayout.addComponent(configuratorSelect);
 	}
-	
-	
+
+
 	private Select getConfigurationSelection() {
 		Select select = new Select(messages.getString("GenericSelfConfigurationPanel.selectcaption")); //$NON-NLS-1$
-		select.addItem(MESH);		
+		select.addItem(MESH);
 		select.addItem(GENETICSELFCONFIG);
 		select.setImmediate(true);
 		select.addListener(new ConfigurationSelectionListener());
 		return select;
 	}
-	
+
 	private void doMeshBasedSelfConfiguration() {
 		mainLayout.removeAllComponents();
 		sub=new MeshBasedSelfConfigPanel(application, messages);
 		mainLayout.addComponent(sub);
 		sub.start();
 	}
-	
+
 	private void doGeneticBasedSelfConfiguration() {
 		mainLayout.removeAllComponents();
 		sub = new GeneticBasedSelfConfigPanel(application, messages);
 		mainLayout.addComponent(sub);
 		sub.start();
 	}
-	
+
 	class ConfigurationSelectionListener implements ValueChangeListener {
 		private static final long serialVersionUID = -8110159175024579415L;
 
@@ -71,17 +70,17 @@ public class GenericSelfConfigurationPanel extends PerformPanel{
 				doGeneticBasedSelfConfiguration();
 			}
 		}
-		
+
 	}
 
 	@Override
 	public void onClose() {
 		if(sub != null)
-			sub.onClose();		
+			sub.onClose();
 	}
 	@Override
 	public void start() {
 		if(sub != null)
-			sub.start();		
+			sub.start();
 	}
 }

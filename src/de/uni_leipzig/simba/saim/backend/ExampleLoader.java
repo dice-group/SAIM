@@ -11,23 +11,21 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
-
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.util.DataCleaner;
-
 /**
  * Class to load from a persistent storage. As of now we use a simple file holding the informations.
- * We use this extra class to load to support an easy integration of an database. 
+ * We use this extra class to load to support an easy integration of an database.
  * @author Lyko
  */
 public class ExampleLoader {
 	private final String storageFile = "example.list";
 	SAIMApplication app;
-	
+
 	public ExampleLoader(SAIMApplication app) {
 		this.app = app;
 	}
-	
+
 	/**
 	 * Public method to get the examples from store. As of now a file.
 	 * @return
@@ -44,7 +42,7 @@ public class ExampleLoader {
 			return new LinkedList<ExampleConfig>();
 		}
 	}
-	
+
 	/**
 	 * Reads the example config file.
 	 * @return
@@ -61,14 +59,14 @@ public class ExampleLoader {
 		String line = bufferedReader.readLine();
 		while(line != null) {
 			String parts[] = DataCleaner.separate(line, ";", 2);
-			if(line.length()>0 && parts.length==2) {				
+			if(line.length()>0 && parts.length==2) {
 				list.add(new ExampleConfig(parts[0].replaceAll("\"", ""), parts[1].replaceAll("\"", "")));
 				line = bufferedReader.readLine();
-			}			
+			}
 		}
 		return list;
 	}
-	
+
 	/**
 	 * Method to add a new entry into the examples file.
 	 * @param c

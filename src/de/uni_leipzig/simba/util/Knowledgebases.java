@@ -6,13 +6,13 @@ public class Knowledgebases
 {
 	public static final String DBPEDIA_ENDPOINT = "http://dbpedia.org/sparql";
 	public static final String LINKEDGEODATA_ENDPOINT = "http://linkedgeodata.org/sparql";
-	
-	
+
+
 	public static final String DBPEDIA_GRAPH = "http://dbpedia.org";
 	public static final String LINKEDGEODATA_GRAPH = "http://linkedgeodata.org";
 	public static final String LINKEDMDB_GRAPH = null; // unknown, no results by "SELECT ?s ?g {GRAPH ?g { ?s ?p ?o. ?s a <http://data.linkedmdb.org/resource/movie/film> } } limit 10"
 	public static final String FACTBOOK_GRAPH = null; // unknown, no results by "SELECT ?s ?g {GRAPH ?g  { ?s ?p ?o. ?s a <http://www4.wiwiss.fu-berlin.de/factbook/ns#Country> } } limit 10"
-	
+
 	public static final String DBPEDIA_MOVIE_CLASS  = "http://dbpedia.org/ontology/Film";
 	public static final String LINKEDMDB_MOVIE_CLASS  = "http://data.linkedmdb.org/resource/movie/film";
 	public static final String DBPEDIA_COUNTRY_CLASS  = "http://dbpedia.org/ontology/Country";
@@ -37,11 +37,11 @@ public class Knowledgebases
 			"?var345",LINKEDGEODATA_GRAPH,"a", "<"+LINKEDGEODATA_CITY_CLASS+">");
 	public static final AdvancedKBInfo LINKEDGEODATA_COUNTRY		=	new AdvancedKBInfo("linkedgeodata_country","http://linkedgeodata.org/sparql/",
 			"?lgdcountry",LINKEDGEODATA_GRAPH,"a", "<"+LINKEDGEODATA_COUNTRY_CLASS+">");
-	
-	
+
+
 	public static final AdvancedKBInfo LINKEDMDB_MOVIE	=	new AdvancedKBInfo("linkedmdb_disney_movie","http://data.linkedmdb.org/sparql",
 			"?var678",LINKEDMDB_GRAPH,"a", "<"+LINKEDMDB_MOVIE_CLASS+">");
 	public static final AdvancedKBInfo FACTBOOK_COUNTRY		=	new AdvancedKBInfo("factbook_country","http://www4.wiwiss.fu-berlin.de/factbook/sparql",
 			"?var789",FACTBOOK_GRAPH,"a", "<"+FACTBOOK_COUNTRY_CLASS+">");
-	
+
 }

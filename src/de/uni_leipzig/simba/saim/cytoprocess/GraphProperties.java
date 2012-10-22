@@ -2,13 +2,10 @@ package de.uni_leipzig.simba.saim.cytoprocess;
 
 import giny.model.Edge;
 import giny.model.Node;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import org.apache.log4j.Logger;
-
 import cytoscape.CyEdge;
 import cytoscape.CyNetwork;
 import cytoscape.CyNode;
@@ -34,9 +31,9 @@ public class GraphProperties {
 	private Random rand = new Random();
 
 	public List<Integer> idsToUpdate = new ArrayList<Integer>();
-	
+
 	public GraphProperties(final CyNetwork network, final CyNetworkView finalView, final String p_title) {
-		
+
 		if(LOGGER.isDebugEnabled()) LOGGER.debug("GraphProperties...");
 		cyNetwork = network;
 		cyNetworkView = finalView;
@@ -52,12 +49,12 @@ public class GraphProperties {
 			margin = ((Double)o).intValue()/2;
 		if(o instanceof Integer)
 			margin = ((Integer)o)/2;
-		
+
 		int maxX = Integer.MIN_VALUE, minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, maxY = Integer.MIN_VALUE;
-		
+
 		int[] ids = getCyNetwork().getNodeIndicesArray();
 		for(int id : ids){
-		
+
 			int x = Double.valueOf(getCyNetworkView().getNodeView(id).getXPosition()).intValue();
 			int y = Double.valueOf(getCyNetworkView().getNodeView(id).getYPosition()).intValue();
 
@@ -67,7 +64,7 @@ public class GraphProperties {
 			if (y < minY) 	minY = y;
 		}
 		int viewWidth  = maxX - minX;
-		int viewHeight = maxY - minY;	
+		int viewHeight = maxY - minY;
 
 		for(int id : ids){
 			if(viewWidth > 0){
@@ -88,38 +85,38 @@ public class GraphProperties {
 
 	/**
 	 * Adds an edge.
-	 * @param 
+	 * @param
 	 * @return
 	 */
 	public Integer addEdge(int nodeAid, int nodeBid, String name) {
 		if(LOGGER.isDebugEnabled()) LOGGER.debug("addEdge to cytoscape...");
-		
+
 		if(nodeAid != nodeBid){
 			final CyNode node1 = Cytoscape.getCyNode(String.valueOf(nodeAid), false);
 			final CyNode node2 = Cytoscape.getCyNode(String.valueOf(nodeBid), false);
 
 			if (node1 != null && node2 != null) {
 				// check if edge exists
-				if(cyNetwork.getEdgeCount(nodeAid, nodeBid, true) == 0 && cyNetwork.getEdgeCount(nodeBid, nodeAid, true) == 0){	
-			
+				if(cyNetwork.getEdgeCount(nodeAid, nodeBid, true) == 0 && cyNetwork.getEdgeCount(nodeBid, nodeAid, true) == 0){
+
 					CyEdge edge  = null;
 					String tmpname = "";
 					do{
 						tmpname = "#" + rand.nextInt(999999999) + "_edge";
 						edge =  Cytoscape.getCyEdge(node1, node2, Semantics.INTERACTION, tmpname,false) ;
-					}while(edge != null);				
+					}while(edge != null);
 					edge = Cytoscape.getCyEdge(node1, node2, Semantics.INTERACTION, tmpname, true);
 					// edge.isDirected()  => true
 					int id = edge.getRootGraphIndex();
-					
+
 					edge.setIdentifier(String.valueOf(id));
 					cyNetwork.addEdge(edge);
 					cyNetworkView.addEdgeView(id);
 					Cytoscape.getEdgeAttributes().setAttribute(String.valueOf(id), "label", name);
-	
+
 					if(LOGGER.isDebugEnabled()) LOGGER.debug("addEdge created with id: " + id + " nodes are: " + nodeAid + "," + nodeBid);
-					
-					
+
+
 					return edge.getRootGraphIndex();
 				}else
 					if(LOGGER.isDebugEnabled()) LOGGER.debug("addEdge failed: there is an edge from nodeAid to nodeBid");
@@ -134,15 +131,15 @@ public class GraphProperties {
 	/**
 	 * Adds a node. Node with same label are allowed.
 	 * @param name node label
-	 * @param x position	
+	 * @param x position
 	 * @param y	position
 	 * @param shape node type
 	 * @return node id
 	 */
 	public int addNode(final String name, final int x, final int y, int nodeViewShape,String rgb) {
 		if(LOGGER.isDebugEnabled()) LOGGER.debug("addNode to cytoscape...");
-		
-		// search for a free node	
+
+		// search for a free node
 		CyNode node = null;
 		String tmpname = "";
 		do{
@@ -150,22 +147,22 @@ public class GraphProperties {
 			node = Cytoscape.getCyNode(tmpname) ;
 		}while(node != null);
 
-		node = Cytoscape.getCyNode(tmpname, true);	
+		node = Cytoscape.getCyNode(tmpname, true);
 		int id = node.getRootGraphIndex();
-		node.setIdentifier(String.valueOf(id)); 		
+		node.setIdentifier(String.valueOf(id));
 
-		cyNetwork.addNode(node);		
+		cyNetwork.addNode(node);
 		cyNetworkView.addNodeView(id).setXPosition(x);
 		cyNetworkView.addNodeView(id).setYPosition(y);
 		//cyNetworkView.addNodeView(id).setShape(nodeViewShape);
-		
+
 		Cytoscape.getNodeAttributes().setAttribute (String.valueOf(id), "label", name);
 		Cytoscape.getNodeAttributes().setAttribute (String.valueOf(id), "color", rgb);
 		Cytoscape.getNodeAttributes().setAttribute (String.valueOf(id), "shape", nodeViewShape);
-		
-//		setNodeDoubleProperty(int node_index, int property, double value) 
+
+//		setNodeDoubleProperty(int node_index, int property, double value)
 //		cyNetworkView.setNodeIntProperty(arg0, arg1, arg2)
-		
+
 		return id;
 	}
 
@@ -181,9 +178,9 @@ public class GraphProperties {
 	public CyEdge getCyEdge(int id){
 		return (CyEdge) getCyNetwork().getEdge(id);
 	}
-	
-	
-	
+
+
+
 	// getter setter
 	public CyNetwork getCyNetwork() {
 		return cyNetwork;

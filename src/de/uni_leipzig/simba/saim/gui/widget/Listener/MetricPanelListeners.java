@@ -12,13 +12,13 @@ import de.uni_leipzig.simba.saim.gui.widget.panel.PerformPanel;
  */
 public class MetricPanelListeners
 {
-	protected final Messages messages;	
+	protected final Messages messages;
 	protected SAIMApplication application;
 	public MetricPanelListeners(SAIMApplication application, final Messages messages){
 		this.messages=messages;
 		this.application = application;
 	}
-	
+
 	/**
 	 * Show Window on applications main window
 	 * @param sub Window to show
@@ -34,7 +34,7 @@ public class MetricPanelListeners
 	 */
 	public void getWindow(final PerformPanel content) {
 		Window sub = new Window();
-		sub.addListener(new CloseListener() {			
+		sub.addListener(new CloseListener() {
 			/**
 			 */
 			private static final long serialVersionUID = 5880054040870696798L;
@@ -50,7 +50,7 @@ public class MetricPanelListeners
 		sub.setContent(content);
 		sub.setImmediate(true);
 		sub.setVisible(true);
-		sub.setModal(true);		
+		sub.setModal(true);
 		showWindow(sub);
 		content.start();
 	}

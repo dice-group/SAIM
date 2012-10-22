@@ -7,12 +7,12 @@ public class VVisualStyle {
 	public int width = 0, height = 0;
 	public String title = "";
 	public int nodeSize = 50;
-	
+
 	public String NODE_BORDER_COLOR, NODE_FILL_COLOR, NODE_LABEL_COLOR,
 			EDGE_LABEL_COLOR,EDGE_COLOR, NODE_LINE_WIDTH, NODE_FONT_SIZE, NODE_FONT_NAME,EDGE_FONT_NAME,EDGE_FONT_SIZE,
 			DefaultBackgroundColor, DefaultNodeSelectionColor,
 			DefaultEdgeSelectionColor, EDGE_LABEL_OPACITY;
-	
+
 	public int EDGE_LINE_WIDTH;
 
 	// parse settings
@@ -38,6 +38,6 @@ public class VVisualStyle {
 		DefaultNodeSelectionColor = child.getStringAttribute("DefaultNodeSelectionColor");
 		DefaultEdgeSelectionColor = child.getStringAttribute("DefaultEdgeSelectionColor");
 		EDGE_LABEL_OPACITY        = child.getStringAttribute("EDGE_LABEL_OPACITY");
-		
+
 	}
 }

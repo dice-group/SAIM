@@ -2,7 +2,6 @@ package org.vaadin.cssinject.client.ui;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LinkElement;
@@ -80,14 +79,14 @@ public class VCSSInject extends Widget implements Paintable {
 	/*-{
 	    var el;
 	    var elid = "v-cssinject-" + id;
-	    
+
 	    if(!(el = $doc.getElementById(elid))) {
 	        el = $doc.createElement("style");
 	        el.type = "text/css";
 	        el.id = elid;
 	        $doc.getElementsByTagName("head")[0].appendChild(el);
 	    }
-	    
+
 	    if(el.styleSheet)
 	        el.styleSheet.cssText = value;
 	    else {
@@ -127,7 +126,7 @@ public class VCSSInject extends Widget implements Paintable {
 	/*-{
 	    var el;
 	    var elid = "v-cssinject-" + id;
-	    
+
 	    if(el = $doc.getElementById(elid)) {
 	        $doc.getElementsByTagName("head")[0].removeChild(el);
 	    }

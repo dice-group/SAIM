@@ -11,7 +11,7 @@ import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.panel.ClassMatchingPanel;
 
 public class ClassMatchingStep implements WizardStep
-{	
+{
 	private final SAIMApplication app;
 	//private final Messages messages;
 
@@ -54,7 +54,7 @@ public class ClassMatchingStep implements WizardStep
 				target.restrictions.clear();
 				//source
 				source.prefixes.put("rdf", PrefixHelper.getURI("rdf"));
-				String restr = source.var+" rdf:type ";		
+				String restr = source.var+" rdf:type ";
 				String value1 = SPARQLHelper.wrapIfNecessary(PrefixHelper.expand(panel.sourceClassForm.getField("textfield").getValue().toString()));
 				if(value1 != null && value1.length()>0)
 					source.restrictions.add(restr + value1);
@@ -73,14 +73,14 @@ public class ClassMatchingStep implements WizardStep
 					//					List<Object> parameters = Arrays.asList(new Object[] {config.getSource().endpoint,config.getTarget().endpoint,config.getSource().id,config.getTarget().id});
 					//				try {
 					//						Logger.getLogger("SAIM").info("Trying to add selected values to classMapping cache.");
-					//						if(cache.isKeyInCache(parameters)) {	
+					//						if(cache.isKeyInCache(parameters)) {
 					//							HashMap<String,HashMap<String,Double>> map;
 					//							map = ((HashMap<String,HashMap<String,Double>>) cache.get(parameters).getValue());
 					//							if(map == null) {
 					//								map = new HashMap<String,HashMap<String,Double>>();
 					//							}
 					//							HashMap<String, Double> targetMap = map.remove(panel.sourceClassForm.getField("textfield").getValue().toString());
-					//							if(targetMap == null) 
+					//							if(targetMap == null)
 					//								targetMap = new HashMap<String, Double>();
 					//							if(!targetMap.containsKey(panel.targetClassForm.getField("textfield").getValue().toString()))
 					//						    	targetMap.put(panel.targetClassForm.getField("textfield").getValue().toString(), 1.0d);
@@ -94,11 +94,11 @@ public class ClassMatchingStep implements WizardStep
 					//					}catch(Exception e){
 					//						Logger.getLogger("SAIM").info("Exception addding selected elements to classMatching cache: "+e.getMessage());
 					//					}
-					//				}				
-					panel.close();			
+					//				}
+					panel.close();
 					return true;
 				}
-			}	
+			}
 		}//if sparql endpoints
 		return false;
 	}
@@ -106,7 +106,7 @@ public class ClassMatchingStep implements WizardStep
 	@Override
 	public boolean onBack()
 	{
-		panel.close();		
+		panel.close();
 		return true;
 	}
 

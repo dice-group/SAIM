@@ -1,9 +1,7 @@
 package de.uni_leipzig.simba.saim;
 
 import static org.junit.Assert.assertTrue;
-
 import java.util.Locale;
-
 import org.junit.Test;
 
 public class MessagesTest

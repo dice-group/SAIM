@@ -3,9 +3,7 @@ package de.uni_leipzig.simba.saim.cytoprocess.widgetset.client.ui.graph;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import org.vaadin.contrib.processing.svg.gwt.client.ProcessingJs;
-
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -22,7 +20,6 @@ import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.Command;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
-
 import de.uni_leipzig.simba.saim.cytoprocess.widgetset.client.ui.VCytoprocess;
 /**
  * @author rspeck
@@ -106,8 +103,8 @@ public class VGraph {
 		}
 		if (LOG)
 			VConsole.log("parseUIDLtoUpdateNode done. ");
-		
-		
+
+
 		vcytoprocess.requestDone();
 	}
 
@@ -129,8 +126,8 @@ public class VGraph {
 		}
 		if (LOG)
 			VConsole.log("parseUIDLtoDeleteEdge done. ");
-		
-		
+
+
 	}
 
 	/** refresh node positions */
@@ -205,7 +202,7 @@ public class VGraph {
 		}
 		if (LOG)
 			VConsole.log("parseUIDLtoDeleteNode done.");
-		
+
 	}
 
 	/** adds an edge */
@@ -271,9 +268,9 @@ public class VGraph {
 					VConsole.log("parseUIDL node ...");
 				createVNode(cytoChild);
 			}
-						
+
 		}
-		
+
 		this.parseUIDLtoDeleteNode(child);
 		this.parseUIDLtoDeleteEdge(child);
 		if (LOG)
@@ -288,7 +285,7 @@ public class VGraph {
 		EdgeHandler eh = new EdgeHandler(vcytoprocess, vedge.id);
 		vedge.line.addMouseDownHandler(eh);
 		vedge.line.addDoubleClickHandler(eh);
-		
+
 		vedge.label.addMouseDownHandler(eh);
 		vedge.label.addDoubleClickHandler(eh);
 	}
@@ -303,7 +300,7 @@ public class VGraph {
 		vnode.shape.addClickHandler(nh);
 		vnode.shape.addDoubleClickHandler(nh);
 		vnode.shape.addMouseOverHandler(nh);
-		
+
 		vnode.label.addMouseUpHandler(nh);
 		vnode.label.addMouseMoveHandler(nh);
 		vnode.label.addMouseDownHandler(nh);
@@ -380,9 +377,9 @@ public class VGraph {
 			VConsole.log("updateNodeValues ...");
 
 		if (
-				nodeChild.hasAttribute("label1")&& 
+				nodeChild.hasAttribute("label1")&&
 				nodeChild.hasAttribute("value1")
-				)			
+				)
 			node.addValue1(
 					vcytoprocess,
 					nodeChild.getStringAttribute("label1"),
@@ -479,12 +476,12 @@ class NodeHandler implements ContextListener, MouseDownHandler, MouseUpHandler,
 	private int vnodeid;
 	private int moveX = 0, moveY = 0;
 	public boolean LOG = true;
-	
+
 	public NodeHandler(VCytoprocess vccytoprocess, int vnodeid) {
 		this.vccytoprocess = vccytoprocess;
 		this.vnodeid = vnodeid;
 	}
-	
+
 	// MouseOverHandler
 	@Override
 	public void onMouseOver(MouseOverEvent event) {
@@ -492,7 +489,7 @@ class NodeHandler implements ContextListener, MouseDownHandler, MouseUpHandler,
 		if (vccytoprocess.isLinkingTo())
 			vccytoprocess.linkedNodeid_B = vnodeid;
 	}
-	
+
 	// DoubleClickHandler
 	@Override
 	public void onDoubleClick(DoubleClickEvent event) {
@@ -503,10 +500,10 @@ class NodeHandler implements ContextListener, MouseDownHandler, MouseUpHandler,
 	@Override
 	public void onMouseMove(MouseMoveEvent event) {
 
-		if ( 
+		if (
 				vccytoprocess.getSelectedObject() != null &&
 				Integer.valueOf(String.valueOf(vccytoprocess.getSelectedObject())) == vnodeid &&
-				vccytoprocess.isMousePressed() && 
+				vccytoprocess.isMousePressed() &&
 				vccytoprocess.mouseButton == ProcessingJs.LEFT
 				) {
 

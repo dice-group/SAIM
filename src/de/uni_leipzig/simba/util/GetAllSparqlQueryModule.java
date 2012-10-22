@@ -36,8 +36,8 @@ public class GetAllSparqlQueryModule extends SparqlQueryModule
 
 	/** superclass member variable kb is private, access via reflection */
 	protected KBInfo getKB()
-	{	
-//		this.kb=null;		
+	{
+//		this.kb=null;
 		try
 		{
 //			System.out.println(Arrays.toString(SparqlQueryModule.class.getDeclaredFields()));
@@ -71,7 +71,7 @@ public class GetAllSparqlQueryModule extends SparqlQueryModule
 	//		{
 	//			// only count each subject once at maximum, even if there are multiple objects for once subject and property
 	//			query = "SELECT distinct ?p (count(distinct "+getKB().var+") AS ?count) where {"+getKB().var+" ?p ?o. "+getKB().getRestrictionQuerySubstring()+"}"
-	//			+" order by desc(?count) limit "+propertyLimit;//count(distinct "+getKB().var+")			
+	//			+" order by desc(?count) limit "+propertyLimit;//count(distinct "+getKB().var+")
 	//		}
 	//		ResultSet rs = SPARQLHelper.querySelect(query, kb);
 	//		Set<String> properties = new HashSet<String>();
@@ -81,7 +81,7 @@ public class GetAllSparqlQueryModule extends SparqlQueryModule
 	//			//System.out.println(qs);
 	//			properties.add(qs.get("p").toString());
 	//		}
-	//		return properties;		
+	//		return properties;
 	//	}
 
 	// may not work properly if the returned sample is not representative as the sample depends on the sparql server and is not randomly chosen
@@ -99,7 +99,7 @@ public class GetAllSparqlQueryModule extends SparqlQueryModule
 	//		{
 	//			sample.add(rs.next().get(getKB().var).toString());
 	//		}
-	//		return sample;		
+	//		return sample;
 	//	}
 
 	//	private String getFilterContent(Set<String> sample)
@@ -111,7 +111,7 @@ public class GetAllSparqlQueryModule extends SparqlQueryModule
 	//			String resource = it.next();
 	//			content.append("(?s = <"+resource+">)");
 	//			if(it.hasNext())
-	//			{		
+	//			{
 	//				content.append("|| ");
 	//			}
 	//			//break;
@@ -126,7 +126,7 @@ public class GetAllSparqlQueryModule extends SparqlQueryModule
 	//		String query = "SELECT distinct ?p where {?s ?p ?o. filter ("+getFilterContent(sample)+")}";
 	//		System.out.println(query);
 	//		ResultSet rs = SPARQLHelper.querySelect(query, kb);
-	//		Set<String> properties = new HashSet<String>(); 
+	//		Set<String> properties = new HashSet<String>();
 	//		while(rs.hasNext())
 	//		{
 	//			properties.add(rs.next().get("?p").toString());
@@ -135,27 +135,27 @@ public class GetAllSparqlQueryModule extends SparqlQueryModule
 	//	}
 
 	public static int queryNumberOfInstances(KBInfo kb)
-	{		
+	{
 		String queryString = 	"SELECT DISTINCT (count("+kb.var+") as ?count) WHERE {"+
-				new AdvancedKBInfo(kb).getRestrictionQuerySubstring()+'}';		 
+				new AdvancedKBInfo(kb).getRestrictionQuerySubstring()+'}';
 		//		WHERE {?x ?p ?o. { select ?x where {
 		//		?x rdf:type dbpedia:Drug .} limit 10}
 		//		}
 		//System.out.println(queryString);
 		QuerySolution soln = querySelect(queryString,kb).next();
-		//System.out.println(soln);		
+		//System.out.println(soln);
 		return Integer.valueOf(soln.getLiteral("count").getInt());
 	}
 
 	public static ResultSet querySelect(String query, KBInfo kb)
-	{		
+	{
 		String wholeQuery = SPARQLHelper.formatPrefixes(kb.prefixes)+'\n'+query;
 		// end workaround
 		//System.out.println(wholeQuery);
 		return SPARQLHelper.querySelect(query, kb.endpoint, kb.graph);
 	}
-	
-	 /** @param paginate with pagination set to false, no additional offset queries will be generated after the first query */ 
+
+	 /** @param paginate with pagination set to false, no additional offset queries will be generated after the first query */
 	public void fillCache(Cache cache,boolean paginate)
 	{
 		try{fillCache(cache,null,paginate);} catch (Exception e) {throw new RuntimeException(e);}
@@ -178,11 +178,11 @@ public class GetAllSparqlQueryModule extends SparqlQueryModule
 	/**
 	 * @param cache
 	 * @param getOnlyThisProperty
-	 * @param paginate with pagination set to false, no additional offset queries will be generated after the first query 
+	 * @param paginate with pagination set to false, no additional offset queries will be generated after the first query
 	 * @throws Exception
 	 */
 	public void fillCache(final Cache cache,final  String getOnlyThisProperty,final boolean paginate) throws Exception
-	{		
+	{
 		String var = getKB().var.replace("?", "");
 		//		SELECT DISTINCT *
 		//		WHERE {?x ?p ?o. { select ?x where {
@@ -192,7 +192,7 @@ public class GetAllSparqlQueryModule extends SparqlQueryModule
 		//LimesLOGGER LOGGER = LimesLOGGER.getInstance();
 		long startTime = System.currentTimeMillis();
 		String query = "";
-		//write prefixes				
+		//write prefixes
 
 		// ***** begin workaround TODO: change back when error is resolved with the drugbank sparql endpoint
 		//		for (String key : getKB().prefixes.keySet())
@@ -268,7 +268,7 @@ public class GetAllSparqlQueryModule extends SparqlQueryModule
 			}
 			catch(Exception e)
 			{
-				throw new Exception("error with query "+ query+" "+e.getLocalizedMessage(),e);				
+				throw new Exception("error with query "+ query+" "+e.getLocalizedMessage(),e);
 			}
 
 			//write
@@ -344,10 +344,10 @@ public class GetAllSparqlQueryModule extends SparqlQueryModule
 	//		// get the names of all properties
 	//		// however that is very time consuming, so we only get a certain amount of triples and then select their properties
 	//		// statistically we should only miss very rare properties
-	//		// this is done via subqueries, problem is that we can't assume getting random triples so that we may get only rdf:type triples or something 
+	//		// this is done via subqueries, problem is that we can't assume getting random triples so that we may get only rdf:type triples or something
 	//		// select distinct ?p where {{select ?p where {?s ?p ?o.} limit 1000}}
 	//
-	//		queryProperties.append("SELECT DISTINCT ?p where {?s ?p ?o.}");                        
+	//		queryProperties.append("SELECT DISTINCT ?p where {?s ?p ?o.}");
 	//
 	//		// get the occurrences of the properties
 	//		// "select distinct ?p,(count(?s) AS ?count) where {?s ?p ?o.}  ORDER BY DESC(?count)"

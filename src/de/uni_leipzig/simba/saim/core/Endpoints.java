@@ -331,7 +331,7 @@ public class Endpoints
 		"http://zbw.eu/beta/sparql/stw"
 	};
 	public static final Set<String> endpoints = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(endpointArray)));
-//	public static final Trie<String> endpointTrie = new Trie<String>(); 
+//	public static final Trie<String> endpointTrie = new Trie<String>();
 //	static
 //	{
 //		for(String endpoint: endpointArray) {endpointTrie.add(endpoint,endpoint);}
@@ -351,5 +351,5 @@ public class Endpoints
 //				return subset;
 //	}
 
-	
+
 }

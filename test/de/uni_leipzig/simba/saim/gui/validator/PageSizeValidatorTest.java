@@ -2,9 +2,7 @@ package de.uni_leipzig.simba.saim.gui.validator;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
-
 import com.vaadin.data.Validator.InvalidValueException;
-
 
 public class PageSizeValidatorTest {
 
@@ -24,7 +22,7 @@ public class PageSizeValidatorTest {
 		}
 		for(String s : goodValues)
 		{
-			assertTrue(valid.isValid(s));			
+			assertTrue(valid.isValid(s));
 			valid.validate(s);
 		}
 	}

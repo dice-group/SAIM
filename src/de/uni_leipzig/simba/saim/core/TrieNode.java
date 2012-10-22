@@ -2,7 +2,7 @@
 //
 //import java.util.ArrayList;
 //import java.util.List;
-// 
+//
 //public class TrieNode
 //{
 //   private TrieNode parent;
@@ -10,7 +10,7 @@
 //   private boolean isLeaf;	//Quick way to check if any children exist
 //   private boolean isWord;	//Does this node represent the last character of a word
 //   private char character;	//The character this node represents
-// 
+//
 //   /**
 //    * Constructor for top level root node.
 //    */
@@ -20,7 +20,7 @@
 //      isLeaf = true;
 //      isWord = false;
 //   }
-// 
+//
 //   /**
 //    * Constructor for child node.
 //    */
@@ -29,7 +29,7 @@
 //      this();
 //      this.character = character;
 //   }
-//   
+//
 //   /**
 //    * Adds a word to this node. This method is called recursively and
 //    * adds child nodes for each successive letter in the word, therefore
@@ -40,13 +40,13 @@
 //   {
 //      isLeaf = false;
 //      int charPos = word.charAt(0) - 'a';
-//      
+//
 //      if (children[charPos] == null)
 //      {
 //	 children[charPos] = new TrieNode(word.charAt(0));
 //	 children[charPos].parent = this;
 //      }
-//      
+//
 //      if (word.length() > 1)
 //      {
 //	 children[charPos].addWord(word.substring(1));
@@ -56,7 +56,7 @@
 //	 children[charPos].isWord = true;
 //      }
 //   }
-//   
+//
 //   /**
 //    * Returns the child TrieNode representing the given char,
 //    * or null if no node exists.
@@ -67,7 +67,7 @@
 //   {
 //      return children[c - 'a'];
 //   }
-//   
+//
 //   /**
 //    * Returns a List of String objects which are lower in the
 //    * hierarchy that this node.
@@ -77,13 +77,13 @@
 //   {
 //      //Create a list to return
 //      List list = new ArrayList();
-//      
+//
 //      //If this node represents a word, add it
 //      if (isWord)
 //      {
 //	 list.add(toString());
 //      }
-//      
+//
 //      //If any children
 //      if (!isLeaf)
 //      {
@@ -96,9 +96,9 @@
 //	    }
 //	 }
 //      }
-//      return list;  
+//      return list;
 //   }
-// 
+//
 //   /**
 //    * Gets the String that this node represents.
 //    * For example, if this node represents the character t, whose parent
@@ -116,5 +116,5 @@
 //      {
 //	 return parent.toString() + new String(new char[] {character});
 //      }
-//   }  
+//   }
 //}

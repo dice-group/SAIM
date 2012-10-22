@@ -11,11 +11,11 @@ public class Pair<T> {
 	public T getB() {
 		return b;
 	}
-	
+
 	public void setA(T a) {
 		this.a = a;
 	}
-	
+
 	public void setB(T b) {
 		this.b = b;
 	}
@@ -25,7 +25,7 @@ public class Pair<T> {
 		this.a = a;
 		this.b = b;
 	}
-	
+
 	public String toString() {
 		return a.toString()+" - "+b.toString();
 	}
@@ -45,6 +45,6 @@ public class Pair<T> {
 		}
 		return false;
 	}
-	
-	
+
+
 }

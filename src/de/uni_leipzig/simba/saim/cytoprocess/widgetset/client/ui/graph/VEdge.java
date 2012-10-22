@@ -2,7 +2,6 @@ package de.uni_leipzig.simba.saim.cytoprocess.widgetset.client.ui.graph;
 
 import org.vaadin.gwtgraphics.client.Line;
 import org.vaadin.gwtgraphics.client.shape.Text;
-
 import de.uni_leipzig.simba.saim.cytoprocess.widgetset.client.ui.VCytoprocess;
 import de.uni_leipzig.simba.saim.cytoprocess.widgetset.client.ui.graph.VNode;
 /**
@@ -72,34 +71,34 @@ public class VEdge {
 			text.setStrokeColor(vs.EDGE_LABEL_COLOR);
 			text.setFontSize(Integer.valueOf(vs.EDGE_FONT_SIZE));
 			text.setFontFamily(vs.EDGE_FONT_NAME);
-			
+
 			vcytoprocess.fill();
-						
-			VEdge vedge = new VEdge(id, source, target, 
-					line, 
+
+			VEdge vedge = new VEdge(id, source, target,
+					line,
 					lineArrowA,
-					lineArrowB, 
+					lineArrowB,
 					text);
-			
+
 			return vedge;
 
-		
+
 		}else{
 			vcytoprocess.noStroke();
 			vcytoprocess.noFill();
-			
+
 			Line line       = vcytoprocess.line(0, 0, 0, 0);
 			Text text       = vcytoprocess.text(label, 0, 0);
-			
+
 			vcytoprocess.fill();
 			vcytoprocess.stroke();
-			VEdge vedge = new VEdge(id, source, target, 
-					line, 
+			VEdge vedge = new VEdge(id, source, target,
+					line,
 					null,
-					null, 
+					null,
 					text);
-			
-			return vedge; 
+
+			return vedge;
 		}
 
 	}

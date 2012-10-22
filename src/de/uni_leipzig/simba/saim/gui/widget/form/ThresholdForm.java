@@ -7,10 +7,8 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.FormFieldFactory;
 import com.vaadin.ui.Slider;
-
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.core.Configuration;
-
 /**
  * Form for setting acceptance thresholds.
  * @author Lyko
@@ -23,17 +21,17 @@ public class ThresholdForm extends Form {
 	private final Messages messages;
 	public static final String elementsWidth = "100px"; //$NON-NLS-1$
 
-	
+
 	public ThresholdForm(final Messages messages, ThresholdBean bean) {
 		this.messages = messages;
 
 		 @SuppressWarnings("unchecked")
-		BeanItem item = new BeanItem(bean);		
+		BeanItem item = new BeanItem(bean);
 		 setItemDataSource(item);
 		 this.setWriteThrough(true);
 	}
-	
-	class ThresholdFormFieldFactory implements FormFieldFactory {		
+
+	class ThresholdFormFieldFactory implements FormFieldFactory {
 		/**
 		 */
 		private static final long serialVersionUID = 7097223897721929002L;
@@ -61,9 +59,9 @@ public class ThresholdForm extends Form {
 	        }
 			return null;
 		}
-		
+
 	}
-		 
+
 	/**
 	 * Bean used by class ThresholdForm to remember settings.
 	 * @author Lyko

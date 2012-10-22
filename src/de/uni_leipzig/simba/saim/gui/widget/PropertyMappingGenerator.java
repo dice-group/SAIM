@@ -2,7 +2,6 @@ package de.uni_leipzig.simba.saim.gui.widget;
 
 import java.util.HashSet;
 import java.util.Set;
-
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.vaadin.ui.Button;
@@ -11,7 +10,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
-
 import de.konrad.commons.sparql.PrefixHelper;
 import de.konrad.commons.sparql.SPARQLHelper;
 import de.uni_leipzig.simba.data.Mapping;
@@ -29,7 +27,7 @@ public class PropertyMappingGenerator extends Panel {
 	ListSelect targetSelector = new ListSelect("Target Properties");
 	Button addPropertyMatch = new Button("Add Property Match");
 	Mapping propertyMapping = new Mapping();
-	
+
 	public PropertyMappingGenerator() {
 		setContent(layout);
 		fillProperties();
@@ -47,11 +45,11 @@ public class PropertyMappingGenerator extends Panel {
 		layout.addComponent(hL);
 		addComponent(refresher);
 	}
-	
-	
+
+
 	private void fillProperties() {
 		new Thread()
-		{			
+		{
 			@Override
 			public void run()
 			{
@@ -63,13 +61,13 @@ public class PropertyMappingGenerator extends Panel {
 
 					for(String t : targetProps) {
 						targetSelector.addItem(t);
-					} 
+					}
 				}
 				addPropertyMatch.setEnabled(true);
 			}
 		}.start();
 	}
-	
+
 	/**
 	 * Get the properties.
 	 */
@@ -87,9 +85,9 @@ public class PropertyMappingGenerator extends Panel {
 		for(String prop : SPARQLHelper.properties(info.endpoint, info.graph, className)) {
 			String s_abr=PrefixHelper.abbreviate(prop);
 			targetProps.add(s_abr);
-		}	
+		}
 	}
-	
+
 	private class addPropertyMatchListener implements Button.ClickListener {
 
 		/**
@@ -103,19 +101,19 @@ public class PropertyMappingGenerator extends Panel {
 			// adding Properties
 			if(sourceProp != null && sourceProp.length()>0 && targetProp != null && targetProp.length()>0 )
 				((SAIMApplication) getApplication()).getConfig().addPropertiesMatch(sourceProp, targetProp, true);
-		}		
+		}
 	}
-	
+
 	public boolean isValid() {
 		if(propertyMapping.size()>0)
 			return true;
 		return false;
 	}
-	
+
 	public class PropertyMappingGeneratorRefreshListener implements RefreshListener
 	{
-		boolean running = true; 
-		private static final long serialVersionUID = -8765221895426102605L;		    
+		boolean running = true;
+		private static final long serialVersionUID = -8765221895426102605L;
 		@Override public void refresh(final Refresher source)	{if(!running) {removeComponent(source);source.setEnabled(false);}}
 	}
 }

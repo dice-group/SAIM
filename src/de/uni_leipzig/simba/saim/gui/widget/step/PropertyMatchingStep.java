@@ -1,26 +1,24 @@
 package de.uni_leipzig.simba.saim.gui.widget.step;
 
 import org.vaadin.teemu.wizards.WizardStep;
-
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Window;
-
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.gui.widget.panel.PropertyMatchingPanel;
 
 public class PropertyMatchingStep implements WizardStep
 {
-	private final Messages messages;	
+	private final Messages messages;
 	SAIMApplication application;
 	PropertyMatchingPanel panel;
 	Window sub = null;
 	public PropertyMatchingStep(SAIMApplication application, final Messages messages) {
 		this.messages=messages;
 		this.application = application;
-	}		
+	}
 	public PropertyMatchingStep(SAIMApplication application, Window sub, final Messages messages)
-	{		
+	{
 		this(application, messages);
 		this.sub = sub;
 	}
@@ -45,7 +43,7 @@ public class PropertyMatchingStep implements WizardStep
 				application.refresh();
 			}
 			return true;
-		}		
+		}
 		return false;
 	}
 

@@ -3,17 +3,14 @@ package de.uni_leipzig.simba.saim.gui.widget.form;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-
 import com.vaadin.ui.*;
 import com.vaadin.ui.Upload.FailedEvent;
 import com.vaadin.ui.Upload.SucceededEvent;
-
 import de.uni_leipzig.simba.cache.HybridCache;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.query.FileQueryModule;
 import com.vaadin.ui.Upload.FailedEvent;
 import com.vaadin.ui.Upload.SucceededEvent;
-
 import de.uni_leipzig.simba.cache.HybridCache;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.query.FileQueryModule;
@@ -22,19 +19,19 @@ import de.uni_leipzig.simba.saim.core.FileStore;
  * @BUG: Writes an empty line at the end
  * @author Lyko
  */
-public class EndPointUploader extends CustomComponent implements Upload.SucceededListener, 
+public class EndPointUploader extends CustomComponent implements Upload.SucceededListener,
 	Upload.FailedListener, Upload.Receiver{
 
 	VerticalLayout l = new VerticalLayout();
 	Panel root;
 	Select typeSelect;
-	
+
 	File file;
-	
+
 	public EndPointUploader() {
 		FileStore.setUp();
 		root = new Panel("Upload dumped endpoint to server");
-		
+
 		l.addComponent(root);
 	    setCompositionRoot(l);
 
@@ -44,27 +41,27 @@ public class EndPointUploader extends CustomComponent implements Upload.Succeede
 
 	    // Use a custom button caption instead of plain "Upload".
 	    upload.setButtonCaption("Upload Now");
-	        
+
 	    // Listen for events regarding the success of upload.
 	    upload.addListener((Upload.SucceededListener) this);
 	    upload.addListener((Upload.FailedListener) this);
 
 	    root.addComponent(upload);
-	    
+
 	    typeSelect = new Select("Type");
 //		typeSelect.addItem("N-Triple");
 		typeSelect.addItem("N3");
 		typeSelect.addItem("Turtle");
-		
+
 		typeSelect.select("N3	");
 		typeSelect.setNullSelectionAllowed(false);
-	
+
 		root.addComponent(typeSelect);
 //	    root.addComponent(new Label("Click 'Browse' to "+
 //	    "select a file and then click 'Upload'."));
 	}
-	
-	
+
+
 	@Override
 	public OutputStream receiveUpload(String filename, String mimeType) {
 		String suffix = filename.substring(filename.lastIndexOf(".")+1);
@@ -77,8 +74,8 @@ public class EndPointUploader extends CustomComponent implements Upload.Succeede
 //	    } else {
 	    	FileOutputStream fos = null; // Output stream to write to
 	        file = new File(FileStore.getPathToEPStore() + "/" + filename);
-	         
-	        System.out.println("Attempt to upload file "+filename);	     
+
+	        System.out.println("Attempt to upload file "+filename);
 	        try {
 	            // Open the file for writing.
 	            fos = new FileOutputStream(file);
@@ -89,13 +86,13 @@ public class EndPointUploader extends CustomComponent implements Upload.Succeede
 	        }
 	        return fos; // Return the output stream to write to
 //	    }
-		
+
 	}
 
 	@Override
 	public void uploadFailed(FailedEvent event) {
 		System.out.println("Upload failed:\n"+event.getReason().getMessage());
-		getWindow().showNotification("Sorry there was an error uploading the file.");		
+		getWindow().showNotification("Sorry there was an error uploading the file.");
 	}
 
 	@Override
@@ -128,7 +125,7 @@ public class EndPointUploader extends CustomComponent implements Upload.Succeede
 //			file.delete();
 		}
 		/** @TODO provide form for name and additional informations.*/
-		
+
 		/** @TODO Store prebuild KBInfo for endpoint,
 		 *  profide shortcut in predefined KBInfos set in the EndpointPanel
 		 */

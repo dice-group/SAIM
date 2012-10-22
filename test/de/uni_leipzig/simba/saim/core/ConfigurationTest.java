@@ -1,15 +1,13 @@
 package de.uni_leipzig.simba.saim.core;
 
 import static org.junit.Assert.*;
-
 import org.junit.Test;
-
 import de.uni_leipzig.simba.io.ConfigReader;
 
 public class ConfigurationTest
 {
 	@Test
-	public void testEquals() 
+	public void testEquals()
 	{
 		Configuration c = new Configuration();
 		Configuration d = new Configuration();
@@ -64,7 +62,7 @@ public class ConfigurationTest
 		//		c.saveToXML("test.xml");
 		//		c=null;
 	}
-	
+
 	@Test
 	public void testisPropertyDefined() {
 		Configuration c = new Configuration();

@@ -8,14 +8,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
-
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -31,7 +28,6 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-
 import de.konrad.commons.sparql.PrefixHelper;
 import de.konrad.commons.sparql.SPARQLHelper;
 import de.uni_leipzig.simba.data.Mapping;
@@ -44,11 +40,10 @@ import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.PropertyComboBox;
 import de.uni_leipzig.simba.saim.gui.widget.panel.MetricPanel.AccordionLayoutClickListener;
-
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
 @SuppressWarnings("serial")
 public class PropertyMatchingPanel extends Panel
-{		
+{
 	private final Messages messages;
 	private static final boolean CACHING = true;
 	private final Layout mainLayout;
@@ -57,11 +52,11 @@ public class PropertyMatchingPanel extends Panel
 	private ClassResource closeImageResource;
 	private Table table = new Table();
 	private List<String> sourceProperties;
-	private List<String> targetProperties;	
+	private List<String> targetProperties;
 	private final ProgressIndicator progress = new ProgressIndicator();
 	private Label progressLabel;
 	private boolean listenerActive = true;
-	Button simpleAlgorithm; 
+	Button simpleAlgorithm;
 	// to perform automatic mappings
 	Thread propMapper;
 	Button computeStringBasedMapping;
@@ -151,7 +146,7 @@ public class PropertyMatchingPanel extends Panel
 	}
 
 	public boolean isValid() // empty and full pairs ok, half full ones are not
-	{		
+	{
 		for(Object[] row: rows)
 		{if(columnValue(row[0])==null^columnValue(row[1])==null) {return false;}}
 		return true;
@@ -168,7 +163,7 @@ public class PropertyMatchingPanel extends Panel
 		return classRestriction.substring((classRestriction.lastIndexOf(' ')+1)).replace("<","").replace(">",""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 
-	/**	returns all properties (not just the ones from the property matching) that instances of the knowledge base of the 
+	/**	returns all properties (not just the ones from the property matching) that instances of the knowledge base of the
 	 * class restriction specified in the KBInfo have. <b>May break if the class restriction is not set.</b>*/
 	private Set<String> allPropertiesFromKBInfo(KBInfo kb)
 	{
@@ -188,7 +183,7 @@ public class PropertyMatchingPanel extends Panel
 		final Object[] row;
 
 		public RowChangeListener(Object[] source)
-		{			
+		{
 			if(source.length!=3) throw new IllegalArgumentException();
 			this.row=source;
 		}
@@ -207,7 +202,7 @@ public class PropertyMatchingPanel extends Panel
 					table.addItem(row,row);
 				}
 			}
-			else if(columnValue(row[0])==null&&columnValue(row[1])==null) // remove empty rows at non-last position 
+			else if(columnValue(row[0])==null&&columnValue(row[1])==null) // remove empty rows at non-last position
 			{
 				removeRow(row);
 			}
@@ -216,13 +211,13 @@ public class PropertyMatchingPanel extends Panel
 
 	private Object[] createTableRow()
 	{
-		PropertyComboBox sourceBox = new PropertyComboBox(sourceProperties,messages);		
+		PropertyComboBox sourceBox = new PropertyComboBox(sourceProperties,messages);
 		PropertyComboBox targetBox = new PropertyComboBox(targetProperties,messages);
 		//Embedded closeImage = new Embedded("",closeImageResource);
 		//		CSSInject css = new CSSInject();
 		//		css.setValue(".center {margin-left:auto;margin-right:auto;}");
 		//		this.getContent().addComponent(css);
-		// TODO:  make the button smaller but keep the cross in the middle 
+		// TODO:  make the button smaller but keep the cross in the middle
 		Button closeRowButton = new Button();
 		//		closeRowButton.setWidth("24px");
 		closeRowButton.setIcon(closeImageResource);
@@ -232,7 +227,7 @@ public class PropertyMatchingPanel extends Panel
 		sourceBox.addListener(new RowChangeListener(row));
 		targetBox.addListener(new RowChangeListener(row));
 		closeRowButton.addListener(new ClickListener()
-		{			
+		{
 			@Override
 			public void buttonClick(ClickEvent event)
 			{
@@ -246,7 +241,7 @@ public class PropertyMatchingPanel extends Panel
 	private void removeRow(Object[] row)
 	{
 		rows.remove(row);
-		if(!table.removeItem(row));		
+		if(!table.removeItem(row));
 	}
 
 	@Override
@@ -266,29 +261,29 @@ public class PropertyMatchingPanel extends Panel
 				//			for(String prop : Configuration.getInstance().getSource().properties) {
 				//				sourcePropertiesFull.add(prop);
 				//			}
-				//			
+				//
 				//			for(String prop : Configuration.getInstance().getTarget().properties) {
 				//				targetPropertiesFull.add(prop);
 				//			}
 				//		} else {
 				//			sourcePropertiesFull = allPropertiesFromKBInfo(source);
 				//			targetPropertiesFull = allPropertiesFromKBInfo(target);
-				//		}		
+				//		}
 				//		// abbreviate
 				//		for(String prop : sourcePropertiesFull) {
 				//			String s_abr=PrefixHelper.abbreviate(prop);
 				//			sourceProperties.add(s_abr);
 				//		}
-				//		
+				//
 				//		for(String prop : targetPropertiesFull) {
 				//			String s_abr=PrefixHelper.abbreviate(prop);
 				//			targetProperties.add(s_abr);
 				//		}
 				table.setWidth("100%"); //$NON-NLS-1$
-				mainLayout.addComponent(table);		
+				mainLayout.addComponent(table);
 				closeImageResource = new ClassResource("img/no_crystal_clear_16.png",getApplication());		 //$NON-NLS-1$
 				/* Define the names and data types of columns.
-				 * The "default value" parameter is meaningless here. */		
+				 * The "default value" parameter is meaningless here. */
 				table.addContainerProperty(messages.getString("sourceproperty"), PropertyComboBox.class,  null); //$NON-NLS-1$
 				table.addContainerProperty(messages.getString("targetproperty"), PropertyComboBox.class,  null); //$NON-NLS-1$
 				table.addContainerProperty("", Button.class,  null); //$NON-NLS-1$
@@ -298,7 +293,7 @@ public class PropertyMatchingPanel extends Panel
 
 				//		Button closeButton = new Button();
 				//		closeButton.setWidth("16px");
-				//		closeButton.setHeight("16px");		
+				//		closeButton.setHeight("16px");
 				//		closeButton.setIcon(resource);
 				Object[] row = createTableRow();
 				table.addItem(row,row);
@@ -324,7 +319,7 @@ public class PropertyMatchingPanel extends Panel
 	//	}
 
 	/**
-	 * Method to add Properties to according KBInfo. 
+	 * Method to add Properties to according KBInfo.
 	 * @param s URI of the property. May or may not be abbreviated.
 	 * @param info KBInfo of endpoint property belongs to.
 	 */
@@ -392,7 +387,7 @@ public class PropertyMatchingPanel extends Panel
 
 	//TODO quick fix to support multiple computations
 	UseComputedClickListener useComputedListener;
-	Property.ValueChangeListener selectListener = new Property.ValueChangeListener() {			
+	Property.ValueChangeListener selectListener = new Property.ValueChangeListener() {
 		@Override
 		public void valueChange(ValueChangeEvent event) {
 			ClassMatchItem item = (ClassMatchItem) select.getValue();
@@ -417,13 +412,13 @@ public class PropertyMatchingPanel extends Panel
 			useAll.setEnabled(true);
 		for(String key : map.keySet()) {
 			for(Entry<String, Double> e : map.get(key).entrySet())
-			{				
+			{
 				if(e.getValue()>0)
 					select.addItem(new ClassMatchItem(key, e.getKey(), e.getValue()));
 			}
 		}
 		select.setImmediate(true);
-		select.setNullSelectionAllowed(false);		
+		select.setNullSelectionAllowed(false);
 		select.addListener(selectListener);
 	}
 
@@ -468,12 +463,12 @@ public class PropertyMatchingPanel extends Panel
 		Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
 		for(Object[] row : rows) {
 			if(((PropertyComboBox)row[0]).getValue() != null && ((PropertyComboBox)row[0]).getValue()!=null &&
-					((PropertyComboBox)row[0]).getValue().toString().length()>0 && 
+					((PropertyComboBox)row[0]).getValue().toString().length()>0 &&
 					((PropertyComboBox)row[1]).getValue().toString().length()>0) {
 				addProperty(((PropertyComboBox)row[0]).getValue().toString(),config.getSource());
 				addProperty(((PropertyComboBox)row[1]).getValue().toString(),config.getTarget());
 				config.addPropertiesMatch(((PropertyComboBox)row[0]).getValue().toString(), ((PropertyComboBox)row[1]).getValue().toString(), true);
-			}			
+			}
 		}
 	}
 
@@ -489,7 +484,7 @@ public class PropertyMatchingPanel extends Panel
 
 		@Override
 		public void buttonClick(ClickEvent event) {
-			addMapToTable(propertyMap);		
+			addMapToTable(propertyMap);
 		}
 	}
 
@@ -558,14 +553,14 @@ public class PropertyMatchingPanel extends Panel
 		 */
 		private Mapping performAutomaticPropertyMapping() {
 			Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
-			List<Object> parameters = Arrays.asList(new Object[] {config.getSource().endpoint, config.getTarget().endpoint, 
+			List<Object> parameters = Arrays.asList(new Object[] {config.getSource().endpoint, config.getTarget().endpoint,
 					config.getSource().getClassOfendpoint(), config.getTarget().getClassOfendpoint(), stringBased});
 			Cache mappingCache = null;
 			if(CACHING) {
 				mappingCache = CacheManager.getInstance().getCache("automaticpropertymapping"); //$NON-NLS-1$
-				//			if(mappingCache.getStatus()==net.sf.ehcache.Status.STATUS_UNINITIALISED) {mappingCache.initialise();}					
+				//			if(mappingCache.getStatus()==net.sf.ehcache.Status.STATUS_UNINITIALISED) {mappingCache.initialise();}
 				if(mappingCache.isKeyInCache(parameters))
-				{		
+				{
 					logger.info("Property Mapping Cache hit"); //$NON-NLS-1$
 					return (Mapping) mappingCache.get(parameters).getValue();
 				}
@@ -574,7 +569,7 @@ public class PropertyMatchingPanel extends Panel
 			PropertyMapper propMap;
 			if(stringBased) {
 				logger.info("Starting string based PropertyMapper");
-				propMap = new LabelBasedPropertyMapper();				
+				propMap = new LabelBasedPropertyMapper();
 			} else {
 				logger.info("Starting default PropertyMapper");
 				propMap = new DefaultPropertyMapper();

@@ -1,7 +1,6 @@
 package de.uni_leipzig.simba.saim.gui.widget.form;
 
 import org.vaadin.risto.stepper.IntStepper;
-
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.Component;
@@ -21,22 +20,22 @@ public class LearnerConfigurationForm extends Form
 	private static final long serialVersionUID = -3980421724099685985L;
 	private final Messages messages;
 	public static final String elementsWidth = "100px"; //$NON-NLS-1$
-	
+
 	public LearnerConfigurationForm(LearnerConfigurationBean bean,final Messages messages)
 	{
 		this.messages=messages;
 		setCaption(messages.getString("LearnerConfigurationForm.learnerconfigcaption")); //$NON-NLS-1$
 //		setDescription("Specify parameters for the genetic metric learner. Note that higher values for the number of generations and the population size will lead in longer execution time.");
-		 
+
 		setFormFieldFactory(new LearnerCofigurationFormFieldFactory());
-		
+
 		 @SuppressWarnings("unchecked")
 		BeanItem item = new BeanItem(bean);
-		
+
 		 setItemDataSource(item);
 		 this.setWriteThrough(true);
 	}
-	
+
 	/**
 	 * We use a factory to build Form Fields.
 	 * @author Lyko
@@ -59,7 +58,7 @@ public class LearnerConfigurationForm extends Form
 	            intStepper.setWidth(elementsWidth);
 	            intStepper.setPropertyDataSource(item.getItemProperty(pid));
 	            return intStepper;
-	        } 
+	        }
 	        else if ("population".equals(pid)) { //$NON-NLS-1$
 	        	IntStepper intStepper = new IntStepper();
 	            intStepper.setStepAmount(5);
@@ -82,7 +81,7 @@ public class LearnerConfigurationForm extends Form
 	        	slider.setPropertyDataSource(item.getItemProperty(pid));
 	        	return slider;
 	        }
-	        else if("numberOfInqueriesPerRun".equals(pid)) { 
+	        else if("numberOfInqueriesPerRun".equals(pid)) {
 	        	IntStepper intStepper = new IntStepper();
 	            intStepper.setStepAmount(10);
 	            intStepper.setMaxValue(100);
@@ -92,7 +91,7 @@ public class LearnerConfigurationForm extends Form
 	            intStepper.setPropertyDataSource(item.getItemProperty(pid));
 	            return intStepper;
 	        }
-	        
+
 	        return null; // Invalid field (property) name.
 	    }
 	}

@@ -1,16 +1,13 @@
 package org.vaadin.cssinject;
 
 import java.util.ArrayList;
-
 import org.vaadin.cssinject.client.ui.VCSSInject;
-
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.ClientWidget;
-
 @SuppressWarnings("serial")
 @ClientWidget(VCSSInject.class)
 public class CSSInject extends AbstractComponent {

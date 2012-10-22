@@ -2,11 +2,8 @@ package de.uni_leipzig.simba.saim.core.metric;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
 import java.util.Arrays;
-
 import org.junit.Test;
-
 import de.uni_leipzig.simba.saim.core.metric.Property.Origin;
 
 public class NodeTest
@@ -24,20 +21,20 @@ public class NodeTest
 			"AND(levenshtein(x.rdfs:label,dest.rdfs:label)|1.0,levenshtein(x.rdfs:label,dest.dbp:name)|1.0)",
 			"AND(levenshtein(x.title,y.title)|0.25,trigrams(x.director,y.title)|1.0)",
 			"OR(jaccard(x.title,y.title)|0.5446749320576767,XOR(jaccard(x.title,y.title)|0.5446749320576767,jaccard(x.title,y.title)|0.5446749320576767)|0.5446749320576767)"
-			 
+
 			};
 	@Test
 	public void testMetricParsing() {
 		for(String s : testMetrics) {
 			System.out.println("testing: "+s);
 			Output o = MetricParser.parse(s,"x");
-			System.out.println("parsed : "+o.toString());	
+			System.out.println("parsed : "+o.toString());
 			assertTrue("metric strings not equal, s="+s+", o="+o,o.toString().equalsIgnoreCase(s));
 			assertTrue(o.isComplete());
 		}
-		String s = "ADD(0.6*jaccard(x.dc:title,y.dc:title)|0.5,0.6*cosine(x.authors,y.authors)|0.5)|0.5";	
+		String s = "ADD(0.6*jaccard(x.dc:title,y.dc:title)|0.5,0.6*cosine(x.authors,y.authors)|0.5)|0.5";
 	}
-	
+
 	@Test
 	public void testSplitFunc()
 	{
@@ -72,7 +69,7 @@ public class NodeTest
 		assertFalse(m.acceptsChild(q));
 
 		assertTrue(m.isValidParentOf(r));
-		assertTrue(m.acceptsChild(r));		
+		assertTrue(m.acceptsChild(r));
 		assertFalse(m.isComplete());
 		m.addChild(r);
 		assertTrue(m.isComplete());

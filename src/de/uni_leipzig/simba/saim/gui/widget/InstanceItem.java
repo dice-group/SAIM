@@ -1,15 +1,11 @@
 package de.uni_leipzig.simba.saim.gui.widget;
 
 import java.util.Collection;
-
 import lombok.AllArgsConstructor;
-
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.ui.Label;
-
 import de.uni_leipzig.simba.data.Instance;
-
 @AllArgsConstructor
 public class InstanceItem implements Item
 {
@@ -17,7 +13,7 @@ public class InstanceItem implements Item
 	 */
 	private static final long serialVersionUID = -588945056441225096L;
 	public final Instance instance;
-	
+
 	@Override public Property getItemProperty(Object id) {return new Label(instance.getProperty(id.toString()).first());}
 
 	@Override public Collection<?> getItemPropertyIds() {return instance.getAllProperties();}

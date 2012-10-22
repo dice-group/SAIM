@@ -14,15 +14,15 @@ import de.uni_leipzig.simba.saim.gui.widget.form.ClassChooser.ClassNode;
  * In RAVEN, the mapping is injective and uniquely defined (there is at most one match for a class).
  * The user gets shown some classes and can add some manually or create the matching manually.*/
 public class ClassMatchingForm extends Form
-{	
+{
 	/**
 	 */
 	private static final long serialVersionUID = -7897392568006310314L;
-	protected ComboBox field; 
-//	protected final TextField target; 
+	protected ComboBox field;
+//	protected final TextField target;
 	protected final ClassChooser chooser;
 	KBInfo info;
-	
+
 	public ClassMatchingForm(String caption, final KBInfo info) {
 		this.info = info;
 		Layout layout = new VerticalLayout();
@@ -36,8 +36,8 @@ public class ClassMatchingForm extends Form
 		field.setImmediate(true);
 		setDefault(info);
 		chooser = new ClassChooser(info.endpoint, info.id, info.graph);
-		
-		chooser.tree.addListener(new ItemClickListener() {	
+
+		chooser.tree.addListener(new ItemClickListener() {
 			/**
 			 */
 			private static final long serialVersionUID = -4408783618595964107L;
@@ -64,7 +64,7 @@ public class ClassMatchingForm extends Form
 		addField("textfield", field); //$NON-NLS-1$
 		this.getLayout().addComponent(chooser);
 	}
-	
+
 	/**
 	 * Method to add and select a value in the field.
 	 * @param uri
@@ -76,7 +76,7 @@ public class ClassMatchingForm extends Form
 		}
 		if(select) {field.select(uri);}
 	}
-	
+
 	/**
 	 * Tries to set default values by reading the KBInfo.
 	 * @param info

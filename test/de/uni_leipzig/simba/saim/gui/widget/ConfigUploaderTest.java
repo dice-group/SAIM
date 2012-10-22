@@ -1,9 +1,7 @@
 package de.uni_leipzig.simba.saim.gui.widget;
 
 import static org.junit.Assert.*;
-
 import org.junit.Test;
-
 import de.uni_leipzig.simba.io.ConfigReader;
 import de.uni_leipzig.simba.saim.core.Configuration;
 

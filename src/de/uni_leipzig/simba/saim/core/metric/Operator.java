@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
 /** Metric operations allow to combine metric values. They include the operators
  * MIN, MAX, ADD and MULT, e.g. as follows:
 <pre><code>MAX(trigrams(x.rdfs:label,y.dc:title),euclidean(x.lat|long,y.latitude|longitude))</code></pre>.
@@ -18,10 +17,10 @@ public class Operator extends Node
 	public Operator(String id) {super(id);}
 	public static final Set<String> identifiers =
 			Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(new String[] {"add","and","diff","max","min","minus","mult","or","xor"})));
-	@Override public Set<String> identifiers()	{return identifiers;}	
+	@Override public Set<String> identifiers()	{return identifiers;}
 	@Override public byte getMaxChilds() {return 2;}
 	@SuppressWarnings("unchecked")
 	static public final Set<Class<? extends Node>> validChildClasses =
-	Collections.unmodifiableSet(new HashSet<Class<? extends Node>>(Arrays.asList((Class<? extends Node>[])new Class[] {Measure.class,Operator.class})));		
-	@Override public Set<Class<? extends Node>> validChildClasses() {return validChildClasses;}	
+	Collections.unmodifiableSet(new HashSet<Class<? extends Node>>(Arrays.asList((Class<? extends Node>[])new Class[] {Measure.class,Operator.class})));
+	@Override public Set<Class<? extends Node>> validChildClasses() {return validChildClasses;}
 }

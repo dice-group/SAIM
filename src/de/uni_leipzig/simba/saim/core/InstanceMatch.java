@@ -2,9 +2,7 @@ package de.uni_leipzig.simba.saim.core;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-
 import com.vaadin.ui.Label;
-
 import de.konrad.commons.sparql.PrefixHelper;
 
 public class InstanceMatch  implements Serializable{
@@ -64,20 +62,20 @@ public class InstanceMatch  implements Serializable{
 		if(!(o instanceof InstanceMatch)) {
 			return false;
 		}
-		InstanceMatch oi = (InstanceMatch) o;		
+		InstanceMatch oi = (InstanceMatch) o;
 		return (oi.getUri1().equals(uri1) && oi.getUri2().equals(uri2));
-		    
+
 	}
-	
+
 	private int getFieldHash(int seed, Object o) {
 		return seed + o.hashCode();
 	}
-	
+
 	@Override
 	public String toString() {
 		return uri1 + " - " + uri2 +": "+value+"? "+selected;
 	}
-	
+
 	public static Label getLinkLabelToUri(String uri) {
 		return new Label("<a href='"+uri.replaceAll("[<>\"]", "")+"' target='_blank'>"+PrefixHelper.abbreviate(uri)+"</a>", Label.CONTENT_XHTML);
 	}

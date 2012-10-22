@@ -27,11 +27,11 @@ public class ExecutionPanel extends PerformPanel implements PropertyChangeListen
 	private ProgressIndicator progress;
 	private Mapping m = new Mapping();
 	private float maxSteps = LimesRunner.MAX_STEPS;
-	
+
 	Layout mainLayout = new VerticalLayout();
 	Thread thread;
 	public ExecutionPanel(final Messages messages)
-	{		
+	{
 		super(messages.getString("ExecutionPanel.executelinkspecification")); //$NON-NLS-1$
 		this.messages=messages;
 //		Label l;
@@ -45,7 +45,7 @@ public class ExecutionPanel extends PerformPanel implements PropertyChangeListen
 		this.setContent(mainLayout);
 		mainLayout.addComponent(progressLabel);
 		mainLayout.addComponent(progress);
-	}	
+	}
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if(evt.getPropertyName().equals(LimesRunner.MESSAGE)) {
@@ -58,14 +58,14 @@ public class ExecutionPanel extends PerformPanel implements PropertyChangeListen
 			progress.requestRepaint();
 		}
 	}
-	
-	
+
+
 	private void runMapping() {
 		final Configuration config = ((SAIMApplication)getApplication()).getConfig();
 		thread = new Thread() {
 			@Override
 			public void run() {
-				m = lR.runConfig(((SAIMApplication)getApplication()).getConfig());	
+				m = lR.runConfig(((SAIMApplication)getApplication()).getConfig());
 				progress.setValue(1f);
 				progressLabel.setValue(messages.getString("ExecutionPanel.mappingperformed")); //$NON-NLS-1$
 				InstanceMappingTable iT = new InstanceMappingTable(getApplication(), config, m, lR.getSourceCache(), lR.getTargetCache(), false,messages);

@@ -15,9 +15,9 @@ public class InstanceInfoPanel extends Panel {
 	private static final long serialVersionUID = 1L;
 	public static final String TableWidth= "30em";
 	public static final String PanelWidth= "62em";
-	
+
 	Instance i1; Instance i2;
-	/** Default Constructor 
+	/** Default Constructor
 	 * @param i1 the source instance
 	 * @param i2 the target instance
 	 */
@@ -31,11 +31,11 @@ public class InstanceInfoPanel extends Panel {
 	public void attach() {
 		HorizontalLayout mainLayout = new HorizontalLayout();
 		this.setContent(mainLayout);
-		
+
 
 		KBInfo source = ((SAIMApplication)getApplication()).getConfig().getSource();
 		KBInfo target = ((SAIMApplication)getApplication()).getConfig().getTarget();
-		
+
 		VerticalLayout vl1 = new VerticalLayout();
 		VerticalLayout vl2 = new VerticalLayout();
 		vl1.setCaption("Source Instance of "+source.id);
@@ -44,12 +44,12 @@ public class InstanceInfoPanel extends Panel {
 		Table t2 = getTable(i2);
 		vl1.addComponent(t1);
 		vl2.addComponent(t2);
-		
+
 		mainLayout.addComponent(vl1);
 		mainLayout.addComponent(vl2);
 		this.setWidth(PanelWidth);
 	}
-	
+
 	/** Generates a table with two columns: the property name and the value of the property
 	 * @param i Instance to display.
 	 * @return generated table.

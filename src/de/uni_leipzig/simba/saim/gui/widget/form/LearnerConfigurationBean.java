@@ -1,7 +1,6 @@
 package de.uni_leipzig.simba.saim.gui.widget.form;
 
 import java.util.HashMap;
-
 /**
  * Bean to automatically build form for genetic learner configuration.
  * @author Lyko
@@ -12,11 +11,11 @@ public class LearnerConfigurationBean {
 	private double mutationRate;
 	private double crossoverRate;
 	private int numberOfInqueriesPerRun;
-	
+
 	public LearnerConfigurationBean() {
 		setDefaultValues();
 	}
-	
+
 	/**
 	 * To set some default values.
 	 */
@@ -52,7 +51,7 @@ public class LearnerConfigurationBean {
 	public void setNumberOfInqueriesPerRun(int numberOfInqueriesPerRun) {
 			this.numberOfInqueriesPerRun = numberOfInqueriesPerRun;
 	}
-	
+
 	public double getCrossoverRate() {
 		return crossoverRate;
 	}
@@ -60,7 +59,7 @@ public class LearnerConfigurationBean {
 	public void setCrossoverRate(double crossoverRate) {
 		this.crossoverRate = crossoverRate;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "BEAN: gens="+generations+" pop="+population+" mutationRate="+mutationRate+" inquieries="+numberOfInqueriesPerRun;

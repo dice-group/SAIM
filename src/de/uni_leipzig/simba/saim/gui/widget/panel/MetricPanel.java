@@ -2,12 +2,9 @@ package de.uni_leipzig.simba.saim.gui.widget.panel;
 
 import java.util.Set;
 import java.util.TreeSet;
-
 import lombok.Getter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.ui.Accordion;
@@ -20,7 +17,6 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
-
 import de.konrad.commons.sparql.PrefixHelper;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
@@ -33,67 +29,66 @@ import de.uni_leipzig.simba.saim.cytoprocess.CytoprocessProperties;
 import de.uni_leipzig.simba.saim.gui.widget.Listener.LearnClickListener;
 import de.uni_leipzig.simba.saim.gui.widget.Listener.SelfConfigClickListener;
 import de.uni_leipzig.simba.saim.gui.widget.Listener.StartMappingListener;
-
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
-public class MetricPanel extends Panel{    
+public class MetricPanel extends Panel{
 
 	final static Logger logger = LoggerFactory.getLogger(MetricPanel.class);
 	private static final long serialVersionUID = 6766679517868840795L;
-	
+
 	@Getter private final Messages messages;
 	@Getter private Configuration config;
-	
+
 	private VerticalLayout sourceLayout, targetLayout;
 	private HorizontalLayout buttonLayout;
 	private Set<String> sourceProps,targetProps;
 	private Button selfConfigButton, learnButton, startMapping, setMetric;
-	
+
 	@Getter private SAIMCytoprocess saimcytopro;
-	
-	public MetricPanel(final Messages messages) {	
+
+	public MetricPanel(final Messages messages) {
 		this.messages = messages;
 	}
-	
+
 	@Override
 	public void attach() {
-		
+
 		if((SAIMApplication)getApplication()!= null)
 			config = ((SAIMApplication)getApplication()).getConfig();
-		
+
 		VerticalLayout mainLayout = new VerticalLayout();
 		mainLayout.setSpacing(false);
 		mainLayout.setMargin(false);
-		
+
 		final VerticalLayout accordionLayout = new VerticalLayout();
 		HorizontalLayout layout = new HorizontalLayout();
-		
+
 		layout.addComponent(accordionLayout);
 		layout.setSpacing(false);
 		layout.setMargin(false);
-		
+
 		setContent(mainLayout);
 		mainLayout.addComponent(layout);
 		final ProgressIndicator progress = new ProgressIndicator();
 		progress.setIndeterminate(false);
 		accordionLayout.addComponent(progress);
-		//buttons		
+		//buttons
 		mainLayout.addComponent(getButtonLayout());
 		// accordion panel
 		Panel accordionPanel = new Panel();
 		accordionPanel.setHeight("100%"); //$NON-NLS-1$
 		accordionLayout.addComponent(accordionPanel);
 		accordionPanel.setWidth("25em"); //$NON-NLS-1$
-		final Accordion accordion = new Accordion();		
+		final Accordion accordion = new Accordion();
 		accordion.setHeight("100%"); //$NON-NLS-1$
 
 		accordionPanel.addComponent(accordion);
-		
+
 		VerticalLayout metricsLayout, operatorsLayout;
 		sourceLayout =  new VerticalLayout();
 		targetLayout =  new VerticalLayout();
 		metricsLayout =  new VerticalLayout();
 		operatorsLayout =  new VerticalLayout();
-		
+
 		accordion.addTab(sourceLayout,messages.getString("MetricPanel.sourceproperties")); //$NON-NLS-1$
 		accordion.addTab(targetLayout,messages.getString("MetricPanel.targetproperties")); //$NON-NLS-1$
 		accordion.addTab(metricsLayout,messages.getString("MetricPanel.metrics"));  //$NON-NLS-1$
@@ -101,11 +96,11 @@ public class MetricPanel extends Panel{
 		// add Cytographer
 		saimcytopro = makeCytographer();
 		layout.addComponent(saimcytopro);
-		
+
 		getAllProps();
 		for(String s : sourceProps) {
 			final Label check = new Label(s);
-			sourceLayout.addComponent(check); 
+			sourceLayout.addComponent(check);
 		}
 
 		for(String t : targetProps) {
@@ -114,45 +109,45 @@ public class MetricPanel extends Panel{
 		}
 		accordionLayout.removeComponent(progress);
 		progress.setEnabled(false);
-				
-//		metricsLayout.addComponent( new Label(messages.getString("MetricPanel.0"))); 
-//		operatorsLayout.addComponent( new Label(messages.getString("MetricPanel.8"))); 
+
+//		metricsLayout.addComponent( new Label(messages.getString("MetricPanel.0")));
+//		operatorsLayout.addComponent( new Label(messages.getString("MetricPanel.8")));
 		Set<String> sorted = new TreeSet<String>();
 		sorted.addAll( Measure.identifiers);
 		for(String label : sorted)
-			metricsLayout.addComponent( new Label(label)); 
-		
+			metricsLayout.addComponent( new Label(label));
+
 		sorted.clear();
 		sorted.addAll(Operator.identifiers);
 		for(String label : sorted)
-			operatorsLayout.addComponent( new Label(label)); 	
-		
+			operatorsLayout.addComponent( new Label(label));
+
 		sourceLayout.addListener(   new AccordionLayoutClickListener(saimcytopro, SAIMCytoprocess.NODE_TYPE.SOURCE,   config));
 		targetLayout.addListener(   new AccordionLayoutClickListener(saimcytopro, SAIMCytoprocess.NODE_TYPE.TARGET,   config));
 		metricsLayout.addListener(  new AccordionLayoutClickListener(saimcytopro, SAIMCytoprocess.NODE_TYPE.MEASURE,  config));
 		operatorsLayout.addListener(new AccordionLayoutClickListener(saimcytopro, SAIMCytoprocess.NODE_TYPE.OPERATOR, config));
-		
+
 		this.checkButtons();
 	}
-	
+
 	private SAIMCytoprocess makeCytographer(){
-		
+
 		int hadjust = 100;
 		int wadjust = 350;
-		
+
 		int wm = Math.round(((SAIMApplication)getApplication()).getMainWindow().getWidth());
 		int hm = Math.round(((SAIMApplication)getApplication()).getMainWindow().getHeight());
-		
+
 		final int HEIGHT = hm > hadjust ? hm - hadjust : 600;
-		final int WIDTH  = wm > wadjust ? wm - wadjust : 900;		
-		
+		final int WIDTH  = wm > wadjust ? wm - wadjust : 900;
+
 		saimcytopro  = new SAIMCytoprocess(WIDTH, HEIGHT, (SAIMApplication)getApplication());
-		
+
 		CytoprocessProperties.defaults();
-		
+
 		saimcytopro.loadMetricExpression();
-		
-		return saimcytopro;		
+
+		return saimcytopro;
 	}
 
 	private void getAllProps() {
@@ -171,7 +166,7 @@ public class MetricPanel extends Panel{
 							sourceProps.add(s_abr);
 					}
 				}
-				
+
 				for(String prop : config.getTarget().properties) {
 					if(prop.trim().length()>0) {
 						String s_abr=PrefixHelper.abbreviate(prop);
@@ -182,18 +177,18 @@ public class MetricPanel extends Panel{
 				selfConfigButton.setEnabled(true);
 			}
 	}
-	
+
 	/**
 	 * Creates the button is the lower window.
 	 * @return
 	 */
 	public Layout getButtonLayout() {
-		
+
 //		setMetric = new Button(messages.getString("MetricPanel.setmetricbutton"));
 //		setMetric.setEnabled(true);
-//		setMetric.addListener(new ClickListener() {			
+//		setMetric.addListener(new ClickListener() {
 //			 /**
-//			 * 
+//			 *
 //			 */
 //			private static final long serialVersionUID = 2349781868228639555L;
 //
@@ -202,27 +197,27 @@ public class MetricPanel extends Panel{
 //				setMetricFromGraph();
 //			}
 //		});
-		
+
 		selfConfigButton = new Button(messages.getString("MetricPanel.startselfconfigbutton")); //$NON-NLS-1$
 		selfConfigButton.setEnabled(false);
 		selfConfigButton.addListener(new SelfConfigClickListener((SAIMApplication) getApplication(), messages));
-		
+
 		learnButton = new Button(messages.getString("MetricPanel.learnmetricbutton")); //$NON-NLS-1$
 		learnButton.setEnabled(true);
 		learnButton.addListener(new LearnClickListener((SAIMApplication) getApplication(), messages,this));
-		
+
 		startMapping = new Button(messages.getString("MetricPanel.startmappingbutton")); //$NON-NLS-1$
 		startMapping.setEnabled(true);
 		startMapping.addListener(new StartMappingListener((SAIMApplication) getApplication(), messages,this));
-		
+
 		buttonLayout = new HorizontalLayout();
 		//buttonLayout.addComponent(setMetric);
 		buttonLayout.addComponent(selfConfigButton);
 		buttonLayout.addComponent(learnButton);
 		buttonLayout.addComponent(startMapping);
-		return buttonLayout;		
+		return buttonLayout;
 	}
-	
+
 	/**
 	 * Method to set Metric from the graph.
 	 */
@@ -245,7 +240,7 @@ public class MetricPanel extends Panel{
 				getApplication().getMainWindow().showNotification(messages.getString("MetricPanel.settingnotablenothreholds")); //$NON-NLS-1$
 				return false;
 			}
-		}		
+		}
 	}
 
 	/**
@@ -262,7 +257,7 @@ public class MetricPanel extends Panel{
 					startMapping.setEnabled(true);
 					return true;
 				}
-			}		
+			}
 		}
 		return false;
 	}
@@ -270,25 +265,25 @@ public class MetricPanel extends Panel{
 	/**Listener to react on clicks in the accordion panel.*/
 	class AccordionLayoutClickListener implements LayoutClickListener{
 		private static final long serialVersionUID = -3498649095113131161L;
-		
-		private SAIMCytoprocess saimcytoprocess;	
+
+		private SAIMCytoprocess saimcytoprocess;
 		private SAIMCytoprocess.NODE_TYPE shape;
 		private Configuration config;
-		
+
 		public AccordionLayoutClickListener(SAIMCytoprocess cytographer,SAIMCytoprocess.NODE_TYPE shape, Configuration config){
 			this.saimcytoprocess = cytographer;
 			this.shape = shape;
 			this.config = config;
 		}
-		
+
 		@Override
 		public void layoutClick(LayoutClickEvent event) {
 			// its left button
 			if(event.getButtonName().equalsIgnoreCase("left") && event.getClickedComponent() instanceof Label ){ //$NON-NLS-1$
 				String labelValue = ((Label)event.getClickedComponent()).getValue().toString();
-			
+
 				switch(shape){
-					case SOURCE: {				
+					case SOURCE: {
 						String pref = config.getSource().var.replaceAll("\\?", ""); //$NON-NLS-1$
 						saimcytoprocess.addNode(pref+"."+labelValue, SAIMCytoprocess.NODE_TYPE.SOURCE); //$NON-NLS-1$
 						break;
@@ -298,13 +293,13 @@ public class MetricPanel extends Panel{
 						saimcytoprocess.addNode(pref+"."+labelValue, SAIMCytoprocess.NODE_TYPE.TARGET); //$NON-NLS-1$
 						break;
 					}
-					case OPERATOR: 
-						saimcytoprocess.addNode(labelValue, SAIMCytoprocess.NODE_TYPE.OPERATOR); 
+					case OPERATOR:
+						saimcytoprocess.addNode(labelValue, SAIMCytoprocess.NODE_TYPE.OPERATOR);
 						break;
-					
-					case MEASURE: 
-						saimcytoprocess.addNode(labelValue, SAIMCytoprocess.NODE_TYPE.MEASURE); 
-					}		
+
+					case MEASURE:
+						saimcytoprocess.addNode(labelValue, SAIMCytoprocess.NODE_TYPE.MEASURE);
+					}
 				// repaint
 				saimcytoprocess.repaintGraph();
 			}

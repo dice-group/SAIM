@@ -14,7 +14,7 @@ public abstract class Node
 	/** the identifier for this instance, for example "max", "min", or "trigrams".*/
 	public final String id;
 	//	@SuppressWarnings("unchecked")
-	//	protected static Class<? extends Node>[] subclasses = (Class<? extends Node>[]) new Class[] {Measure.class,Operator.class,Output.class,Property.class};	
+	//	protected static Class<? extends Node>[] subclasses = (Class<? extends Node>[]) new Class[] {Measure.class,Operator.class,Output.class,Property.class};
 	/** returns all possible identifiers for the class of this instance, for example ("min","max","add") for an instance of the Operator class.*/
 	public abstract Set<String> identifiers();
 	/** the number of "colors" already assigned to nodes (some of which may not exist anymore) to prevent cycles.*/
@@ -34,11 +34,11 @@ public abstract class Node
 	{
 		OK
 		,INVALID_PARENT,ALREADY_HAS_A_PARENT,CANNOT_ACCEPT_ANYMORE_CHILDREN,SOURCE_PROPERTY_EXPECTED,TARGET_PROPERTY_EXPECTED}
-	
+
 	/**	adds the child node to the node and returns true if it was successfull. */
 	public boolean addChild(Node child)
-	{		
-		if(!acceptsChild(child)) {return false;}		
+	{
+		if(!acceptsChild(child)) {return false;}
 		childs.add(child);
 		child.parent=this;
 		child.pushDownColor(this.color);
@@ -53,7 +53,7 @@ public abstract class Node
 	}
 
 	public boolean acceptsChild(Node n) {return isValidParentOf(n)&&n.parent==null&&childs.size()<getMaxChilds()&&this.color!=n.color;}
-	
+
 	public Acceptance acceptsChildWithReason(Node n)
 	{
 		if(!isValidParentOf(n)) {return Acceptance.INVALID_PARENT;}
@@ -106,7 +106,7 @@ public abstract class Node
 //					else if(i==1&&param2!=null)	{sb.append(param2.toString()+'*');}
 //				}
 				sb.append(child.toString());
-				
+
 				if(!this.hasFrontParameters())
 				{
 					Double p;
@@ -130,9 +130,9 @@ public abstract class Node
 	public static Node createNode(String id)
 	{
 		id = id.toLowerCase();
-		// I could do it with reflection but there are only 5 subclasses (of which 4 are created by this method) 
+		// I could do it with reflection but there are only 5 subclasses (of which 4 are created by this method)
 		if(Measure.identifiers.contains(id)) return new Measure(id);
-		if(Operator.identifiers.contains(id)) return new Operator(id);		
+		if(Operator.identifiers.contains(id)) return new Operator(id);
 		throw new MetricFormatException("There is no node with id \""+id+"\", creation is not possible.");
 	}
 
@@ -140,10 +140,10 @@ public abstract class Node
 	//	{
 	//		if(!(this.getClass()==o.getClass())) return false;
 	//		Node node = (Node)o;
-	//		// convoluted because it must be safe against NullPointerException 
+	//		// convoluted because it must be safe against NullPointerException
 	//		if(id==null^node.id==null)			{return false;}
 	//		if(param1==null^node.param1==null)	{return false;}
-	//		if(param2==null^node.param2==null)	{return false;}		
+	//		if(param2==null^node.param2==null)	{return false;}
 	//		return
 	//				(id==node.id||id.equals(node.id))&&
 	//				(param1==node.param1||param1.equals(node.param1))&&
@@ -151,15 +151,15 @@ public abstract class Node
 	//				childs.equals(node.childs);
 	//	}
 	public boolean hasFrontParameters() {return "add".equalsIgnoreCase(id);}
-	
+
 	public boolean equals(Object o) {
 		return equals(o, false);
 	}
-	
+
 	@SuppressWarnings("unused")
 	public boolean equals(Object o, boolean strict)
 	{
-		if(o==null||!(this.getClass()==o.getClass())) 
+		if(o==null||!(this.getClass()==o.getClass()))
 			return false;
 		Node n2 = (Node) o;
 		boolean stringTest = false, parentTest = true, childTest = true, completeTest;
@@ -167,10 +167,10 @@ public abstract class Node
 		if((this.parent == null && n2.parent != null) || (n2.parent==null && this.parent != null)) {
 			// one of the parents is null
 //			parentTest = false;
-		}			
+		}
 		else if(this.parent != null && n2.parent != null)
 			if(this.parent == n2.parent) { // same parent
-				
+
 			} else {
 				parentTest = false;
 			}
@@ -193,7 +193,7 @@ public abstract class Node
 			}
 		}else {
 			childTest = false;
-		}		
+		}
 		//testing completeness
 		completeTest = this.isComplete() == n2.isComplete();
 //		return stringTest && parentTest && childTest && completeTest;

@@ -7,13 +7,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
-
 import org.apache.log4j.Logger;
-
 import com.hp.hpl.jena.query.ARQ;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -23,12 +20,10 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.Syntax;
 import com.hp.hpl.jena.vocabulary.OWL;
-
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.util.AdvancedKBInfo;
 import de.uni_leipzig.simba.util.AdvancedMemoryCache;
 import de.uni_leipzig.simba.util.GetAllSparqlQueryModule;
-
 //import java.io.File;
 //import java.io.IOException;
 //import java.util.Collection;
@@ -72,7 +67,7 @@ public class SPARQLHelper
 	public static final String DBPEDIA_ENDPOINT_LIVE = "http://live.dbpedia.org/sparql";
 	public static final String DBPEDIA_ENDPOINT = DBPEDIA_ENDPOINT_OFFICIAL;
 	//
-	//	public static final String DBPEDIA_ENDPOINT = DBPEDIA_ENDPOINT_OFFICIAL; 
+	//	public static final String DBPEDIA_ENDPOINT = DBPEDIA_ENDPOINT_OFFICIAL;
 	//
 	//	public static final String LGD_ENDPOINT = "http://linkedgeodata.org/sparql/";
 	//	//public static int TIMEOUT = 10000;
@@ -101,7 +96,7 @@ public class SPARQLHelper
 	//		} catch (IOException e)
 	//		{
 	//			e.printStackTrace();
-	//			return new HashMap<String, String>();	
+	//			return new HashMap<String, String>();
 	//		}
 	//	}
 	//
@@ -138,7 +133,7 @@ public class SPARQLHelper
 		cache.flush();
 		return (Set<String>)element.getValue();
 	}
-	
+
 	public static Set<String> subClassesOfUncached(String endpoint, String graph,String clazz)
 	{
 		final int MAX_CHILDREN = 100;
@@ -162,7 +157,7 @@ public class SPARQLHelper
 		cache.flush();
 		return (Set<String>)element.getValue();
 	}
-	
+
 	/** returns the root classes of a SPARQL endpoint's ontology ({owl:Thing} normally).  */
 	public static Set<String> rootClassesUncached(String endpoint, String graph)
 	{
@@ -208,7 +203,7 @@ public class SPARQLHelper
 	/**
 	 */
 	static final Set<String> blackset = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(new String[]
-			{"http://dbpedia.org/property/wikiPageUsesTemplate","http://dbpedia.org/property/wikiPageExternalLink"}))); 
+			{"http://dbpedia.org/property/wikiPageUsesTemplate","http://dbpedia.org/property/wikiPageExternalLink"})));
 
 
 	public static Set<String> properties(String endpoint, String graph, String className)
@@ -231,7 +226,7 @@ public class SPARQLHelper
 	 * @param endpoint
 	 * @param graph can be null (recommended as e.g. rdf:label doesn't have to be in the graph)
 	 * @return
-	 */	
+	 */
 	public static Set<String> propertiesUncached(String endpoint, String graph, String className)
 	{
 		if(className.isEmpty()) {className=null;}
@@ -246,7 +241,7 @@ public class SPARQLHelper
 		KBInfo info = className!=null?
 				new AdvancedKBInfo("", endpoint, "s", graph, "rdf:type", className):new AdvancedKBInfo("", endpoint, "s", graph);
 				try
-				{				
+				{
 					Set<String> properties = new HashSet<String>(Arrays.asList(commonProperties(info, 0.8, 20, 50)));
 					if(className!=null) {properties.addAll(getPropertiesWithDomain(endpoint,graph,className));}
 					properties.removeAll(blackset);
@@ -262,7 +257,7 @@ public class SPARQLHelper
 		Set<String> properties = resultSetToList(querySelect(query, endpoint, graph));
 		long end = System.currentTimeMillis();
 		logger.trace(properties.size()+" properties with domain "+clazz+" from endpoint "+endpoint+" in "+(end-start)+" ms.");
-		return properties;		
+		return properties;
 	}
 
 	//	/**
@@ -270,18 +265,18 @@ public class SPARQLHelper
 	//	 * @param endpoint
 	//	 * @param graph can be null (recommended as e.g. rdf:label doesn't have to be in the graph)
 	//	 * @return
-	//	 */	
+	//	 */
 	//	public static List<String> properties(String endpoint, String graph, String className)
 	//	{
-	//		final int SUBJECT_SAMPLE_SIZE = 10;		
+	//		final int SUBJECT_SAMPLE_SIZE = 10;
 	//		Logger logger = Logger.getLogger(SPARQLHelper.class);
 	//		logger.setLevel(Level.TRACE);
 	//		String classRestriction = (className==null||className.isEmpty())?"":"?s ?p ?o. ?s a "+wrapIfNecessary(className)+".\n";
 	//		long start,end;
 	//		//		// ********************************************* rdf:Property ************************************************
 	//		start = System.currentTimeMillis();
-	//		// try it with rdf:Property first  							
-	//		// get all properties which have at least once instance of the class restriction as a subject 
+	//		// try it with rdf:Property first
+	//		// get all properties which have at least once instance of the class restriction as a subject
 	//		String q = "SELECT DISTINCT ?p \n" +
 	//				"{"+classRestriction+
 	//				"?p a rdf:Property}\n";
@@ -295,12 +290,12 @@ public class SPARQLHelper
 	//		// endpoint doesn't have properties marked as rdf:Property
 	//		// ********************************************* subject sample ************************************************
 	//		String query1 = "SELECT DISTINCT ?s \n" +
-	//				"{"+classRestriction+ 
+	//				"{"+classRestriction+
 	//				"?s ?p ?o. }\n"+
 	//				"LIMIT "+SUBJECT_SAMPLE_SIZE;
 	//		start = System.currentTimeMillis();
 	//		List<String> subjectList = resultSetToList(querySelect(PrefixHelper.addPrefixes(query1), endpoint, graph));
-	//		end = System.currentTimeMillis();		
+	//		end = System.currentTimeMillis();
 	//		logger.info("Got "+subjectList.size()+" subjects of type "+className+" from "+endpoint+", took "+(end-start)+" ms with subject sample size "+SUBJECT_SAMPLE_SIZE);
 	//
 	//		String subQuery = "SELECT DISTINCT ?p WHERE {\n";
@@ -311,7 +306,7 @@ public class SPARQLHelper
 	//		}
 	//		subQuery+="}";
 	//		logger.info("May execute: "+subQuery);
-	//		if(subjectList.size()>0) {return resultSetToList(querySelect(PrefixHelper.addPrefixes(subQuery), endpoint, graph));}	
+	//		if(subjectList.size()>0) {return resultSetToList(querySelect(PrefixHelper.addPrefixes(subQuery), endpoint, graph));}
 	//		else {
 	//			String query = "\nSELECT ?s ?p "+//(COUNT(?s) AS ?count)\n"+
 	//					//		"FROM "+wrapIfNecessary(graph)+"\n"+
@@ -330,23 +325,23 @@ public class SPARQLHelper
 	//			}
 	//			return props;
 	//		}
-	//		//		return resultSetToList(querySelect(PrefixHelper.addPrefixes(query), endpoint, graph));		
+	//		//		return resultSetToList(querySelect(PrefixHelper.addPrefixes(query), endpoint, graph));
 	//	}
 
 	//
 	//	public static ResultSet query(String endpoint, String graph, String query)
 	//	{
-	//		log.info("Querying \""+query+"\" at endpoint \""+endpoint+"\" and graph "+(graph!=null?'"'+graph+'"':" no graph")+".");	
+	//		log.info("Querying \""+query+"\" at endpoint \""+endpoint+"\" and graph "+(graph!=null?'"'+graph+'"':" no graph")+".");
 	//		try
 	//		{
 	//			QueryEngineHTTP queryExecution = new QueryEngineHTTP(endpoint, query);
 	//			if(graph!=null)	{queryExecution.addDefaultGraph(graph);}
-	//			ResultSet rs = queryExecution.execSelect(); 
+	//			ResultSet rs = queryExecution.execSelect();
 	//			return rs;
 	//		}
 	//		catch(Throwable e)
 	//		{
-	//			throw new 
+	//			throw new
 	//			RuntimeException("Error with query \""+query+"\" at endpoint \""+endpoint+"\" and graph "+(graph!=null?'"'+graph+'"':" no graph")+".",e);
 	//		}
 	//	}
@@ -364,8 +359,8 @@ public class SPARQLHelper
 	//	{
 	//		List<Instance> instances = new LinkedList<Instance>();
 	//		for(int i=0;i<n;i++)
-	//		{		
-	//			Instance instance = new Instance("http://someurl"+i);		
+	//		{
+	//			Instance instance = new Instance("http://someurl"+i);
 	//			instance.addProperty("rdfs:label", "some label"+i);
 	//			instance.addProperty("blubb:name", "some name"+i);
 	//			instance.addProperty("dc:title", "some title"+i);
@@ -376,10 +371,10 @@ public class SPARQLHelper
 	//
 	//	public static Instance[] getSample(KBInfo kb, int n, int timeout) throws Exception
 	//	{
-	//		StringBuilder query = new StringBuilder();	
+	//		StringBuilder query = new StringBuilder();
 	//		query.append("SELECT DISTINCT * where {?"+kb.var+" ?p ?o. ");
 	//		query.append('\n');
-	//		// limited restriction subquery 
+	//		// limited restriction subquery
 	//		query.append("{select ?"+kb.var+" where "+Restriction.restrictionUnion(kb.restrictions, kb.var)+" limit "+n+"}}");
 	//
 	//		List<Instance> instances = new LinkedList<Instance>();
@@ -388,8 +383,8 @@ public class SPARQLHelper
 	//			ResultSet rs = SPARQLHelper.query(kb.endpoint, null, query.toString(), timeout);
 	//			MultiMap<String,QuerySolution> urlToSolution = new MultiHashMap<String,QuerySolution>();
 	//			while(rs.hasNext())
-	//			{			
-	//				QuerySolution qs = rs.next();			
+	//			{
+	//				QuerySolution qs = rs.next();
 	//				urlToSolution.put(qs.getResource(kb.var).toString(), qs);
 	//			}
 	//			for(String url : urlToSolution.keySet())
@@ -400,10 +395,10 @@ public class SPARQLHelper
 	//				for(QuerySolution solution : querySolutions)
 	//				{
 	//					instance.addProperty(solution.getResource("p").toString(), solution.get("o").toString());
-	//				}				
+	//				}
 	//			}
 	//			return instances.toArray(new Instance[0]);
-	//		}		
+	//		}
 	//		//catch (TimeoutException e) {throw new Exception(e);}
 	//		//{return new Instance[]{new Instance("error: timeout ("+TIMEOUT+") or other sparql error for sparql query\n \""+query+"\",\nmessage: "+e.getMessage())};}
 	//	}
@@ -425,11 +420,11 @@ public class SPARQLHelper
 	//	public static String lexicalForm(final String literal)
 	//	{
 	//		String lexicalForm = literal;
-	//		// remove data type		
+	//		// remove data type
 	//		int index = lexicalForm.indexOf("^^");
 	//		if(index>-1) {lexicalForm = lexicalForm.substring(0, index);}
 	//		// remove language tag
-	//		index = lexicalForm.indexOf("@"); 				
+	//		index = lexicalForm.indexOf("@");
 	//		if(index>-1) {lexicalForm = lexicalForm.substring(0, index);}
 	//		return lexicalForm;
 	//	}
@@ -437,7 +432,7 @@ public class SPARQLHelper
 	public static QueryExecution queryExecution(String query,String graph, String endpoint)
 	{
 		ARQ.setNormalMode();
-		Query sparqlQuery = QueryFactory.create(query,Syntax.syntaxARQ);		
+		Query sparqlQuery = QueryFactory.create(query,Syntax.syntaxARQ);
 		QueryExecution qexec;
 
 		// take care of graph issues. Only takes one graph. Seems like some sparql endpoint do
@@ -485,7 +480,7 @@ public class SPARQLHelper
 	}
 
 	public static ResultSet querySelect(String query, String endpoint, String graph)
-	{		
+	{
 		try
 		{
 			//QueryExecution qexec = queryExecutionDirect(query,graph,endpoint);
@@ -499,7 +494,7 @@ public class SPARQLHelper
 	}
 
 	//	public static ResultSet querySelect(String query, KBInfo kb)
-	//	{		
+	//	{
 	//		String wholeQuery = formatPrefixes(kb.prefixes)+'\n'+query;
 	//		// end workaround
 	//		//System.out.println(wholeQuery);
@@ -516,7 +511,7 @@ public class SPARQLHelper
 	//	}
 	//
 	//	//	public static ResultSet querySelect(String query, KBInfo kb,int pageSize)
-	//	//	{		
+	//	//	{
 	//	//		String wholeQuery = formatPrefixes(kb.prefixes)+'\n'+query;
 	//	//		QueryExecution qexec = queryExecution(wholeQuery,kb.graph,kb.endpoint);
 	//	//		ResultSet results = qexec.execSelect();
@@ -528,7 +523,7 @@ public class SPARQLHelper
 	//	//			String query, String graph, String endpoint, Integer limit,
 	//	//			int offset,Integer pageSize, Map<String,String> prefixes
 	//	//	)
-	//	//	{		
+	//	//	{
 	//	//		String wholeQuery = formatPrefixes(prefixes)+'\n'+query;
 	//	//		do
 	//	//		{
@@ -552,7 +547,7 @@ public class SPARQLHelper
 	//
 	//
 	//	/**
-	//	 * @param rs all solutions need to contain bindings for the variables ?s, ?p and ?o 
+	//	 * @param rs all solutions need to contain bindings for the variables ?s, ?p and ?o
 	//	 * @return the resulting instances
 	//	 */
 	//	public static Instance[] resultSetToInstances(ResultSet rs)
@@ -561,8 +556,8 @@ public class SPARQLHelper
 	//		List<Instance> instances = new LinkedList<Instance>();
 	//
 	//		while(rs.hasNext())
-	//		{			
-	//			QuerySolution qs = rs.next();			
+	//		{
+	//			QuerySolution qs = rs.next();
 	//			urlToSolution.put(qs.getResource("s").toString(), qs);
 	//		}
 	//		for(String url : urlToSolution.keySet())
@@ -574,9 +569,9 @@ public class SPARQLHelper
 	//			{
 	//				//System.out.println(solution);
 	//				instance.addProperty(solution.getResource("p").toString(), solution.get("o").toString());
-	//			}				
+	//			}
 	//		}
-	//		return instances.toArray(new Instance[0]);			
+	//		return instances.toArray(new Instance[0]);
 	//	}
 	//
 	//	/** Generates a random sample from a knowledge base.
@@ -584,7 +579,7 @@ public class SPARQLHelper
 	//	 * @param n
 	//	 * @param timeout
 	//	 * @return
-	//	 * @throws TimeoutException 
+	//	 * @throws TimeoutException
 	//	 * @throws Exception
 	//	 */
 	//	public static Instance[] getRandomSample(KBInfo kb, int n, int timeout)
@@ -610,7 +605,7 @@ public class SPARQLHelper
 	//			{
 	//				// no random sample needed, just retrieve all
 	//				String query = "select ?s ?p ?o where {?s ?p ?o."+Restriction.restrictionUnion(kb.restrictions, "s")+"}";
-	//				ResultSet rs = SPARQLHelper.query(kb.endpoint, null, query, timeout);				
+	//				ResultSet rs = SPARQLHelper.query(kb.endpoint, null, query, timeout);
 	//				return resultSetToInstances(rs);
 	//			}
 	//			double p = (double)n / count;
@@ -618,31 +613,31 @@ public class SPARQLHelper
 	//			//			double sigma = Math.sqrt(count*p*(1-p));
 	//			// simplified
 	//			double sigma = Math.sqrt(n*(1-p));
-	//			//level l	   percentage of values within l standard deviations of the mean  
-	//			//			1 	31% 
-	//			//			2 	69% 
-	//			//			3 	93.3% 
-	//			//			4 	99.38% 
-	//			//			5 	99.977% 
-	//			//			6 	99.99966% 
-	//			//			7 	99.9999981% 
+	//			//level l	   percentage of values within l standard deviations of the mean
+	//			//			1 	31%
+	//			//			2 	69%
+	//			//			3 	93.3%
+	//			//			4 	99.38%
+	//			//			5 	99.977%
+	//			//			6 	99.99966%
+	//			//			7 	99.9999981%
 	//			// increasing the sigma level increases the probability that we get at least n elements, however
-	//			// it increases the statistical skew towards the elements at the beginning of the ordering used by 
+	//			// it increases the statistical skew towards the elements at the beginning of the ordering used by
 	//			// the SPARQL endpoint
 	//			final double SIGMA_LEVEL = 3;
-	//			double safetyIncrement = SIGMA_LEVEL*sigma/count; 
+	//			double safetyIncrement = SIGMA_LEVEL*sigma/count;
 	//			// this formula is an approximation from below
 	//			// as increasing the probability also increases the variance
 	//			double decimationFactor = 1/(p+safetyIncrement);
 	//
 	//			String query =
-	//					"SELECT * WHERE {?s ?p ?o ."+ 
+	//					"SELECT * WHERE {?s ?p ?o ."+
 	//							"{select ?s where {?s ?p ?o. "+Restriction.restrictionUnion(kb.restrictions, "s")+
 	//							"FILTER ( 1>  <SHORT_OR_LONG::bif:rnd>  ("+decimationFactor+", ?s))} limit "+n+" }}";
 	//			try
 	//			{
 	//				ResultSet rs = SPARQLHelper.querySelect(query, kb);
-	//				Instance[] instances = resultSetToInstances(rs); 
+	//				Instance[] instances = resultSetToInstances(rs);
 	//				return RandomUtils.<Instance>randomSample(instances,n);
 	//			}
 	//			catch(Exception e)
@@ -651,16 +646,16 @@ public class SPARQLHelper
 	//				throw new RuntimeException(e);
 	//			}
 	//		}
-	//		//		StringBuilder query = new StringBuilder();	
+	//		//		StringBuilder query = new StringBuilder();
 	//		//
 	//		//		query.append("SELECT DISTINCT * where {?"+kb.var+" ?p ?o. ");
 	//		//		query.append('\n');
-	//		//		// limited restriction subquery 
+	//		//		// limited restriction subquery
 	//		//		query.append("{select ?"+kb.var+" where "+Restriction.restrictionUnion(kb.restrictions, kb.var)+" limit "+n+"}}");
 	//
 	//
 	//
-	//	}		
+	//	}
 	//
 	//	//{return new Instance[]{new Instance("error: timeout ("+TIMEOUT+") or other sparql error for sparql query\n \""+query+"\",\nmessage: "+e.getMessage())};}
 	//
@@ -670,7 +665,7 @@ public class SPARQLHelper
 
 	protected static AdvancedMemoryCache getSample(KBInfo kb, int sampleSize)
 	{
-		String hashString = Integer.toString(kb.hashCode());                            
+		String hashString = Integer.toString(kb.hashCode());
 		if(!samples.containsKey(hashString)) {samples.put(hashString,generateSample(kb,sampleSize));}
 		return samples.get(hashString);
 	}
@@ -683,7 +678,7 @@ public class SPARQLHelper
 		{
 			queryModule.fillCache(cache,false);
 		}
-		catch(Exception e) {throw new RuntimeException(e);}             
+		catch(Exception e) {throw new RuntimeException(e);}
 		return cache;
 	}
 

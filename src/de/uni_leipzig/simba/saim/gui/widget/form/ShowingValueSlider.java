@@ -2,7 +2,6 @@ package de.uni_leipzig.simba.saim.gui.widget.form;
 
 import java.text.NumberFormat;
 import java.util.Collection;
-
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator;
 import com.vaadin.data.Validator.InvalidValueException;
@@ -12,7 +11,6 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Slider;
-
 /**
  * Custom component basically wraps around Slider and adds an Label showing the current value.
  * @TODO use FieldWrapper class from the CustomField add-on to avoid 80% of code.
@@ -23,9 +21,9 @@ public class ShowingValueSlider extends CustomComponent implements Field {
 	private static final long serialVersionUID = 3590831032966822810L;
 
 	Slider slider = new Slider();
-	
+
 	private Label value = new Label("0");
-	   
+
     public ShowingValueSlider(String caption, double min, double max, int resolution) {
         // Initilization
         setCaption(caption);
@@ -34,7 +32,7 @@ public class ShowingValueSlider extends CustomComponent implements Field {
         slider.setResolution(resolution);
         slider.setWidth("100%");
         slider.setImmediate(true);
-       
+
         value.setWidth(null);
         slider.addListener(new ValueChangeListener() {
             private static final long serialVersionUID = -860672027897366148L;
@@ -44,7 +42,7 @@ public class ShowingValueSlider extends CustomComponent implements Field {
                 value.setValue(NumberFormat.getInstance().format(event.getProperty().getValue()));
             }
         });
-            
+
         // Component root
         HorizontalLayout hl = new HorizontalLayout();
         hl.setSpacing(true);
@@ -54,12 +52,12 @@ public class ShowingValueSlider extends CustomComponent implements Field {
         hl.setExpandRatio(slider, 1);
         hl.addComponent(value);
         hl.setComponentAlignment(value, Alignment.MIDDLE_LEFT);
-       
+
         setCompositionRoot(hl);
     }
 
-   
-   
+
+
     @Override
     public void focus() {
         slider.focus();
@@ -77,12 +75,12 @@ public class ShowingValueSlider extends CustomComponent implements Field {
 
     @Override
     public void setRequired(boolean required) {
-        slider.setRequired(required);       
+        slider.setRequired(required);
     }
 
     @Override
     public void setRequiredError(String requiredMessage) {
-        slider.setRequiredError(requiredMessage);       
+        slider.setRequiredError(requiredMessage);
     }
 
     @Override
@@ -92,12 +90,12 @@ public class ShowingValueSlider extends CustomComponent implements Field {
 
     @Override
     public void setInvalidCommitted(boolean isCommitted) {
-        slider.setInvalidCommitted(isCommitted);       
+        slider.setInvalidCommitted(isCommitted);
     }
 
     @Override
     public void commit() throws SourceException, InvalidValueException {
-        slider.commit();       
+        slider.commit();
     }
 
     @Override
@@ -128,7 +126,7 @@ public class ShowingValueSlider extends CustomComponent implements Field {
     @Override
     public void setWriteThrough(boolean writeThrough) throws SourceException,
             InvalidValueException {
-        slider.setWriteThrough(writeThrough);       
+        slider.setWriteThrough(writeThrough);
     }
 
     @Override
@@ -164,7 +162,7 @@ public class ShowingValueSlider extends CustomComponent implements Field {
 
     @Override
     public void validate() throws InvalidValueException {
-        slider.validate();       
+        slider.validate();
     }
 
     @Override

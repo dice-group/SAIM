@@ -6,9 +6,7 @@ import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
-
 import org.apache.log4j.Logger;
-
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
@@ -25,9 +23,8 @@ import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.backend.ExampleConfig;
 import de.uni_leipzig.simba.saim.backend.ExampleLoader;
 import de.uni_leipzig.simba.saim.core.Configuration;
-
 @SuppressWarnings("serial")
-public class ConfigUploader extends CustomComponent 
+public class ConfigUploader extends CustomComponent
 implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver
 {
 	//private final Messages messages;
@@ -60,7 +57,7 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver
 		root.getContent().addComponent(upload);
 		//add Button to proceed
 		executeFileButton.setEnabled(false);
-		executeFileButton.addListener(new Button.ClickListener() {			
+		executeFileButton.addListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				Configuration config = ((SAIMApplication) getApplication()).getConfig();//Configuration.getInstance();
@@ -70,10 +67,10 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver
 				SAIMApplication appl = (SAIMApplication) getApplication();
 				appl.getMainWindow().requestRepaintAll();
 			}
-		});       
+		});
 		root.getContent().addComponent(executeFileButton);
 	}
-	
+
 	public void attach() {
 		loader = new ExampleLoader((SAIMApplication) getApplication());
 		buildLocalExamplesSelection();
@@ -101,14 +98,14 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver
 		// Log the failure on screen.
 		root.addComponent(new Label("Uploading "
 				+ event.getFilename() + " of type '"
-				+ event.getMIMEType() + "' failed."));		
+				+ event.getMIMEType() + "' failed."));
 	}
 
 	@Override
 	public void uploadSucceeded(SucceededEvent event) {
 		root.addComponent(new Label("File " + event.getFilename()
 				+ " of type '" + event.getMIMEType()
-				+ "' uploaded."));		
+				+ "' uploaded."));
 		if(isValidFile(file))
 		{
 			executeFileButton.setEnabled(true);
@@ -144,15 +141,15 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver
 //		localExamplesSelect.addItem("examples/Abt-Buy.xml");
 //		localExamplesSelect.addItem("examples/Amazon-GoogleProducts.xml");
 //		localExamplesSelect.addItem("examples/astronauts-astronauts.xml");
-//		
+//
 //		localExamplesSelect.addItem(DEFAULT_LIMES_XML);
 //		localExamplesSelect.select(DEFAULT_LIMES_XML);
 		// Button to run a default spec locally
-		runExampleButton.addListener(new Button.ClickListener() {			
+		runExampleButton.addListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				Configuration config = ((SAIMApplication) getApplication()).getConfig();//Configuration.getInstance();
-				
+
 				ConfigReader cR = new ConfigReader();
 				InputStream inStream;
 				inStream = getClass().getClassLoader().getResourceAsStream(""+localExamplesSelect.getValue());
@@ -180,7 +177,7 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver
 				}
 				config.setFromConfigReader(cR);
 				SAIMApplication appl = (SAIMApplication) getApplication();
-				appl.refresh();				
+				appl.refresh();
 				appl.getMainWindow().removeWindow(getWindow());
 			}
 		});

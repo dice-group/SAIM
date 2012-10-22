@@ -10,7 +10,7 @@ public abstract class PerformPanel extends Panel{
 	public PerformPanel(String string) {
 		super(string);
 	}
-	
+
 	public PerformPanel() {
 		super();
 	}
@@ -19,7 +19,7 @@ public abstract class PerformPanel extends Panel{
 	 * Action to be performed if Window holding Panel is closed.
 	 */
 	public abstract void onClose();
-	
+
 	/**
 	 * Called after Window is showed.
 	 */

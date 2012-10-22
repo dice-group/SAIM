@@ -4,11 +4,9 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
-
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
-
-/** An item that is a union of items. properties will be returned from 
+/** An item that is a union of items. properties will be returned from
  * the first Item in the given collection that contains that property id.*/
 
 public class ItemUnion implements Item
@@ -20,8 +18,8 @@ public class ItemUnion implements Item
 	public final List<Item> items;
 	public final List<String> ids = new LinkedList<String>();
 
-	
-	
+
+
 	public ItemUnion(List<Item> items)
 	{
 		this.items = items;
@@ -35,7 +33,7 @@ public class ItemUnion implements Item
 			i++;
 		}
 	}
-	
+
 	public ItemUnion(Item... items)
 	{
 		this.items = new Vector<Item>();
@@ -51,13 +49,13 @@ public class ItemUnion implements Item
 		}
 	}
 	@Override public Property getItemProperty(Object id)
-	{		
+	{
 		Item item = items.get(Integer.valueOf(id.toString().charAt(0)));
 		return item.getItemProperty(id.toString().substring(1));
 	}
 
 	@Override public Collection<?> getItemPropertyIds()
-	{ 
+	{
 		return ids;
 	}
 

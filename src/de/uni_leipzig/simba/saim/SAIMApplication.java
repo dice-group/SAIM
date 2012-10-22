@@ -23,21 +23,18 @@ import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-
 import csplugins.layout.algorithms.circularLayout.CircularLayoutAlgorithm;
 import csplugins.layout.algorithms.force.ForceDirectedLayout;
 import csplugins.layout.algorithms.hierarchicalLayout.HierarchicalLayoutAlgorithm;
 import cytoscape.layout.algorithms.GridNodeLayout;
-
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.ConfigUploader;
 import de.uni_leipzig.simba.saim.gui.widget.form.EndPointUploader;
 import de.uni_leipzig.simba.saim.gui.widget.panel.MetricPanel;
 import de.uni_leipzig.simba.saim.gui.widget.window.EndpointWindow;
-
 /**
  * Central Application class.
- * Sets up main window and 
+ * Sets up main window and
  */
 @SuppressWarnings("serial")
 public class SAIMApplication extends Application implements TransactionListener
@@ -49,26 +46,26 @@ public class SAIMApplication extends Application implements TransactionListener
 	private Wizard wizard;
 	Window sub;
 	transient Configuration config = new Configuration();
-	Panel content;	
+	Panel content;
 	static transient final Logger logger = Logger.getLogger(SAIMApplication.class);
 
 	private MenuBar menuBar = null;
 
-	private static ThreadLocal<SAIMApplication> currentApplication = 
+	private static ThreadLocal<SAIMApplication> currentApplication =
 			new ThreadLocal<SAIMApplication> ();
-	
+
 	@Override
 	public void init()
-	{	
+	{
 		 getContext ().addTransactionListener ( this );
 		// reproduce failure on headless environments
-//		System.setProperty("java.awt.headless", "true"); 
+//		System.setProperty("java.awt.headless", "true");
 		logger.debug("SAIMApplication()");
 //		messages = new Messages(Locale.getDefault());
 		messages = new Messages(Locale.ENGLISH);
 		mainWindow = new Window();
 		ParameterHandler parameterHandler = new ParameterHandler()
-		{			
+		{
 			@Override
 			public void handleParameters(Map<String, String[]> parameters)
 			{
@@ -76,8 +73,8 @@ public class SAIMApplication extends Application implements TransactionListener
 				if(logger.getEffectiveLevel().isGreaterOrEqual(Level.INFO))
 				{logger.info("SAIMApplication was called with url parameters "+parametersToString(parameters));}
 
-				String[] languages=parameters.get("language");				
-				String language = languages==null?null:languages[0];				
+				String[] languages=parameters.get("language");
+				String language = languages==null?null:languages[0];
 				if((language!=null))
 				{
 					setLanguage(language);
@@ -90,7 +87,7 @@ public class SAIMApplication extends Application implements TransactionListener
 				for(String key:parameters.keySet()) {sb.append(Arrays.toString(parameters.get(key)));}
 				return sb.toString();
 			}
-		};		
+		};
 
 		mainWindow.addParameterHandler(parameterHandler);
 		mainLayout = buildMainLayout();
@@ -98,9 +95,9 @@ public class SAIMApplication extends Application implements TransactionListener
 		mainWindow.addComponent(menuBar=buildMenuBar());
 		content = new MetricPanel(messages);
 		mainLayout.addComponent(content);
-		wizard = new Wizard();	
+		wizard = new Wizard();
 		setTheme("saim");
-		setMainWindow(mainWindow);		
+		setMainWindow(mainWindow);
 	}
 
 	private void setLanguage(String language)
@@ -118,24 +115,24 @@ public class SAIMApplication extends Application implements TransactionListener
 	{
 		final MenuBar menuBar = new MenuBar();
 		menuBar.setWidth("100%"); //$NON-NLS-1$
-	
+
 		MenuItem fileMenu = menuBar.addItem(messages.getString("file"), null, null); //$NON-NLS-1$
 		fileMenu.addItem(messages.getString("startnewconfig"), null, new StartCommand(this));
-		
+
 //		fileMenu.addItem(messages.getString("open"), null, null).setEnabled(false); //$NON-NLS-1$
 //		fileMenu.addItem(messages.getString("save"), null, null).setEnabled(false); //$NON-NLS-1$
 
 		fileMenu.addItem(messages.getString("importlimes"), null, importLIMESCommand).setEnabled(true);		 //$NON-NLS-1$
 		fileMenu.addItem(messages.getString("exportlimes"), null, exportLIMESCommand).setEnabled(true); //$NON-NLS-1$
-		
+
 		//TODO for testing to upload dumped endpoints.
 //		fileMenu.addItem("Upload Endpoint", null, uploadEndpointCommand);
-		
+
 
 		MenuItem languageMenu = menuBar.addItem(messages.getString("language"), null, null); //$NON-NLS-1$
 		languageMenu.addItem(messages.getString("german"), null, new SetLanguageCommand("de"));		 //$NON-NLS-1$
 		languageMenu.addItem(messages.getString("english"), null, new SetLanguageCommand("en")).setEnabled(true); //$NON-NLS-1$
-		
+
 		// zoom
 				menuBar.addItem(messages.getString("menubar_zoom_in"), null,new MenuBar.Command()	{
 					public void menuSelected(MenuItem selectedItem) {
@@ -143,15 +140,15 @@ public class SAIMApplication extends Application implements TransactionListener
 							((MetricPanel)content).getSaimcytopro().zoomIn(true);
 						}
 					}
-				});	
+				});
 				menuBar.addItem(messages.getString("menubar_zoom_fit"), null,new MenuBar.Command()	{
 					public void menuSelected(MenuItem selectedItem) {
 						if(selectedItem.getText().equals(messages.getString("menubar_zoom_fit"))){//$NON-NLS-1$
-						
+
 							((MetricPanel)content).getSaimcytopro().fitToView();
 						}
 					}
-				});		
+				});
 				menuBar.addItem(messages.getString("menubar_zoom_out"), null,new MenuBar.Command()	{
 					public void menuSelected(MenuItem selectedItem) {
 						if(selectedItem.getText().equals(messages.getString("menubar_zoom_out"))){//$NON-NLS-1$
@@ -159,31 +156,31 @@ public class SAIMApplication extends Application implements TransactionListener
 						}
 					}
 				});
-				
+
 				// layout algo.
 				MenuItem layoutalgo = menuBar.addItem(messages.getString("menubar_layout_algorithm"), null, null); //$NON-NLS-1$
-				
+
 				layoutalgo.addItem(messages.getString("menubar_layout_algorithm_force_directed"), null, new MenuBar.Command()	{//$NON-NLS-1$
 					public void menuSelected(MenuItem selectedItem) {
 						if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_force_directed"))){//$NON-NLS-1$
 							((MetricPanel)content).getSaimcytopro().applyLayoutAlgorithm(new ForceDirectedLayout(),true);
 						}
 					}
-				});	
+				});
 				layoutalgo.addItem(messages.getString("menubar_layout_algorithm_hierarchical"), null, new MenuBar.Command()	{//$NON-NLS-1$
 					public void menuSelected(MenuItem selectedItem) {
 						if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_hierarchical"))){//$NON-NLS-1$
 						((MetricPanel)content).getSaimcytopro().applyLayoutAlgorithm(new HierarchicalLayoutAlgorithm(),true);
 						}
 					}
-				});		
+				});
 				layoutalgo.addItem(messages.getString("menubar_layout_algorithm_grid"), null, new MenuBar.Command()	{//$NON-NLS-1$
 					public void menuSelected(MenuItem selectedItem) {
 						if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_grid"))){//$NON-NLS-1$
 							((MetricPanel)content).getSaimcytopro().applyLayoutAlgorithm(new GridNodeLayout(),true);
 						}
 					}
-				});	
+				});
 				layoutalgo.addItem(messages.getString("menubar_layout_algorithm_circular"), null, new MenuBar.Command()	{//$NON-NLS-1$
 					public void menuSelected(MenuItem selectedItem) {
 						if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_circular"))){//$NON-NLS-1$
@@ -191,7 +188,7 @@ public class SAIMApplication extends Application implements TransactionListener
 						}
 					}
 				});
-				
+
 		return menuBar;
 	}
 
@@ -212,14 +209,14 @@ public class SAIMApplication extends Application implements TransactionListener
 			sub.addComponent(upload);
 			Button ok = new Button("ok"); //$NON-NLS-1$
 			sub.addComponent(ok);
-			ok.addListener(new ClickListener() {				
+			ok.addListener(new ClickListener() {
 				@Override
 				public void buttonClick(ClickEvent event) {
 					getMainWindow().removeWindow(sub);
 				}
 			});
 			getMainWindow().addWindow(sub);
-		}  
+		}
 	};
 
 	MenuBar.Command exportLIMESCommand = new MenuBar.Command() {
@@ -231,11 +228,11 @@ public class SAIMApplication extends Application implements TransactionListener
 
 			sub.addComponent(new Link(messages.getString("SAIMApplication.menudownloadlinkspec"),new FileResource(new File("linkspec.xml"),SAIMApplication.this))); //$NON-NLS-1$ //$NON-NLS-2$
 			getMainWindow().addWindow(sub);
-		}  
+		}
 	};
 
-	
-	MenuBar.Command uploadEndpointCommand = new MenuBar.Command() {		
+
+	MenuBar.Command uploadEndpointCommand = new MenuBar.Command() {
 		@Override
 		public void menuSelected(MenuItem selectedItem) {
 			sub = new Window("Endpoint Upload");
@@ -245,13 +242,13 @@ public class SAIMApplication extends Application implements TransactionListener
 			getMainWindow().addWindow(sub);
 		}
 	};
-	
+
 	private class SetLanguageCommand implements MenuBar.Command
 	{
 		private final String language;
 		public SetLanguageCommand(String language) {this.language=language;}
 
-		public void menuSelected(MenuItem selectedItem) {setLanguage(language);}  
+		public void menuSelected(MenuItem selectedItem) {setLanguage(language);}
 	};
 
 	public Configuration getConfig()
@@ -261,7 +258,7 @@ public class SAIMApplication extends Application implements TransactionListener
 		return config;
 	}
 
-	
+
 	/**
 	 * Method is called if any action was taken in a subwindow that needs the main content to update.
 	 */
@@ -274,16 +271,16 @@ public class SAIMApplication extends Application implements TransactionListener
 		content.attach();
 		//mainLayout.addComponent(content);
 
-		mainLayout.addComponent(menuBar=buildMenuBar(),0);	
-		
-		
+		mainLayout.addComponent(menuBar=buildMenuBar(),0);
+
+
 	}
 
 	public class StartCommand implements Command
 	{
 		SAIMApplication app;
 		public StartCommand(SAIMApplication app) {this.app=app;}
-		
+
 		@Override
 		public void menuSelected(MenuItem selectedItem) {
 			config = new Configuration();
@@ -293,7 +290,7 @@ public class SAIMApplication extends Application implements TransactionListener
 			app.getMainWindow().addWindow(endpointWindow);
 		}
 	}
-	
+
 	/**
 	 * Get the WEB-INF Folder on runtime
 	 * @return
@@ -322,7 +319,7 @@ public class SAIMApplication extends Application implements TransactionListener
             currentApplication.remove ();
         }
     }
-	
+
 	/**
 	 * For access in non-UI classes.
 	 * @TODO Heavy testing

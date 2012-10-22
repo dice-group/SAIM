@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeSet;
-
 import com.vaadin.Application;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -21,7 +20,6 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.Window;
-
 import de.uni_leipzig.simba.cache.Cache;
 import de.uni_leipzig.simba.data.Instance;
 import de.uni_leipzig.simba.data.Mapping;
@@ -57,10 +55,10 @@ public class InstanceMappingTable implements Serializable
 			for(Entry<String, Double> uri2 : data.map.get(uri1).entrySet())
 			{dataList.add(new InstanceMatch(uri1, uri2.getKey(), uri2.getValue()));}
 	}
-	
+
 	@SuppressWarnings({ "serial" })
 	public Table getTable()
-	{	
+	{
 		beanItemContainer = new BeanItemContainer<InstanceMatch>(InstanceMatch.class);
 		beanItemContainer.addAll(dataList);
 		t = new Table("", beanItemContainer);
@@ -93,9 +91,9 @@ public class InstanceMappingTable implements Serializable
 	            }
 	        });
 		}
-		
+
 		// add column to display addition info
-		t.addGeneratedColumn("info",new Table.ColumnGenerator() {			
+		t.addGeneratedColumn("info",new Table.ColumnGenerator() {
 			@Override
 			public Object generateCell(Table source, Object itemId, Object columnId) {
 				final InstanceMatch bean = (InstanceMatch) itemId;
@@ -130,7 +128,7 @@ public class InstanceMappingTable implements Serializable
 			    }
 			    if(labels != null && labels.size()>=1)
 			    	return InstanceMatch.getLinkLabelToUri(uri, labels.first());
-			    return InstanceMatch.getLinkLabelToUri(uri);  
+			    return InstanceMatch.getLinkLabelToUri(uri);
 			  }
 			});
 		t.addGeneratedColumn("uri2", new Table.ColumnGenerator() { //$NON-NLS-1$
@@ -147,7 +145,7 @@ public class InstanceMappingTable implements Serializable
 			    }
 				if(labels != null && labels.size()>=1)
 			    	return InstanceMatch.getLinkLabelToUri(uri, labels.first());
-			    return InstanceMatch.getLinkLabelToUri(uri);  
+			    return InstanceMatch.getLinkLabelToUri(uri);
 			  }
 			});
 		t.addGeneratedColumn("value", new Table.ColumnGenerator() { //$NON-NLS-1$
@@ -163,14 +161,14 @@ public class InstanceMappingTable implements Serializable
 		t.setColumnHeader("uri2", messages.getString("InstanceMappingTable.targeturi"));
 		t.setColumnHeader("value", messages.getString("value"));
 		String sort[] = {"value", "uri1", "uri2"};
-		
+
 		boolean ascending[] = {true, true, true};
 		t.sort(sort, ascending);
 		if(showBoxes)
 			t.setVisibleColumns(new Object[] {"info", "uri1", "uri2", "value", messages.getString("InstanceMappingTable.isamatch")});
 		else
 			t.setVisibleColumns(new Object[] {"info","uri1","uri2", "value"});
-		
+
 		// Allow selecting items from the table.
 		t.setSelectable(true);
 		t.setSortDisabled(false);
@@ -179,7 +177,7 @@ public class InstanceMappingTable implements Serializable
 		t.setImmediate(true);
 		return t;
 	}
-	
+
 	/**
 	 * Method to get the Mapping out of the table, or for that matter out of the
 	 * underlying BeanContainer.
@@ -196,7 +194,7 @@ public class InstanceMappingTable implements Serializable
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Method to return the source data of the Table.
 	 * @return
@@ -204,17 +202,17 @@ public class InstanceMappingTable implements Serializable
 	public Mapping getMapping() {
 		return data;
 	}
-	
+
 	/**Listener reacts on clicks on the info image*/
 	class InfoIconClickListener implements ClickListener {
 		/**
 		 */
 		private static final long serialVersionUID = 5370196171933436788L;
-		InstanceMatch row; 
+		InstanceMatch row;
 		public InfoIconClickListener(InstanceMatch row) {this.row = row;}
 		@Override
 		public void click(ClickEvent event) {
-			
+
 			Instance i1 = sourceCache.getInstance(row.getOriginalUri1());
 			Instance i2 = targetCache.getInstance(row.getOriginalUri2());
 			if(i1!=null && i2 != null) {
@@ -225,6 +223,6 @@ public class InstanceMappingTable implements Serializable
 				application.getMainWindow().addWindow(sub);
 				}
 		}
-		
+
 	}
 }

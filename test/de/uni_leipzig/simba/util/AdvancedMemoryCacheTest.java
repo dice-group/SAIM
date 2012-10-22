@@ -3,9 +3,7 @@ package de.uni_leipzig.simba.util;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.junit.Test;
-
 /** @author Konrad Höffner */
 public class AdvancedMemoryCacheTest
 {
@@ -18,12 +16,12 @@ public class AdvancedMemoryCacheTest
 //		AdvancedMemoryCache cache =  new AdvancedMemoryCache();
 //		cache.addTriple("test","west", "schmest");
 //		cache.addTriple("rest","mest", "best");
-//		
+//
 //		cache.saveToFile(f);
 //		AdvancedMemoryCache cacheLoaded = AdvancedMemoryCache.loadFromFile(f);
 //		assertTrue(cache.toString().equals(cacheLoaded.toString()));
 //	}
-	
+
 	@Test
 	public void  getCommonPropertiesTest() throws Exception
 	{

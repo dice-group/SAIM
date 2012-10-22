@@ -13,11 +13,10 @@ import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
 import de.uni_leipzig.simba.saim.gui.widget.form.LearnerConfigurationBean;
-
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
 @SuppressWarnings("serial")
 public class ActiveLearningPanel extends MetricLearnPanel
-{	
+{
 	private final Messages messages;
 	//	public ActiveLearningPanel() {
 	//		super();
@@ -54,12 +53,12 @@ public class ActiveLearningPanel extends MetricLearnPanel
 		}
 
 		params.put("preserveFittest",true);
-		if(config.propertyMapping != null) 
+		if(config.propertyMapping != null)
 			params.put("propertyMapping", config.propertyMapping);
 		else
 			params.put("propertyMapping", new PropertyMapping());
-		params.put("granularity", 2); 
-		params.put("config", config.getLimesConfiReader()); 
+		params.put("granularity", 2);
+		params.put("config", config.getLimesConfiReader());
 		learner = new GeneticActiveLearner();
 		try {
 			learner.init(config.getSource(), config.getTarget(), params);
@@ -88,7 +87,7 @@ public class ActiveLearningPanel extends MetricLearnPanel
 		public ActiveLearnButtonClickListener(Layout l) {this.l = l;}
 
 		@Override
-		public void buttonClick(ClickEvent event) {		
+		public void buttonClick(ClickEvent event) {
 			Mapping map;
 			if(iMapTable == null) // on start
 			{
@@ -113,8 +112,8 @@ public class ActiveLearningPanel extends MetricLearnPanel
 			l.addComponent(iMapTable.getTable());
 			if (map.size()>0)
 			{
-				terminate.setEnabled(true);	
+				terminate.setEnabled(true);
 			}
-		}		
+		}
 	}
 }

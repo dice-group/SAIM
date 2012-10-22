@@ -12,16 +12,14 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-
 import de.uni_leipzig.simba.cache.Cache;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
-import de.uni_leipzig.simba.saim.gui.widget.panel.PerformPanel; 
+import de.uni_leipzig.simba.saim.gui.widget.panel.PerformPanel;
 import de.uni_leipzig.simba.saim.gui.widget.panel.ResultPanel;
-
 /**
  * Implements the idea of a generic Execution window for SelfConfigurators.
  * @author Lyko
@@ -43,14 +41,14 @@ public abstract class SelfConfigExecutionPanel extends PerformPanel{
 	Button showMapping;
 	// learned mapping
 	Mapping learnedMapping = new Mapping();
-	
+
 	public SelfConfigExecutionPanel(SAIMApplication application, final Messages messages) {
 		this.application = application;
 		this.messages = messages;
 	}
-	
+
 	/**
-	 * Should be called by extending classes on attachements. 
+	 * Should be called by extending classes on attachements.
 	 * Builds the component (mainLayout) by calling the abstract methods to create
 	 * child specific components and adding them to the layout.
 	 */
@@ -66,28 +64,28 @@ public abstract class SelfConfigExecutionPanel extends PerformPanel{
 		SelfConfigRefreshListener listener = new SelfConfigRefreshListener();
 		refresher.addListener(listener);
 		addComponent(refresher);
-		indicatorLayout = new VerticalLayout();		
-		indicator.setCaption("Current action"); 
+		indicatorLayout = new VerticalLayout();
+		indicator.setCaption("Current action");
 		mainLayout.addComponent(indicator);
 		indicator.setImmediate(true);
 		indicator.setVisible(false);
 
 		mainLayout.addComponent(stepPanel);
 		stepPanel.setVisible(false);
-		
+
 
 		// results
-		mainLayout.addComponent(getPerformPanel());		
+		mainLayout.addComponent(getPerformPanel());
 		// buttons
 		mainLayout.addComponent(getButtonComponent());
 	}
-	
+
 	/**
 	 * Called by the start button implements and runs the specific selfconfiguration
 	 * method.
 	 */
 	protected abstract void performSelfConfiguration();
-	
+
 	/**
 	 * Creates Component (most often some kind of Form) to configure the specific self
 	 * configuration method.
@@ -106,7 +104,7 @@ public abstract class SelfConfigExecutionPanel extends PerformPanel{
 	 * @return Component describing the method (e.g. a Label).
 	 */
 	protected abstract Component getDescriptionComponent();
-	
+
 	/**
 	 * Creates buttons to start and close the windows.
 	 * @return A Component (a HorizontalLayout) with all Buttons.
@@ -124,7 +122,7 @@ public abstract class SelfConfigExecutionPanel extends PerformPanel{
 			}
 		});
 		close = new Button("Close");
-		close.addListener(new Button.ClickListener() {			
+		close.addListener(new Button.ClickListener() {
 			private static final long serialVersionUID = 288995511804810376L;
 
 			@Override
@@ -135,23 +133,23 @@ public abstract class SelfConfigExecutionPanel extends PerformPanel{
 			}
 		});
 		close.setEnabled(false);
-		
+
 		showMapping = new Button("Show Mapping");
 		showMapping.setEnabled(false);
-		
+
 		HorizontalLayout finishButtonsLayout = new HorizontalLayout();
 		finishButtonsLayout.addComponent(start);
 		finishButtonsLayout.addComponent(showMapping);
 		finishButtonsLayout.addComponent(close);
 		return finishButtonsLayout;
 	}
-	
-	
+
+
 	/**To enable refreshing while multithreading*/
 	public class SelfConfigRefreshListener implements RefreshListener  {
-		boolean running = true; 
-		private static final long serialVersionUID = -8765221895426102605L;		    
-		@Override 
+		boolean running = true;
+		private static final long serialVersionUID = -8765221895426102605L;
+		@Override
 		public void refresh(final Refresher source)	{
 			if(!running) {
 				removeComponent(source);
@@ -171,7 +169,7 @@ public abstract class SelfConfigExecutionPanel extends PerformPanel{
 		Cache tC;
 		Messages messages;
 		Window parent;
-		
+
 		public ShowPseudoMappingClickListener(Cache sC, Cache tC, Mapping data, Messages messages, Window parent) {
 			this.sC = sC;
 			this.tC = tC;
@@ -189,7 +187,7 @@ public abstract class SelfConfigExecutionPanel extends PerformPanel{
 			sub.setContent(res);
 			parent.addWindow(sub);
 		}
-		
+
 	}
 
 }

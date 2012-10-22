@@ -1,7 +1,6 @@
 package de.uni_leipzig.simba.saim.backend;
 
 import java.io.Serializable;
-
 /**
  * An example config as of now has only 2 fields: name and fileParth;
  * @author Lyko
@@ -20,7 +19,7 @@ public class ExampleConfig implements Serializable {
 		this.filePath = filePath;
 	}
 	/**
-	 * Construct without name specification uses file name as name of the config. 
+	 * Construct without name specification uses file name as name of the config.
 	 * @param filePath
 	 */
 	public ExampleConfig(String filePath) {

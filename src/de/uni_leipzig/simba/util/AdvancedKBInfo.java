@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import de.uni_leipzig.simba.io.KBInfo;
-
 /**
  * Subclass of KBInfo that adds a view convenience methods such as different constructors and better error messages.
  * Also contains additional fields like the classes so that you can't downgrade AdvancedKBInfo to KBInfo without some information losses.
@@ -83,13 +82,13 @@ public class AdvancedKBInfo extends KBInfo implements Serializable
 	// TODO: move somewhere else?
 	public static String expandPrefix(String url, Map<String,String> prefixes)
 	{
-		if(url.startsWith("http")||url.startsWith("<")) return url;	
+		if(url.startsWith("http")||url.startsWith("<")) return url;
 		for(String prefix: prefixes.keySet())
 		{
 			if(url.startsWith(prefix+':'))
 			{
 				return '<'+url.replace(prefix+':', prefixes.get(prefix))+'>';
-			}							
+			}
 		}
 		return url;
 	}
@@ -102,7 +101,7 @@ public class AdvancedKBInfo extends KBInfo implements Serializable
 	{
 		List<String> newProperties = new ArrayList<String>();
 		for(String property: properties)
-		{							
+		{
 			newProperties.add(expandPrefix(property,prefixes));
 		}
 		this.properties = newProperties;

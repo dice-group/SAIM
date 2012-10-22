@@ -2,11 +2,11 @@
 //
 //import java.util.ArrayList;
 //import java.util.List;
-// 
+//
 //public class Trie
 //{
 //   private TrieNode root;
-//   
+//
 //   /**
 //    * Constructor
 //    */
@@ -14,7 +14,7 @@
 //   {
 //      root = new TrieNode();
 //   }
-//   
+//
 //   /**
 //    * Adds a word to the Trie
 //    * @param word
@@ -23,7 +23,7 @@
 //   {
 //      root.addWord(word.toLowerCase());
 //   }
-//   
+//
 //   /**
 //    * Get the words in the Trie with the given
 //    * prefix
@@ -38,11 +38,11 @@
 //      for (int i=0; i<prefix.length(); i++)
 //      {
 //	 lastNode = lastNode.getNode(prefix.charAt(i));
-//	 
+//
 //	 //If no node matches, then no words exist, return empty list
-//	 if (lastNode == null) return new ArrayList();	 
+//	 if (lastNode == null) return new ArrayList();
 //      }
-//      
+//
 //      //Return the words which eminate from the last node
 //      return lastNode.getWords();
 //   }

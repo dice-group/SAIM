@@ -5,7 +5,6 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
-
 /** Shown to the user when the application starts.
  */
 public class StartPanel extends Panel
@@ -17,7 +16,7 @@ public class StartPanel extends Panel
 		HorizontalLayout layout = new HorizontalLayout();
 		layout.setWidth("100%");
 		this.setContent(layout);
-	
+
 		Embedded image = new Embedded("",new ClassResource("saimlogo.jpg",	getApplication()));
 		addComponent(image);
 		layout.setComponentAlignment(image, Alignment.MIDDLE_CENTER);

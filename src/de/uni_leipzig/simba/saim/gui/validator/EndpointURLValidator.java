@@ -3,18 +3,15 @@ package de.uni_leipzig.simba.saim.gui.validator;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
 import com.vaadin.data.Validator;
 import com.vaadin.ui.Component;
-
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.core.EndpointTester;
 import de.uni_leipzig.simba.saim.core.EndpointTester.EndpointStatus;
-
 /** Validates the string format (starts with "http") and sends a sample sparql query to the endpoint.*/
 public class EndpointURLValidator implements Validator
 {
-	private final Messages messages;		
+	private final Messages messages;
 
 	private static final long	serialVersionUID	= -5470766225738299746L;
 	protected static Map<String,EndpointStatus> validateCache = new HashMap<String,EndpointStatus>();
@@ -27,11 +24,11 @@ public class EndpointURLValidator implements Validator
 		this.messages = messages;
 	}
 
-	private EndpointTester tester = new EndpointTester(); 
+	private EndpointTester tester = new EndpointTester();
 
 	//	protected validationColor()
 	//	{
-	//		
+	//
 	//	}
 
 	/**	terminates the EndpointURLValidator and all it's running threads and connections. */
@@ -54,13 +51,13 @@ public class EndpointURLValidator implements Validator
 		{
 			EndpointStatus status = validateCache.get(s);
 			if(status==null)
-			{				
+			{
 				status = tester.testSPARQLEndpointTimeOut(s);
 				validateCache.put(s,status);
 			}
 
 			if(status==EndpointStatus.OK)
-			{				
+			{
 				if(component!=null)
 				{
 					component.setStyleName("valid");
@@ -75,7 +72,7 @@ public class EndpointURLValidator implements Validator
 			}
 			throw new InvalidValueException(messages.getString("endpointstatus")+status.toString());
 		}
-	}			
+	}
 	@Override
 	public boolean isValid(Object value)
 	{

@@ -1,14 +1,11 @@
 package de.uni_leipzig.simba.saim.gui.widget.panel.selfconfiguration;
 
 import java.util.HashMap;
-
 import org.jgap.InvalidConfigurationException;
-
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
-
 import de.uni_leipzig.simba.cache.Cache;
 import de.uni_leipzig.simba.cache.HybridCache;
 import de.uni_leipzig.simba.genetics.core.Metric;
@@ -18,10 +15,9 @@ import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.gui.widget.form.SelfConfigGeneticBasedBean;
 import de.uni_leipzig.simba.saim.gui.widget.form.SelfConfigGeneticBasedForm;
-
 /**
  * Panel displayed after selecting genetic based self configuration.
- * Shows form to configure the the genetic based learning approach, and starts 
+ * Shows form to configure the the genetic based learning approach, and starts
  * learning process. Extends PerformPanel to stop learning action on close().
  * @author Lyko
  */
@@ -34,7 +30,7 @@ public class GeneticBasedSelfConfigPanel extends SelfConfigExecutionPanel {
 	//perform
 	Thread thread;
 
-	
+
 	public GeneticBasedSelfConfigPanel(SAIMApplication application, final Messages messages) {
 		super(application, messages);
 	}
@@ -62,7 +58,7 @@ public class GeneticBasedSelfConfigPanel extends SelfConfigExecutionPanel {
 				indicator.requestRepaint();
 				HashMap<String, Object> params = bean.getConfiguartorParams(config, sourceCache, targetCache);
 				indicator.setValue(new Float(4f/steps));
-				stepPanel.setCaption("Learning..."); 
+				stepPanel.setCaption("Learning...");
 				indicator.requestRepaint();
 				GeneticSelfConfigurator learner = new BasicGeneticSelfConfigurator();
 				try {
@@ -78,12 +74,12 @@ public class GeneticBasedSelfConfigPanel extends SelfConfigExecutionPanel {
 				indicator.requestRepaint();
 				config.setMetricExpression(learnedMetric.getExpression());
 				config.setAcceptanceThreshold(learnedMetric.getThreshold());
-				
-				learnedMapping = learner.getMapping();			
+
+				learnedMapping = learner.getMapping();
 				onFinish(sourceCache, targetCache);
 			}
 		};
-		thread.start();	
+		thread.start();
 	}
 
 	/**
@@ -92,11 +88,11 @@ public class GeneticBasedSelfConfigPanel extends SelfConfigExecutionPanel {
 	private void onFinish(Cache sC, Cache tC) {
 		start.setEnabled(true);
 		close.setEnabled(true);
-		
+
 		showMapping.addListener(new ShowPseudoMappingClickListener(sC, tC, learnedMapping, messages, getApplication().getMainWindow()));
 		if(learnedMapping!= null && learnedMapping.size()>0) {
 			showMapping.setEnabled(true);
-		}			
+		}
 	}
 
 	@Override
@@ -104,7 +100,7 @@ public class GeneticBasedSelfConfigPanel extends SelfConfigExecutionPanel {
 		this.config = ((SAIMApplication)getApplication()).getConfig();
 		super.init();
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onClose() {
@@ -133,7 +129,7 @@ public class GeneticBasedSelfConfigPanel extends SelfConfigExecutionPanel {
 		} else {
 			return descr;
 		}
-	}	
+	}
 
 
 	@Override

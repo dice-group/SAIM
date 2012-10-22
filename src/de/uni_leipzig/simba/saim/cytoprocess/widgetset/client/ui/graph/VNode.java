@@ -3,9 +3,7 @@ package de.uni_leipzig.simba.saim.cytoprocess.widgetset.client.ui.graph;
 import org.vaadin.gwtgraphics.client.DrawingArea;
 import org.vaadin.gwtgraphics.client.Shape;
 import org.vaadin.gwtgraphics.client.shape.Text;
-
 import com.vaadin.terminal.gwt.client.VConsole;
-
 import de.uni_leipzig.simba.saim.cytoprocess.widgetset.client.ui.VCytoprocess;
 /**
  * @author rspeck
@@ -31,7 +29,7 @@ public class VNode {
 	public Double value1 = null;
 	public Text label2 = null;
 	public Double value2 = null;
-	
+
 	private final boolean LOG = false;
 
 	/**
@@ -60,7 +58,7 @@ public class VNode {
 			if (!name.trim().isEmpty()) {
 				label1 = vcypro.text(name + ": " + value, shape.getX(),
 						shape.getY() + label.getTextHeight());
-				
+
 				setStyle(label,label1);
 				value1 = value;
 			}
@@ -123,13 +121,13 @@ public class VNode {
 		// draw label
 		vcytoprocess.noStroke();
 		vcytoprocess.noFill();
-		
+
 		Text text =  vcytoprocess.text(label, 0, 0);
 		setStyle(text,vs);
-		
+
 		VNode vnode = new VNode(id, shape,text);
 		vnode.updatePosition();
-		
+
 		vcytoprocess.fill();
 		vcytoprocess.stroke();
 
@@ -180,30 +178,30 @@ public class VNode {
 	}
 
 	public void updatePosition() {
-		
+
 		boolean l1 = (label1 != null && label1.getText().trim().length()>0)? true:false;
 		boolean l2 = (label2 != null && label2.getText().trim().length()>0)? true:false;
-			
+
 		if(l1 && l2){
 			label.setX(  getX() - label.getTextWidth() / 2);
-			label1.setX( getX() - label1.getTextWidth()/ 2);			
+			label1.setX( getX() - label1.getTextWidth()/ 2);
 			label2.setX( getX() - label2.getTextWidth()/ 2);
-			
+
 			label.setY( getY() - label1.getTextHeight()/2);
-			label1.setY(getY() + label1.getTextHeight()/2);				
+			label1.setY(getY() + label1.getTextHeight()/2);
 			label2.setY(getY() + label1.getTextHeight()/2  + label1.getTextHeight());
 		}
 		if(l1 && !l2){
 			label.setX(  getX() - label.getTextWidth()  / 2);
-			label1.setX( getX() - label1.getTextWidth() / 2);			
-						
+			label1.setX( getX() - label1.getTextWidth() / 2);
+
 			label.setY( getY() - label.getTextHeight() /2);
 			label1.setY(getY() + label1.getTextHeight()/2);
 		}
 		if(!l1 && l2){
 			label.setX(  getX() - label.getTextWidth() / 2);
-			label2.setX( getX() - label2.getTextWidth()/ 2);			
-						
+			label2.setX( getX() - label2.getTextWidth()/ 2);
+
 			label.setY( getY() - label.getTextHeight() /2);
 			label2.setY(getY() + label2.getTextHeight()/2);
 		}

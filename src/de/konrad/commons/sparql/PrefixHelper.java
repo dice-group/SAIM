@@ -2,7 +2,6 @@ package de.konrad.commons.sparql;
 
 import static de.konrad.commons.sparql.PrefixHelper.LazyLoaded.prefixToURI;
 import static de.konrad.commons.sparql.PrefixHelper.LazyLoaded.uriToPrefix;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +31,7 @@ public class PrefixHelper
 	// public static final PrefixHelper INSTANCE = new PrefixHelper(new File("config/prefix.csv"));
 
 	// no bidirectional map as the there may be multiple prefixes for the same URI
-	// in this case uriToPrefix contains the most common prefix 
+	// in this case uriToPrefix contains the most common prefix
 
 	/** Adds a new prefix to the PrefixHelper (not persistent). Threadsafe.
 	 * @param prefix the abbreviated url, example "dbo"
@@ -63,7 +62,7 @@ public class PrefixHelper
  		if(prefix.isEmpty()||getPrefixes().containsKey(prefix))
 		{
 			// didn't work, just generate something
-			prefix  = "prefix"+base.hashCode();			
+			prefix  = "prefix"+base.hashCode();
 		}
 		if(prefix.isEmpty()||getPrefixes().containsKey(prefix))
 		{
@@ -73,14 +72,14 @@ public class PrefixHelper
 			{
 				prefix  = "prefix"+random.nextLong();
 			}
-			while(prefix.isEmpty()||getPrefixes().containsKey(prefix)); 
+			while(prefix.isEmpty()||getPrefixes().containsKey(prefix));
 		}
 		addPrefix(prefix,base);
 		return new String[]{prefix,base};
 	}
 
 	public static String addPrefixes(String query)
-	{		
+	{
 		return formatPrefixes(restrictPrefixes(getPrefixes(),query))+query;
 	}
 
@@ -102,14 +101,14 @@ public class PrefixHelper
 
 	public static String getPrefix(String uri)
 	{
-		return uriToPrefix.get(uri);		
+		return uriToPrefix.get(uri);
 	}
 
 	public static synchronized String getURI(String prefix)
 	{
 //		if(prefix.endsWith(":"))
 //			prefix = prefix.substring(0, prefix.length()-1);
-		return prefixToURI.get(prefix);		
+		return prefixToURI.get(prefix);
 	}
 
 	/** @param uri a URI, either in expanded form like "http://dbpedia.org/ontology/Settlement" or in abbreviated form like "dbo:Settlement".
@@ -131,20 +130,20 @@ public class PrefixHelper
 		if(baseURIEnd==-1) {return uri;}
 		return uri.substring(0, baseURIEnd+1);
 	}
-	
+
 	public static String abbreviate(String uri)
 	{
 		if(!uri.startsWith("http://")) return uri;
-		int baseURIEnd = Math.max(uri.lastIndexOf('#'),uri.lastIndexOf('/'));		 
+		int baseURIEnd = Math.max(uri.lastIndexOf('#'),uri.lastIndexOf('/'));
 		if(baseURIEnd==-1) {return uri;}
-		String baseURI = uri.substring(0, baseURIEnd+1); 
+		String baseURI = uri.substring(0, baseURIEnd+1);
 		String prefix = getPrefix(baseURI);
 		if(prefix!=null) {return uri.replace(baseURI, prefix+':');}
 		return uri;
 	}
 
 	public static String expand(String shortURI)
-	{		
+	{
 		// already expanded?
 		if(shortURI.startsWith("http://")) {return shortURI;}
 		int prefixEnd = shortURI.indexOf(':');
@@ -157,20 +156,20 @@ public class PrefixHelper
 		return shortURI.replace(prefix+':', baseURI);
 	}
 
-	// init from file:	
+	// init from file:
 	//	private static void init()
 	//	{
 	//		try
 	//		{
 	//			prefixToURI = new HashMap<String,String>();
 	//			uriToPrefix = new HashMap<String,String>();
-	//			@Cleanup BufferedReader in = new BufferedReader(new FileReader(prefixCSV));		
+	//			@Cleanup BufferedReader in = new BufferedReader(new FileReader(prefixCSV));
 	//
 	//			String line;
 	//			while((line = in.readLine())!=null)
 	//			{
 	//				if(line.isEmpty()) continue; // sometimes there is a newline at the end of the file, don't want to crash there
-	//				String[] tokens = line.split("\t");			
+	//				String[] tokens = line.split("\t");
 	//				if(tokens.length!=2)
 	//				{
 	//					throw new IOException("Error in the following line in the csv: \""+line+"\". " +
@@ -203,14 +202,14 @@ public class PrefixHelper
 	//			String longForm = shortToLongForm.get(shortForm);
 	//			p.put(shortForm, longForm);
 	//		}
-	//		FileWriter out = new FileWriter(f);		
+	//		FileWriter out = new FileWriter(f);
 	//		p.store(out, null);
 	//		out.close();
 	//	}
 
 	//	public static void saveToCSVFile(Map<String,String> shortToLongForm, File f) throws IOException
 	//	{
-	//		PrintWriter out = new PrintWriter(new FileWriter(f));		
+	//		PrintWriter out = new PrintWriter(new FileWriter(f));
 	//		for(String shortForm : shortToLongForm.keySet())
 	//		{
 	//			String longForm = shortToLongForm.get(shortForm);
@@ -252,14 +251,14 @@ public class PrefixHelper
 
 	//	private static SortedMap<String,String> loadFromCSVFile(File f) throws IOException
 	//	{
-	//		BufferedReader in = new BufferedReader(new FileReader(f));		
+	//		BufferedReader in = new BufferedReader(new FileReader(f));
 	//		SortedMap<String,String> prefixes = new TreeMap<String,String>();
 	//
 	//		String line;
 	//		while((line = in.readLine())!=null)
 	//		{
 	//			if(line.isEmpty()) continue; // sometimes there is a newline at the end of the file, don't want to crash there
-	//			String[] tokens = line.split("\t");			
+	//			String[] tokens = line.split("\t");
 	//			if(tokens.length!=2)
 	//			{
 	//				throw new IOException("Error in the following line in the csv: \""+line+"\". " +

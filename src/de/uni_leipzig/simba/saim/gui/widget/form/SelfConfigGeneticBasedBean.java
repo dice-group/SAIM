@@ -1,8 +1,6 @@
 package de.uni_leipzig.simba.saim.gui.widget.form;
 
 import java.util.HashMap;
-
-
 import de.uni_leipzig.simba.cache.Cache;
 import de.uni_leipzig.simba.genetics.selfconfig.GeneticSelfConfigurator;
 import de.uni_leipzig.simba.saim.core.Configuration;
@@ -19,8 +17,8 @@ public class SelfConfigGeneticBasedBean {
 	private int generations;
 	private double mutationRate;
 	private double crossoverRate;
-	
-	
+
+
 	/**
 	 * Constructor. Calls setting default values.
 	 */
@@ -53,7 +51,7 @@ public class SelfConfigGeneticBasedBean {
 	public void setMeasure(int measure) {
 		this.measure = measure;
 	}
-	
+
 	public int getPopulation() {
 		return population;
 	}
@@ -69,7 +67,7 @@ public class SelfConfigGeneticBasedBean {
 	public void setGenerations(int generations) {
 		this.generations = generations;
 	}
-	
+
 	public double getMutationRate() {
 		return mutationRate;
 	}
@@ -95,15 +93,15 @@ public class SelfConfigGeneticBasedBean {
 	 */
 	public HashMap<String,Object> getConfiguartorParams(Configuration config, Cache sC, Cache tC) {
 		HashMap<String,Object> params = new HashMap<String, Object>();
-		
+
 		params.put(GeneticSelfConfigurator.pSInfo, config.getSource());
 		params.put(GeneticSelfConfigurator.pTInfo, config.getTarget());
 		params.put(GeneticSelfConfigurator.pSCache, sC);
 		params.put(GeneticSelfConfigurator.pTCache, tC);
-		
+
 		params.put(GeneticSelfConfigurator.pPropMapping, config.propertyMapping);
 		System.out.println("Setting property mapping to: \n"+config.propertyMapping);
-		
+
 		params.put(GeneticSelfConfigurator.pBeta, beta);
 		params.put(GeneticSelfConfigurator.pGen, generations);
 		params.put(GeneticSelfConfigurator.pPop, population);
@@ -114,7 +112,7 @@ public class SelfConfigGeneticBasedBean {
 			pseudoMeasure = new ReferencePseudoMeasures();
 		}
 		params.put(GeneticSelfConfigurator.pMeasure, pseudoMeasure);
-		
+
 		return params;
 	}
 }

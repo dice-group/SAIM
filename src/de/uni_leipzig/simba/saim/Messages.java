@@ -4,9 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
 import org.apache.log4j.Logger;
-
 /** The property files are expected to be encoded in UTF8 contrary to the Java definition and displayed with a small hack.*/
 public class Messages
 {
@@ -15,8 +13,8 @@ public class Messages
 	private static final String	BUNDLE_NAME	= "de.uni_leipzig.simba.saim.messages"; //$NON-NLS-1$
 	private ResourceBundle	RESOURCE_BUNDLE;
 	public synchronized void setLanguage(String language)
-	{		
-		Locale locale = new Locale(language);		
+	{
+		Locale locale = new Locale(language);
 		ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME,locale,Thread.currentThread().getContextClassLoader());
 
 		if(bundle==null)
@@ -32,7 +30,7 @@ public class Messages
 			logger.info("language set to \""+language+"\"");this.RESOURCE_BUNDLE=bundle;
 		}
 	}
-	
+
 	public Messages(Locale locale) {RESOURCE_BUNDLE	= ResourceBundle.getBundle(BUNDLE_NAME, locale, Thread.currentThread().getContextClassLoader());}
 
 	// TODO: remove hack when Java permits UTF-8 in property files, see http://stackoverflow.com/questions/4659929/how-to-use-utf-8-in-resource-properties-with-resourcebundle

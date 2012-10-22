@@ -19,20 +19,16 @@ import static de.konrad.commons.sparql.SPARQLHelper.querySelect;
 import static de.konrad.commons.sparql.SPARQLHelper.resultSetToList;
 import static de.konrad.commons.sparql.SPARQLHelper.rootClasses;
 import static org.junit.Assert.assertTrue;
-
 import java.util.Collection;
 import java.util.LinkedList;
-
 import org.junit.Test;
-
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.core.DefaultEndpointLoader;
 import de.uni_leipzig.simba.saim.gui.validator.EndpointURLValidator;
-
 /** @author Konrad Höffner */
 public class SPARQLHelperTest
 {
-	Collection<KBInfo> workingKBs = null; 
+	Collection<KBInfo> workingKBs = null;
 
 	public void initWorkingKBs()
 	{
@@ -42,13 +38,13 @@ public class SPARQLHelperTest
 			if(validator.isValid(kb.endpoint)) {workingKBs.add(kb);}
 		assertTrue(workingKBs.size()>0);
 	}
-	
+
 	private Collection<KBInfo> getWorkingKBs()
 	{
 		if(workingKBs==null) initWorkingKBs();
 		return workingKBs;
 	}
-	//static String[] testObjects = {"Comune di Marcedusa@en","556^^http://www.w3.org/2001/XMLSchema#integer","http://www4.wiwiss.fu-berlin.de/flickrwrappr/photos/Marcedusa"}; 
+	//static String[] testObjects = {"Comune di Marcedusa@en","556^^http://www.w3.org/2001/XMLSchema#integer","http://www4.wiwiss.fu-berlin.de/flickrwrappr/photos/Marcedusa"};
 
 	@Test
 	public void testSubClassesOf()
@@ -61,7 +57,7 @@ public class SPARQLHelperTest
 	{
 		//		assertTrue(rootClasses(TestingDefaults.sparqlEndpoint, null).equals(Collections.singletonList(OWL.Thing.toString())));
 		//		assertTrue(rootClasses(TestingDefaults.sparqlEndpoint, null).equals(Collections.singletonList(OWL.Thing.toString())));
-		//		assertTrue(rootClasses("http://linkedgeodata.org/sparql", "http://linkedgeodata.org").contains("http://linkedgeodata.org/ontology/Way"));		
+		//		assertTrue(rootClasses("http://linkedgeodata.org/sparql", "http://linkedgeodata.org").contains("http://linkedgeodata.org/ontology/Way"));
 		for(KBInfo kb : getWorkingKBs())
 		{
 			String endpoint = kb.endpoint;
@@ -103,7 +99,7 @@ public class SPARQLHelperTest
 				SPARQLHelper.DBPEDIA_ENDPOINT, null).next().getLiteral("o").getInt())==341);
 	}
 
-	
+
 	@Test
 	public void testProperties()
 	{
@@ -111,7 +107,7 @@ public class SPARQLHelperTest
 		testProperties("http://dbpedia.org/sparql","","http://dbpedia.org/ontology/Country>");
 		testProperties("http://linkedgeodata.org/sparql","","http://linkedgeodata.org/ontology/Country");
 	}
-	
+
 	public void testProperties(String endpoint, String graph, String clazz)
 	{
 		Collection<String> properties = SPARQLHelper.properties(endpoint, graph, clazz);
@@ -122,7 +118,7 @@ public class SPARQLHelperTest
 	//	@Test
 	//	public void testDataType()
 	//	{
-	//		String[] dataTypes = {"","http://www.w3.org/2001/XMLSchema#integer",""};			
+	//		String[] dataTypes = {"","http://www.w3.org/2001/XMLSchema#integer",""};
 	//		for(int i=0;i<testObjects.length;i++)
 	//		{
 	//		assertTrue(SPARQLHelper.dataType(testObjects[i]).equals(dataTypes[i]));
@@ -150,7 +146,7 @@ public class SPARQLHelperTest
 	//		assertTrue(SPARQLHelper.lexicalForm(testObjects[i]).equals(lexicalForms[i]));
 	//		}
 	//	}
-	//	
+	//
 	//	@Test
 	//	public void getRandomSample() throws Exception
 	//	{
@@ -159,7 +155,7 @@ public class SPARQLHelperTest
 	//	}
 	//
 	//	static final Map<String,String> rdfsPrefix = SPARQLHelper.textToMap("rdfs	http://www.w3.org/2000/01/rdf-schema#");
-	//	
+	//
 	//	@Test
 	//	public void testTextToMap()
 	//	{

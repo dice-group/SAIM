@@ -3,7 +3,6 @@ package de.uni_leipzig.simba.saim.core.metric;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-
 import de.uni_leipzig.simba.saim.core.metric.Property.Origin;
 
 public class MetricParser
@@ -27,14 +26,14 @@ public class MetricParser
 					if(depth>1) {sb.append(c);} else {tokenList.add(sb.toString());sb = new StringBuilder();}
 				break;
 				default: sb.append(c);
-			}		
+			}
 		}
 		tokenList.add(sb.toString());
 		return tokenList.toArray(new String[0]);
 	}
 
 	protected static String setParametersFromString(Node node, String s, int pos)
-	{				
+	{
 		// example: 0.6*trigrams(x.rdfs:label,y.rdfs:label)
 		if(node.hasFrontParameters())
 		{
@@ -46,11 +45,11 @@ public class MetricParser
 			{
 				case(0):node.param1=d;break;
 				case(1):node.param2=d;
-			}			
+			}
 		}
 		// example: trigrams(x.rdfs:label,y.rdfs:label)|0.5
 		else
-		{ 
+		{
 			int i = s.lastIndexOf("|");
 			if(i==-1||i<s.lastIndexOf(")")) {return s;}
 //			if(s.lastIndexOf("|")>s.lastIndexOf(")"))
@@ -73,14 +72,14 @@ public class MetricParser
 	{
 		//ADD(0.6*jaccard(x.title,y.title)|0.5,0.6*cosine(x.authors,y.authors)|0.5)|0.5
 		//		if(!s.contains("(")) {return output;}
-		String[] tokens = splitFunc(s);		
+		String[] tokens = splitFunc(s);
 		String id = tokens[0].trim();
 		if(id.contains("*")) // e.g. 0.6*jaccard, parameter of parent component
 		{
 			String[] parts = id.split("\\*");
 			double d = Double.parseDouble(parts[0]);
 			if(parent.param1==null) {parent.param1=d;} else {parent.param2=d;}
-			id = parts[1]; 
+			id = parts[1];
 		}
 		if(tokens.length==1) return new Property(id,id.startsWith(sourceVar)?Origin.SOURCE:Origin.TARGET);
 
@@ -92,7 +91,7 @@ public class MetricParser
 		{
 			if(!node.addChild(parsePart(node,argument,sourceVar,i))) {throw new MetricFormatException("Could not add child \""+argument+'"');}
 			i++;
-		}				
+		}
 		return node;
 	}
 
@@ -111,7 +110,7 @@ public class MetricParser
 		output.param1=null;
 		output.param2=null;
 		try{output.addChild(parsePart(output, s,sourceVar,0));}
-		catch(MetricFormatException e) {throw new MetricFormatException("Error parsing metric expression \""+s+"\".",e);}		
+		catch(MetricFormatException e) {throw new MetricFormatException("Error parsing metric expression \""+s+"\".",e);}
 		return output;
 	}
 }

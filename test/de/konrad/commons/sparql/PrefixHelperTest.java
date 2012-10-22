@@ -16,11 +16,8 @@
 package de.konrad.commons.sparql;
 
 import static org.junit.Assert.*;
-
 import org.junit.Test;
-
 import de.uni_leipzig.simba.saim.core.Configuration;
-
 /** @author Konrad Höffner */
 public class PrefixHelperTest
 {
@@ -39,7 +36,7 @@ public class PrefixHelperTest
 		assertTrue(PrefixHelper.getPrefix("http://lamas.org/ontology/")==null);
 	}
 
-	
+
 	@Test
 	public void testGetPrefix()
 	{
@@ -64,13 +61,13 @@ public class PrefixHelperTest
 	{
 		assertTrue(PrefixHelper.expand("dbo:Settlement").equals("http://dbpedia.org/ontology/Settlement"));
 	}
-	
+
 	@Test
 	public void testSuffix()
 	{
 		assertTrue(PrefixHelper.getSuffix("http://dbpedia.org/ontology/Settlement").equals("Settlement"));
 	}
-	
+
 	@Test
 	public void testOWL() {
 		Configuration config = new Configuration();
@@ -80,7 +77,7 @@ public class PrefixHelperTest
 			base = base.substring(0,base.length()-1);
 		}
 		assertNotNull(PrefixHelper.getURI(base));
-		
+
 //		PrefixHelper.getPrefix(PrefixHelper.getBase(sameAsRelation)), PrefixHelper.getURI(PrefixHelper.getBase(sameAsRelation))
 	}
 }

@@ -11,13 +11,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
-
 /** Class to test if a certain endpoint is available */
 public class EndpointTester
 {
@@ -26,7 +24,7 @@ public class EndpointTester
 
 	public enum EndpointStatus {
 		OK, EMPTY, TIMED_OUT, SERVER_NOT_FOUND, HTTP_ERROR, EXECUTION_ERROR, OTHER_ERROR
-	} 
+	}
 
 	//	public EndpointTester(String url){
 	//		this.url = url;
@@ -57,13 +55,13 @@ public class EndpointTester
 	private boolean querySPARQLEndpoint(String endpointURL)
 	{
 		boolean answer = false;
-		String query = "SELECT ?s WHERE { ?s ?p ?o . } LIMIT 1";		
+		String query = "SELECT ?s WHERE { ?s ?p ?o . } LIMIT 1";
 		Query sparqlQuery = QueryFactory.create(query);
 		QueryExecution qexec = QueryExecutionFactory.sparqlService(endpointURL, sparqlQuery);
 		ResultSet res = qexec.execSelect();
 		if(res.hasNext())
-			answer = true;       
-		return answer;				
+			answer = true;
+		return answer;
 	}
 
 	/**	terminates all running threads and connections. */
@@ -73,7 +71,7 @@ public class EndpointTester
 	}
 
 	/**
-	 * Tests whether the given url is a valid SPARQL end point. 
+	 * Tests whether the given url is a valid SPARQL end point.
 	 * @param url URL of the server to test.
 	 * @return EndpointStatus indicating the status of the server.
 	 */
@@ -81,9 +79,9 @@ public class EndpointTester
 	{
 		if(!pingEndpoint(url)) {
 			return EndpointStatus.SERVER_NOT_FOUND;
-		}	
+		}
 		executor = Executors.newCachedThreadPool();
-		boolean result = false;        
+		boolean result = false;
 		Callable<Boolean> task = new Callable<Boolean>()
 				{
 			public Boolean call() {
@@ -104,7 +102,7 @@ public class EndpointTester
 					e.printStackTrace();
 					return EndpointStatus.OTHER_ERROR;
 				} catch (ExecutionException e) {
-					e.printStackTrace();	
+					e.printStackTrace();
 					return EndpointStatus.EXECUTION_ERROR;
 				} catch (Exception e) {
 					e.printStackTrace();

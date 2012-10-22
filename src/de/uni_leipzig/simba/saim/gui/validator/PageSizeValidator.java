@@ -12,7 +12,7 @@ public class PageSizeValidator extends IntegerValidator
 	public void validate(Object value) throws InvalidValueException
 	{
 		super.validate(value);
-		if(Integer.valueOf(value.toString())<=0 && Integer.valueOf(value.toString()) != -1) throw new InvalidValueException("pagesize < 0.");		
+		if(Integer.valueOf(value.toString())<=0 && Integer.valueOf(value.toString()) != -1) throw new InvalidValueException("pagesize < 0.");
 	}
 
 	@Override

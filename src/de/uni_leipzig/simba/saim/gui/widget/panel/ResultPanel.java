@@ -5,13 +5,11 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
 import de.uni_leipzig.simba.saim.gui.widget.window.SerializationWindow;
-
 /**Panel to show a Table with computed mappings**/
 public class ResultPanel extends Panel
 {
@@ -23,31 +21,31 @@ public class ResultPanel extends Panel
 	VerticalLayout layout;
 	Button downloadResults;
 	Configuration config;// = Configuration.getInstance();
-	
+
 	public ResultPanel(final InstanceMappingTable iT,final Messages messages)
 	{
 		super(messages.getString("results")); //$NON-NLS-1$
 		this.messages=messages;
 		this.data = iT;
 	}
-	
+
 	@Override
 	public void attach() {
 		config = ((SAIMApplication)getApplication()).getConfig();
 		init();
 	}
-	
+
 	private void init() {
 		layout = new VerticalLayout();
 		layout.setWidth("100%");
 		this.setContent(layout);
 		downloadResults = new Button(messages.getString("save"));
-		downloadResults.addListener(new DownLoadButtonClickListener());		
+		downloadResults.addListener(new DownLoadButtonClickListener());
 		layout.addComponent(data.getTable());
 		layout.addComponent(downloadResults);
 	}
-	
-	/**ClickListener for the Button to download results**/	
+
+	/**ClickListener for the Button to download results**/
 	class DownLoadButtonClickListener implements Button.ClickListener
 	{
 		/**
@@ -56,7 +54,7 @@ public class ResultPanel extends Panel
 
 		@Override
 		public void buttonClick(ClickEvent event) {
-			
+
 			Window download = new SerializationWindow(data.getMapping(),messages);
 			getApplication().getMainWindow().addWindow(download);
 		}

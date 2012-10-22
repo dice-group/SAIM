@@ -4,7 +4,6 @@ import de.uni_leipzig.simba.cache.Cache;
 import de.uni_leipzig.simba.selfconfig.DisjunctiveMeshSelfConfigurator;
 import de.uni_leipzig.simba.selfconfig.LinearMeshSelfConfigurator;
 import de.uni_leipzig.simba.selfconfig.MeshBasedSelfConfigurator;
-
 /**
  * Bean used by the form to configure the MeshBased SelfConfigurator;
  * @author Lyko
@@ -15,12 +14,12 @@ public class SelfConfigMeshBasedBean {
 	private int iterations;
 	private double beta;
 	private double minCoverage;
-	
-	
+
+
 	public SelfConfigMeshBasedBean() {
 		setDefaultValues();
 	}
-	
+
 	private void setDefaultValues() {
 		setGridPoints(5);
 		setIterations(5);

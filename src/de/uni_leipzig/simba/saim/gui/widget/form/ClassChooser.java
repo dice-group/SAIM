@@ -3,15 +3,12 @@ package de.uni_leipzig.simba.saim.gui.widget.form;
 import static de.konrad.commons.sparql.SPARQLHelper.lastPartOfURL;
 import static de.konrad.commons.sparql.SPARQLHelper.rootClasses;
 import static de.konrad.commons.sparql.SPARQLHelper.subclassesOf;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
 import org.apache.log4j.Logger;
-
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.vaadin.ui.Panel;
@@ -24,7 +21,7 @@ import com.vaadin.ui.Tree.ExpandListener;
 public class ClassChooser extends Panel
 {
 	private static final long serialVersionUID = -7664923698708644130L;
-	private static final Logger log = Logger.getLogger(ClassChooser.class); 
+	private static final Logger log = Logger.getLogger(ClassChooser.class);
 	protected static final boolean PRELOAD = false;
 	protected final String endpoint,graph;
 	protected final Tree tree;
@@ -41,7 +38,7 @@ public class ClassChooser extends Panel
 		this.graph = graph;
 		addComponent(tree);
 		tree.setImmediate(true);
-		
+
 		final ProgressIndicator progress = new ProgressIndicator();
 		progress.setImmediate(true);
 		progress.setIndeterminate(true);
@@ -57,40 +54,40 @@ public class ClassChooser extends Panel
 			@Override
 			public void run()
 			{
-				
+
 //				addComponent(refresher);
 				Set<String> rootClasses = rootClasses(endpoint, graph);
-				
-				ClassNode lastNode = null; 
+
+				ClassNode lastNode = null;
 				for(String clazz: rootClasses)
 				{
 					log.trace(clazz);
-					lastNode = new ClassNode(clazz); 
+					lastNode = new ClassNode(clazz);
 					tree.addItem(lastNode);
-				}							
-				
+				}
+
 				tree.setImmediate(true);
-				
+
 				progress.setEnabled(false);
 				ClassChooser.this.removeComponent(progress);
-				
+
 				ExpandListener expandListener = new ExpandListener()
-				{			
+				{
 					@Override
 					public void nodeExpand(ExpandEvent event)
 					{
 						log.debug("expanding node "+event.getItemId());
-						expandNode((ClassNode) event.getItemId(),PRELOAD?1:0);				
+						expandNode((ClassNode) event.getItemId(),PRELOAD?1:0);
 					}
-				};				
+				};
 				tree.addListener(expandListener);
 
 				// TODO BUG: does not get expanded (or just not shown)
-				if(rootClasses.size()==1) {expandListener.nodeExpand(new ExpandEvent(ClassChooser.this, lastNode));} // owl:Thing				
+				if(rootClasses.size()==1) {expandListener.nodeExpand(new ExpandEvent(ClassChooser.this, lastNode));} // owl:Thing
 				listener.running=false;
 			}
 		}.start();
-		//		
+		//
 		//tree.setDragMode(TreeDragMode.NODE);
 	}
 
@@ -117,11 +114,11 @@ public class ClassChooser extends Panel
 				for(String subClass: subClasses)
 				{
 
-					ClassNode subNode = new ClassNode(subClass);					
+					ClassNode subNode = new ClassNode(subClass);
 					tree.addItem(subNode);
-					tree.setParent(subNode,node);					
+					tree.setParent(subNode,node);
 					subNodes.add(subNode);
-				}						
+				}
 			}
 			catch(Exception e){System.err.println("Error expanding node "+node.url);e.printStackTrace();}
 		}
@@ -134,11 +131,11 @@ public class ClassChooser extends Panel
 		if(depth>0)
 		{
 			new Thread()
-			{			
+			{
 				@Override
 				public void run()
 				{
-					{for(ClassNode subNode: subNodes) {expandNode(subNode, depth-1);}}			
+					{for(ClassNode subNode: subNodes) {expandNode(subNode, depth-1);}}
 				}
 			}.start();
 		}
@@ -163,8 +160,8 @@ public class ClassChooser extends Panel
 
 	public class TreeRefreshListener implements RefreshListener
 	{
-		boolean running = true; 
-		private static final long serialVersionUID = -8765221895426102605L;		    
+		boolean running = true;
+		private static final long serialVersionUID = -8765221895426102605L;
 		@Override public void refresh(final Refresher source)	{if(!running) {removeComponent(source);source.setEnabled(false);}}
 	}
 
@@ -174,7 +171,7 @@ public class ClassChooser extends Panel
 	//		Tree tree = new Tree("DBpedia classes");
 	//		tree.addItem("owl:Thing");
 	//		tree.addItem("Animal");
-	//		
+	//
 	//		tree.addItem("Plant");
 	//		tree.addItem("Grass");
 	//		tree.setParent("Animal", "owl:Thing");

@@ -6,13 +6,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Form;
-
 import de.konrad.commons.sparql.PrefixHelper;
 import de.uni_leipzig.simba.io.KBInfo;
 /**
@@ -24,7 +21,7 @@ public class PreprocessingForm extends Form{
 	String prop;
 	Logger logger = LoggerFactory.getLogger(PreprocessingForm.class);
 	HashMap<String, CheckBox> boxes = new HashMap<String, CheckBox>();
-	
+
 	/**
 	 * Default constructor with KBInfo of the corresponding endpoint and name of the property.
 	 * @param info
@@ -40,27 +37,27 @@ public class PreprocessingForm extends Form{
 		setCaption("Select property preprocessing");
 		init();
 	}
-	
+
 	private void init() {
 		Set<String> choosen = new HashSet<String>();
 		if(info.functions.get(prop)!=null &&info.functions.containsKey(prop)) {
 			String split[] = info.functions.get(prop).get(prop).split("->");
 			for(String preproc : split) {
 				if(preproc.trim().length()>0)
-					choosen.add(preproc.trim());		
+					choosen.add(preproc.trim());
 			}
 		}
 		boxes.put("lowercase", new CheckBox("lowercase"));
 		boxes.put("uppercase", new CheckBox("uppercase"));
 		boxes.put("nolang", new CheckBox("nolang"));
 		boxes.put("number", new CheckBox("number"));
-		
+
 		for(String choosed: choosen ) {
 			if(boxes.get(choosed) != null) {
 				boxes.get(choosed).setValue(true);
 			}
 		}
-		
+
 		for(final Entry<String, CheckBox> box : boxes.entrySet()) {
 			box.getValue().addListener(new ValueChangeListener() {
 				@Override
@@ -95,7 +92,7 @@ public class PreprocessingForm extends Form{
 			info.functions.get(prop).put(prop, funcChain);
 		}
 	}
-	
+
 	/**
 	 * Remove preprocessing functions.
 	 * @param name

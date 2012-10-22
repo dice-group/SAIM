@@ -5,7 +5,6 @@ import java.awt.Font;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
 import cytoscape.Cytoscape;
 import cytoscape.visual.VisualPropertyType;
 /**
@@ -19,7 +18,7 @@ public class CytoprocessProperties {
 		InputStream in=CytoprocessProperties.class.getClassLoader().getResourceAsStream(resource);
 
 		Properties properties =null;
-		if(in != null){		
+		if(in != null){
 			properties = new Properties();
 			try {
 				properties.load(in);
@@ -31,13 +30,13 @@ public class CytoprocessProperties {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
+
 		}
 
 		if(properties != null){
 
 			final int NODESIZE = Integer.parseInt(properties.getProperty("nodesize"));
-			//margin = (NODESIZE)/2;			
+			//margin = (NODESIZE)/2;
 			final double EDGE_LABEL_OPACITY = Double.parseDouble(properties.getProperty("edge_label_opacity"));
 			final int EDGE_LINE_WIDTH = Integer.parseInt(properties.getProperty("edge_line_width"));
 			final int NODE_LINE_WIDTH = Integer.parseInt(properties.getProperty("node_line_width"));
@@ -50,7 +49,7 @@ public class CytoprocessProperties {
 			final int NODE_FONT_SIZE = Integer.parseInt(properties.getProperty("node_font_size"));
 			final String NODE_FONT = (properties.getProperty("node_font"));
 			final String EDGE_FONT = (properties.getProperty("edge_font"));
-			
+
 			Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().setDefaultBackgroundColor(BACKGROUND_COLOR);
 			Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_LINE_WIDTH,EDGE_LINE_WIDTH);
 			Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.NODE_LINE_WIDTH, NODE_LINE_WIDTH);
@@ -64,16 +63,16 @@ public class CytoprocessProperties {
 			Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(
 					VisualPropertyType.EDGE_FONT_FACE,
 					new Font(EDGE_FONT, Font.PLAIN, EDGE_FONT_SIZE));
-			
-			Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.NODE_FONT_SIZE,NODE_FONT_SIZE);			
+
+			Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.NODE_FONT_SIZE,NODE_FONT_SIZE);
 			Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().set(
 					VisualPropertyType.NODE_FONT_FACE,
 					new Font(NODE_FONT, Font.PLAIN, NODE_FONT_SIZE));
-			
-						
+
+
 		}
 	}
-	
+
 	public static Color getColor(final String rgb) {
 		try{
 			String tmprgb=rgb.substring(rgb.lastIndexOf("(")+1, rgb.lastIndexOf(")"));

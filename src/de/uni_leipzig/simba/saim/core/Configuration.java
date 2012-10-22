@@ -17,16 +17,15 @@ import de.uni_leipzig.simba.io.ConfigReader;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.core.metric.MetricParser;
 import de.uni_leipzig.simba.saim.core.metric.Output;
-
 /**Class holds all configuration settings for a linking process. */
 public class Configuration
 {
 	private Logger logger = Logger.getLogger("SAIM");
 	protected Output metric = null;
-		
-	
-//	private static Configuration instance = new Configuration();	
-	private PropertyChangeSupport changes = new PropertyChangeSupport( this ); 
+
+
+//	private static Configuration instance = new Configuration();
+	private PropertyChangeSupport changes = new PropertyChangeSupport( this );
 	public static final String SETTING_CONFIG = "setting from xml";
 	private String id = null;
 	private String name;
@@ -40,14 +39,14 @@ public class Configuration
 	public KBInfo target = null;
 	public boolean isLocal  = false;
 
-	public volatile PropertyMapping propertyMapping = new PropertyMapping(); 
+	public volatile PropertyMapping propertyMapping = new PropertyMapping();
 
 	public String getMetricExpression() {
 		if(metric != null)
 			return metric.toString();
 		return null;
 	}
-	
+
 	public void setMetricExpression(String metricExpression) {
 		logger.info("Setting metric expression to "+metricExpression+" using the source.var "+source.var);
 		if(metric != null) {
@@ -56,7 +55,7 @@ public class Configuration
 			if(metric.param1 != null)
 				param1 = metric.param1;
 			if(metric.param2 != null)
-				param2 = metric.param2;		
+				param2 = metric.param2;
 			metric = MetricParser.parse(metricExpression, source.var.replaceAll("\\?", ""));
 			if(param1 <= 1)
 				metric.param1 = param1;
@@ -66,9 +65,9 @@ public class Configuration
 			//donno
 			metric = MetricParser.parse(metricExpression, source.var.replaceAll("\\?", ""));
 		}
-	
+
 		logger.info("Setted metric expression to "+this.metric.toString());
-		
+
 	}
 	public double getAcceptanceThreshold() {
 		if(metric == null || metric.param1==null) {
@@ -120,7 +119,7 @@ public class Configuration
 		metric = MetricParser.parse(cR.metricExpression,cR.sourceInfo.var.replace("?",""));
 		setAcceptanceThreshold(cR.acceptanceThreshold);
 		metric.param2 = cR.verificationThreshold;
-		
+
 		logger.info("Successfully parsed metric from config reader: "+metric);
 		granularity = cR.granularity;
 		if(source.type.equalsIgnoreCase("CSV") || target.type.equalsIgnoreCase("CSV"))
@@ -129,13 +128,13 @@ public class Configuration
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener l)
-	{ 
-		changes.addPropertyChangeListener(l); 
-	} 
+	{
+		changes.addPropertyChangeListener(l);
+	}
 
-	public void removePropertyChangeListener(PropertyChangeListener l) 
-	{ 
-		changes.removePropertyChangeListener(l); 
+	public void removePropertyChangeListener(PropertyChangeListener l)
+	{
+		changes.removePropertyChangeListener(l);
 	}
 
 	//	/**Set default namespaces in both source and target KBInfo  */
@@ -162,14 +161,14 @@ public class Configuration
 	//		//		  defs.put("sider", "http://www4.wiwiss.fu-berlin.de/sider/resource/sider/");
 	//		//		  defs.put("drugbank", "http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/");
 	//		//		  defs.put("dailymed", "http://www4.wiwiss.fu-berlin.de/dailymed/resource/dailymed/");
-	//		Map<String, String> map = PrefixHelper.getPrefixes();	
+	//		Map<String, String> map = PrefixHelper.getPrefixes();
 	//		for(Entry<String, String> e : map.entrySet())
 	//			defs.put(e.getKey(), e.getValue());
 	//		return defs;
 	//	}
 
 	private void fillKBElement(Element element, KBInfo kb)
-	{		
+	{
 		if(kb == null)
 			return;
 		element.getChild("ID").setText(kb.id);
@@ -178,13 +177,13 @@ public class Configuration
 		element.getChild("VAR").setText(String.valueOf(kb.var));
 		element.getChild("PAGESIZE").setText(String.valueOf(kb.pageSize));
 		for(String restriction: kb.restrictions)
-		{			
+		{
 			Element restrictionElement = new Element("RESTRICTION");
 			element.addContent(restrictionElement);
 			restrictionElement.setText(restriction);
 		}
 		for(String property: kb.properties)
-		{			
+		{
 			Element restrictionElement = new Element("PROPERTY");
 			element.addContent(restrictionElement);
 			restrictionElement.setText(property);
@@ -202,7 +201,7 @@ public class Configuration
 				prefixes.putAll(target.prefixes);
 				int i = 0;
 				for(String prefix: prefixes.keySet())
-				{				
+				{
 					Element prefixElement;
 					rootElement.addContent(i++,prefixElement=new Element("PREFIX"));
 					prefixElement.addContent(new Element("NAMESPACE").setText(prefixes.get(prefix)));
@@ -218,7 +217,7 @@ public class Configuration
 				rootElement.getChild("METRIC").setText(metric.toString());
 				System.out.println(metric.toString());
 			}
-			
+
 			{
 			Element acceptanceElement = rootElement.getChild("ACCEPTANCE");
 			acceptanceElement.getChild("FILE").setText(source.endpoint+'-'+target.endpoint+"-accept");
@@ -236,7 +235,7 @@ public class Configuration
 			//getElementById("/LIMES/SOURCE/VAR")
 		}
 		catch (Exception e){throw new RuntimeException(e);}
-	}	
+	}
 
 	public String toString() {
 		String output= source.toString()+"\n<br>\n"+target.toString()+"\n<br>\n";
@@ -273,12 +272,12 @@ public class Configuration
 				source.functions.put(s_abr, new HashMap<String,String>());
 				source.functions.get(s_abr).put(s_abr, "nolang->lowercase");
 			}
-			
+
 			if(!target.functions.containsKey(t_abr)) {
 				target.functions.put(t_abr, new HashMap<String,String>());
 				target.functions.get(t_abr).put(t_abr, "nolang->lowercase");
 			}
-				
+
 		} else {
 			logger.info("Adding Number Property Match: "+s_abr+" - "+t_abr);
 			propertyMapping.addNumberPropertyMatch(s_abr, t_abr);
@@ -297,7 +296,7 @@ public class Configuration
 			target.var="?dest";
 		cR.sourceInfo = getSource();
 		cR.targetInfo = getTarget();
-		if(getMetricExpression() == null) {			
+		if(getMetricExpression() == null) {
 			String defMetric = "trigram("+source.var+"."+source.properties.get(0)+","+target.var+"."+target.properties.get(0)+")";
 			defMetric = defMetric.replaceAll("\\?", "");
 			System.out.println("No metricExpression set ... using default: "+defMetric);
@@ -318,7 +317,7 @@ public class Configuration
 		cR.metricExpression = getMetricExpression();
 		cR.acceptanceThreshold = getAcceptanceThreshold();
 		cR.verificationThreshold  = getVerificationThreshold();
-		cR.granularity = granularity;		 
+		cR.granularity = granularity;
 		//	cR.
 		return cR;
 	}
