@@ -20,7 +20,8 @@ import de.uni_leipzig.simba.saim.core.metric.Output;
 /**Class holds all configuration settings for a linking process. */
 public class Configuration
 {
-	private Logger logger = Logger.getLogger("SAIM");
+	private Logger logger = Logger.getLogger(Configuration.class);
+
 	protected Output metric = null;
 
 
