@@ -137,24 +137,29 @@ public class SAIMCytoprocess extends Cytoprocess {
 	public void deleteNode(int id){
 		if(LOGGER.isDebugEnabled())LOGGER.debug("deleteNode ...");
 
-		Node n = nodeMap.remove(id);
+		if(nodeMap.get(id) instanceof Output){
+			mainWindow.showNotification(messages.getString("Cytographer.deleteOutputnode"), Notification.TYPE_WARNING_MESSAGE);
 
-		if(n != null){
-			for(Node node : nodeMap.values())
-				for(Node child : node.getChilds())
-					if(child.hashCode() == n.hashCode()){
-						node.removeChild(child);
-						break;
-					}
+		}else{
+			Node n = nodeMap.remove(id);
 
-			while(n.getChilds().size()>0)
-				n.removeChild(n.getChilds().get(0));
+			if(n != null){
+				for(Node node : nodeMap.values())
+					for(Node child : node.getChilds())
+						if(child.hashCode() == n.hashCode()){
+							node.removeChild(child);
+							break;
+						}
 
-			super.deleteNode(id);
+				while(n.getChilds().size()>0)
+					n.removeChild(n.getChilds().get(0));
 
-			repaintGraph();
-		}else
-			if(LOGGER.isDebugEnabled())LOGGER.debug("node not found!");
+				super.deleteNode(id);
+
+				repaintGraph();
+			}else
+				if(LOGGER.isDebugEnabled())LOGGER.debug("node not found!");
+		}
 	}
 
 	@Override
