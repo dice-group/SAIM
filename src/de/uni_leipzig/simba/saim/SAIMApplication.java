@@ -27,6 +27,7 @@ import csplugins.layout.algorithms.circularLayout.CircularLayoutAlgorithm;
 import csplugins.layout.algorithms.force.ForceDirectedLayout;
 import csplugins.layout.algorithms.hierarchicalLayout.HierarchicalLayoutAlgorithm;
 import cytoscape.layout.algorithms.GridNodeLayout;
+import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.ConfigUploader;
 import de.uni_leipzig.simba.saim.gui.widget.form.EndPointUploader;
@@ -224,10 +225,20 @@ public class SAIMApplication extends Application implements TransactionListener
 			sub = new Window(messages.getString("limesdownload")); //$NON-NLS-1$
 			sub.setWidth("700px"); //$NON-NLS-1$
 			sub.setModal(true);
-			config.saveToXML("linkspec.xml"); //$NON-NLS-1$
 
-			sub.addComponent(new Link(messages.getString("SAIMApplication.menudownloadlinkspec"),new FileResource(new File("linkspec.xml"),SAIMApplication.this))); //$NON-NLS-1$ //$NON-NLS-2$
-			getMainWindow().addWindow(sub);
+			
+			if(((MetricPanel)content).getSaimcytopro().getMetric().isComplete()){
+				
+				// TODO How to set this correctly?
+				config.setTargetEndpoint(new KBInfo());
+				config.setSourceEndpoint(new KBInfo());
+				
+				config.setMetricExpression(((MetricPanel)content).getSaimcytopro().getMetric().toString());
+				config.saveToXML("linkspec.xml"); //$NON-NLS-1$
+				sub.addComponent(new Link(messages.getString("SAIMApplication.menudownloadlinkspec"),new FileResource(new File("linkspec.xml"),SAIMApplication.this))); //$NON-NLS-1$ //$NON-NLS-2$
+				getMainWindow().addWindow(sub);
+			}else
+				getMainWindow().showNotification(messages.getString("MetricPanel.settingnotablenotcomplete")); //$NON-NLS-1$
 		}
 	};
 
