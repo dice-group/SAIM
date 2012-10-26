@@ -126,7 +126,8 @@ public class SAIMApplication extends Application implements TransactionListener
 		fileMenu.addItem(messages.getString("exportlimes"), null, exportLIMESCommand).setEnabled(true); //$NON-NLS-1$
 
 		//TODO for testing to upload dumped endpoints.
-//		fileMenu.addItem("Upload Endpoint", null, uploadEndpointCommand);
+		if(System.getProperty("user.name").equals("Lyko"))
+			fileMenu.addItem("Upload Endpoint", null, uploadEndpointCommand);
 
 
 		MenuItem languageMenu = menuBar.addItem(messages.getString("language"), null, null); //$NON-NLS-1$

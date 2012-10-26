@@ -3,6 +3,10 @@ package de.uni_leipzig.simba.saim.gui.validator;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.data.Validator;
 import com.vaadin.ui.Component;
 import de.uni_leipzig.simba.saim.Messages;
@@ -12,10 +16,10 @@ import de.uni_leipzig.simba.saim.core.EndpointTester.EndpointStatus;
 public class EndpointURLValidator implements Validator
 {
 	private final Messages messages;
-
 	private static final long	serialVersionUID	= -5470766225738299746L;
 	protected static Map<String,EndpointStatus> validateCache = new HashMap<String,EndpointStatus>();
 	final Component component;
+	Logger logger = LoggerFactory.getLogger(EndpointURLValidator.class);
 
 	public EndpointURLValidator() {this(null,new Messages(Locale.getDefault()));}
 	public EndpointURLValidator(Component component,final Messages messages)
@@ -44,11 +48,12 @@ public class EndpointURLValidator implements Validator
 		String s = (String)value;
 		if(s.contains(".csv"))
 			return;
-		if(!(s.startsWith("http://")))
-		{throw new InvalidValueException(messages.getString("endpointurldoesnotstartwithhttp"));}
-
-		else
-		{
+		if(!(s.startsWith("http://"))) {
+			//FIXME support local files
+			logger.info("This is a local endpoint, skipping validation");
+//			throw new InvalidValueException(messages.getString("endpointurldoesnotstartwithhttp"));
+		}
+		else {
 			EndpointStatus status = validateCache.get(s);
 			if(status==null)
 			{

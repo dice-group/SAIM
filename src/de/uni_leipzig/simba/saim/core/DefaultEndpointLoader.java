@@ -5,6 +5,14 @@ import de.uni_leipzig.simba.io.KBInfo;
 
 public class DefaultEndpointLoader
 {
+	/**
+	 * Create regular KBInfos.
+	 * @param endpoint
+	 * @param graph
+	 * @param pageSize
+	 * @param id
+	 * @return
+	 */
 	static public KBInfo createKBInfo(String endpoint, String graph, int pageSize, String id)
 	{
 		KBInfo kb = new KBInfo();
@@ -15,6 +23,26 @@ public class DefaultEndpointLoader
 		return kb;
 	}
 
+	/**
+	 * Creates KBInfo for local files.
+	 * @param endpoint
+	 * @param graph
+	 * @param pageSize
+	 * @param id
+	 * @return
+	 */
+	static public KBInfo createLocalEndpointKBInfo(String endpoint, String graph, int pageSize, String id) {
+		KBInfo kb = createKBInfo(endpoint, graph, pageSize, id);
+		String type = endpoint.substring(endpoint.lastIndexOf("."));
+		if(type.equalsIgnoreCase("ttl"))
+			kb.type = "TURTLE";
+		if(type.equalsIgnoreCase("nt"))
+			kb.type = "N-TRIPLE";
+//		if(type.equalsIgnoreCase("csv"))
+//			kb.type = "CSV";
+		return kb;
+	}
+	
 	/**
 	 * Returns named default endpoints.
 	 * @return
