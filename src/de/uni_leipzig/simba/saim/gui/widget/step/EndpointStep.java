@@ -58,8 +58,8 @@ public class EndpointStep implements WizardStep
 				source.var = "?src";
 				KBInfo target = panel.kbTarget.getKBInfo();
 				target.var = "?dest";
-				config.setSourceEndpoint(source);
-				config.setTargetEndpoint(target);
+				config.setSource(source);
+				config.setTarget(target);
 				//panel.getWindow().showNotification(source + "\n\n" + target);
 				return true;
 			}

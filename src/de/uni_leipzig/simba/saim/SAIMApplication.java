@@ -3,11 +3,15 @@ package de.uni_leipzig.simba.saim;
 import java.io.File;
 import java.util.Locale;
 import java.util.Map;
+
 import lombok.Getter;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.vaadin.teemu.wizards.Wizard;
+
 import cern.colt.Arrays;
+
 import com.vaadin.Application;
 import com.vaadin.service.ApplicationContext.TransactionListener;
 import com.vaadin.terminal.FileResource;
@@ -16,6 +20,7 @@ import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
@@ -23,11 +28,13 @@ import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+
 import csplugins.layout.algorithms.circularLayout.CircularLayoutAlgorithm;
 import csplugins.layout.algorithms.force.ForceDirectedLayout;
 import csplugins.layout.algorithms.hierarchicalLayout.HierarchicalLayoutAlgorithm;
 import cytoscape.layout.algorithms.GridNodeLayout;
 import de.uni_leipzig.simba.saim.core.Configuration;
+import de.uni_leipzig.simba.saim.core.metric.Node;
 import de.uni_leipzig.simba.saim.gui.widget.ConfigUploader;
 import de.uni_leipzig.simba.saim.gui.widget.form.EndPointUploader;
 import de.uni_leipzig.simba.saim.gui.widget.panel.MetricPanel;
@@ -57,11 +64,11 @@ public class SAIMApplication extends Application implements TransactionListener
 	@Override
 	public void init()
 	{
-		 getContext ().addTransactionListener ( this );
+		getContext ().addTransactionListener ( this );
 		// reproduce failure on headless environments
-//		System.setProperty("java.awt.headless", "true");
+		//		System.setProperty("java.awt.headless", "true");
 		logger.debug("SAIMApplication()");
-//		messages = new Messages(Locale.getDefault());
+		//		messages = new Messages(Locale.getDefault());
 		messages = new Messages(Locale.ENGLISH);
 		mainWindow = new Window();
 		ParameterHandler parameterHandler = new ParameterHandler()
@@ -119,8 +126,8 @@ public class SAIMApplication extends Application implements TransactionListener
 		MenuItem fileMenu = menuBar.addItem(messages.getString("file"), null, null); //$NON-NLS-1$
 		fileMenu.addItem(messages.getString("startnewconfig"), null, new StartCommand(this));
 
-//		fileMenu.addItem(messages.getString("open"), null, null).setEnabled(false); //$NON-NLS-1$
-//		fileMenu.addItem(messages.getString("save"), null, null).setEnabled(false); //$NON-NLS-1$
+		//		fileMenu.addItem(messages.getString("open"), null, null).setEnabled(false); //$NON-NLS-1$
+		//		fileMenu.addItem(messages.getString("save"), null, null).setEnabled(false); //$NON-NLS-1$
 
 		fileMenu.addItem(messages.getString("importlimes"), null, importLIMESCommand).setEnabled(true);		 //$NON-NLS-1$
 		fileMenu.addItem(messages.getString("exportlimes"), null, exportLIMESCommand).setEnabled(true); //$NON-NLS-1$
@@ -135,60 +142,60 @@ public class SAIMApplication extends Application implements TransactionListener
 		languageMenu.addItem(messages.getString("english"), null, new SetLanguageCommand("en")).setEnabled(true); //$NON-NLS-1$
 
 		// zoom
-				menuBar.addItem(messages.getString("menubar_zoom_in"), null,new MenuBar.Command()	{
-					public void menuSelected(MenuItem selectedItem) {
-						if(selectedItem.getText().equals(messages.getString("menubar_zoom_in"))){//$NON-NLS-1$
-							((MetricPanel)content).getSaimcytopro().zoomIn(true);
-						}
-					}
-				});
-				menuBar.addItem(messages.getString("menubar_zoom_fit"), null,new MenuBar.Command()	{
-					public void menuSelected(MenuItem selectedItem) {
-						if(selectedItem.getText().equals(messages.getString("menubar_zoom_fit"))){//$NON-NLS-1$
+		menuBar.addItem(messages.getString("menubar_zoom_in"), null,new MenuBar.Command()	{
+			public void menuSelected(MenuItem selectedItem) {
+				if(selectedItem.getText().equals(messages.getString("menubar_zoom_in"))){//$NON-NLS-1$
+					((MetricPanel)content).getSaimcytopro().zoomIn(true);
+				}
+			}
+		});
+		menuBar.addItem(messages.getString("menubar_zoom_fit"), null,new MenuBar.Command()	{
+			public void menuSelected(MenuItem selectedItem) {
+				if(selectedItem.getText().equals(messages.getString("menubar_zoom_fit"))){//$NON-NLS-1$
 
-							((MetricPanel)content).getSaimcytopro().fitToView();
-						}
-					}
-				});
-				menuBar.addItem(messages.getString("menubar_zoom_out"), null,new MenuBar.Command()	{
-					public void menuSelected(MenuItem selectedItem) {
-						if(selectedItem.getText().equals(messages.getString("menubar_zoom_out"))){//$NON-NLS-1$
-							((MetricPanel)content).getSaimcytopro().zoomIn(false);
-						}
-					}
-				});
+					((MetricPanel)content).getSaimcytopro().fitToView();
+				}
+			}
+		});
+		menuBar.addItem(messages.getString("menubar_zoom_out"), null,new MenuBar.Command()	{
+			public void menuSelected(MenuItem selectedItem) {
+				if(selectedItem.getText().equals(messages.getString("menubar_zoom_out"))){//$NON-NLS-1$
+					((MetricPanel)content).getSaimcytopro().zoomIn(false);
+				}
+			}
+		});
 
-				// layout algo.
-				MenuItem layoutalgo = menuBar.addItem(messages.getString("menubar_layout_algorithm"), null, null); //$NON-NLS-1$
+		// layout algo.
+		MenuItem layoutalgo = menuBar.addItem(messages.getString("menubar_layout_algorithm"), null, null); //$NON-NLS-1$
 
-				layoutalgo.addItem(messages.getString("menubar_layout_algorithm_force_directed"), null, new MenuBar.Command()	{//$NON-NLS-1$
-					public void menuSelected(MenuItem selectedItem) {
-						if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_force_directed"))){//$NON-NLS-1$
-							((MetricPanel)content).getSaimcytopro().applyLayoutAlgorithm(new ForceDirectedLayout(),true);
-						}
-					}
-				});
-				layoutalgo.addItem(messages.getString("menubar_layout_algorithm_hierarchical"), null, new MenuBar.Command()	{//$NON-NLS-1$
-					public void menuSelected(MenuItem selectedItem) {
-						if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_hierarchical"))){//$NON-NLS-1$
-						((MetricPanel)content).getSaimcytopro().applyLayoutAlgorithm(new HierarchicalLayoutAlgorithm(),true);
-						}
-					}
-				});
-				layoutalgo.addItem(messages.getString("menubar_layout_algorithm_grid"), null, new MenuBar.Command()	{//$NON-NLS-1$
-					public void menuSelected(MenuItem selectedItem) {
-						if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_grid"))){//$NON-NLS-1$
-							((MetricPanel)content).getSaimcytopro().applyLayoutAlgorithm(new GridNodeLayout(),true);
-						}
-					}
-				});
-				layoutalgo.addItem(messages.getString("menubar_layout_algorithm_circular"), null, new MenuBar.Command()	{//$NON-NLS-1$
-					public void menuSelected(MenuItem selectedItem) {
-						if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_circular"))){//$NON-NLS-1$
-							((MetricPanel)content).getSaimcytopro().applyLayoutAlgorithm(new CircularLayoutAlgorithm(),true);
-						}
-					}
-				});
+		layoutalgo.addItem(messages.getString("menubar_layout_algorithm_force_directed"), null, new MenuBar.Command()	{//$NON-NLS-1$
+			public void menuSelected(MenuItem selectedItem) {
+				if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_force_directed"))){//$NON-NLS-1$
+					((MetricPanel)content).getSaimcytopro().applyLayoutAlgorithm(new ForceDirectedLayout(),true);
+				}
+			}
+		});
+		layoutalgo.addItem(messages.getString("menubar_layout_algorithm_hierarchical"), null, new MenuBar.Command()	{//$NON-NLS-1$
+			public void menuSelected(MenuItem selectedItem) {
+				if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_hierarchical"))){//$NON-NLS-1$
+					((MetricPanel)content).getSaimcytopro().applyLayoutAlgorithm(new HierarchicalLayoutAlgorithm(),true);
+				}
+			}
+		});
+		layoutalgo.addItem(messages.getString("menubar_layout_algorithm_grid"), null, new MenuBar.Command()	{//$NON-NLS-1$
+			public void menuSelected(MenuItem selectedItem) {
+				if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_grid"))){//$NON-NLS-1$
+					((MetricPanel)content).getSaimcytopro().applyLayoutAlgorithm(new GridNodeLayout(),true);
+				}
+			}
+		});
+		layoutalgo.addItem(messages.getString("menubar_layout_algorithm_circular"), null, new MenuBar.Command()	{//$NON-NLS-1$
+			public void menuSelected(MenuItem selectedItem) {
+				if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_circular"))){//$NON-NLS-1$
+					((MetricPanel)content).getSaimcytopro().applyLayoutAlgorithm(new CircularLayoutAlgorithm(),true);
+				}
+			}
+		});
 
 		return menuBar;
 	}
@@ -225,10 +232,22 @@ public class SAIMApplication extends Application implements TransactionListener
 			sub = new Window(messages.getString("limesdownload")); //$NON-NLS-1$
 			sub.setWidth("700px"); //$NON-NLS-1$
 			sub.setModal(true);
+
+			Node metric = ((MetricPanel)content).getSaimcytopro().getMetric();
+			if(metric.isComplete())	{config.setMetricExpression(((MetricPanel)content).getSaimcytopro().getMetric().toString());}
+
 			config.saveToXML("linkspec.xml"); //$NON-NLS-1$
 
+			if(!config.isComplete())
+			{
+				Label warnLabel = new Label("Warning: the exported link specification is not complete!");
+				warnLabel.setStyleName("red");
+				sub.addComponent(warnLabel);
+			}
 			sub.addComponent(new Link(messages.getString("SAIMApplication.menudownloadlinkspec"),new FileResource(new File("linkspec.xml"),SAIMApplication.this))); //$NON-NLS-1$ //$NON-NLS-2$
 			getMainWindow().addWindow(sub);
+			//			}else
+			//				getMainWindow().showNotification(messages.getString("MetricPanel.settingnotablenotcomplete")); //$NON-NLS-1$
 		}
 	};
 
@@ -305,29 +324,29 @@ public class SAIMApplication extends Application implements TransactionListener
 
 	@Override
 	public void transactionStart ( Application application, Object o )
-    {
-        if ( application == SAIMApplication.this )
-        {
-            currentApplication.set ( this );
-        }
-    }
+	{
+		if ( application == SAIMApplication.this )
+		{
+			currentApplication.set ( this );
+		}
+	}
 	@Override
-    public void transactionEnd ( Application application, Object o )
-    {
-        if ( application == SAIMApplication.this )
-        {
-            currentApplication.set ( null );
-            currentApplication.remove ();
-        }
-    }
+	public void transactionEnd ( Application application, Object o )
+	{
+		if ( application == SAIMApplication.this )
+		{
+			currentApplication.set ( null );
+			currentApplication.remove ();
+		}
+	}
 
 	/**
 	 * For access in non-UI classes.
 	 * @TODO Heavy testing
 	 * @return SAIMApplication instance
 	 */
-    public static SAIMApplication getInstance()
-    {
-        return currentApplication.get ();
-    }
+	public static SAIMApplication getInstance()
+	{
+		return currentApplication.get ();
+	}
 }

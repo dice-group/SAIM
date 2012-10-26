@@ -10,8 +10,8 @@ public class TestManualMetricForm {
 	@Test
 	public void testTestPropertiesAreSet() {
 		Configuration c = new Configuration();
-		c.setSourceEndpoint(DefaultEndpointLoader.getDefaultEndpoints().get("lgd.aksw - Drugbank"));
-		c.setTargetEndpoint(DefaultEndpointLoader.getDefaultEndpoints().get("lgd.aksw - Sider"));
+		c.setSource(DefaultEndpointLoader.getDefaultEndpoints().get("lgd.aksw - Drugbank"));
+		c.setTarget(DefaultEndpointLoader.getDefaultEndpoints().get("lgd.aksw - Sider"));
 		c.addPropertiesMatch("rdfs:label", "rdfs:FalseLable", true);
 		ManualMetricForm form = new ManualMetricForm();
 
