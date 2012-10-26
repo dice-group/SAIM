@@ -24,7 +24,6 @@ public class Configuration
 
 	protected Output metric = null;
 
-
 //	private static Configuration instance = new Configuration();
 	private PropertyChangeSupport changes = new PropertyChangeSupport( this );
 	public static final String SETTING_CONFIG = "setting from xml";
@@ -36,8 +35,8 @@ public class Configuration
 	public String sameAsRelation = "owl:sameAs";
 	private ConfigReader cR = new ConfigReader();
 
-	public KBInfo source = null;
-	public KBInfo target = null;
+	public KBInfo source = new KBInfo();
+	public KBInfo target = new KBInfo();
 	public boolean isLocal  = false;
 
 	public volatile PropertyMapping propertyMapping = new PropertyMapping();
@@ -48,6 +47,15 @@ public class Configuration
 		return null;
 	}
 
+	public boolean isComplete()
+	{
+		for(KBInfo kb : new KBInfo[] {source,target})
+		{
+			if(kb==null||kb.endpoint==null||kb.endpoint.isEmpty()||kb.properties.isEmpty()) return false;
+		}
+		return metric!=null&&metric.isComplete();
+	}
+	
 	public void setMetricExpression(String metricExpression) {
 		logger.info("Setting metric expression to "+metricExpression+" using the source.var "+source.var);
 		if(metric != null) {
@@ -100,11 +108,11 @@ public class Configuration
 	/** Implements Singleton pattern.*/
 //	public static Configuration getInstance() {return instance;}
 
-	public void setSourceEndpoint(KBInfo source) {	this.source = source;
+	public void setSource(KBInfo source) {	this.source = source;
 	if(source.var == null)
 		source.var = "?src";
 	}
-	public void setTargetEndpoint(KBInfo target) {	this.target = target;
+	public void setTarget(KBInfo target) {	this.target = target;
 	if(target.var == null);
 	target.var = "?dest";
 	}
