@@ -59,48 +59,30 @@ public class VEdge {
 	}
 
 	public static VEdge createVEdge(VVisualStyle vs, VCytoprocess vcytoprocess,	VNode source, VNode target, int id, String label, String shape,	boolean arrow) {
-
-		if (arrow){
-			vcytoprocess.noFill();
-			vcytoprocess.strokeWeight(vs.EDGE_LINE_WIDTH);
-			vcytoprocess.setStroke(vs.EDGE_COLOR);
-			Line line       = vcytoprocess.line(0, 0, 0, 0);
-			Line lineArrowA = vcytoprocess.line(0, 0, 0, 0);
-			Line lineArrowB = vcytoprocess.line(0, 0, 0, 0);
-			Text text       = vcytoprocess.text(label, 0, 0);
-			text.setStrokeColor(vs.EDGE_LABEL_COLOR);
-			text.setFontSize(Integer.valueOf(vs.EDGE_FONT_SIZE));
-			text.setFontFamily(vs.EDGE_FONT_NAME);
-
-			vcytoprocess.fill();
-
-			VEdge vedge = new VEdge(id, source, target,
-					line,
-					lineArrowA,
-					lineArrowB,
-					text);
-
-			return vedge;
-
-
-		}else{
-			vcytoprocess.noStroke();
-			vcytoprocess.noFill();
-
-			Line line       = vcytoprocess.line(0, 0, 0, 0);
-			Text text       = vcytoprocess.text(label, 0, 0);
-
-			vcytoprocess.fill();
-			vcytoprocess.stroke();
-			VEdge vedge = new VEdge(id, source, target,
-					line,
-					null,
-					null,
-					text);
-
-			return vedge;
-		}
-
+		VEdge vedge = null;
+		Line lineArrowA = null;
+		Line lineArrowB = null;
+		vcytoprocess.strokeWeight(vs.EDGE_LINE_WIDTH);
+		vcytoprocess.setStroke(vs.EDGE_COLOR);
+		if (arrow){			
+			lineArrowA = vcytoprocess.line(0, 0, 0, 0);
+			lineArrowB = vcytoprocess.line(0, 0, 0, 0);
+		}		
+		Line line = vcytoprocess.line(0, 0, 0, 0);
+		Text text       = vcytoprocess.text(label, 0, 0);
+		text.setStrokeColor(vs.EDGE_LABEL_COLOR);
+		text.setFontSize(Integer.valueOf(vs.EDGE_FONT_SIZE));
+		text.setFontFamily(vs.EDGE_FONT_NAME);			
+		text.setFillOpacity(1.0);
+		text.setFillColor(vs.EDGE_LABEL_COLOR);
+		
+		vedge = new VEdge(id, source, target,
+				line,
+				lineArrowA,
+				lineArrowB,
+				text);
+		
+		return vedge;
 	}
 
 	// private

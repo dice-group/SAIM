@@ -119,17 +119,11 @@ public class VNode {
 			vcytoprocess.setFill(tmp);
 
 		// draw label
-		vcytoprocess.noStroke();
-		vcytoprocess.noFill();
-
 		Text text =  vcytoprocess.text(label, 0, 0);
 		setStyle(text,vs);
 
 		VNode vnode = new VNode(id, shape,text);
 		vnode.updatePosition();
-
-		vcytoprocess.fill();
-		vcytoprocess.stroke();
 
 		return vnode;
 	}
@@ -138,11 +132,15 @@ public class VNode {
 		text.setStrokeColor(vs.NODE_LABEL_COLOR);
 		text.setFontSize(Integer.valueOf(vs.NODE_FONT_SIZE));
 		text.setFontFamily(vs.NODE_FONT_NAME);
+		text.setFillOpacity(1.0);
+		text.setFillColor(vs.NODE_LABEL_COLOR);
 	}
 	private void setStyle(Text from,Text to){
 		to.setStrokeColor(from.getStrokeColor());
 		to.setFontSize(from.getFontSize());
 		to.setFontFamily(from.getFontFamily());
+		to.setFillOpacity(from.getFillOpacity());
+		to.setFillColor(from.getFillColor());
 	}
 	public void move(int x, int y) {
 		shape.setX(shape.getX() - x);
