@@ -15,6 +15,7 @@ import de.konrad.commons.sparql.SPARQLHelper;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.SAIMApplication;
+import de.uni_leipzig.simba.saim.core.Configuration;
 
 public class PropertyMappingGenerator extends Panel {
 	/**
@@ -72,17 +73,18 @@ public class PropertyMappingGenerator extends Panel {
 	 * Get the properties.
 	 */
 	private void getAllProps() {
+		Configuration config = ((SAIMApplication) getApplication()).getConfig();
 		//for source
-		KBInfo info = ((SAIMApplication) getApplication()).getConfig().getSource();
+		KBInfo info = config.getSource();
 		String className = info.getClassOfendpoint();
-		for(String prop : SPARQLHelper.properties(info.endpoint, info.graph, className)) {
+		for(String prop : SPARQLHelper.properties(info.endpoint, info.graph, className, config.sourceModel)) {
 			String s_abr=PrefixHelper.abbreviate(prop);
 			sourceProps.add(s_abr);
 		}
 		//for target
-		info = ((SAIMApplication) getApplication()).getConfig().getTarget();
+		info = config.getTarget();
 		className = info.getClassOfendpoint();
-		for(String prop : SPARQLHelper.properties(info.endpoint, info.graph, className)) {
+		for(String prop : SPARQLHelper.properties(info.endpoint, info.graph, className, config.targetModel)) {
 			String s_abr=PrefixHelper.abbreviate(prop);
 			targetProps.add(s_abr);
 		}

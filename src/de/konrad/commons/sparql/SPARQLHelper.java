@@ -19,6 +19,7 @@ import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.Syntax;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.vocabulary.OWL;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.util.AdvancedKBInfo;
@@ -119,7 +120,7 @@ public class SPARQLHelper
 		return url.substring(Math.max(url.lastIndexOf('#'),url.lastIndexOf('/'))+1);
 	}
 
-	public static Set<String> subclassesOf(String endpoint, String graph,String clazz)
+	public static Set<String> subclassesOf(String endpoint, String graph, String clazz, Model model)
 	{
 		Cache cache = CacheManager.getInstance().getCache("subclasses");
 		List<String> key = Arrays.asList(new String[] {endpoint,graph,clazz});
@@ -127,23 +128,23 @@ public class SPARQLHelper
 		if(cache.isKeyInCache(key))	{element = cache.get(key);}
 		else
 		{
-			element = new Element(key, subClassesOfUncached(endpoint,graph,clazz));
+			element = new Element(key, subClassesOfUncached(endpoint, graph, clazz, model));
 			cache.put(element);
 		}
 		cache.flush();
 		return (Set<String>)element.getValue();
 	}
 
-	public static Set<String> subClassesOfUncached(String endpoint, String graph,String clazz)
+	public static Set<String> subClassesOfUncached(String endpoint, String graph,String clazz, Model model)
 	{
 		final int MAX_CHILDREN = 100;
 		String query = "SELECT distinct(?class) WHERE { ?class rdfs:subClassOf "+wrapIfNecessary(clazz)+". } LIMIT "+MAX_CHILDREN;
 		query = PrefixHelper.addPrefixes(query); // in case rdfs and owl prefixes are not known
-		return resultSetToList(querySelect(query,endpoint,graph));
+		return resultSetToList(querySelect(query, endpoint, graph, model));
 	}
 
 	/** returns the root classes of a SPARQL endpoint's ontology ({owl:Thing} normally).  */
-	public static Set<String> rootClasses(String endpoint, String graph)
+	public static Set<String> rootClasses(String endpoint, String graph, Model model)
 	{
 		Cache cache = CacheManager.getInstance().getCache("rootclasses");
 		List<String> key = Arrays.asList(new String[] {endpoint,graph});
@@ -151,7 +152,7 @@ public class SPARQLHelper
 		if(cache.isKeyInCache(key))	{element = cache.get(key);}
 		else
 		{
-			element = new Element(key, rootClassesUncached(endpoint,graph));
+			element = new Element(key, rootClassesUncached(endpoint, graph, model));
 			cache.put(element);
 		}
 		cache.flush();
@@ -159,12 +160,12 @@ public class SPARQLHelper
 	}
 
 	/** returns the root classes of a SPARQL endpoint's ontology ({owl:Thing} normally).  */
-	public static Set<String> rootClassesUncached(String endpoint, String graph)
+	public static Set<String> rootClassesUncached(String endpoint, String graph, Model model)
 	{
 		{
 			// if owl:Thing exists and has at least one subclass, so use owl:Thing
 			String queryForOWLThing = "SELECT ?class WHERE {?class rdfs:subClassOf owl:Thing} limit 1";
-			if(!resultSetToList(querySelect(PrefixHelper.addPrefixes(queryForOWLThing),endpoint,graph)).isEmpty())
+			if(!resultSetToList(querySelect(PrefixHelper.addPrefixes(queryForOWLThing),endpoint,graph, model)).isEmpty())
 			{return Collections.singleton(OWL.Thing.toString());}
 		}
 		//		System.err.println("no owl:Thing found for endpoint "+endpoint+", using fallback.");
@@ -173,7 +174,7 @@ public class SPARQLHelper
 			String queryForParentlessClasses =
 					"SELECT distinct(?class) WHERE {{?class a owl:Class} UNION {?class a rdfs:Class}. OPTIONAL {?class rdfs:subClassOf ?superClass.} FILTER (!BOUND(?superClass))}";
 
-			Set<String> classes = resultSetToList(querySelect(PrefixHelper.addPrefixes(queryForParentlessClasses), endpoint, graph));
+			Set<String> classes = resultSetToList(querySelect(PrefixHelper.addPrefixes(queryForParentlessClasses), endpoint, graph, model));
 
 			if(!classes.isEmpty()) {return classes;}
 		}
@@ -182,7 +183,7 @@ public class SPARQLHelper
 		{
 			String query =
 					"SELECT distinct(?class) WHERE {?x a ?class. OPTIONAL {?class rdfs:subClassOf ?superClass.} FILTER (!BOUND(?superClass))}";
-			Set<String> classes = resultSetToList(querySelect(PrefixHelper.addPrefixes(query), endpoint, graph));
+			Set<String> classes = resultSetToList(querySelect(PrefixHelper.addPrefixes(query), endpoint, graph, model));
 
 			// we only want classes of instances
 			classes.remove("http://www.w3.org/1999/02/22-rdf-syntax-ns#Property");
@@ -206,7 +207,7 @@ public class SPARQLHelper
 			{"http://dbpedia.org/property/wikiPageUsesTemplate","http://dbpedia.org/property/wikiPageExternalLink"})));
 
 
-	public static Set<String> properties(String endpoint, String graph, String className)
+	public static Set<String> properties(String endpoint, String graph, String className, Model model)
 	{
 		Cache cache = CacheManager.getInstance().getCache("properties");
 		List<String> key = Arrays.asList(new String[] {endpoint,graph,className});
@@ -214,7 +215,7 @@ public class SPARQLHelper
 		if(cache.isKeyInCache(key))	{element = cache.get(key);}
 		else
 		{
-			element = new Element(key, propertiesUncached(endpoint,graph,className));
+			element = new Element(key, propertiesUncached(endpoint,graph,className, model));
 			cache.put(element);
 		}
 		cache.flush();
@@ -227,7 +228,7 @@ public class SPARQLHelper
 	 * @param graph can be null (recommended as e.g. rdf:label doesn't have to be in the graph)
 	 * @return
 	 */
-	public static Set<String> propertiesUncached(String endpoint, String graph, String className)
+	public static Set<String> propertiesUncached(String endpoint, String graph, String className, Model model)
 	{
 		if(className.isEmpty()) {className=null;}
 		if(className!=null)
@@ -243,18 +244,18 @@ public class SPARQLHelper
 				try
 				{
 					Set<String> properties = new HashSet<String>(Arrays.asList(commonProperties(info, 0.8, 20, 50)));
-					if(className!=null) {properties.addAll(getPropertiesWithDomain(endpoint,graph,className));}
+					if(className!=null) {properties.addAll(getPropertiesWithDomain(endpoint, graph, className, model));}
 					properties.removeAll(blackset);
 					return properties;
 				}
 				catch (Exception e) {throw new RuntimeException("error getting the properties for endpoint "+endpoint,e);}
 	}
 
-	static Set<String> getPropertiesWithDomain(String endpoint, String graph, String clazz)
+	static Set<String> getPropertiesWithDomain(String endpoint, String graph, String clazz, Model model)
 	{
 		long start = System.currentTimeMillis();
 		String query = PrefixHelper.addPrefixes("select ?p where {?p rdfs:domain "+wrapIfNecessary(clazz)+"}");
-		Set<String> properties = resultSetToList(querySelect(query, endpoint, graph));
+		Set<String> properties = resultSetToList(querySelect(query, endpoint, graph, model));
 		long end = System.currentTimeMillis();
 		logger.trace(properties.size()+" properties with domain "+clazz+" from endpoint "+endpoint+" in "+(end-start)+" ms.");
 		return properties;
@@ -429,7 +430,7 @@ public class SPARQLHelper
 	//		return lexicalForm;
 	//	}
 	//
-	public static QueryExecution queryExecution(String query,String graph, String endpoint)
+	public static QueryExecution queryExecution(String query, String graph, String endpoint, Model model)
 	{
 		ARQ.setNormalMode();
 		Query sparqlQuery = QueryFactory.create(query,Syntax.syntaxARQ);
@@ -438,14 +439,19 @@ public class SPARQLHelper
 		// take care of graph issues. Only takes one graph. Seems like some sparql endpoint do
 		// not like the FROM option.
 		// it is important to
-		if (graph != null)
-		{
-			qexec = QueryExecutionFactory.sparqlService(endpoint, sparqlQuery, graph);
-		} //
-		else
-		{
+		if(model == null) {
+			if (graph != null)
+			{
+				qexec = QueryExecutionFactory.sparqlService(endpoint, sparqlQuery, graph);
+			} //
+			else
+			{
 			qexec = QueryExecutionFactory.sparqlService(endpoint, sparqlQuery);
+			}
+		} else {
+			qexec = QueryExecutionFactory.create(sparqlQuery, model);
 		}
+		
 		return qexec;
 	}
 	//
@@ -479,12 +485,12 @@ public class SPARQLHelper
 		return list;
 	}
 
-	public static ResultSet querySelect(String query, String endpoint, String graph)
+	public static ResultSet querySelect(String query, String endpoint, String graph, Model model)
 	{
 		try
 		{
 			//QueryExecution qexec = queryExecutionDirect(query,graph,endpoint);
-			ResultSet results = queryExecution(query,graph,endpoint).execSelect();
+			ResultSet results = queryExecution(query, graph, endpoint, model).execSelect();
 			return results;
 		}
 		catch(RuntimeException e)

@@ -13,6 +13,8 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.hp.hpl.jena.rdf.model.Model;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -165,12 +167,13 @@ public class PropertyMatchingPanel extends Panel
 
 	/**	returns all properties (not just the ones from the property matching) that instances of the knowledge base of the
 	 * class restriction specified in the KBInfo have. <b>May break if the class restriction is not set.</b>*/
-	private Set<String> allPropertiesFromKBInfo(KBInfo kb)
+	private Set<String> allPropertiesFromKBInfo(KBInfo kb, Model model)
 	{
-		return SPARQLHelper.properties(
+		return SPARQLHelper.properties(				
 				kb.endpoint,
 				kb.graph,
-				classRestrictionToClass(kb.getClassRestriction()));
+				classRestrictionToClass(kb.getClassRestriction()),
+				model);
 	}
 
 	private List<String> mockAllPropertiesFromKBInfo(KBInfo kb)
@@ -367,11 +370,11 @@ public class PropertyMatchingPanel extends Panel
 		String className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8); //$NON-NLS-1$
 		info = config.getSource();
 		className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8); //$NON-NLS-1$
-		propListSource = SPARQLHelper.properties(info.endpoint, info.graph, className);
+		propListSource = SPARQLHelper.properties(info.endpoint, info.graph, className, config.sourceModel);
 		logger.info("Got "+propListSource.size()+ " source props"); //$NON-NLS-1$ //$NON-NLS-2$
 		info = config.getTarget();
 		className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8); //$NON-NLS-1$
-		propListTarget = SPARQLHelper.properties(info.endpoint, info.graph, className);
+		propListTarget = SPARQLHelper.properties(info.endpoint, info.graph, className, config.targetModel);
 		logger.info("Got "+propListTarget.size()+ " target props"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		for(String prop : propListSource) {

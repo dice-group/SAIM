@@ -11,6 +11,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.Tree;
@@ -31,7 +32,7 @@ public class ClassChooser extends Panel
 	 * @param id
 	 * @param graph
 	 */
-	public ClassChooser(final String endpoint, String id, final String graph)
+	public ClassChooser(final String endpoint, String id, final String graph, final Model model)
 	{
 		tree = new Tree(id+" classes");
 		this.endpoint = endpoint;
@@ -56,7 +57,7 @@ public class ClassChooser extends Panel
 			{
 
 //				addComponent(refresher);
-				Set<String> rootClasses = rootClasses(endpoint, graph);
+				Set<String> rootClasses = rootClasses(endpoint, graph, model);
 
 				ClassNode lastNode = null;
 				for(String clazz: rootClasses)
@@ -77,7 +78,7 @@ public class ClassChooser extends Panel
 					public void nodeExpand(ExpandEvent event)
 					{
 						log.debug("expanding node "+event.getItemId());
-						expandNode((ClassNode) event.getItemId(),PRELOAD?1:0);
+						expandNode((ClassNode) event.getItemId(),PRELOAD?1:0, model);
 					}
 				};
 				tree.addListener(expandListener);
@@ -91,7 +92,7 @@ public class ClassChooser extends Panel
 		//tree.setDragMode(TreeDragMode.NODE);
 	}
 
-	protected void expandNode(ClassNode node, final int depth)
+	protected void expandNode(ClassNode node, final int depth, final Model model)
 	{
 		if(tree.hasChildren(node)&&depth<1) return;
 		final List<ClassNode> subNodes = new LinkedList<ClassNode>();
@@ -107,7 +108,7 @@ public class ClassChooser extends Panel
 			List<String> subClasses;
 			try
 			{
-				subClasses  = new ArrayList<String>(subclassesOf(endpoint, graph,node.url));
+				subClasses  = new ArrayList<String>(subclassesOf(endpoint, graph,node.url, model));
 				log.trace(subClasses);
 				Collections.sort(subClasses); // sorting in java and not in the SPARQL query because the sort order may be different for the short short
 				tree.expandItem(node);
@@ -135,7 +136,7 @@ public class ClassChooser extends Panel
 				@Override
 				public void run()
 				{
-					{for(ClassNode subNode: subNodes) {expandNode(subNode, depth-1);}}
+					{for(ClassNode subNode: subNodes) {expandNode(subNode, depth-1, model);}}
 				}
 			}.start();
 		}

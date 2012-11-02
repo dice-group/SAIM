@@ -1,5 +1,6 @@
 package de.uni_leipzig.simba.saim.gui.widget.form;
 
+import com.hp.hpl.jena.rdf.model.Model;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.ComboBox;
@@ -23,7 +24,7 @@ public class ClassMatchingForm extends Form
 	protected final ClassChooser chooser;
 	KBInfo info;
 
-	public ClassMatchingForm(String caption, final KBInfo info) {
+	public ClassMatchingForm(String caption, final KBInfo info, Model model) {
 		this.info = info;
 		Layout layout = new VerticalLayout();
 		layout.setWidth("100%"); //$NON-NLS-1$
@@ -35,7 +36,7 @@ public class ClassMatchingForm extends Form
 		field.setNewItemsAllowed(true);
 		field.setImmediate(true);
 		setDefault(info);
-		chooser = new ClassChooser(info.endpoint, info.id, info.graph);
+		chooser = new ClassChooser(info.endpoint, info.id, info.graph, model);
 
 		chooser.tree.addListener(new ItemClickListener() {
 			/**

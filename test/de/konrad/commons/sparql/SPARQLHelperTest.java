@@ -22,14 +22,18 @@ import static org.junit.Assert.assertTrue;
 import java.util.Collection;
 import java.util.LinkedList;
 import org.junit.Test;
+
+import com.hp.hpl.jena.rdf.model.Model;
+
 import de.uni_leipzig.simba.io.KBInfo;
+import de.uni_leipzig.simba.query.ModelRegistry;
 import de.uni_leipzig.simba.saim.core.DefaultEndpointLoader;
 import de.uni_leipzig.simba.saim.gui.validator.EndpointURLValidator;
 /** @author Konrad Höffner */
 public class SPARQLHelperTest
 {
 	Collection<KBInfo> workingKBs = null;
-
+	Model model = null;
 	public void initWorkingKBs()
 	{
 		workingKBs = new LinkedList<KBInfo>();
@@ -49,7 +53,7 @@ public class SPARQLHelperTest
 	@Test
 	public void testSubClassesOf()
 	{
-		System.out.println(SPARQLHelper.subclassesOf(SPARQLHelper.DBPEDIA_ENDPOINT, null,"http://dbpedia.org/ontology/Building"));
+		System.out.println(SPARQLHelper.subclassesOf(SPARQLHelper.DBPEDIA_ENDPOINT, null,"http://dbpedia.org/ontology/Building", model));
 	}
 
 	@Test
@@ -61,11 +65,12 @@ public class SPARQLHelperTest
 		for(KBInfo kb : getWorkingKBs())
 		{
 			String endpoint = kb.endpoint;
+			Model model = ModelRegistry.getInstance().getMap().get(kb.endpoint);
 			if(!endpoint.equals("http://linkedgeodata.org/sparql")) continue; // TODO: remove
 
 			{
 				try{
-					assertTrue("could not get root classes for endpoint "+kb.endpoint,!rootClasses(kb.endpoint,kb.graph).isEmpty());
+					assertTrue("could not get root classes for endpoint "+kb.endpoint,!rootClasses( kb.endpoint, kb.graph, model).isEmpty());
 				} catch (Exception e)
 				{
 					throw new RuntimeException("error getting root classes for endpoint "+kb.endpoint,e);
@@ -88,7 +93,7 @@ public class SPARQLHelperTest
 	{
 		assertTrue(resultSetToList(querySelect(
 				"select ?s where {?s <http://dbpedia.org/ontology/birthPlace> <http://dbpedia.org/resource/Leipzig> }",
-				SPARQLHelper.DBPEDIA_ENDPOINT, null)).contains("http://dbpedia.org/resource/Friedrich_Nietzsche"));
+				SPARQLHelper.DBPEDIA_ENDPOINT, null, null)).contains("http://dbpedia.org/resource/Friedrich_Nietzsche"));
 	}
 
 	@Test
@@ -96,7 +101,7 @@ public class SPARQLHelperTest
 	{
 		assertTrue((querySelect(
 				"select ?o where {<http://dbpedia.org/resource/Leipzig> <http://dbpedia.org/property/vorwahl> ?o.} limit 1",
-				SPARQLHelper.DBPEDIA_ENDPOINT, null).next().getLiteral("o").getInt())==341);
+				SPARQLHelper.DBPEDIA_ENDPOINT, null, null).next().getLiteral("o").getInt())==341);
 	}
 
 
@@ -110,7 +115,8 @@ public class SPARQLHelperTest
 
 	public void testProperties(String endpoint, String graph, String clazz)
 	{
-		Collection<String> properties = SPARQLHelper.properties(endpoint, graph, clazz);
+		Model model = ModelRegistry.getInstance().getMap().get(endpoint);
+		Collection<String> properties = SPARQLHelper.properties(endpoint, graph, clazz, model);
 		assertTrue(!properties.isEmpty());
 		System.out.println(properties);
 	}

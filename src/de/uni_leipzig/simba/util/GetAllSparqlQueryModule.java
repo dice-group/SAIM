@@ -7,9 +7,12 @@ import java.lang.reflect.Field;
 import java.util.logging.Logger;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.rdf.model.Model;
+
 import de.konrad.commons.sparql.SPARQLHelper;
 import de.uni_leipzig.simba.cache.Cache;
 import de.uni_leipzig.simba.io.KBInfo;
+import de.uni_leipzig.simba.query.ModelRegistry;
 import de.uni_leipzig.simba.query.SparqlQueryModule;
 /**
  * Simple modification of SparqlQueryModule but instead of only returning a part this class gets everything.
@@ -149,10 +152,11 @@ public class GetAllSparqlQueryModule extends SparqlQueryModule
 
 	public static ResultSet querySelect(String query, KBInfo kb)
 	{
+		Model model = ModelRegistry.getInstance().getMap().get(kb.endpoint);
 		String wholeQuery = SPARQLHelper.formatPrefixes(kb.prefixes)+'\n'+query;
 		// end workaround
 		//System.out.println(wholeQuery);
-		return SPARQLHelper.querySelect(query, kb.endpoint, kb.graph);
+		return SPARQLHelper.querySelect(query, kb.endpoint, kb.graph, model);
 	}
 
 	 /** @param paginate with pagination set to false, no additional offset queries will be generated after the first query */

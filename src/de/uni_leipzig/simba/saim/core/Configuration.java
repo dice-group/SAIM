@@ -11,6 +11,9 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+
+import com.hp.hpl.jena.rdf.model.Model;
+
 import de.konrad.commons.sparql.PrefixHelper;
 import de.uni_leipzig.simba.genetics.util.PropertyMapping;
 import de.uni_leipzig.simba.io.ConfigReader;
@@ -38,7 +41,9 @@ public class Configuration
 	public KBInfo source = new KBInfo();
 	public KBInfo target = new KBInfo();
 	public boolean isLocal  = false;
-
+	public Model sourceModel = null;
+	public Model targetModel = null;
+	
 	public volatile PropertyMapping propertyMapping = new PropertyMapping();
 
 	public String getMetricExpression() {

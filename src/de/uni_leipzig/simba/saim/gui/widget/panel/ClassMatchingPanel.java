@@ -123,8 +123,8 @@ public class ClassMatchingPanel extends Panel
 				targetClassForm.requestRepaint();
 			}
 		};
-		sourceClassForm = new ClassMatchingForm(messages.getString("ClassMatchingPanel.sourceclass"), config.getSource()); //$NON-NLS-1$
-		targetClassForm = new ClassMatchingForm(messages.getString("ClassMatchingPanel.targetclass"), config.getTarget()); //$NON-NLS-1$
+		sourceClassForm = new ClassMatchingForm(messages.getString("ClassMatchingPanel.sourceclass"), config.getSource(), config.sourceModel); //$NON-NLS-1$
+		targetClassForm = new ClassMatchingForm(messages.getString("ClassMatchingPanel.targetclass"), config.getTarget(), config.targetModel); //$NON-NLS-1$
 
 		HorizontalLayout hori = new HorizontalLayout();
 		hori.setWidth("100%"); //$NON-NLS-1$
