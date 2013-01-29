@@ -74,13 +74,14 @@ public class PropertyMatchingPanel extends Panel
 		progressLabel = new Label(messages.getString("generatingpropertymatching"));	 //$NON-NLS-1$
 		mainLayout = new VerticalLayout();
 
+	
 		select = new ListSelect(messages.getString("PropertyMatchingPanel.computed")); //$NON-NLS-1$
 		useAll  = new Button(messages.getString("PropertyMatchingPanel.useButton")); //$NON-NLS-1$
 		selectionLayout.addComponent(select);
 		selectionLayout.addComponent(useAll);
 		useAll.setEnabled(false);
 		mainLayout.addComponent(selectionLayout);
-
+		
 		// Buttons to control property mapping
 		computeStringBasedMapping = new Button("Compute String Based PropertyMapping");
 		computeDefaultPropertyMapping = new Button("Compute Default PropertyMapping");
@@ -399,6 +400,7 @@ public class PropertyMatchingPanel extends Panel
 	};
 	/**
 	 * TODO causing java.util.ConcurrentModificationExceptions !!!
+	 * WoRKAROUND: copy list to display, makes changes, replace it
 	 * Show computed Property mapping in select, activate Button to use them all.
 	 * @param map
 	 */
@@ -406,23 +408,25 @@ public class PropertyMatchingPanel extends Panel
 	{
 
 		logger.info("Displaying property Mapping"); //$NON-NLS-1$
-		select.removeListener(selectListener);
-		useAll.removeListener(useComputedListener);
-		select.removeAllItems();
-		useComputedListener = new UseComputedClickListener(map);
-		useAll.addListener(useComputedListener);
-		if(map.size()>0)
-			useAll.setEnabled(true);
-		for(String key : map.keySet()) {
-			for(Entry<String, Double> e : map.get(key).entrySet())
-			{
-				if(e.getValue()>0)
-					select.addItem(new ClassMatchItem(key, e.getKey(), e.getValue()));
+		synchronized(select) {
+			select.removeListener(selectListener);
+			useAll.removeListener(useComputedListener);
+			select.removeAllItems();
+			useComputedListener = new UseComputedClickListener(map);
+			useAll.addListener(useComputedListener);
+			if(map.size()>0)
+				useAll.setEnabled(true);
+			for(String key : map.keySet()) {
+				for(Entry<String, Double> e : map.get(key).entrySet())
+				{
+					if(e.getValue()>0)
+						select.addItem(new ClassMatchItem(key, e.getKey(), e.getValue()));
+				}
 			}
-		}
-		select.setImmediate(true);
-		select.setNullSelectionAllowed(false);
-		select.addListener(selectListener);
+			select.setImmediate(true);
+			select.setNullSelectionAllowed(false);
+			select.addListener(selectListener);
+		}		
 	}
 
 	/**
