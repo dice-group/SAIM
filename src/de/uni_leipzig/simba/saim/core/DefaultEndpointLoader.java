@@ -38,8 +38,8 @@ public class DefaultEndpointLoader
 			kb.type = "TURTLE";
 		if(type.equalsIgnoreCase("nt"))
 			kb.type = "N-TRIPLE";
-//		if(type.equalsIgnoreCase("csv"))
-//			kb.type = "CSV";
+		if(type.equalsIgnoreCase("csv"))
+			kb.type = "CSV";
 		return kb;
 	}
 	
@@ -51,6 +51,7 @@ public class DefaultEndpointLoader
 		HashMap<String, KBInfo> defaults = new HashMap<String, KBInfo>();
 		defaults.put("DBPedia - default graph", createKBInfo("http://dbpedia.org/sparql","http://dbpedia.org",10000,"dbpedia"));
 		defaults.put("DBPedia live - default graph", createKBInfo("http://live.dbpedia.org/sparql","http://dbpedia.org",1000,"dbpedia"));
+	
 		defaults.put("LinkedGeoData", createKBInfo("http://linkedgeodata.org/sparql", "http://linkedgeodata.org", 1000, "linkedgeodata"));
 		defaults.put("lgd.aksw - Diseasome", createKBInfo("http://lgd.aksw.org:5678/sparql", "http://www.instancematching.org/oaei/di/diseasome/", 1000, "diseasome"));
 		defaults.put("lgd.aksw - Sider", createKBInfo("http://lgd.aksw.org:5678/sparql", "http://www.instancematching.org/oaei/di/sider/", 1000, "sider"));
@@ -61,7 +62,12 @@ public class DefaultEndpointLoader
 		defaults.put("Wiktionary", createKBInfo("http://wiktionary.dbpedia.org/sparql", "", 1000, "wiktionary"));
 		defaults.put("WordNet 3.0 (VU Amsterdam)", createKBInfo("http://api.talis.com/stores/wordnet/services/sparql", "", 1000, "wordnet"));
 		defaults.put("WordNet (RKBExplorer)", createKBInfo("http://wordnet.rkbexplorer.com/sparql/", "", 1000, "wordnet"));
-		defaults.put("Bibbase", createKBInfo("http://data.bibbase.org:2020/sparql", "", 300, "bibbase"));
+		defaults.put("Bibbase", createKBInfo("http://data.bibbase.org:2020/sparql", "", 300, "bibbase"));	
+		int i = 0;
+		for(KBInfo kbi : FileStore.getListOfInfos()) {
+			defaults.put("dump "+i, kbi);
+			i++;
+		}
 		return defaults;
 	}
 }

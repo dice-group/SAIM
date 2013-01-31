@@ -228,7 +228,7 @@ public class KBInfoForm extends Form
 	{
 		KBInfo kbInfo = new KBInfo();
 		kbInfo.id = id.getValue().toString();
-		kbInfo.endpoint = url.getValue().toString();
+		kbInfo.endpoint = url.getValue().toString();		
 		if (graph.getValue() != null) kbInfo.graph = graph.getValue()
 				.toString();
 		int pageSizeInt = Integer.parseInt("" + pageSize.getValue());

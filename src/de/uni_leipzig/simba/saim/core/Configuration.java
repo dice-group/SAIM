@@ -18,6 +18,9 @@ import de.konrad.commons.sparql.PrefixHelper;
 import de.uni_leipzig.simba.genetics.util.PropertyMapping;
 import de.uni_leipzig.simba.io.ConfigReader;
 import de.uni_leipzig.simba.io.KBInfo;
+import de.uni_leipzig.simba.query.ModelRegistry;
+import de.uni_leipzig.simba.query.QueryModule;
+import de.uni_leipzig.simba.query.QueryModuleFactory;
 import de.uni_leipzig.simba.saim.core.metric.MetricParser;
 import de.uni_leipzig.simba.saim.core.metric.Output;
 /**Class holds all configuration settings for a linking process. */
@@ -113,14 +116,33 @@ public class Configuration
 	/** Implements Singleton pattern.*/
 //	public static Configuration getInstance() {return instance;}
 
-	public void setSource(KBInfo source) {	this.source = source;
-	if(source.var == null)
-		source.var = "?src";
+	public void setSource(KBInfo source) {
+		this.source = source;
+		if(source.var == null)
+			source.var = "?src";
+		this.sourceModel = setModel(source);
 	}
-	public void setTarget(KBInfo target) {	this.target = target;
-	if(target.var == null);
-	target.var = "?dest";
+	public void setTarget(KBInfo target) {
+		this.target = target;
+		if(target.var == null);
+		target.var = "?dest";
+		this.targetModel = setModel(target);
 	}
+	
+	public Model setModel(KBInfo i) {
+		try {
+			String fileType = i.endpoint.substring(i.endpoint.lastIndexOf(".")+1);
+			QueryModule fQModule = QueryModuleFactory.getQueryModule(fileType, i);
+			Model model = ModelRegistry.getInstance().getMap().get(i.endpoint);	
+	      logger.info("Setting a query model");  
+			return model;
+		} catch(Exception e) {
+			logger.debug("Unable to set model due to exception...");
+			e.printStackTrace();
+		}
+		return null;		
+	}
+	
 	public KBInfo getSource() {	return source;}
 	public KBInfo getTarget() {	return target;}
 

@@ -1,5 +1,6 @@
 package de.konrad.commons.sparql;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -22,6 +23,9 @@ import com.hp.hpl.jena.query.Syntax;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.vocabulary.OWL;
 import de.uni_leipzig.simba.io.KBInfo;
+import de.uni_leipzig.simba.query.ModelRegistry;
+import de.uni_leipzig.simba.query.QueryModule;
+import de.uni_leipzig.simba.query.QueryModuleFactory;
 import de.uni_leipzig.simba.util.AdvancedKBInfo;
 import de.uni_leipzig.simba.util.AdvancedMemoryCache;
 import de.uni_leipzig.simba.util.GetAllSparqlQueryModule;
@@ -61,12 +65,41 @@ import de.uni_leipzig.simba.util.GetAllSparqlQueryModule;
 //// TODO: move all sparql stuff into aksw commons
 public class SPARQLHelper
 {
+	
 	private final static Logger logger = Logger.getLogger(SPARQLHelper.class.getName());
 	//	protected static transient final Logger log = Logger.getLogger(SPARQLHelper.class.toString());
 	//	public static final String GEONAMES_ENDPOINT_INTERNAL = "http://lgd.aksw.org:8900/sparql";
 	public static final String DBPEDIA_ENDPOINT_OFFICIAL = "http://dbpedia.org/sparql";
 	public static final String DBPEDIA_ENDPOINT_LIVE = "http://live.dbpedia.org/sparql";
 	public static final String DBPEDIA_ENDPOINT = DBPEDIA_ENDPOINT_OFFICIAL;
+	
+	
+	public static void main(String args[]) {
+		SPARQLHelper h = new SPARQLHelper();
+		KBInfo info = new KBInfo();
+		File file = new File("C:/Users/Lyko/SAIM/EPStore/person11.nt");
+		info.endpoint = file.getAbsolutePath();
+		try {
+			QueryModule fQModule = QueryModuleFactory.getQueryModule("N-TRIPLE", info);
+			Model model = ModelRegistry.getInstance().getMap().get(info.endpoint);
+             if (model == null) {
+                 throw new RuntimeException("No model with id '" + info.endpoint + "' registered");
+             } else  {
+            	logger.info("Successfully read data of type: "+info.type);
+     			logger.info("Registered Model of size ... "+model.size());
+     			Set<String> set = SPARQLHelper.rootClassesUncached(info.endpoint, null, model);
+     			System.out.println("Retrieved Classes...");
+     			int i = 0;
+     			for(String className : set) {
+     				System.out.println((i++)+".: "+className);
+     			}
+     			
+             }
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	
+	}
 	//
 	//	public static final String DBPEDIA_ENDPOINT = DBPEDIA_ENDPOINT_OFFICIAL;
 	//
@@ -190,9 +223,22 @@ public class SPARQLHelper
 			classes.remove("http://www.w3.org/2000/01/rdf-schema#Class");
 			classes.remove("http://www.w3.org/2002/07/owl#DatatypeProperty");
 			classes.remove("http://www.w3.org/2002/07/owl#DatatypeProperty");
-
-			return classes;
+			if(!classes.isEmpty())
+				return classes;
+			else {
+				// very very bad endpoint
+				// using objects of rdf:type property
+				query = "SELECT distinct(?class) WHERE{?x a ?class.}";
+				classes = resultSetToList(querySelect(PrefixHelper.addPrefixes(query), endpoint, graph, model));
+				classes.remove("http://www.w3.org/1999/02/22-rdf-syntax-ns#Property");
+				classes.remove("http://www.w3.org/2000/01/rdf-schema#Class");
+				classes.remove("http://www.w3.org/2002/07/owl#DatatypeProperty");
+				classes.remove("http://www.w3.org/2002/07/owl#DatatypeProperty");
+				return classes;
+			}
 		}
+		
+		
 	}
 
 	public static String wrapIfNecessary(String uriString)
@@ -449,6 +495,7 @@ public class SPARQLHelper
 			qexec = QueryExecutionFactory.sparqlService(endpoint, sparqlQuery);
 			}
 		} else {
+			logger.info("Query to Model...");
 			qexec = QueryExecutionFactory.create(sparqlQuery, model);
 		}
 		
