@@ -3,6 +3,7 @@ package de.uni_leipzig.simba.saim.core;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.FileOutputStream;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.log4j.Logger;
@@ -99,8 +100,10 @@ public class Configuration
 		metric.param1 = acceptanceThreshold;
 	}
 	public double getVerificationThreshold() {
-		if( metric == null ||metric.param2 == null)
-			return getAcceptanceThreshold()-0.1d;
+		if( metric == null ||metric.param2 == null) {
+			  DecimalFormat twoDForm = new DecimalFormat("#.####");
+		        return Double.valueOf(twoDForm.format(getAcceptanceThreshold()-0.1d));
+		}
 		else
 			return metric.param2;
 	}
