@@ -18,7 +18,7 @@ import de.uni_leipzig.simba.query.ModelRegistry;
 import de.uni_leipzig.simba.query.QueryModule;
 import de.uni_leipzig.simba.query.QueryModuleFactory;
 
-import de.uni_leipzig.simba.saim.core.FileStore;
+import de.uni_leipzig.simba.saim.backend.FileStore;
 /**
  * Endpoint upload componenet with type select. Writes File to store, attempts to
  * register Model of the selected type.

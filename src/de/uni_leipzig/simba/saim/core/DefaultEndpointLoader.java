@@ -2,6 +2,7 @@ package de.uni_leipzig.simba.saim.core;
 
 import java.util.HashMap;
 import de.uni_leipzig.simba.io.KBInfo;
+import de.uni_leipzig.simba.saim.backend.FileStore;
 
 public class DefaultEndpointLoader
 {

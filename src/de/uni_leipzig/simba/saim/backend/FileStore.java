@@ -1,4 +1,4 @@
-package de.uni_leipzig.simba.saim.core;
+package de.uni_leipzig.simba.saim.backend;
 
 import java.io.File;
 import java.io.FileInputStream;
