@@ -29,6 +29,7 @@ Upload.FailedListener, Upload.Receiver {
 	VerticalLayout l = new VerticalLayout();
 	Panel root;
 	Select typeSelect;
+//	TextField name;
 	File file;
 	Logger logger = LoggerFactory.getLogger(EndPointUploader.class);
 	
@@ -48,7 +49,8 @@ Upload.FailedListener, Upload.Receiver {
 	    // Listen for events regarding the success of upload.
 	    upload.addListener((Upload.SucceededListener) this);
 	    upload.addListener((Upload.FailedListener) this);
-
+	    //upload.Listener(new ValueChangeListene);
+	    
 	    root.addComponent(upload);
 
 	    typeSelect = new Select("Type");
@@ -61,6 +63,9 @@ Upload.FailedListener, Upload.Receiver {
 		typeSelect.setNullSelectionAllowed(false);
 
 		root.addComponent(typeSelect);
+		
+//		name = new TextField("Name");
+//		root.addComponent(name);
 	}
 
 
@@ -94,8 +99,10 @@ Upload.FailedListener, Upload.Receiver {
 		root.addComponent(l);
 		KBInfo info = new KBInfo();
 		info.endpoint = file.getAbsolutePath();
+		info.id = file.getName();
 		try {
-			QueryModule fQModule = QueryModuleFactory.getQueryModule((String) typeSelect.getValue(), info);
+			String dumpType = (String) typeSelect.getValue();
+			QueryModule fQModule = QueryModuleFactory.getQueryModule(dumpType, info);
 			Model model = ModelRegistry.getInstance().getMap().get(info.endpoint);
              if (model == null) {
                  throw new RuntimeException("No model with id '" + info.endpoint + "' registered");
@@ -103,6 +110,7 @@ Upload.FailedListener, Upload.Receiver {
             	 l.setCaption("File parsed correctly. Model is registered!");
      			logger.info("Successfully read data of type: "+info.type);
      			logger.info("Registered Model of size ... "+model.size());
+     			info.type = dumpType;
      			rememberEndpoint(info);
              }
 		} catch(Exception  e) {

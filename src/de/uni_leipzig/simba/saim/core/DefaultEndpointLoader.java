@@ -66,7 +66,7 @@ public class DefaultEndpointLoader
 		defaults.put("Bibbase", createKBInfo("http://data.bibbase.org:2020/sparql", "", 300, "bibbase"));	
 		int i = 0;
 		for(KBInfo kbi : FileStore.getListOfInfos()) {
-			defaults.put("dump "+i, kbi);
+			defaults.put(kbi.id+" (local)", kbi);
 			i++;
 		}
 		return defaults;
