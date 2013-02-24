@@ -262,11 +262,6 @@ public class ClassMatchingPanel extends Panel
 		@Override
 		public void run() {
 			progress.setEnabled(true);
-//			Configuration config = Configuration.getInstance();
-//			Refresher refresher = new Refresher();
-//			SuggestionsRefreshListener listener = new SuggestionsRefreshListener();
-//			refresher.addListener(listener);
-//			addComponent(refresher);
 			// Cache parameter
 			List<Object> parameters = Arrays.asList(new Object[] {config.getSource().endpoint,
 					config.getTarget().endpoint,
@@ -292,17 +287,20 @@ public class ClassMatchingPanel extends Panel
 				if(stringBased) {
 					//FIXME are returned in the right order
 					LabelBasedClassMapper mapper = new LabelBasedClassMapper();
-					classMapping = mapper.getEntityMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id);
+					mapper.setSourceModel(config.sourceModel);
+					mapper.setTargetModel(config.targetModel);
+					classMapping = mapper.getEntityMapping(config.getSource().endpoint, config.getTarget().endpoint);
 				} else {
 					//FIXME are returned in the wrong order: call reverseSourceTarget().
 					DefaultClassMapper classMapper = new DefaultClassMapper(10);
+					classMapper.setSourceModel(config.sourceModel);
+					classMapper.setTargetModel(config.targetModel);
 					classMapping = classMapper.getEntityMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id).reverseSourceTarget();
 				}
 				if(CACHING)	{
 					cache = CacheManager.getInstance().getCache("classmatching"); //$NON-NLS-1$
 					if(cache.getStatus()==net.sf.ehcache.Status.STATUS_UNINITIALISED)
 						{cache.initialise();}
-//					List<Object> parameters = Arrays.asList(new Object[] {config.getSource().endpoint,config.getTarget().endpoint,config.getSource().id,config.getTarget().id});
 					logger.info("Cache saving class matching map of size " + classMapping.map.size()); //$NON-NLS-1$
 					cache.put(new Element(parameters, classMapping.map));
 					cache.flush();
@@ -310,8 +308,6 @@ public class ClassMatchingPanel extends Panel
 			}
 			display(classMapping);
 			progress.setEnabled(false);
-//			removeComponent(progress);
-//			listener.running=false;
 		}
 	}
 }

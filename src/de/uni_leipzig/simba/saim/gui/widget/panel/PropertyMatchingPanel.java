@@ -577,9 +577,13 @@ public class PropertyMatchingPanel extends Panel
 			if(stringBased) {
 				logger.info("Starting string based PropertyMapper");
 				propMap = new LabelBasedPropertyMapper();
+				propMap.setSourceModel(config.sourceModel);
+				propMap.setTargetModel(config.targetModel);
 			} else {
 				logger.info("Starting default PropertyMapper");
 				propMap = new DefaultPropertyMapper();
+				propMap.setSourceModel(config.sourceModel);
+				propMap.setTargetModel(config.targetModel);
 			}
 			try {
 				Mapping m = propMap.getPropertyMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().getClassOfendpoint(), config.getTarget().getClassOfendpoint());
