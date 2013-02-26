@@ -4,6 +4,8 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.FileOutputStream;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.log4j.Logger;
@@ -102,7 +104,17 @@ public class Configuration
 	public double getVerificationThreshold() {
 		if( metric == null ||metric.param2 == null) {
 			  DecimalFormat twoDForm = new DecimalFormat("#.####");
-		        return Double.valueOf(twoDForm.format(getAcceptanceThreshold()-0.1d));
+			  System.out.println("guessed verfication threshold: "+(getAcceptanceThreshold()-0.1d));
+			  NumberFormat format = NumberFormat.getInstance();
+			  Number number;
+			try {
+				number = format.parse(twoDForm.format(getAcceptanceThreshold()-0.1d));
+			} catch (ParseException e) {
+				System.err.println(e);
+				return 0.3d;
+			}
+			  return number.doubleValue();
+//		        return Double.valueOf).);
 		}
 		else
 			return metric.param2;
