@@ -39,6 +39,8 @@ import csplugins.layout.algorithms.circularLayout.CircularLayoutAlgorithm;
 import csplugins.layout.algorithms.force.ForceDirectedLayout;
 import csplugins.layout.algorithms.hierarchicalLayout.HierarchicalLayoutAlgorithm;
 import cytoscape.layout.algorithms.GridNodeLayout;
+import de.uni_leipzig.simba.saim.backend.User;
+import de.uni_leipzig.simba.saim.backend.UserAuthenticator;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.metric.Node;
 import de.uni_leipzig.simba.saim.gui.widget.ConfigUploader;
@@ -381,26 +383,32 @@ public class SAIMApplication extends Application implements TransactionListener
 			form.addListener(new LoginListener() {				
 				@Override
 				public void onLogin(LoginEvent event) {
-					// TODO Auto-generated method stub
 					String pw = event.getLoginParameter("password");
 		            String username = event.getLoginParameter("username");
-		            if (username.equalsIgnoreCase("admin") && pw.equals("saim4ever")) {
-		                //TODO Log him in
-		            	System.out.println("logging in");
-		            	app.getMainWindow().showNotification("Logged in as Admin successfully.", 
-		            			Notification.TYPE_HUMANIZED_MESSAGE);	
-		            	
-		            	app.getMainWindow().setContent(mainLayout);
-		            	WebApplicationContext ctx = ((WebApplicationContext) getContext());
-		            	HttpSession session = ctx.getHttpSession();
-		            	session.setAttribute("user", username);
-		            	session.setAttribute("userrole", "admin");
-		            	session.setAttribute("loggedIn", true);
-		            	//buildMenuBar();
-		            	refresh();
+		            UserAuthenticator auth = new UserAuthenticator();
+		            if (auth.existsUser(username)) {
+		            	User u = auth.getUser(username);
+		            	if(auth.authenticate(u, pw)) {
+			            	logger.info("logging as User: "+u);
+			            	app.getMainWindow().showNotification("Logged in as "+u+" successfully.", 
+			            			Notification.TYPE_HUMANIZED_MESSAGE);	
+			            	
+			            	app.getMainWindow().setContent(mainLayout);
+			            	WebApplicationContext ctx = ((WebApplicationContext) getContext());
+			            	HttpSession session = ctx.getHttpSession();
+			            	session.setAttribute("user", username);
+			            	session.setAttribute("userrole", "admin");
+			            	session.setAttribute("loggedIn", true);
+			            	//buildMenuBar();
+			            	refresh();
+		            	} else {
+		            		app.getMainWindow().showNotification(
+			                        "Sorry the given password(\""+pw+"\") for User "+u+" was wrong. " ,
+			                        Notification.TYPE_WARNING_MESSAGE);
+		            	}
 		            } else {
 		                app.getMainWindow().showNotification(
-		                        "Wrong password.",
+		                        "Sorry a User with this name doesn't exist.",
 		                        Notification.TYPE_WARNING_MESSAGE);
 		            }
 				}
