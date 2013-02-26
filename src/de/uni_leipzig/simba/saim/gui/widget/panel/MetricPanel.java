@@ -9,14 +9,12 @@ import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Button.ClickEvent;
 import de.konrad.commons.sparql.PrefixHelper;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
@@ -41,7 +39,7 @@ public class MetricPanel extends Panel{
 	private VerticalLayout sourceLayout, targetLayout;
 	private HorizontalLayout buttonLayout;
 	private Set<String> sourceProps,targetProps;
-	private Button selfConfigButton, learnButton, startMapping, setMetric;
+	private Button selfConfigButton, learnButton, startMapping;
 
 	@Getter private SAIMCytoprocess saimcytopro;
 

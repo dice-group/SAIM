@@ -64,10 +64,9 @@ public class DefaultEndpointLoader
 		defaults.put("WordNet 3.0 (VU Amsterdam)", createKBInfo("http://api.talis.com/stores/wordnet/services/sparql", "", 1000, "wordnet"));
 		defaults.put("WordNet (RKBExplorer)", createKBInfo("http://wordnet.rkbexplorer.com/sparql/", "", 1000, "wordnet"));
 		defaults.put("Bibbase", createKBInfo("http://data.bibbase.org:2020/sparql", "", 300, "bibbase"));	
-		int i = 0;
+
 		for(KBInfo kbi : FileStore.getListOfInfos()) {
 			defaults.put(kbi.id+" (local)", kbi);
-			i++;
 		}
 		return defaults;
 	}

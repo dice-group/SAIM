@@ -8,7 +8,6 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.FormFieldFactory;
 import com.vaadin.ui.Select;
-import com.vaadin.ui.Slider;
 import de.uni_leipzig.simba.saim.Messages;
 /**
  * Configurator for the Meshbased selfconfigurator.
@@ -28,8 +27,7 @@ public class SelfConfigMeshBasedForm extends Form {
 	public SelfConfigMeshBasedForm(SelfConfigMeshBasedBean bean, final Messages messages) {
 		this.messages = messages;
 		setFormFieldFactory(new SelfConfigMeshBasedFormFieldFactory());
-		@SuppressWarnings("unchecked")
-		BeanItem item = new BeanItem(bean);
+		BeanItem<SelfConfigMeshBasedBean> item = new BeanItem<SelfConfigMeshBasedBean>(bean);
 		setItemDataSource(item);
 		this.setWriteThrough(true);
 	}

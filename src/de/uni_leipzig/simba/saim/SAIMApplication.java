@@ -73,11 +73,7 @@ public class SAIMApplication extends Application implements TransactionListener
 	public void init()
 	{
 		getContext().addTransactionListener ( this );
-		this.
-		// reproduce failure on headless environments
-		//		System.setProperty("java.awt.headless", "true");
-		logger.debug("SAIMApplication()");
-		//		messages = new Messages(Locale.getDefault());
+		SAIMApplication.logger.debug("SAIMApplication()");
 		messages = new Messages(Locale.ENGLISH);
 		mainWindow = new Window();
 		ParameterHandler parameterHandler = new ParameterHandler()
@@ -215,7 +211,7 @@ public class SAIMApplication extends Application implements TransactionListener
     		MenuBar.MenuItem logIn = menuBar.addItem("Login", null, new LoginCommand(this));
     		logIn.setEnabled(true);
     	} else {
-    		MenuBar.MenuItem logIn = menuBar.addItem("Logged in as "+session.getAttribute("user"), null);
+    		menuBar.addItem("Logged in as "+session.getAttribute("user"), null);
     	}
 		
 		return menuBar;

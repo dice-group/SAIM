@@ -11,7 +11,6 @@ import com.vaadin.ui.VerticalLayout;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.genetics.util.Pair;
 import de.uni_leipzig.simba.learning.query.LabelBasedPropertyMapper;
-import de.uni_leipzig.simba.learning.query.PropertyMapper;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;

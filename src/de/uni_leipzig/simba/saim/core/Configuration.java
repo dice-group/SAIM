@@ -22,7 +22,6 @@ import de.uni_leipzig.simba.genetics.util.PropertyMapping;
 import de.uni_leipzig.simba.io.ConfigReader;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.query.ModelRegistry;
-import de.uni_leipzig.simba.query.QueryModule;
 import de.uni_leipzig.simba.query.QueryModuleFactory;
 import de.uni_leipzig.simba.saim.core.metric.MetricParser;
 import de.uni_leipzig.simba.saim.core.metric.Output;
@@ -32,14 +31,10 @@ public class Configuration
 	private Logger logger = Logger.getLogger(Configuration.class);
 
 	protected Output metric = null;
-
-//	private static Configuration instance = new Configuration();
 	private PropertyChangeSupport changes = new PropertyChangeSupport( this );
 	public static final String SETTING_CONFIG = "setting from xml";
 	private String id = null;
 	private String name;
-//	private double acceptanceThreshold=0.5d;
-//	private double reviewThreshold=0.4d;
 	int granularity=2;
 	public String sameAsRelation = "owl:sameAs";
 	private ConfigReader cR = new ConfigReader();
@@ -82,7 +77,6 @@ public class Configuration
 			if(param2 <= 1)
 				metric.param2 = param2;
 		} else {
-			//donno
 			metric = MetricParser.parse(metricExpression, source.var.replaceAll("\\?", ""));
 		}
 
@@ -114,7 +108,6 @@ public class Configuration
 				return 0.3d;
 			}
 			  return number.doubleValue();
-//		        return Double.valueOf).);
 		}
 		else
 			return metric.param2;
@@ -127,9 +120,6 @@ public class Configuration
 
 	public Configuration() {}
 	public void store() {}
-
-	/** Implements Singleton pattern.*/
-//	public static Configuration getInstance() {return instance;}
 
 	public void setSource(KBInfo source) {
 		this.source = source;
@@ -147,7 +137,7 @@ public class Configuration
 	public Model setModel(KBInfo i) {
 		try {
 			String fileType = i.endpoint.substring(i.endpoint.lastIndexOf(".")+1);
-			QueryModule fQModule = QueryModuleFactory.getQueryModule(fileType, i);
+			QueryModuleFactory.getQueryModule(fileType, i);
 			Model model = ModelRegistry.getInstance().getMap().get(i.endpoint);	
 	      logger.info("Setting a query model");  
 			return model;
@@ -188,35 +178,6 @@ public class Configuration
 		changes.removePropertyChangeListener(l);
 	}
 
-	//	/**Set default namespaces in both source and target KBInfo  */
-	//	public void setDefaultNameSpaces() {
-	//		source.prefixes = getDefaultNameSpaces();
-	//		target.prefixes = getDefaultNameSpaces();
-	//	}
-	//
-	//	/**
-	//	 * Function returns HashMap of label and uri of often used namespaces.
-	//	 * @return HashMap<label,uri>
-	//	 */
-	//	public HashMap<String, String> getDefaultNameSpaces()
-	//	{
-	//		HashMap<String, String> defs = new HashMap<String, String>();
-	//		//		  defs.put("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-	//		//		  defs.put("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
-	//		//		  defs.put("foaf", "http://xmlns.com/foaf/0.1/");
-	//		//		  defs.put("owl", "http://www.w3.org/2002/07/owl#");
-	//		//		  defs.put("diseasome", "http://www4.wiwiss.fu-berlin.de/diseasome/resource/diseasome/");
-	//		//		  defs.put("dbpedia", "http://dbpedia.org/ontology/");
-	//		//		  defs.put("dbpedia-p", "http://dbpedia.org/property/");
-	//		//		  defs.put("dc", "http://purl.org/dc/terms/");
-	//		//		  defs.put("sider", "http://www4.wiwiss.fu-berlin.de/sider/resource/sider/");
-	//		//		  defs.put("drugbank", "http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/");
-	//		//		  defs.put("dailymed", "http://www4.wiwiss.fu-berlin.de/dailymed/resource/dailymed/");
-	//		Map<String, String> map = PrefixHelper.getPrefixes();
-	//		for(Entry<String, String> e : map.entrySet())
-	//			defs.put(e.getKey(), e.getValue());
-	//		return defs;
-	//	}
 
 	private void fillKBElement(Element element, KBInfo kb)
 	{
@@ -405,8 +366,6 @@ public class Configuration
 		result = prime * result + (isLocal ? 1231 : 1237);
 		result = prime * result + ((metric == null) ? 0 : metric.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		//		result = prime * result
-		//				+ ((propertyMapping == null) ? 0 : propertyMapping.hashCode());
 		result = prime * result
 				+ ((sameAsRelation == null) ? 0 : sameAsRelation.hashCode());
 		result = prime * result + ((source == null) ? 0 : source.hashCode());
@@ -446,17 +405,7 @@ public class Configuration
 			if (other.name != null) return false;
 		}
 		else if (!name.equals(other.name)) return false;
-		//		if (propertyMapping == null)
-		//		{
-		//			if (other.propertyMapping != null) return false;
-		//		}
-		//		else
-		//		{
-		//			if(other.propertyMapping==null) return false;
-		//			if (!propertyMapping.getStringPropMapping().map.equals(other.propertyMapping.getStringPropMapping().map)) return false;
-		//			if (!propertyMapping.getNumberPropMapping().map.equals(other.propertyMapping.getNumberPropMapping().map)) return false;
-		//
-		//		}
+
 		if (sameAsRelation == null)
 		{
 			if (other.sameAsRelation != null) return false;

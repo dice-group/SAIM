@@ -14,9 +14,6 @@ import de.uni_leipzig.simba.saim.core.Configuration;
  * @author Lyko
  */
 public class ThresholdForm extends Form {
-
-	/**
-	 */
 	private static final long serialVersionUID = 108894012576028115L;
 	private final Messages messages;
 	public static final String elementsWidth = "100px"; //$NON-NLS-1$
@@ -24,11 +21,9 @@ public class ThresholdForm extends Form {
 
 	public ThresholdForm(final Messages messages, ThresholdBean bean) {
 		this.messages = messages;
-
-		 @SuppressWarnings("unchecked")
-		BeanItem item = new BeanItem(bean);
-		 setItemDataSource(item);
-		 this.setWriteThrough(true);
+		BeanItem<ThresholdBean> item = new BeanItem<ThresholdBean>(bean);
+		setItemDataSource(item);
+	this.setWriteThrough(true);
 	}
 
 	class ThresholdFormFieldFactory implements FormFieldFactory {

@@ -7,7 +7,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.FormFieldFactory;
-import com.vaadin.ui.Slider;
 import de.uni_leipzig.simba.saim.Messages;
 /**
  * Form used to configure genetic metric learner.
@@ -25,12 +24,9 @@ public class LearnerConfigurationForm extends Form
 	{
 		this.messages=messages;
 		setCaption(messages.getString("LearnerConfigurationForm.learnerconfigcaption")); //$NON-NLS-1$
-//		setDescription("Specify parameters for the genetic metric learner. Note that higher values for the number of generations and the population size will lead in longer execution time.");
-
 		setFormFieldFactory(new LearnerCofigurationFormFieldFactory());
 
-		 @SuppressWarnings("unchecked")
-		BeanItem item = new BeanItem(bean);
+		BeanItem<LearnerConfigurationBean> item = new BeanItem<LearnerConfigurationBean>(bean);
 
 		 setItemDataSource(item);
 		 this.setWriteThrough(true);

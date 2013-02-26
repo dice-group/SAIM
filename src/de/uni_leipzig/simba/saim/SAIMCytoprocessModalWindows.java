@@ -28,13 +28,13 @@ public class SAIMCytoprocessModalWindows {
 	//SAIMApplication
 	private final Messages messages;
 	//SAIMApplication
-	private Configuration config;
+//	private Configuration config;
 	//SAIMApplication
 	private Window mainWindow;
 
 	public SAIMCytoprocessModalWindows(Messages messages, Configuration config,	Window mainWindow) {
 		this.messages = messages;
-		this.config = config;
+//		this.config = config;
 		this.mainWindow = mainWindow;
 	}
 

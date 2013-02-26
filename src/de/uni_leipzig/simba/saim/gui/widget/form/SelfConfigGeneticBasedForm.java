@@ -9,7 +9,6 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.FormFieldFactory;
 import com.vaadin.ui.Select;
-import com.vaadin.ui.Slider;
 import de.uni_leipzig.simba.saim.Messages;
 
 public class SelfConfigGeneticBasedForm extends Form {
@@ -29,8 +28,7 @@ public class SelfConfigGeneticBasedForm extends Form {
 
 		setFormFieldFactory(new SelfConfigGeneticBasedFormFieldFactory());
 
-		@SuppressWarnings("unchecked")
-		BeanItem item = new BeanItem(bean);
+		BeanItem<SelfConfigGeneticBasedBean> item = new BeanItem<SelfConfigGeneticBasedBean>(bean);
 
 		setItemDataSource(item);
 		this.setWriteThrough(true);

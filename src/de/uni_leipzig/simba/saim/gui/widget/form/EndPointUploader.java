@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.LinkedList;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +14,6 @@ import com.vaadin.ui.Upload.FailedEvent;
 import com.vaadin.ui.Upload.SucceededEvent;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.query.ModelRegistry;
-import de.uni_leipzig.simba.query.QueryModule;
 import de.uni_leipzig.simba.query.QueryModuleFactory;
 
 import de.uni_leipzig.simba.saim.backend.FileStore;
@@ -26,6 +24,7 @@ import de.uni_leipzig.simba.saim.backend.FileStore;
  */
 public class EndPointUploader extends CustomComponent implements Upload.SucceededListener, 
 Upload.FailedListener, Upload.Receiver {
+	private static final long serialVersionUID = 1L;
 	VerticalLayout l = new VerticalLayout();
 	Panel root;
 	Select typeSelect;
@@ -102,7 +101,7 @@ Upload.FailedListener, Upload.Receiver {
 		info.id = file.getName();
 		try {
 			String dumpType = (String) typeSelect.getValue();
-			QueryModule fQModule = QueryModuleFactory.getQueryModule(dumpType, info);
+			QueryModuleFactory.getQueryModule(dumpType, info);
 			Model model = ModelRegistry.getInstance().getMap().get(info.endpoint);
              if (model == null) {
                  throw new RuntimeException("No model with id '" + info.endpoint + "' registered");

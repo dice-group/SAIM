@@ -17,6 +17,7 @@ import de.uni_leipzig.simba.io.KBInfo;
  * @author Lyko
  */
 public class PreprocessingForm extends Form{
+	private static final long serialVersionUID = -8922925671391148363L;
 	KBInfo info;
 	String prop;
 	Logger logger = LoggerFactory.getLogger(PreprocessingForm.class);
@@ -60,6 +61,8 @@ public class PreprocessingForm extends Form{
 
 		for(final Entry<String, CheckBox> box : boxes.entrySet()) {
 			box.getValue().addListener(new ValueChangeListener() {
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public void valueChange(
 						com.vaadin.data.Property.ValueChangeEvent event) {

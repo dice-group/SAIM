@@ -35,7 +35,7 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver
 	private final Button executeFileButton;
 	private final NativeSelect localExamplesSelect;
 	private final Button runExampleButton;
-	private static final String DEFAULT_LIMES_XML = "examples/dbpedia-linkedmdb.xml";
+	static final String DEFAULT_LIMES_XML = "examples/dbpedia-linkedmdb.xml";
 	Button add;
 	ExampleLoader loader;
 	Logger logger = Logger.getLogger("ConfigUploader.class");
