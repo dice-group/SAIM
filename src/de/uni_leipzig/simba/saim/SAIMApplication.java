@@ -4,11 +4,13 @@ import java.io.File;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import lombok.Getter;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.vaadin.teemu.wizards.Wizard;
+//import org.vaadin.teemu.wizards.Wizard;
 
 import cern.colt.Arrays;
 
@@ -22,12 +24,16 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
+import com.vaadin.ui.LoginForm;
+import com.vaadin.ui.LoginForm.LoginListener;
 import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.LoginForm.LoginEvent;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Window.Notification;
 
 import csplugins.layout.algorithms.circularLayout.CircularLayoutAlgorithm;
 import csplugins.layout.algorithms.force.ForceDirectedLayout;
@@ -50,7 +56,7 @@ public class SAIMApplication extends Application implements TransactionListener
 	private static final long serialVersionUID = -7665596682464881860L;
 	@Getter private  Window mainWindow;
 	private VerticalLayout mainLayout;
-	private Wizard wizard;
+//	private Wizard wizard;
 	Window sub;
 	transient Configuration config = new Configuration();
 	Panel content;
@@ -64,7 +70,8 @@ public class SAIMApplication extends Application implements TransactionListener
 	@Override
 	public void init()
 	{
-		getContext ().addTransactionListener ( this );
+		getContext().addTransactionListener ( this );
+		this.
 		// reproduce failure on headless environments
 		//		System.setProperty("java.awt.headless", "true");
 		logger.debug("SAIMApplication()");
@@ -102,7 +109,7 @@ public class SAIMApplication extends Application implements TransactionListener
 		mainWindow.addComponent(menuBar=buildMenuBar());
 		content = new MetricPanel(messages);
 		mainLayout.addComponent(content);
-		wizard = new Wizard();
+//		wizard = new Wizard();
 		setTheme("saim");
 		setMainWindow(mainWindow);
 	}
@@ -126,14 +133,14 @@ public class SAIMApplication extends Application implements TransactionListener
 		MenuItem fileMenu = menuBar.addItem(messages.getString("file"), null, null); //$NON-NLS-1$
 		fileMenu.addItem(messages.getString("startnewconfig"), null, new StartCommand(this));
 
-		//		fileMenu.addItem(messages.getString("open"), null, null).setEnabled(false); //$NON-NLS-1$
-		//		fileMenu.addItem(messages.getString("save"), null, null).setEnabled(false); //$NON-NLS-1$
-
 		fileMenu.addItem(messages.getString("importlimes"), null, importLIMESCommand).setEnabled(true);		 //$NON-NLS-1$
 		fileMenu.addItem(messages.getString("exportlimes"), null, exportLIMESCommand).setEnabled(true); //$NON-NLS-1$
-
-		//TODO for testing to upload dumped endpoints.
-		if(System.getProperty("user.name").equals("Lyko"))
+		
+		WebApplicationContext ctx = ((WebApplicationContext) getContext());
+    	HttpSession session = ctx.getHttpSession();
+		
+    	if(session.getAttribute("userrole")!= null && 
+    			session.getAttribute("userrole").toString().equalsIgnoreCase("admin"))
 			fileMenu.addItem("Upload Endpoint", null, uploadEndpointCommand);
 
 
@@ -142,14 +149,16 @@ public class SAIMApplication extends Application implements TransactionListener
 		languageMenu.addItem(messages.getString("english"), null, new SetLanguageCommand("en")).setEnabled(true); //$NON-NLS-1$
 
 		// zoom
-		menuBar.addItem(messages.getString("menubar_zoom_in"), null,new MenuBar.Command()	{
+		MenuItem zoom = menuBar.addItem("Zoom", null);
+		
+		zoom.addItem(messages.getString("menubar_zoom_in"), null,new MenuBar.Command()	{
 			public void menuSelected(MenuItem selectedItem) {
 				if(selectedItem.getText().equals(messages.getString("menubar_zoom_in"))){//$NON-NLS-1$
 					((MetricPanel)content).getSaimcytopro().zoomIn(true);
 				}
 			}
 		});
-		menuBar.addItem(messages.getString("menubar_zoom_fit"), null,new MenuBar.Command()	{
+		zoom.addItem(messages.getString("menubar_zoom_fit"), null,new MenuBar.Command()	{
 			public void menuSelected(MenuItem selectedItem) {
 				if(selectedItem.getText().equals(messages.getString("menubar_zoom_fit"))){//$NON-NLS-1$
 
@@ -157,7 +166,7 @@ public class SAIMApplication extends Application implements TransactionListener
 				}
 			}
 		});
-		menuBar.addItem(messages.getString("menubar_zoom_out"), null,new MenuBar.Command()	{
+		zoom.addItem(messages.getString("menubar_zoom_out"), null,new MenuBar.Command()	{
 			public void menuSelected(MenuItem selectedItem) {
 				if(selectedItem.getText().equals(messages.getString("menubar_zoom_out"))){//$NON-NLS-1$
 					((MetricPanel)content).getSaimcytopro().zoomIn(false);
@@ -197,6 +206,16 @@ public class SAIMApplication extends Application implements TransactionListener
 			}
 		});
 
+		
+    	if(session.getAttribute("loggedIn")== null ||
+    			!(boolean)session.getAttribute("loggedIn")) {
+//    		menuBar.addItem(" | ", null);
+    		MenuBar.MenuItem logIn = menuBar.addItem("Login", null, new LoginCommand(this));
+    		logIn.setEnabled(true);
+    	} else {
+    		MenuBar.MenuItem logIn = menuBar.addItem("Logged in as "+session.getAttribute("user"), null);
+    	}
+		
 		return menuBar;
 	}
 
@@ -207,6 +226,71 @@ public class SAIMApplication extends Application implements TransactionListener
 	}
 
 
+
+	public Configuration getConfig()
+	{
+		if(config == null)
+			config = new Configuration();
+		return config;
+	}
+
+
+	/**
+	 * Method is called if any action was taken in a subwindow that needs the main content to update.
+	 */
+	public void refresh()
+	{
+		//mainLayout.removeComponent(content);
+		mainWindow.removeComponent(menuBar);
+		//FIXME call refresh() method instead of constructing completely new?
+		//content = new MetricPanel(messages);
+		content.attach();
+		//mainLayout.addComponent(content);
+
+		mainLayout.addComponent(menuBar=buildMenuBar(),0);
+
+
+	}
+
+	/**
+	 * Get the WEB-INF Folder on runtime
+	 * @return
+	 */
+	public File getWebInfFolder() {
+		WebApplicationContext context = (WebApplicationContext)getContext();
+		File f = new File ( context.getHttpSession().getServletContext().getRealPath("/WEB-INF") );
+		System.out.println(f.getAbsolutePath());
+		return f;
+	}
+
+	@Override
+	public void transactionStart ( Application application, Object o )
+	{
+		if ( application == SAIMApplication.this )
+		{
+			currentApplication.set ( this );
+		}
+	}
+	@Override
+	public void transactionEnd ( Application application, Object o )
+	{
+		if ( application == SAIMApplication.this )
+		{
+			currentApplication.set ( null );
+			currentApplication.remove ();
+		}
+	}
+
+	/**
+	 * For access in non-UI classes.
+	 * @TODO Heavy testing
+	 * @return SAIMApplication instance
+	 */
+	public static SAIMApplication getInstance()
+	{
+		return currentApplication.get ();
+	}
+	
 	MenuBar.Command importLIMESCommand = new MenuBar.Command()
 	{
 		public void menuSelected(MenuItem selectedItem) {
@@ -271,31 +355,6 @@ public class SAIMApplication extends Application implements TransactionListener
 		public void menuSelected(MenuItem selectedItem) {setLanguage(language);}
 	};
 
-	public Configuration getConfig()
-	{
-		if(config == null)
-			config = new Configuration();
-		return config;
-	}
-
-
-	/**
-	 * Method is called if any action was taken in a subwindow that needs the main content to update.
-	 */
-	public void refresh()
-	{
-		//mainLayout.removeComponent(content);
-		mainWindow.removeComponent(menuBar);
-		//FIXME call refresh() method instead of constructing completely new?
-		//content = new MetricPanel(messages);
-		content.attach();
-		//mainLayout.addComponent(content);
-
-		mainLayout.addComponent(menuBar=buildMenuBar(),0);
-
-
-	}
-
 	public class StartCommand implements Command
 	{
 		SAIMApplication app;
@@ -311,42 +370,43 @@ public class SAIMApplication extends Application implements TransactionListener
 		}
 	}
 
-	/**
-	 * Get the WEB-INF Folder on runtime
-	 * @return
-	 */
-	public File getWebInfFolder() {
-		WebApplicationContext context = (WebApplicationContext)getContext();
-		File f = new File ( context.getHttpSession().getServletContext().getRealPath("/WEB-INF") );
-		System.out.println(f.getAbsolutePath());
-		return f;
-	}
+	public class LoginCommand implements Command
+	{
+		SAIMApplication app;
+		public LoginCommand(SAIMApplication app) {this.app = app;}
 
-	@Override
-	public void transactionStart ( Application application, Object o )
-	{
-		if ( application == SAIMApplication.this )
-		{
-			currentApplication.set ( this );
+		@Override
+		public void menuSelected(MenuItem selectedItem) {
+			LoginForm form = new LoginForm();
+			form.addListener(new LoginListener() {				
+				@Override
+				public void onLogin(LoginEvent event) {
+					// TODO Auto-generated method stub
+					String pw = event.getLoginParameter("password");
+		            String username = event.getLoginParameter("username");
+		            if (username.equalsIgnoreCase("admin") && pw.equals("saim4ever")) {
+		                //TODO Log him in
+		            	System.out.println("logging in");
+		            	app.getMainWindow().showNotification("Logged in as Admin successfully.", 
+		            			Notification.TYPE_HUMANIZED_MESSAGE);	
+		            	
+		            	app.getMainWindow().setContent(mainLayout);
+		            	WebApplicationContext ctx = ((WebApplicationContext) getContext());
+		            	HttpSession session = ctx.getHttpSession();
+		            	session.setAttribute("user", username);
+		            	session.setAttribute("userrole", "admin");
+		            	session.setAttribute("loggedIn", true);
+		            	//buildMenuBar();
+		            	refresh();
+		            } else {
+		                app.getMainWindow().showNotification(
+		                        "Wrong password.",
+		                        Notification.TYPE_WARNING_MESSAGE);
+		            }
+				}
+			});
+			app.getMainWindow().setContent(form);
 		}
-	}
-	@Override
-	public void transactionEnd ( Application application, Object o )
-	{
-		if ( application == SAIMApplication.this )
-		{
-			currentApplication.set ( null );
-			currentApplication.remove ();
-		}
-	}
-
-	/**
-	 * For access in non-UI classes.
-	 * @TODO Heavy testing
-	 * @return SAIMApplication instance
-	 */
-	public static SAIMApplication getInstance()
-	{
-		return currentApplication.get ();
+		
 	}
 }
