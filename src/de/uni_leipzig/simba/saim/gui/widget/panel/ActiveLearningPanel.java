@@ -8,6 +8,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Layout;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.genetics.learner.GeneticActiveLearner;
+import de.uni_leipzig.simba.genetics.learner.GeneticCorrelationActiveLearner;
 import de.uni_leipzig.simba.genetics.util.PropertyMapping;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
@@ -17,6 +18,12 @@ import de.uni_leipzig.simba.saim.gui.widget.form.LearnerConfigurationBean;
 @SuppressWarnings("serial")
 public class ActiveLearningPanel extends MetricLearnPanel
 {
+
+	public static enum LEARNER {
+		AL_EAGLE, AL_CLUSTER, AL_WD
+	}
+	LEARNER method = LEARNER.AL_EAGLE;
+
 	private final Messages messages;
 	//	public ActiveLearningPanel() {
 	//		super();
@@ -24,10 +31,11 @@ public class ActiveLearningPanel extends MetricLearnPanel
 	//		init();
 	//	}
 
-	public ActiveLearningPanel(SAIMApplication application, LearnerConfigurationBean learnerConfigBean,final Messages messages)
+	public ActiveLearningPanel(SAIMApplication application, LearnerConfigurationBean learnerConfigBean, LEARNER learner,final Messages messages)
 	{
 		super(application, learnerConfigBean);
 		this.messages=messages;
+		this.method = learner;
 		learn.addListener(new ActiveLearnButtonClickListener(learnLayout));
 	}
 	@Override
@@ -59,7 +67,12 @@ public class ActiveLearningPanel extends MetricLearnPanel
 			params.put("propertyMapping", new PropertyMapping());
 		params.put("granularity", 2);
 		params.put("config", config.getLimesConfiReader());
-		learner = new GeneticActiveLearner();
+		switch(method) {
+			case AL_EAGLE: learner = new GeneticActiveLearner(); break;
+			case AL_CLUSTER: learner = new GeneticCorrelationActiveLearner(GeneticCorrelationActiveLearner.CLUSTERING); break;
+			case AL_WD: learner = new GeneticCorrelationActiveLearner(GeneticCorrelationActiveLearner.WEIGHT_DECAY); break;
+		}
+		
 		try {
 			learner.init(config.getSource(), config.getTarget(), params);
 		} catch (InvalidConfigurationException e) {
