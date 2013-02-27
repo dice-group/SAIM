@@ -172,16 +172,18 @@ public class LearningPanel extends PerformPanel
 		public void valueChange(ValueChangeEvent event) {
 			if(event.getProperty().toString().equals(messages.getString("LearningPanel.gpbatchlearner"))) { //$NON-NLS-1$
 				learnerPanel = new BatchLearningPanel(application, learnerConfigBean, messages);
-			}
+			} else
 			if(event.getProperty().toString().equals(messages.getString("LearningPanel.ALEAGE"))) { //$NON-NLS-1$
 				learnerPanel = new ActiveLearningPanel(application, learnerConfigBean, LEARNER.AL_EAGLE, messages);
-			}
+			} else
 			if(event.getProperty().toString().equals(messages.getString("LearningPanel.ALCLUSTERING"))) { //$NON-NLS-1$
 				learnerPanel = new ActiveLearningPanel(application, learnerConfigBean, LEARNER.AL_CLUSTER, messages);
-			}
+			} else
 			if(event.getProperty().toString().equals(messages.getString("LearningPanel.ALWEIGHTDECAY"))) { //$NON-NLS-1$
 				learnerPanel = new ActiveLearningPanel(application, learnerConfigBean, LEARNER.AL_WD, messages);
-			}
+			} else {
+				return;
+			}			
 			mainLayout.removeAllComponents();
 			mainLayout.addComponent(learnerPanel);
 			learnerPanel.start();

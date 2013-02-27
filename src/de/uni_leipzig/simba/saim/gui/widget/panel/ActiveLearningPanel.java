@@ -18,19 +18,25 @@ import de.uni_leipzig.simba.saim.gui.widget.form.LearnerConfigurationBean;
 @SuppressWarnings("serial")
 public class ActiveLearningPanel extends MetricLearnPanel
 {
-
+	/**
+	 * Enum to choose the Active Learning approach.
+	 * @author Klaus Lyko
+	 *
+	 */
 	public static enum LEARNER {
 		AL_EAGLE, AL_CLUSTER, AL_WD
 	}
 	LEARNER method = LEARNER.AL_EAGLE;
 
 	private final Messages messages;
-	//	public ActiveLearningPanel() {
-	//		super();
-	//		learn.addListener(new ActiveLearnButtonClickListener(learnLayout));
-	//		init();
-	//	}
 
+	/**
+	 * 
+	 * @param application
+	 * @param learnerConfigBean
+	 * @param learner LEARNER enum 
+	 * @param messages
+	 */
 	public ActiveLearningPanel(SAIMApplication application, LearnerConfigurationBean learnerConfigBean, LEARNER learner,final Messages messages)
 	{
 		super(application, learnerConfigBean);
@@ -67,10 +73,12 @@ public class ActiveLearningPanel extends MetricLearnPanel
 			params.put("propertyMapping", new PropertyMapping());
 		params.put("granularity", 2);
 		params.put("config", config.getLimesConfiReader());
+		
 		switch(method) {
 			case AL_EAGLE: learner = new GeneticActiveLearner(); break;
 			case AL_CLUSTER: learner = new GeneticCorrelationActiveLearner(GeneticCorrelationActiveLearner.CLUSTERING); break;
 			case AL_WD: learner = new GeneticCorrelationActiveLearner(GeneticCorrelationActiveLearner.WEIGHT_DECAY); break;
+			default: learner = new GeneticActiveLearner(); break;
 		}
 		
 		try {
