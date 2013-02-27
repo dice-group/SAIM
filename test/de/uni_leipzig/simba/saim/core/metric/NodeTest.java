@@ -32,7 +32,7 @@ public class NodeTest
 			assertTrue("metric strings not equal, s="+s+", o="+o,o.toString().equalsIgnoreCase(s));
 			assertTrue(o.isComplete());
 		}
-		String s = "ADD(0.6*jaccard(x.dc:title,y.dc:title)|0.5,0.6*cosine(x.authors,y.authors)|0.5)|0.5";
+//		String s = "ADD(0.6*jaccard(x.dc:title,y.dc:title)|0.5,0.6*cosine(x.authors,y.authors)|0.5)|0.5";
 	}
 
 	@Test

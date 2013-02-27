@@ -206,7 +206,7 @@ public class SAIMApplication extends Application implements TransactionListener
 
 		
     	if(session.getAttribute("loggedIn")== null ||
-    			!(boolean)session.getAttribute("loggedIn")) {
+    			!(Boolean)session.getAttribute("loggedIn")) {
 //    		menuBar.addItem(" | ", null);
     		MenuBar.MenuItem logIn = menuBar.addItem("Login", null, new LoginCommand(this));
     		logIn.setEnabled(true);

@@ -10,9 +10,10 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.LinkedList;
 
-import org.apache.catalina.tribes.util.Arrays;
+//import org.apache.catalina.tribes.util.Arrays;
 import org.apache.commons.codec.digest.DigestUtils;
 
 /**
