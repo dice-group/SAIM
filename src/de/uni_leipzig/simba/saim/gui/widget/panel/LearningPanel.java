@@ -3,6 +3,7 @@ package de.uni_leipzig.simba.saim.gui.widget.panel;
 import java.util.Map.Entry;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
@@ -51,7 +52,9 @@ public class LearningPanel extends PerformPanel
 		fillpropMappingPanel();
 		mainLayout.addComponent(configForm = new LearnerConfigurationForm(learnerConfigBean,messages));
 		mainLayout.addComponent(propMappingPanel);
-		mainLayout.addComponent(learnerSelect);
+		Panel p = new Panel(messages.getString("LearningPanel.geneticLearnerPanel")); //$NON-NLS-1$
+		p.addComponent(learnerSelect);
+		mainLayout.addComponent(p);
 
 	}
 
@@ -61,12 +64,12 @@ public class LearningPanel extends PerformPanel
 	private void generateLearnerSelect() {
 		final Object[][] methods = new Object[][]{
 		        new Object[]{messages.getString("LearningPanel.gpbatchlearner")},  //$NON-NLS-1$
-		        new Object[]{messages.getString("LearningPanel.learnerselect"), 
-		        		messages.getString("LearningPanel.ALEAGE"), 
-		        		messages.getString("LearningPanel.ALCLUSTERING"), 
+		        new Object[]{messages.getString("LearningPanel.learnerselect"),  //$NON-NLS-1$
+		        		messages.getString("LearningPanel.ALEAGE"),  //$NON-NLS-1$
+		        		messages.getString("LearningPanel.ALCLUSTERING"),  //$NON-NLS-1$
 		        		messages.getString("LearningPanel.ALWEIGHTDECAY")} //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		};
-		learnerSelect = new Tree(); //$NON-NLS-1$
+		learnerSelect = new Tree();//messages.getString("LearningPanel.geneticLearnerPanel")); //$NON-NLS-1$
 //		learnerSelect.addItem); //$NON-NLS-1$
 //		learnerSelect.addItem(messages.getString("LearningPanel.gpactivelearner")); //$NON-NLS-1$
 		for(int i = 0; i<methods.length; i++) {
@@ -203,6 +206,5 @@ public class LearningPanel extends PerformPanel
 	public void start() {
 		generateLearnerSelect();
 	}
-
 
 }
