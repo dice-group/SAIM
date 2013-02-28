@@ -15,4 +15,15 @@
 	background-color: #000;
 	color: #fff;
 }
-/**/
+/*tree
+
+.v-tree   {
+	background-color: #928AC2;
+	font-weight: bold;
+}
+.v-tree-node   {
+	font-weight: normal;
+}
+.v-tree-node .v-tree-node-leaf  {
+	font-weight:bold;
+}*/

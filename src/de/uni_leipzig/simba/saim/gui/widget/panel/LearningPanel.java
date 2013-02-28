@@ -3,6 +3,9 @@ package de.uni_leipzig.simba.saim.gui.widget.panel;
 import java.util.Map.Entry;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.terminal.ClassResource;
+import com.vaadin.terminal.ThemeResource;
+import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
@@ -62,28 +65,31 @@ public class LearningPanel extends PerformPanel
 	 * Generate Selection List of Learner.
 	 */
 	private void generateLearnerSelect() {
+		// A theme resource in the current theme ("saim")
+		// Located in: VAADIN/themes/saim/img/
+		ThemeResource cRes = new ThemeResource("img/icon_run.png");
 		final Object[][] methods = new Object[][]{
 		        new Object[]{messages.getString("LearningPanel.gpbatchlearner")},  //$NON-NLS-1$
-		        new Object[]{messages.getString("LearningPanel.learnerselect"),  //$NON-NLS-1$
+		        new Object[]{messages.getString("LearningPanel.gpactivelearner"),  //$NON-NLS-1$
 		        		messages.getString("LearningPanel.ALEAGE"),  //$NON-NLS-1$
 		        		messages.getString("LearningPanel.ALCLUSTERING"),  //$NON-NLS-1$
 		        		messages.getString("LearningPanel.ALWEIGHTDECAY")} //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		};
-		learnerSelect = new Tree();//messages.getString("LearningPanel.geneticLearnerPanel")); //$NON-NLS-1$
-//		learnerSelect.addItem); //$NON-NLS-1$
-//		learnerSelect.addItem(messages.getString("LearningPanel.gpactivelearner")); //$NON-NLS-1$
-		for(int i = 0; i<methods.length; i++) {
+		learnerSelect = new Tree();
+	for(int i = 0; i<methods.length; i++) {
 			//first element is parent
 			String method = (String) methods[i][0];
 			learnerSelect.addItem(method);
 			if(methods[i].length == 1) {
 				learnerSelect.setChildrenAllowed(method, false);
+				learnerSelect.setItemIcon(method, cRes);
 			} else {
 				for(int j = 1; j < methods[i].length; j++) {
 					String subMethod = (String) methods[i][j];
 					learnerSelect.addItem(subMethod);
 					learnerSelect.setParent(subMethod, method);
 					learnerSelect.setChildrenAllowed(subMethod, false);
+					learnerSelect.setItemIcon(subMethod, cRes);
 				}
 				learnerSelect.expandItemsRecursively(method);
 			}
@@ -102,7 +108,6 @@ public class LearningPanel extends PerformPanel
 	private boolean performPropertyMapping() {
 		Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
 		if(!config.propertyMapping.wasSet()) {
-//			PropertyMapper propMapper = new PropertyMapper();
 			LabelBasedPropertyMapper propMapper = new LabelBasedPropertyMapper();
 			String classSource = config.getSource().getClassOfendpoint();
 			String classTarget = config.getTarget().getClassOfendpoint();

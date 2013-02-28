@@ -75,3 +75,10 @@ background-color:#00ff00;
 	color: #fff;
 }
 /**/
+
+.v-tree-node {
+	font-weight:bold;
+}
+.v-tree-node-expanded {
+    font-weight: normal;
+}
