@@ -297,7 +297,9 @@ public class Configuration
 			source.functions.get(s_abr).put(s_abr, "number");
 			target.functions.put(t_abr, new HashMap<String,String>());
 			target.functions.get(t_abr).put(t_abr, "number");
+//			this.
 		}
+		System.out.println("Was Property Mapping set??? "+propertyMapping.wasSet());
 	}
 
 	public ConfigReader getLimesConfiReader() {

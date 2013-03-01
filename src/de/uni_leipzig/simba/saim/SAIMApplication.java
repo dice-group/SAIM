@@ -10,7 +10,6 @@ import lombok.Getter;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-//import org.vaadin.teemu.wizards.Wizard;
 
 import cern.colt.Arrays;
 
@@ -58,7 +57,6 @@ public class SAIMApplication extends Application implements TransactionListener
 	private static final long serialVersionUID = -7665596682464881860L;
 	@Getter private  Window mainWindow;
 	private VerticalLayout mainLayout;
-//	private Wizard wizard;
 	Window sub;
 	transient Configuration config = new Configuration();
 	Panel content;
@@ -73,9 +71,9 @@ public class SAIMApplication extends Application implements TransactionListener
 	public void init()
 	{
 		getContext().addTransactionListener ( this );
-		SAIMApplication.logger.debug("SAIMApplication()");
+		SAIMApplication.logger.debug("SAIMApplication()"); //$NON-NLS-1$
 		messages = new Messages(Locale.ENGLISH);
-		mainWindow = new Window();
+		mainWindow = new Window(messages.getString("SAIMApplication.1")); //$NON-NLS-1$
 		ParameterHandler parameterHandler = new ParameterHandler()
 		{
 			@Override
@@ -83,9 +81,9 @@ public class SAIMApplication extends Application implements TransactionListener
 			{
 				logger.setLevel(Level.DEBUG);
 				if(logger.getEffectiveLevel().isGreaterOrEqual(Level.INFO))
-				{logger.info("SAIMApplication was called with url parameters "+parametersToString(parameters));}
+				{logger.info("SAIMApplication was called with url parameters "+parametersToString(parameters));} //$NON-NLS-1$
 
-				String[] languages=parameters.get("language");
+				String[] languages=parameters.get("language"); //$NON-NLS-1$
 				String language = languages==null?null:languages[0];
 				if((language!=null))
 				{
@@ -107,8 +105,7 @@ public class SAIMApplication extends Application implements TransactionListener
 		mainWindow.addComponent(menuBar=buildMenuBar());
 		content = new MetricPanel(messages);
 		mainLayout.addComponent(content);
-//		wizard = new Wizard();
-		setTheme("saim");
+		setTheme("saim"); //$NON-NLS-1$
 		setMainWindow(mainWindow);
 	}
 
@@ -129,7 +126,7 @@ public class SAIMApplication extends Application implements TransactionListener
 		menuBar.setWidth("100%"); //$NON-NLS-1$
 
 		MenuItem fileMenu = menuBar.addItem(messages.getString("file"), null, null); //$NON-NLS-1$
-		fileMenu.addItem(messages.getString("startnewconfig"), null, new StartCommand(this));
+		fileMenu.addItem(messages.getString("startnewconfig"), null, new StartCommand(this)); //$NON-NLS-1$
 
 		fileMenu.addItem(messages.getString("importlimes"), null, importLIMESCommand).setEnabled(true);		 //$NON-NLS-1$
 		fileMenu.addItem(messages.getString("exportlimes"), null, exportLIMESCommand).setEnabled(true); //$NON-NLS-1$
@@ -137,26 +134,26 @@ public class SAIMApplication extends Application implements TransactionListener
 		WebApplicationContext ctx = ((WebApplicationContext) getContext());
     	HttpSession session = ctx.getHttpSession();
 		
-    	if(session.getAttribute("userrole")!= null && 
-    			session.getAttribute("userrole").toString().equalsIgnoreCase("admin"))
-			fileMenu.addItem("Upload Endpoint", null, uploadEndpointCommand);
+    	if(session.getAttribute("userrole")!= null &&  //$NON-NLS-1$
+    			session.getAttribute("userrole").toString().equalsIgnoreCase("admin")) //$NON-NLS-1$ //$NON-NLS-2$
+			fileMenu.addItem("Upload Endpoint", null, uploadEndpointCommand); //$NON-NLS-1$
 
 
 		MenuItem languageMenu = menuBar.addItem(messages.getString("language"), null, null); //$NON-NLS-1$
-		languageMenu.addItem(messages.getString("german"), null, new SetLanguageCommand("de"));		 //$NON-NLS-1$
-		languageMenu.addItem(messages.getString("english"), null, new SetLanguageCommand("en")).setEnabled(true); //$NON-NLS-1$
+		languageMenu.addItem(messages.getString("german"), null, new SetLanguageCommand("de"));		 //$NON-NLS-1$ //$NON-NLS-2$
+		languageMenu.addItem(messages.getString("english"), null, new SetLanguageCommand("en")).setEnabled(true); //$NON-NLS-1$ //$NON-NLS-2$
 
 		// zoom
-		MenuItem zoom = menuBar.addItem("Zoom", null);
+		MenuItem zoom = menuBar.addItem("Zoom", null); //$NON-NLS-1$
 		
-		zoom.addItem(messages.getString("menubar_zoom_in"), null,new MenuBar.Command()	{
+		zoom.addItem(messages.getString("menubar_zoom_in"), null,new MenuBar.Command()	{ //$NON-NLS-1$
 			public void menuSelected(MenuItem selectedItem) {
 				if(selectedItem.getText().equals(messages.getString("menubar_zoom_in"))){//$NON-NLS-1$
 					((MetricPanel)content).getSaimcytopro().zoomIn(true);
 				}
 			}
 		});
-		zoom.addItem(messages.getString("menubar_zoom_fit"), null,new MenuBar.Command()	{
+		zoom.addItem(messages.getString("menubar_zoom_fit"), null,new MenuBar.Command()	{ //$NON-NLS-1$
 			public void menuSelected(MenuItem selectedItem) {
 				if(selectedItem.getText().equals(messages.getString("menubar_zoom_fit"))){//$NON-NLS-1$
 
@@ -164,7 +161,7 @@ public class SAIMApplication extends Application implements TransactionListener
 				}
 			}
 		});
-		zoom.addItem(messages.getString("menubar_zoom_out"), null,new MenuBar.Command()	{
+		zoom.addItem(messages.getString("menubar_zoom_out"), null,new MenuBar.Command()	{ //$NON-NLS-1$
 			public void menuSelected(MenuItem selectedItem) {
 				if(selectedItem.getText().equals(messages.getString("menubar_zoom_out"))){//$NON-NLS-1$
 					((MetricPanel)content).getSaimcytopro().zoomIn(false);
@@ -205,13 +202,13 @@ public class SAIMApplication extends Application implements TransactionListener
 		});
 
 		
-    	if(session.getAttribute("loggedIn")== null ||
-    			!(Boolean)session.getAttribute("loggedIn")) {
+    	if(session.getAttribute("loggedIn")== null || //$NON-NLS-1$
+    			!(Boolean)session.getAttribute("loggedIn")) { //$NON-NLS-1$
 //    		menuBar.addItem(" | ", null);
-    		MenuBar.MenuItem logIn = menuBar.addItem("Login", null, new LoginCommand(this));
+    		MenuBar.MenuItem logIn = menuBar.addItem(messages.getString("SAIMApplication.18"), null, new LoginCommand(this)); //$NON-NLS-1$
     		logIn.setEnabled(true);
     	} else {
-    		menuBar.addItem("Logged in as "+session.getAttribute("user"), null);
+    		menuBar.addItem(messages.getString("SAIMApplication.19")+session.getAttribute("user"), null); //$NON-NLS-1$ //$NON-NLS-2$
     	}
 		
 		return menuBar;
@@ -236,18 +233,10 @@ public class SAIMApplication extends Application implements TransactionListener
 	/**
 	 * Method is called if any action was taken in a subwindow that needs the main content to update.
 	 */
-	public void refresh()
-	{
-		//mainLayout.removeComponent(content);
+	public void refresh() {
 		mainWindow.removeComponent(menuBar);
-		//FIXME call refresh() method instead of constructing completely new?
-		//content = new MetricPanel(messages);
 		content.attach();
-		//mainLayout.addComponent(content);
-
 		mainLayout.addComponent(menuBar=buildMenuBar(),0);
-
-
 	}
 
 	/**
@@ -256,7 +245,7 @@ public class SAIMApplication extends Application implements TransactionListener
 	 */
 	public File getWebInfFolder() {
 		WebApplicationContext context = (WebApplicationContext)getContext();
-		File f = new File ( context.getHttpSession().getServletContext().getRealPath("/WEB-INF") );
+		File f = new File ( context.getHttpSession().getServletContext().getRealPath("/WEB-INF") ); //$NON-NLS-1$
 		System.out.println(f.getAbsolutePath());
 		return f;
 	}
@@ -322,14 +311,12 @@ public class SAIMApplication extends Application implements TransactionListener
 
 			if(!config.isComplete())
 			{
-				Label warnLabel = new Label("Warning: the exported link specification is not complete!");
-				warnLabel.setStyleName("red");
+				Label warnLabel = new Label(messages.getString("SAIMApplication.22")); //$NON-NLS-1$
+				warnLabel.setStyleName("red"); //$NON-NLS-1$
 				sub.addComponent(warnLabel);
 			}
 			sub.addComponent(new Link(messages.getString("SAIMApplication.menudownloadlinkspec"),new FileResource(new File("linkspec.xml"),SAIMApplication.this))); //$NON-NLS-1$ //$NON-NLS-2$
 			getMainWindow().addWindow(sub);
-			//			}else
-			//				getMainWindow().showNotification(messages.getString("MetricPanel.settingnotablenotcomplete")); //$NON-NLS-1$
 		}
 	};
 
@@ -337,7 +324,7 @@ public class SAIMApplication extends Application implements TransactionListener
 	MenuBar.Command uploadEndpointCommand = new MenuBar.Command() {
 		@Override
 		public void menuSelected(MenuItem selectedItem) {
-			sub = new Window("Endpoint Upload");
+			sub = new Window(messages.getString("SAIMApplication.24")); //$NON-NLS-1$
 			sub.setWidth("700px"); //$NON-NLS-1$
 			sub.setModal(true);
 			sub.addComponent(new EndPointUploader());
@@ -379,32 +366,27 @@ public class SAIMApplication extends Application implements TransactionListener
 			form.addListener(new LoginListener() {				
 				@Override
 				public void onLogin(LoginEvent event) {
-					String pw = event.getLoginParameter("password");
-		            String username = event.getLoginParameter("username");
+					String pw = event.getLoginParameter("password"); //$NON-NLS-1$
+		            String username = event.getLoginParameter("username"); //$NON-NLS-1$
 		            UserAuthenticator auth = new UserAuthenticator();
 		            if (auth.existsUser(username)) {
 		            	User u = auth.getUser(username);
 		            	if(auth.authenticate(u, pw)) {
-			            	logger.info("logging as User: "+u);
-			            	app.getMainWindow().showNotification("Logged in as "+u+" successfully.", 
-			            			Notification.TYPE_HUMANIZED_MESSAGE);	
-			            	
-			            	app.getMainWindow().setContent(mainLayout);
+			            	logger.info("logging as User: "+u); //$NON-NLS-1$
 			            	WebApplicationContext ctx = ((WebApplicationContext) getContext());
 			            	HttpSession session = ctx.getHttpSession();
-			            	session.setAttribute("user", username);
-			            	session.setAttribute("userrole", "admin");
-			            	session.setAttribute("loggedIn", true);
-			            	//buildMenuBar();
+			            	session.setAttribute("user", username); //$NON-NLS-1$
+			            	session.setAttribute("userrole", "admin"); //$NON-NLS-1$ //$NON-NLS-2$
+			            	session.setAttribute("loggedIn", true); //$NON-NLS-1$
 			            	refresh();
 		            	} else {
 		            		app.getMainWindow().showNotification(
-			                        "Sorry the given password(\""+pw+"\") for User "+u+" was wrong. " ,
+			                        messages.getString("SAIMApplication.34")+pw+messages.getString("SAIMApplication.35")+u+messages.getString("SAIMApplication.36") , //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			                        Notification.TYPE_WARNING_MESSAGE);
 		            	}
 		            } else {
 		                app.getMainWindow().showNotification(
-		                        "Sorry a User with this name doesn't exist.",
+		                        messages.getString("SAIMApplication.37"), //$NON-NLS-1$
 		                        Notification.TYPE_WARNING_MESSAGE);
 		            }
 				}
