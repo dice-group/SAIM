@@ -45,6 +45,7 @@ import de.uni_leipzig.simba.saim.core.metric.Node;
 import de.uni_leipzig.simba.saim.gui.widget.ConfigUploader;
 import de.uni_leipzig.simba.saim.gui.widget.form.EndPointUploader;
 import de.uni_leipzig.simba.saim.gui.widget.panel.MetricPanel;
+import de.uni_leipzig.simba.saim.gui.widget.window.About;
 import de.uni_leipzig.simba.saim.gui.widget.window.EndpointWindow;
 /**
  * Central Application class.
@@ -130,6 +131,8 @@ public class SAIMApplication extends Application implements TransactionListener
 
 		fileMenu.addItem(messages.getString("importlimes"), null, importLIMESCommand).setEnabled(true);		 //$NON-NLS-1$
 		fileMenu.addItem(messages.getString("exportlimes"), null, exportLIMESCommand).setEnabled(true); //$NON-NLS-1$
+		fileMenu.addItem("Info", null, infoCommand).setEnabled(true);
+		
 		
 		WebApplicationContext ctx = ((WebApplicationContext) getContext());
     	HttpSession session = ctx.getHttpSession();
@@ -234,9 +237,9 @@ public class SAIMApplication extends Application implements TransactionListener
 	 * Method is called if any action was taken in a subwindow that needs the main content to update.
 	 */
 	public void refresh() {
-		mainWindow.removeComponent(menuBar);
-		content.attach();
+		mainLayout.removeComponent(menuBar);
 		mainLayout.addComponent(menuBar=buildMenuBar(),0);
+		getMainWindow().setContent(mainLayout);
 	}
 
 	/**
@@ -332,6 +335,18 @@ public class SAIMApplication extends Application implements TransactionListener
 		}
 	};
 
+	MenuBar.Command infoCommand = new MenuBar.Command() {
+		@Override
+		public void menuSelected(MenuItem selectedItem) {
+			sub = new Window("Information"); //$NON-NLS-1$
+//			sub.setWidth("700px"); //$NON-NLS-1$
+//			sub.setModal(true);
+			sub.setContent(new About(messages));
+			sub.setSizeFull();
+			getMainWindow().addWindow(sub);
+		}
+	};
+	
 	private class SetLanguageCommand implements MenuBar.Command
 	{
 		private final String language;
