@@ -240,6 +240,7 @@ public class SAIMApplication extends Application implements TransactionListener
 		mainLayout.removeComponent(menuBar);
 		mainLayout.addComponent(menuBar=buildMenuBar(),0);
 		getMainWindow().setContent(mainLayout);
+		mainLayout.attach();
 	}
 
 	/**
