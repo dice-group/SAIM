@@ -115,9 +115,9 @@ public class ClassMatchingPanel extends Panel
 			public void valueChange(ValueChangeEvent event) {
 				//get Value
 				@SuppressWarnings("unchecked")
-				Entry<Double, Pair<String>> entry = (Entry<Double, Pair<String>>) suggestionComboBox.getValue();
-				sourceClassForm.addItem(entry.getValue().getA(),true);
-				targetClassForm.addItem(entry.getValue().getB(),true);
+				Pair<String> entry = (Pair<String>) suggestionComboBox.getValue();
+				sourceClassForm.addItem(entry.getA(),true);
+				targetClassForm.addItem(entry.getB(),true);
 
 				sourceClassForm.requestRepaint();
 				targetClassForm.requestRepaint();
@@ -205,9 +205,14 @@ public class ClassMatchingPanel extends Panel
 			else
 				suggestionComboBox = new ComboBox();
 			SortedMapping sorter = new SortedMapping(classMapping);
-			for(Entry<Double, Pair<String>> e: sorter.sort().descendingMap().entrySet()) {
-				suggestionComboBox.addItem(e);
-				suggestionComboBox.select(e);
+			for(Entry<Double, List<Pair<String>>> e: sorter.sort().descendingMap().entrySet()) {
+				for(Pair<String> pair : e.getValue()) {
+					if(e.getKey()>0) {
+						Object itemId = suggestionComboBox.addItem(pair);
+						suggestionComboBox.setItemCaption(itemId, e.getValue()+"= "+pair);
+						suggestionComboBox.select(itemId);
+					}
+				}				
 			}
 
 			suggestionComboBox.setVisible(true);
@@ -216,10 +221,11 @@ public class ClassMatchingPanel extends Panel
 			suggestionComboBox.setTextInputAllowed(false);
 			suggestionComboBox.addListener(comboListener);
 			{// auto select first item
-				Entry<Double, Pair<String>> entry = (Entry<Double, Pair<String>>) suggestionComboBox.getItemIds().iterator().next();
+				@SuppressWarnings("unchecked")
+				Pair<String> entry = (Pair<String>) suggestionComboBox.getItemIds().iterator().next();
 				suggestionComboBox.select(entry);
-				sourceClassForm.addItem(entry.getValue().getA(),false);
-				targetClassForm.addItem(entry.getValue().getB(),false);
+				sourceClassForm.addItem(entry.getA(),false);
+				targetClassForm.addItem(entry.getB(),false);
 			}
 		}
 	}

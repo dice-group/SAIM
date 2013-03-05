@@ -1,37 +1,49 @@
 package de.uni_leipzig.simba.saim.util;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.saim.core.Pair;
 /**
- * Class to transform a mapping in a sorted data structure
- * @author Lyko
+ * Class to transform a mapping in a sorted data structure.
+ * Keyed by it's similarity value. To support multiple entries the values are List of Pairs of Strings.
+ * 
+ * @author Klaus Lyko
  */
 public class SortedMapping {
-	Mapping base;
-	TreeMap<Double, Pair<String>> sortedMapping;
+	Map<String, HashMap<String, Double>> base;
+	TreeMap<Double, List<Pair<String>>> sortedMapping;
 
 	public SortedMapping(Mapping base) {
-		this.base = base;
-		sortedMapping = new TreeMap<Double, Pair<String>>();
+		this(base.map);		
 	}
 
-	public TreeMap<Double, Pair<String>> sort() {
+	public SortedMapping(Map<String, HashMap<String, Double>> base) {
+		this.base = base;
+		sortedMapping = new TreeMap<Double, List<Pair<String>>>();
+	}
+	
+	public TreeMap<Double, List<Pair<String>>> sort() {
 		sortBase();
 		return sortedMapping;
 	}
 
 	private void sortBase() {
-		for(String s1 : base.map.keySet()) {
-			for(Entry<String, Double> e2 : base.map.get(s1).entrySet()) {
-				sortedMapping.put(e2.getValue(), new Pair<String> (s1, e2.getKey()));
+		for(String s1 : base.keySet()) {
+			for(Entry<String, Double> e2 : base.get(s1).entrySet()) {
+				if(!sortedMapping.containsKey(e2.getValue()))
+					sortedMapping.put(e2.getValue(), new LinkedList<Pair<String>>());
+				sortedMapping.get(e2.getValue()).add(new Pair<String> (s1, e2.getKey()));				
 			}
 		}
 	}
 
 	public String toString() {
 		String s = "";
-		for(Entry<Double, Pair<String>> e : sortedMapping.descendingMap().entrySet()) {
+		for(Entry<Double, List<Pair<String>>> e : sortedMapping.descendingMap().entrySet()) {
 			s += e.getKey() +" : "+e.getValue()+System.getProperty ( "line.separator" );
 		}
 		return s;
@@ -58,6 +70,7 @@ public class SortedMapping {
 		m.add("a", "d", 22);
 
 		m.add("aa", "bb", 5);
+		m.add("ac", "bc", 5);
 		m.add("aaa", "bbb", 3);
 		m.add("aaaa", "bbbb", 1);
 

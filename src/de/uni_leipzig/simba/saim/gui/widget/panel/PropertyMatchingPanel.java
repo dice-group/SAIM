@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.Vector;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
@@ -40,8 +41,10 @@ import de.uni_leipzig.simba.learning.query.PropertyMapper;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
+import de.uni_leipzig.simba.saim.core.Pair;
 import de.uni_leipzig.simba.saim.gui.widget.PropertyComboBox;
 import de.uni_leipzig.simba.saim.gui.widget.panel.MetricPanel.AccordionLayoutClickListener;
+import de.uni_leipzig.simba.saim.util.SortedMapping;
 /** Contains instances of ClassMatchingForm and lays them out vertically.*/
 @SuppressWarnings("serial")
 public class PropertyMatchingPanel extends Panel
@@ -407,6 +410,7 @@ public class PropertyMatchingPanel extends Panel
 	private synchronized void displayPropertyMapping(Map<String, HashMap<String, Double>> map)
 	{
 
+		TreeMap<Double, List<Pair<String>>> sort = new SortedMapping(map).sort();
 		logger.info("Displaying property Mapping"); //$NON-NLS-1$
 		synchronized(select) {
 			select.removeListener(selectListener);
@@ -416,11 +420,10 @@ public class PropertyMatchingPanel extends Panel
 			useAll.addListener(useComputedListener);
 			if(map.size()>0)
 				useAll.setEnabled(true);
-			for(String key : map.keySet()) {
-				for(Entry<String, Double> e : map.get(key).entrySet())
-				{
-					if(e.getValue()>0)
-						select.addItem(new ClassMatchItem(key, e.getKey(), e.getValue()));
+			for(Entry<Double, List<Pair<String>>> e: sort.descendingMap().entrySet()) {
+				for(Pair<String> pair : e.getValue()) {
+					if(e.getKey()>0)
+						select.addItem(new ClassMatchItem(pair.getA(), pair.getB(), e.getKey()));
 				}
 			}
 			select.setImmediate(true);

@@ -7,6 +7,7 @@ import de.uni_leipzig.simba.cache.HybridCache;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.filter.Filter;
 import de.uni_leipzig.simba.filter.LinearFilter;
+import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.mapper.SetConstraintsMapper;
 import de.uni_leipzig.simba.mapper.SetConstraintsMapperFactory;
 
@@ -30,16 +31,21 @@ public class LimesRunner implements Serializable {
 	public LimesRunner() {
 		message = "Initializing Limes...";
 		changes.firePropertyChange(MESSAGE, "", message);
-//		changes.fireIndexedPropertyChange(STEP, 0, 0);
 	}
 
-	public Mapping runConfig(Configuration config) {
+	public Mapping runConfig(Configuration config) throws CachingException {
 		fire("Getting source cache...");
-	//	System.out.println(config.getSource());
-		sC = HybridCache.getData(config.getSource());
+		try {
+			sC = HybridCache.getData(config.getSource());
+		} catch(Exception e) {
+			throw new CachingException(config.source, e);
+		}
 		fire("Getting target cache...");
-	//	System.out.println(config.getTarget());
-		tC = HybridCache.getData(config.getTarget());
+		try {
+			tC = HybridCache.getData(config.getTarget());
+		} catch(Exception e) {
+			throw new CachingException(config.getTarget(), e);
+		}
 		fire("Initialize Mapping...");
 		Filter f = new LinearFilter();
 		// call Mapper
@@ -74,5 +80,23 @@ public class LimesRunner implements Serializable {
 
 	  public HybridCache getTargetCache() {
 		  return tC;
+	  }
+	  
+	  /**
+	   * TODO best practice???
+	   * @author Lyko
+	   *
+	   */
+	 public class CachingException extends Exception {
+		  KBInfo info;
+		  Exception root;
+		  public CachingException(KBInfo info, Exception rootCause) {
+			  this.info = info;
+			  this.root = rootCause;
+		  }
+		  
+		  public String toString() {
+			  return "Exception caching data of "+info.endpoint+" using parameters "+info;
+		  }
 	  }
 }

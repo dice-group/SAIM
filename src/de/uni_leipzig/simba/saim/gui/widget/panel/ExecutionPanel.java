@@ -11,6 +11,7 @@ import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.LimesRunner;
+import de.uni_leipzig.simba.saim.core.LimesRunner.CachingException;
 import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
 /**
  * Panel to execute a Mapping.
@@ -65,7 +66,11 @@ public class ExecutionPanel extends PerformPanel implements PropertyChangeListen
 		thread = new Thread() {
 			@Override
 			public void run() {
-				m = lR.runConfig(((SAIMApplication)getApplication()).getConfig());
+				try {
+					m = lR.runConfig(((SAIMApplication)getApplication()).getConfig());
+				} catch (CachingException cE) {
+					getWindow().showNotification(cE.toString());
+				}
 				progress.setValue(1f);
 				progressLabel.setValue(messages.getString("ExecutionPanel.mappingperformed")); //$NON-NLS-1$
 				InstanceMappingTable iT = new InstanceMappingTable(getApplication(), config, m, lR.getSourceCache(), lR.getTargetCache(), false,messages);
