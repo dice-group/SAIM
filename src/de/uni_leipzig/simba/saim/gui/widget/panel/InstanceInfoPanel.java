@@ -4,6 +4,8 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+
+import de.konrad.commons.sparql.PrefixHelper;
 import de.uni_leipzig.simba.data.Instance;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.SAIMApplication;
@@ -65,9 +67,13 @@ public class InstanceInfoPanel extends Panel {
 			for(String s : i.getProperty(prop)) {
 				value+= s+" ";
 			}
-			t.addItem(new Object[]{prop, value}, new Integer(id));
+			t.addItem(new Object[]{PrefixHelper.getSuffix(prop), value}, new Integer(id));
 			id++;
 		}
+	
+		Object [] properties={"Property"};
+		boolean [] ordering={true};
+		t.sort(properties, ordering);
 		t.setHeight("10em");
 		return t;
 	}

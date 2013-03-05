@@ -52,8 +52,9 @@ public class InstanceMappingTable implements Serializable
 		this.sourceCache=sourceCache;
 		this.targetCache=targetCache;
 		for(String uri1 : data.map.keySet())
-			for(Entry<String, Double> uri2 : data.map.get(uri1).entrySet())
-			{dataList.add(new InstanceMatch(uri1, uri2.getKey(), uri2.getValue()));}
+			for(Entry<String, Double> uri2 : data.map.get(uri1).entrySet()) {
+				dataList.add(new InstanceMatch(uri1, uri2.getKey(), uri2.getValue()));
+				}
 	}
 
 	@SuppressWarnings({ "serial" })

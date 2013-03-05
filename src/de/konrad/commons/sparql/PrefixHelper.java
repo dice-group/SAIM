@@ -62,17 +62,18 @@ public class PrefixHelper
  		if(prefix.isEmpty()||getPrefixes().containsKey(prefix))
 		{
 			// didn't work, just generate something
-			prefix  = "prefix"+base.hashCode();
+ 			prefix  = "prefix"+0;//base.hashCode();
 		}
 		if(prefix.isEmpty()||getPrefixes().containsKey(prefix))
 		{
-			Random random = new Random();
 			// this loop should almost never ever be entered
+			int count = 0;
 			do
 			{
-				prefix  = "prefix"+random.nextLong();
+				prefix  = "prefix"+count;
+				count++;
 			}
-			while(prefix.isEmpty()||getPrefixes().containsKey(prefix));
+			while(prefix.isEmpty() || getPrefixes().containsKey(prefix));
 		}
 		addPrefix(prefix,base);
 		return new String[]{prefix,base};
