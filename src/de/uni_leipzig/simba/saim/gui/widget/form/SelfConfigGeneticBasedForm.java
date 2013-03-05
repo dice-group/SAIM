@@ -16,8 +16,8 @@ public class SelfConfigGeneticBasedForm extends Form {
 	private final Messages messages;
 	public static final String elementsWidth = "100px"; //$NON-NLS-1$
 	//names of measure
-	public static final String pseudoMeasureName="Pseudo F-Measure (Dr. Ngonga)";
-	public static final String referenceMeasureName="Reference pseudo F-Measure";
+	public static final String pseudoMeasureName="Pseudo F-Measure NGLY12";
+	public static final String referenceMeasureName="Pseudo F-Measure NIK+12";
 	// Map of measures and indices
 	public static HashMap<Integer, String> measures = new HashMap<Integer,String>();
 
