@@ -50,8 +50,8 @@ public class DefaultEndpointLoader
 	 */
 	public static HashMap<String, KBInfo> getDefaultEndpoints() {
 		HashMap<String, KBInfo> defaults = new HashMap<String, KBInfo>();
-		defaults.put("DBPedia - default graph", createKBInfo("http://dbpedia.org/sparql","http://dbpedia.org",10000,"dbpedia"));
-		defaults.put("DBPedia live - default graph", createKBInfo("http://live.dbpedia.org/sparql","http://dbpedia.org",1000,"dbpedia"));
+		defaults.put("DBpedia - default graph", createKBInfo("http://dbpedia.org/sparql","http://dbpedia.org",10000,"dbpedia"));
+		defaults.put("DBpedia live - default graph", createKBInfo("http://live.dbpedia.org/sparql","http://dbpedia.org",1000,"dbpedia"));
 	
 		defaults.put("LinkedGeoData", createKBInfo("http://linkedgeodata.org/sparql", "http://linkedgeodata.org", 1000, "linkedgeodata"));
 		defaults.put("lgd.aksw - Diseasome", createKBInfo("http://lgd.aksw.org:5678/sparql", "http://www.instancematching.org/oaei/di/diseasome/", 1000, "diseasome"));

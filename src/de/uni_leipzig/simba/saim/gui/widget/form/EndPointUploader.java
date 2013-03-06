@@ -58,6 +58,7 @@ Upload.FailedListener, Upload.Receiver {
 		typeSelect.addItem("Turtle");
 		typeSelect.addItem("RDF/XML");
 
+		
 		typeSelect.select("N3");
 		typeSelect.setNullSelectionAllowed(false);
 
