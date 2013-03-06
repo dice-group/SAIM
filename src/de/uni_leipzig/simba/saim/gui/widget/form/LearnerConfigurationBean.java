@@ -21,7 +21,7 @@ public class LearnerConfigurationBean {
 	 */
 	private void setDefaultValues() {
 		setGenerations(20);
-		setPopulation(20);
+		setPopulation(10);
 		setMutationRate(0.4d);
 		setCrossoverRate(0.4d);
 		setNumberOfInqueriesPerRun(10);
