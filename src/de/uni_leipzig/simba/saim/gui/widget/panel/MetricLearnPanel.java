@@ -47,17 +47,21 @@ public class MetricLearnPanel extends  PerformPanel{
 
 		// add Button
 		learn = new Button("learn");
-		layout.addComponent(learn);
+//		layout.addComponent(learn);
 		learn.setEnabled(true);
-
+	
 		HorizontalLayout solution = new HorizontalLayout();
 
 		terminate = new Button("Get best solution so far");
 		terminate.addListener(new TerminateButtonClickListener(solution));
 		terminate.setEnabled(false);
-		layout.addComponent(terminate);
+//		layout.addComponent(terminate);
+		HorizontalLayout buttonLayout = new HorizontalLayout();
+		buttonLayout.addComponent(learn);
+		buttonLayout.addComponent(terminate);
+		layout.addComponent(buttonLayout);
 		layout.addComponent(solution);
-		learnLayout = new HorizontalLayout();
+		learnLayout = new VerticalLayout();
 		learnLayout.setWidth("100%");
 		layout.addComponent(learnLayout);
 	}

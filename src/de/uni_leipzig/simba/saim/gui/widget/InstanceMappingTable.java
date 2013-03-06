@@ -16,9 +16,11 @@ import com.vaadin.terminal.ClassResource;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import de.uni_leipzig.simba.cache.Cache;
 import de.uni_leipzig.simba.data.Instance;
@@ -58,7 +60,7 @@ public class InstanceMappingTable implements Serializable
 	}
 
 	@SuppressWarnings({ "serial" })
-	public Table getTable()
+	public Table getTable(final Layout parent)
 	{
 		beanItemContainer = new BeanItemContainer<InstanceMatch>(InstanceMatch.class);
 		beanItemContainer.addAll(dataList);
@@ -68,8 +70,23 @@ public class InstanceMappingTable implements Serializable
 		t.setColumnExpandRatio("uri2", 0.5f); //$NON-NLS-1$
 		t.setColumnAlignment("value", Table.ALIGN_RIGHT); //$NON-NLS-1$
 		t.setColumnAlignment(messages.getString("InstanceMappingTable.isamatch"), Table.ALIGN_CENTER); //$NON-NLS-1$
-
-		if(showBoxes) {
+		
+		// Info about match where the table is
+		final Layout info = new VerticalLayout();
+		t.addListener(new Property.ValueChangeListener() {
+		    public void valueChange(ValueChangeEvent event) {
+		        InstanceMatch row = (InstanceMatch) t.getValue();
+				Instance i1 = sourceCache.getInstance(row.getOriginalUri1());
+				Instance i2 = targetCache.getInstance(row.getOriginalUri2());
+				InstanceInfoPanel infoPanel = new InstanceInfoPanel(i1, i2);
+				info.removeAllComponents();
+				info.addComponent(infoPanel);
+		    }
+		});
+		parent.addComponent(info);
+	
+		if(showBoxes) {			
+			// info column
 			t.addGeneratedColumn(messages.getString("InstanceMappingTable.isamatch"), new ColumnGenerator() { //$NON-NLS-1$
 	            @Override
 	            public Component generateCell(final Table source, final Object itemId, final Object columnId) {

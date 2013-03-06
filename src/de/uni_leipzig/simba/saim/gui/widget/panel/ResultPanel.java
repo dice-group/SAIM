@@ -41,7 +41,7 @@ public class ResultPanel extends Panel
 		this.setContent(layout);
 		downloadResults = new Button(messages.getString("save"));
 		downloadResults.addListener(new DownLoadButtonClickListener());
-		layout.addComponent(data.getTable());
+		layout.addComponent(data.getTable(layout));
 		layout.addComponent(downloadResults);
 	}
 

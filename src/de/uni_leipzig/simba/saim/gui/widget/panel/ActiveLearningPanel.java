@@ -60,7 +60,7 @@ public class ActiveLearningPanel extends MetricLearnPanel
 		}
 		if(params == null) {
 			params = new HashMap<String, Object>();
-			params.put("populationSize", 20);
+			params.put("populationSize", 10);
 			params.put("generations", 50);
 			params.put("mutationRate", 0.5f);
 			params.put("trainingDataSize", 10);
@@ -93,10 +93,7 @@ public class ActiveLearningPanel extends MetricLearnPanel
 		if (map.size()>0)
 		{
 			learnLayout.removeAllComponents();
-			learnLayout.addComponent(iMapTable.getTable());
-
-			learnLayout.removeAllComponents();
-			learnLayout.addComponent(iMapTable.getTable());
+			learnLayout.addComponent(iMapTable.getTable(learnLayout));
 		}
 	}
 
@@ -128,9 +125,7 @@ public class ActiveLearningPanel extends MetricLearnPanel
 			iMapTable = new InstanceMappingTable(getApplication(), config, map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache(), true,messages);
 
 			l.removeAllComponents();
-			l.addComponent(iMapTable.getTable());
-			l.removeAllComponents();
-			l.addComponent(iMapTable.getTable());
+			l.addComponent(iMapTable.getTable(l));
 			if (map.size()>0)
 			{
 				terminate.setEnabled(true);
