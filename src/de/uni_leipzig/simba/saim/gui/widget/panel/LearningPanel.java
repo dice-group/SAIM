@@ -20,12 +20,9 @@ import de.uni_leipzig.simba.saim.gui.widget.form.LearnerConfigurationForm;
 import de.uni_leipzig.simba.saim.gui.widget.panel.ActiveLearningPanel.LEARNER;
 /**
  * Panel for Learner Configuration.
- * @author Lyko
+ * @author Klaus Lyko
  */
-public class LearningPanel extends PerformPanel
-{
-	/**
-	 */
+public class LearningPanel extends PerformPanel {
 	private static final long serialVersionUID = 1906531007896945738L;
 	private final Messages messages;
 	private final Layout mainLayout = new VerticalLayout();

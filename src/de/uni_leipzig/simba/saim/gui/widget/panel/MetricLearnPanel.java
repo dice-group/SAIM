@@ -19,11 +19,9 @@ import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
 import de.uni_leipzig.simba.saim.gui.widget.form.LearnerConfigurationBean;
 /**
  * Panel used for metric genetic learner.
- * @author Lyko
+ * @author Klaus Lyko
  */
 public class MetricLearnPanel extends  PerformPanel{
-	/**
-	 */
 	private static final long serialVersionUID = -2043563912763885666L;
 	public static Logger logger = Logger.getLogger("LIMES");
 	SAIMApplication application;
@@ -47,7 +45,6 @@ public class MetricLearnPanel extends  PerformPanel{
 
 		// add Button
 		learn = new Button("learn");
-//		layout.addComponent(learn);
 		learn.setEnabled(true);
 	
 		HorizontalLayout solution = new HorizontalLayout();
@@ -55,7 +52,6 @@ public class MetricLearnPanel extends  PerformPanel{
 		terminate = new Button("Get best solution so far");
 		terminate.addListener(new TerminateButtonClickListener(solution));
 		terminate.setEnabled(false);
-//		layout.addComponent(terminate);
 		HorizontalLayout buttonLayout = new HorizontalLayout();
 		buttonLayout.addComponent(learn);
 		buttonLayout.addComponent(terminate);

@@ -30,7 +30,10 @@ import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.InstanceMatch;
 import de.uni_leipzig.simba.saim.gui.widget.panel.InstanceInfoPanel;
-
+/**
+ * Class to construct a table showing results of a matching process.
+ * @author Klaus Lyko
+ */
 public class InstanceMappingTable implements Serializable
 {
 	private final Messages messages;
@@ -60,6 +63,12 @@ public class InstanceMappingTable implements Serializable
 	}
 
 	@SuppressWarnings({ "serial" })
+	/**
+	 * create the table showing results. Please provide a Layout where the info
+	 * about matches should be placed once they are clicked.
+	 * @param parent
+	 * @return
+	 */
 	public Table getTable(final Layout parent)
 	{
 		beanItemContainer = new BeanItemContainer<InstanceMatch>(InstanceMatch.class);
