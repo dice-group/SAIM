@@ -57,12 +57,13 @@ public class ExampleLoader {
 		BufferedReader bufferedReader = new BufferedReader (inputStreamReader);
 		String line = bufferedReader.readLine();
 		while(line != null) {
-			String parts[] = DataCleaner.separate(line, ";", 2);
+			String parts[] = DataCleaner.separate(line, ";", 2);//$NON-NLS-1$
 			if(line.length()>0 && parts.length==2) {
-				list.add(new ExampleConfig(parts[0].replaceAll("\"", ""), parts[1].replaceAll("\"", "")));
+				list.add(new ExampleConfig(parts[0].replaceAll("\"", ""), parts[1].replaceAll("\"", "")));//$NON-NLS-1$
 				line = bufferedReader.readLine();
 			}
 		}
+		bufferedReader.close();inputStreamReader.close();
 		return list;
 	}
 
@@ -79,7 +80,7 @@ public class ExampleLoader {
 	//	InputStreamReader inputStreamReader = new InputStreamReader(new FileInputStream (path));
 		BufferedWriter writer = new BufferedWriter (new FileWriter(path, true));
 		writer.newLine();
-		writer.write("\""+c.getName()+"\";\""+c.getFilePath()+"\"");
+		writer.write("\""+c.getName()+"\";\""+c.getFilePath()+"\"");//$NON-NLS-1$
 		writer.close();
 	}
 }

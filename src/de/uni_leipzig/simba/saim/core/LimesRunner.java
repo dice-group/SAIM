@@ -25,6 +25,7 @@ public class LimesRunner implements Serializable {
 	public static final String MESSAGE = "message";
 	public static final String STEP = "step";
 	public static final String FINISHED = "ready";
+	public static final String ERROR = "error";
 	HybridCache tC;
 	HybridCache sC;
 
@@ -53,8 +54,14 @@ public class LimesRunner implements Serializable {
 				config.getSource(), config.getTarget(),
 				sC, tC, f, config.granularity);
 		fire("Starting Mapping process...");
-		Mapping actualMapping = sCM.getLinks(config.getMetricExpression(), config.getAcceptanceThreshold());
-		fire("Mapping performed.");
+		Mapping actualMapping;
+		try{
+			actualMapping = sCM.getLinks(config.getMetricExpression(), config.getAcceptanceThreshold());
+			fire("Mapping performed.");
+		}catch(Exception e) {
+			changes.firePropertyChange(ERROR, null, e.getMessage());
+			actualMapping = new Mapping();
+		}
 		return actualMapping;
 	}
 

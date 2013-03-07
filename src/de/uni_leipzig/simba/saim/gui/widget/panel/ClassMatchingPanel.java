@@ -258,7 +258,7 @@ public class ClassMatchingPanel extends Panel
 
 	/**
 	 * Thread to compute class mappings.
-	 * @author Lyko
+	 * @author Klaus Lyko
 	 */
 	public class ComputeClassMapping extends Thread {
 		boolean stringBased = true;

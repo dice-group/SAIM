@@ -85,6 +85,7 @@ public class InstanceMappingTable implements Serializable
 		t.addListener(new Property.ValueChangeListener() {
 		    public void valueChange(ValueChangeEvent event) {
 		        InstanceMatch row = (InstanceMatch) t.getValue();
+		        if(row == null) return;
 				Instance i1 = sourceCache.getInstance(row.getOriginalUri1());
 				Instance i2 = targetCache.getInstance(row.getOriginalUri2());
 				InstanceInfoPanel infoPanel = new InstanceInfoPanel(i1, i2);

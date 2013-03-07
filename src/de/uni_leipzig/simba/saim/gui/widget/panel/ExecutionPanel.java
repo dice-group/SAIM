@@ -4,6 +4,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
 import de.uni_leipzig.simba.data.Mapping;
@@ -15,13 +16,10 @@ import de.uni_leipzig.simba.saim.core.LimesRunner.CachingException;
 import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
 /**
  * Panel to execute a Mapping.
- * @author Lyko
+ * @author Klaus Lyko
  */
-public class ExecutionPanel extends PerformPanel implements PropertyChangeListener
-{
-	/**
-	 */
-	private static final long serialVersionUID = -6418644523043046619L;
+public class ExecutionPanel extends PerformPanel implements PropertyChangeListener {
+	static final long serialVersionUID = -6418644523043046619L;
 	private final Messages messages;
 	private LimesRunner lR;
 	private Label progressLabel;
@@ -57,6 +55,10 @@ public class ExecutionPanel extends PerformPanel implements PropertyChangeListen
 			float newV = Float.valueOf(evt.getNewValue().toString());
 			progress.setValue(newV/maxSteps);
 			progress.requestRepaint();
+		}
+		if(evt.getPropertyName().equalsIgnoreCase(LimesRunner.ERROR)) {
+			String mess = evt.getNewValue().toString();
+			mainLayout.addComponent(new Label(messages.getString("ExecutionPanel.errorNotification")+mess, Label.CONTENT_XHTML)); //$NON-NLS-1$
 		}
 	}
 

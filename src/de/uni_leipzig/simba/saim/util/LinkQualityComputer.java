@@ -16,16 +16,30 @@ import de.uni_leipzig.simba.learning.oracle.mappingreader.CSVMappingReader;
 import de.uni_leipzig.simba.query.ModelRegistry;
 import de.uni_leipzig.simba.query.QueryModuleFactory;
 
+/**
+ * Just a little class to help read gold standards file, as of now supports reading formats as Turtle, TSC and CSV files.
+ * @author Klaus Lyko
+ */
 public class LinkQualityComputer {
 	
 	Mapping m;
 	Mapping reference;
 	
+	/**
+	 * Constructor to read inputs from files.
+	 * @param mappingFile Path to the file holding the mapping to validate.
+	 * @param referenceFile Path to the file holding the gold standard reference mapping.
+	 */
 	public LinkQualityComputer(String mappingFile, String referenceFile) {
 		m = getMapping(mappingFile);
 		reference = getMapping(referenceFile);
 	}
 	
+	/**
+	 * Constructor to use submitted mappings.
+	 * @param map Mapping to be evaluated.
+	 * @param ref Gold standard to compare with.
+	 */
 	public LinkQualityComputer(Mapping map, Mapping ref) {
 		this.m=map;
 		this.reference=ref;
@@ -46,6 +60,12 @@ public class LinkQualityComputer {
 		return p.computeRecall(m, reference);
 	}
 	
+	/**
+	 * Method to read mapping from a supported file.
+	 * Supported file formats are .csv files, .tsv files and a Turtle(.ttl) or NTriple(.nt) serialization.
+	 * @param file Path to file.
+	 * @return Mapping read from file.
+	 */
 	public static Mapping getMapping(String file) {
 		CSVMappingReader r = new CSVMappingReader();
 		if(getSeparator(file) != null) {

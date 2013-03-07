@@ -2,7 +2,6 @@ package de.uni_leipzig.simba.saim.gui.widget.window;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -12,7 +11,6 @@ import com.vaadin.ui.Link;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import de.konrad.commons.sparql.PrefixHelper;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.io.Serializer;
 import de.uni_leipzig.simba.io.SerializerFactory;
@@ -20,10 +18,7 @@ import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 
-public class SerializationWindow extends Window
-{
-	/**
-	 */
+public class SerializationWindow extends Window {
 	private static final long serialVersionUID = 949091830343396212L;
 	private final Messages messages;
 	VerticalLayout mainLayout;
