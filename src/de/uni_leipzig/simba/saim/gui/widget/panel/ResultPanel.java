@@ -1,7 +1,11 @@
 package de.uni_leipzig.simba.saim.gui.widget.panel;
 
+import javax.servlet.http.HttpSession;
+
+import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -10,6 +14,7 @@ import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
 import de.uni_leipzig.simba.saim.gui.widget.window.SerializationWindow;
+import de.uni_leipzig.simba.saim.gui.widget.window.ValidateLinksWindow;
 /**Panel to show a Table with computed mappings**/
 public class ResultPanel extends Panel
 {
@@ -20,6 +25,7 @@ public class ResultPanel extends Panel
 	InstanceMappingTable data;
 	VerticalLayout layout;
 	Button downloadResults;
+	Button validate;
 	Configuration config;// = Configuration.getInstance();
 
 	public ResultPanel(final InstanceMappingTable iT,final Messages messages)
@@ -42,7 +48,15 @@ public class ResultPanel extends Panel
 		downloadResults = new Button(messages.getString("save"));
 		downloadResults.addListener(new DownLoadButtonClickListener());
 		layout.addComponent(data.getTable(layout));
-		layout.addComponent(downloadResults);
+		HorizontalLayout buttonLayout = new HorizontalLayout();
+		buttonLayout.addComponent(downloadResults);
+		// if admin show validation component
+		WebApplicationContext ctx = ((WebApplicationContext) ((SAIMApplication)getApplication()).getContext());
+    	HttpSession session = ctx.getHttpSession();
+		if(session.getAttribute("userrole")!= null &&  //$NON-NLS-1$
+    			session.getAttribute("userrole").toString().equalsIgnoreCase("admin")) //$NON-NLS-1$ //$NON-NLS-2$
+			buttonLayout.addComponent(new ValidateLinksWindow((SAIMApplication) getApplication(), data.getMapping()));
+		layout.addComponent(buttonLayout);
 	}
 
 	/**ClickListener for the Button to download results**/

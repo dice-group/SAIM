@@ -26,6 +26,11 @@ public class LinkQualityComputer {
 		reference = getMapping(referenceFile);
 	}
 	
+	public LinkQualityComputer(Mapping map, Mapping ref) {
+		this.m=map;
+		this.reference=ref;
+	}
+	
 	public double computeFScore() {
 		PRFComputer p = new PRFComputer();
 		return p.computeFScore(m, reference);
@@ -41,7 +46,7 @@ public class LinkQualityComputer {
 		return p.computeRecall(m, reference);
 	}
 	
-	private static Mapping getMapping(String file) {
+	public static Mapping getMapping(String file) {
 		CSVMappingReader r = new CSVMappingReader();
 		if(getSeparator(file) != null) {
 			r.setSeparator(getSeparator(file));
