@@ -21,8 +21,8 @@ public class SelfConfigMeshBasedBean {
 	}
 
 	private void setDefaultValues() {
-		setGridPoints(5);
-		setIterations(5);
+		setGridPoints(3);
+		setIterations(3);
 		setBeta(1.0d);
 		setMinCoverage(0.6d);
 		setClassifierName(0);

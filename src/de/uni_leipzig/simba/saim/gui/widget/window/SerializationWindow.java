@@ -52,15 +52,17 @@ public class SerializationWindow extends Window
 		String fileName   = "";
 		fileName += config.getSource().id+"_"+config.getTarget().id+"."+serial.getFileExtension();
 		serial.open(fileName);
-		String predicate = config.getLimesConfiReader().acceptanceRelation;
+		String predicate = "owl:sameAs";
 		// print prefixes
 //		System.out.println(config.getLimesConfiReader().prefixes);
 		serial.setPrefixes(config.getLimesConfiReader().prefixes);
-		for(String uri1 : m.map.keySet()) {
-			for(Entry<String, Double> e : m.map.get(uri1).entrySet()) {
-				serial.printStatement(PrefixHelper.expand(uri1), PrefixHelper.expand(predicate), PrefixHelper.expand(e.getKey()), e.getValue());
-			}
-		}
+//		serial.
+		serial.writeToFile(m, predicate, fileName);
+//		for(String uri1 : m.map.keySet()) {
+//			for(Entry<String, Double> e : m.map.get(uri1).entrySet()) {
+//				serial.printStatement(PrefixHelper.expand(uri1), predicate, PrefixHelper.expand(e.getKey()), e.getValue());
+//			}
+//		}
 		serial.close();
 		return new Link(messages.getString("downloadlinkspec"),new FileResource(new File(fileName), getApplication()));
 	}

@@ -127,6 +127,10 @@ public class KBInfoForm extends Form
 					{
 						url.addItem(kb.endpoint);
 						url.select(kb.endpoint);
+						if(kb.endpoint.startsWith("C:\\")) {
+							url.setEnabled(false);
+						}
+								
 					}
 					if (kb.id != null)
 					{

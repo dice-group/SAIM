@@ -49,7 +49,7 @@ import de.uni_leipzig.simba.saim.gui.widget.window.About;
 import de.uni_leipzig.simba.saim.gui.widget.window.EndpointWindow;
 /**
  * Central Application class.
- * Sets up main window and
+ * Sets up main window and initializes SAIM.
  */
 @SuppressWarnings("serial")
 public class SAIMApplication extends Application implements TransactionListener
