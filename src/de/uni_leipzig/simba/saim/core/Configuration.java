@@ -18,6 +18,9 @@ import org.jdom.output.XMLOutputter;
 import com.hp.hpl.jena.rdf.model.Model;
 
 import de.konrad.commons.sparql.PrefixHelper;
+import de.uni_leipzig.simba.cache.Cache;
+import de.uni_leipzig.simba.cache.HybridCache;
+import de.uni_leipzig.simba.cache.MemoryCache;
 import de.uni_leipzig.simba.genetics.util.PropertyMapping;
 import de.uni_leipzig.simba.io.ConfigReader;
 import de.uni_leipzig.simba.io.KBInfo;
@@ -150,6 +153,29 @@ public class Configuration
 	
 	public KBInfo getSource() {	return source;}
 	public KBInfo getTarget() {	return target;}
+	
+	public Cache getSourceCache() {
+		if(sourceModel == null)
+			return HybridCache.getData(source);
+		else {
+			Cache c = new MemoryCache();
+			logger.info("Generating Cache with QueryModule("+source.type+")");
+			logger.info(source);
+			QueryModuleFactory.getQueryModule(source.type, source).fillCache(c);
+			return c;
+		}
+	}
+
+	public Cache getTargetCache() {
+		if(targetModel == null)
+			return HybridCache.getData(target);
+		else {
+			Cache c = new MemoryCache();
+			logger.info("Generating Cache with QueryModule("+target.type+")");
+			QueryModuleFactory.getQueryModule(target.type, target).fillCache(c);
+			return c;
+		}
+	}
 
 	public void setFromConfigReader(ConfigReader cR)
 	{

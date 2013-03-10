@@ -168,7 +168,7 @@ public class SPARQLHelper
 		return (Set<String>)element.getValue();
 	}
 
-	public static Set<String> subClassesOfUncached(String endpoint, String graph,String clazz, Model model)
+	public static Set<String> subClassesOfUncached(String endpoint, String graph, String clazz, Model model)
 	{
 		final int MAX_CHILDREN = 100;
 		String query = "SELECT distinct(?class) WHERE { ?class rdfs:subClassOf "+wrapIfNecessary(clazz)+". } LIMIT "+MAX_CHILDREN;

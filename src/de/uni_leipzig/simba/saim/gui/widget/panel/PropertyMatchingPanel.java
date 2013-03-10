@@ -332,7 +332,7 @@ public class PropertyMatchingPanel extends Panel
 	 */
 	private void addProperty(String s, KBInfo info) {
 		String prop;
-		System.out.println("Add property "+s+" to "+info.id); //$NON-NLS-1$ //$NON-NLS-2$
+//		System.out.println("Add property "+s+" to "+info.id); //$NON-NLS-1$ //$NON-NLS-2$
 		if(s.startsWith("http:")) {//do not have a prefix, so we generate one //$NON-NLS-1$
 			PrefixHelper.generatePrefix(s);
 			prop = PrefixHelper.abbreviate(s);
@@ -371,21 +371,24 @@ public class PropertyMatchingPanel extends Panel
 		Set<String> propListSource = null;
 		Set<String> propListTarget = null;
 		KBInfo info = config.getSource();
-		String className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8); //$NON-NLS-1$
-		info = config.getSource();
-		className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8); //$NON-NLS-1$
-		propListSource = SPARQLHelper.properties(info.endpoint, info.graph, className, config.sourceModel);
+		String className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8);//$NON-NLS-1$
+	
+		
+		
+		String classNameExp = expandClassName(info, className);
+		propListSource = SPARQLHelper.properties(info.endpoint, info.graph, classNameExp, config.sourceModel);
 		logger.info("Got "+propListSource.size()+ " source props"); //$NON-NLS-1$ //$NON-NLS-2$
 		info = config.getTarget();
 		className = info.restrictions.get(0).substring(info.restrictions.get(0).indexOf("rdf:type")+8); //$NON-NLS-1$
-		propListTarget = SPARQLHelper.properties(info.endpoint, info.graph, className, config.targetModel);
+	
+		classNameExp = expandClassName(info, className);
+		propListTarget = SPARQLHelper.properties(info.endpoint, info.graph, classNameExp, config.targetModel);
 		logger.info("Got "+propListTarget.size()+ " target props"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		for(String prop : propListSource) {
 			String s_abr=PrefixHelper.abbreviate(prop);
 			sourceProperties.add(s_abr);
 		}
-
 		for(String prop : propListTarget) {
 			String s_abr=PrefixHelper.abbreviate(prop);
 			targetProperties.add(s_abr);
@@ -589,7 +592,7 @@ public class PropertyMatchingPanel extends Panel
 				propMap.setTargetModel(config.targetModel);
 			}
 			try {
-				Mapping m = propMap.getPropertyMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().getClassOfendpoint(), config.getTarget().getClassOfendpoint());
+				Mapping m = propMap.getPropertyMapping(config.getSource().endpoint, config.getTarget().endpoint, expandClassName(config.getSource(),config.getSource().getClassOfendpoint()), expandClassName(config.getTarget(),config.getTarget().getClassOfendpoint()));
 
 				if(CACHING) {
 					mappingCache = CacheManager.getInstance().getCache("automaticpropertymapping"); //$NON-NLS-1$
@@ -655,5 +658,25 @@ public class PropertyMatchingPanel extends Panel
 				ret+= " (" + similarity + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			return ret;
 		}
+	}
+	
+	/**
+	 * Workaround to expanding abbreviated classname to full URI as SPARQWLModule requires them and
+	 * generated prefixes are not persistent in the PrefixHelper.
+	 * @param info
+	 * @param className
+	 * @return
+	 */
+	public String expandClassName(KBInfo info, String className) {
+		if(className.startsWith("http://"))
+			return className;
+		else {
+			String base = className.substring(0, className.indexOf(":")).trim();
+			if(info.prefixes.containsKey(base)) {
+//				logger.info("Restructering classname "+className+" to "+info.prefixes.get(base)+className.substring(className.indexOf(":")+1));
+				return info.prefixes.get(base)+className.substring(className.indexOf(":")+1);
+			}
+		}
+		return className;
 	}
 }

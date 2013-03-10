@@ -74,15 +74,19 @@ public class SelfConfigMeshBasedBean {
 		switch(id) {
 			case 0:
 				bsc = new MeshBasedSelfConfigurator(sourceCache, targetCache, minCoverage, beta);
+				bsc.ITERATIONS_MAX = iterations;
 				break;
 			case 1:
 				bsc = new LinearMeshSelfConfigurator(sourceCache, targetCache, minCoverage, beta);
+				bsc.ITERATIONS_MAX = iterations;
 				break;
 			case 2:
 				bsc = new DisjunctiveMeshSelfConfigurator(sourceCache, targetCache, minCoverage, beta);
+				bsc.ITERATIONS_MAX = iterations;
 				break;
 			default:
 				bsc = new MeshBasedSelfConfigurator(sourceCache, targetCache, minCoverage, beta);
+				bsc.ITERATIONS_MAX = iterations;
 				break;
 		}
 		return bsc;

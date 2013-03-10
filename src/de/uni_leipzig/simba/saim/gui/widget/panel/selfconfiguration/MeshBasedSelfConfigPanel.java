@@ -71,11 +71,11 @@ public class MeshBasedSelfConfigPanel extends SelfConfigExecutionPanel{
 				indicator.setValue(new Float(1f/steps));
 				indicator.requestRepaint();
 				stepPanel.setCaption(messages.getString("MeshBasedSelfConfigPanel.sourcecache")); //$NON-NLS-1$
-				HybridCache sourceCache = HybridCache.getData(config.getSource());
+				Cache sourceCache =	config.getSourceCache();
 				indicator.setValue(new Float(2f/steps));
 				indicator.requestRepaint();
 				stepPanel.setCaption(messages.getString("MeshBasedSelfConfigPanel.targetcache")); //$NON-NLS-1$
-				HybridCache targetCache = HybridCache.getData(config.getTarget());
+				Cache targetCache = config.getTargetCache();
 				indicator.setValue(new Float(3f/steps));
 				stepPanel.setCaption(messages.getString("MeshBasedSelfConfigPanel.performselfconfig")); //$NON-NLS-1$
 
@@ -86,25 +86,34 @@ public class MeshBasedSelfConfigPanel extends SelfConfigExecutionPanel{
 				indicator.setValue(new Float(4f/steps));
 				stepPanel.setCaption(messages.getString("MeshBasedSelfConfigPanel.gotinitialclassifiers")); //$NON-NLS-1$
 				if(classifiers.size()>0) {
-					classifiers = bsc.learnClassifer(classifiers);
-					//@TODO interface to change parameters
-					cc = bsc.getZoomedHillTop(bean.getGridPoints(), bean.getIterations(), classifiers);
-					System.out.println(cc);
-					for(SimpleClassifier co:cc.classifiers) {
-						System.out.println(co);
-					}
-//					classifiers = cc.classifiers;
-					indicator.setValue(new Float(5f/steps));
-					stepPanel.setCaption(messages.getString("MeshBasedSelfConfigPanel.complexclassifiercaption")); //$NON-NLS-1$
-					generatedMetricexpression = generateMetric(cc.classifiers, "");
-					showComplexClassifier();
-					if(cc.mapping != null && cc.mapping.size()>0)
-						learnedMapping = cc.mapping;
-					config.setMetricExpression(generatedMetricexpression);
-					config.setAcceptanceThreshold(getThreshold(cc.classifiers));
-					System.out.println("SelfConfig class= "+bsc.getClass().getCanonicalName());
+					try {
+						classifiers = bsc.learnClassifer(classifiers);
+						//@TODO interface to change parameters
+						cc = bsc.getZoomedHillTop(bean.getGridPoints(), bean.getIterations(), classifiers);
+						System.out.println(cc);
+				
+						for(SimpleClassifier co:cc.classifiers) {
+							System.out.println(co);
+						}	
+						classifiers = cc.classifiers;
+						indicator.setValue(new Float(5f/steps));
+						stepPanel.setCaption(messages.getString("MeshBasedSelfConfigPanel.complexclassifiercaption")); //$NON-NLS-1$
+						generatedMetricexpression = generateMetric(cc.classifiers, "");
+						showComplexClassifier();
+						if(cc.mapping != null && cc.mapping.size()>0)
+							learnedMapping = cc.mapping;
+						config.setMetricExpression(generatedMetricexpression);
+						config.setAcceptanceThreshold(getThreshold(cc.classifiers));
+						System.out.println("SelfConfig class= "+bsc.getClass().getCanonicalName());
 
-					onFinish(sourceCache, targetCache);
+						onFinish(sourceCache, targetCache);
+					}catch(Exception e) {
+						e.printStackTrace();
+						indicator.setValue(new Float(5f/steps));
+						stepPanel.setCaption("Sorry there occured an exception while computing.");//$NON-NLS-1$
+						
+					}
+//					
 				} else {
 					indicator.setValue(new Float(5f/steps));
 					stepPanel.setCaption(messages.getString("MeshBasedSelfConfigPanel.nosimpleclassifiers"));

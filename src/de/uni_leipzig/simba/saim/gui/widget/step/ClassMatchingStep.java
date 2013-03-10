@@ -1,5 +1,6 @@
 package de.uni_leipzig.simba.saim.gui.widget.step;
 
+import org.apache.log4j.Logger;
 import org.vaadin.teemu.wizards.WizardStep;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Panel;
@@ -14,7 +15,7 @@ public class ClassMatchingStep implements WizardStep
 {
 	private final SAIMApplication app;
 	//private final Messages messages;
-
+	private Logger logger = Logger.getLogger(Configuration.class);
 	public ClassMatchingStep(SAIMApplication app/*, private final Messages messages*/)
 	{
 		this.app = app;
@@ -49,23 +50,34 @@ public class ClassMatchingStep implements WizardStep
 		else {
 			if(panel.sourceClassForm.isValid() && panel.targetClassForm.isValid())
 			{
-
 				source.restrictions.clear();
 				target.restrictions.clear();
 				//source
 				source.prefixes.put("rdf", PrefixHelper.getURI("rdf"));
 				String restr = source.var+" rdf:type ";
-				String value1 = SPARQLHelper.wrapIfNecessary(PrefixHelper.expand(panel.sourceClassForm.getField("textfield").getValue().toString()));
-				if(value1 != null && value1.length()>0)
+				String value1 = panel.sourceClassForm.getField("textfield").getValue().toString();
+				String[] abbr1 = PrefixHelper.generatePrefix(value1);
+				source.prefixes.put(abbr1[0],abbr1[1]);				
+				if(value1 != null && value1.length()>0) {
+					value1 = PrefixHelper.abbreviate(value1);
 					source.restrictions.add(restr + value1);
+				    logger.info("Setting source restriction to..."+value1);
+				}
 				//target
-				restr = target.var+" rdf:type ";
-				String value2 = SPARQLHelper.wrapIfNecessary(PrefixHelper.expand(panel.targetClassForm.getField("textfield").getValue().toString()));
-				if(value2 != null && value2.length()>0)
-					target.restrictions.add(restr + value2);
 				target.prefixes.put("rdf", PrefixHelper.getURI("rdf"));
+				restr = target.var+" rdf:type ";
+				String value2 = panel.targetClassForm.getField("textfield").getValue().toString();
+				String[] abbr2 = PrefixHelper.generatePrefix(value2);
+				target.prefixes.put(abbr2[0],abbr2[1]);
+				
+				if(value2 != null && value2.length()>0) {
+					value2 = PrefixHelper.abbreviate(value2);
+					target.restrictions.add(restr + value2);
+					logger.info("Setting target restriction to..."+value2);
+				}
+				
 				if(value1 != null && value2 !=  null && value1.length()>0 && value2.length()>0) {
-					System.out.println("Added class restrictions:\nSource: "+source.restrictions.get(0)+" \nTarget: "+target.restrictions.get(0));
+//					System.out.println("Added class restrictions:\nSource: "+source.restrictions.get(0)+" \nTarget: "+target.restrictions.get(0));
 
 					//				// we may add the selected result to the cache
 					//				if(ClassMatchingPanel.CACHING) {

@@ -197,12 +197,12 @@ public class GetAllSparqlQueryModule extends SparqlQueryModule
 		long startTime = System.currentTimeMillis();
 		String query = "";
 		//write prefixes
-
+		System.out.println(getKB().prefixes);
 		// ***** begin workaround TODO: change back when error is resolved with the drugbank sparql endpoint
-		//		for (String key : getKB().prefixes.keySet())
-		//		{
-		//			query = query + "PREFIX " + key + ": <" + getKB().prefixes.get(key) + ">\n";
-		//		}
+				for (String key : getKB().prefixes.keySet())
+				{
+					query = query + "PREFIX " + key + ": <" + getKB().prefixes.get(key) + ">\n";
+				}
 
 		//		query= query + "PREFIX drugbank: <http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/>\n";
 		query= query + "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n";
