@@ -89,7 +89,7 @@ public class Configuration
 	public double getAcceptanceThreshold() {
 		if(metric == null || metric.param1==null) {
 			logger.warn("Not able to get threshold");
-			return 0.3d;
+			return 1d;
 		}
 		return metric.param1;
 	}
@@ -108,7 +108,7 @@ public class Configuration
 				number = format.parse(twoDForm.format(getAcceptanceThreshold()-0.1d));
 			} catch (ParseException e) {
 				System.err.println(e);
-				return 0.3d;
+				return 0.8d;
 			}
 			  return number.doubleValue();
 		}
@@ -121,7 +121,8 @@ public class Configuration
 		metric.param2 = verificationThreshold;
 	}
 
-	public Configuration() {}
+	public Configuration() {
+	}
 	public void store() {}
 
 	public void setSource(KBInfo source) {

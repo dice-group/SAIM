@@ -93,7 +93,9 @@ public class SAIMCytoprocess extends Cytoprocess {
 
 		}else{
 			Node n = new Output();
-			addNode(n.id, NODE_TYPE.OUTPUT);
+			n.param1 = 1.0d;
+			n.param2 = 0.8d;
+			addNode(n.id, NODE_TYPE.OUTPUT, n.param1, n.param2);
 			repaintGraph();
 		}
 	}
@@ -214,6 +216,8 @@ public class SAIMCytoprocess extends Cytoprocess {
 		switch(shape){
 		case OUTPUT :{
 			n = new Output();
+			n.param1 = 1.0d;
+			n.param2 = 0.8d;
 			nodeView = NodeView.ELLIPSE;
 			rgb = PaintController.getRGB(Color.decode(properties.getProperty(SAIMCytoprocessProperties.OUTPUT_COLOR)));
 			break;
