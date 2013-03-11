@@ -7,7 +7,6 @@
 		<GRAPH></GRAPH>
 		<VAR></VAR>
 		<PAGESIZE></PAGESIZE>
-		<TYPE></TYPE>
 	</SOURCE>
 	<TARGET>
 		<ID></ID>
@@ -15,7 +14,6 @@
 		<GRAPH></GRAPH>
 		<VAR></VAR>
 		<PAGESIZE></PAGESIZE>
-		<TYPE></TYPE>
 	</TARGET>	
 	<METRIC></METRIC>
 	<ACCEPTANCE>

@@ -233,10 +233,11 @@ public class Configuration
 				element.addContent(propertyElement);
 			}
 		}
-		if(kb.type != null && kb.type.length()>0)
-			element.getChild("TYPE").setText(kb.type);
-		else
-			element.removeChild("TYPE");
+		if(kb.type != null && kb.type.length()>0) {
+			Element type = new Element("TYPE");
+			type.setText(kb.type);
+			element.addContent(type);
+		}
 	}
 
 	public void saveToXML(String filename)
