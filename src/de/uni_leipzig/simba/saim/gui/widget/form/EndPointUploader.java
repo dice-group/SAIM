@@ -28,7 +28,8 @@ Upload.FailedListener, Upload.Receiver {
 	VerticalLayout l = new VerticalLayout();
 	Panel root;
 	Select typeSelect;
-//	TextField name;
+	
+	TextField name;
 	File file;
 	Logger logger = LoggerFactory.getLogger(EndPointUploader.class);
 	
@@ -41,7 +42,7 @@ Upload.FailedListener, Upload.Receiver {
 
 	    // Create the Upload component.
         final Upload upload = new Upload("Please select a dumped endpoint and it's type to upload", this);
-
+        
 	    // Use a custom button caption instead of plain "Upload".
 	    upload.setButtonCaption("Upload Now");
 
@@ -61,11 +62,9 @@ Upload.FailedListener, Upload.Receiver {
 		
 		typeSelect.select("N3");
 		typeSelect.setNullSelectionAllowed(false);
-
+		name = new TextField("Name of Endpoint");
+		root.addComponent(name);
 		root.addComponent(typeSelect);
-		
-//		name = new TextField("Name");
-//		root.addComponent(name);
 	}
 
 
@@ -99,7 +98,11 @@ Upload.FailedListener, Upload.Receiver {
 		root.addComponent(l);
 		KBInfo info = new KBInfo();
 		info.endpoint = file.getAbsolutePath();
-		info.id = file.getName();
+		String name = (String) this.name.getValue();
+		if(name != null && name.length()>0)
+			info.id = name;
+		else
+			info.id = file.getName();
 		try {
 			String dumpType = (String) typeSelect.getValue();
 			QueryModuleFactory.getQueryModule(dumpType, info);
