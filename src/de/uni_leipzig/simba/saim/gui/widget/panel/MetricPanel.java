@@ -292,7 +292,7 @@ public class MetricPanel extends Panel{
 						break;
 					}
 					case OPERATOR:
-						saimcytoprocess.addNode(labelValue, SAIMCytoprocess.NODE_TYPE.OPERATOR);
+						saimcytoprocess.addNode(labelValue, SAIMCytoprocess.NODE_TYPE.OPERATOR, 0.3d, 0.3d);
 						break;
 
 					case MEASURE:
