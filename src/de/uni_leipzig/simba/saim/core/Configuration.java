@@ -217,16 +217,26 @@ public class Configuration
 		element.getChild("PAGESIZE").setText(String.valueOf(kb.pageSize));
 		for(String restriction: kb.restrictions)
 		{
-			Element restrictionElement = new Element("RESTRICTION");
-			element.addContent(restrictionElement);
-			restrictionElement.setText(restriction);
+			if(restriction != null && restriction.trim().length()>0) {
+				Element	restrictionElement = new Element("RESTRICTION");
+				
+				restrictionElement.setText(restriction);			
+				element.addContent(restrictionElement);
+			}
 		}
 		for(String property: kb.properties)
 		{
-			Element restrictionElement = new Element("PROPERTY");
-			element.addContent(restrictionElement);
-			restrictionElement.setText(property);
+			if(property!= null && property.trim().length()>0) {
+				Element	propertyElement = new Element("PROPERTY");
+				propertyElement.setText(property);
+				System.out.println("Adding property "+propertyElement);
+				element.addContent(propertyElement);
+			}
 		}
+		if(kb.type != null && kb.type.length()>0)
+			element.getChild("TYPE").setText(kb.type);
+		else
+			element.removeChild("TYPE");
 	}
 
 	public void saveToXML(String filename)
@@ -248,7 +258,11 @@ public class Configuration
 				}
 			}
 			Element sourceElement = rootElement.getChild("SOURCE");
+			sourceElement.removeChildren("RESTRICTION");
+			sourceElement.removeChildren("PROPERTY");
 			Element targetElement = rootElement.getChild("TARGET");
+			targetElement.removeChildren("RESTRICTION");
+			targetElement.removeChildren("PROPERTY");
 			fillKBElement(sourceElement,source);
 			fillKBElement(targetElement,target);
 
