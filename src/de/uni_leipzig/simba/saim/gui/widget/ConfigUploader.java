@@ -28,7 +28,8 @@ public class ConfigUploader extends CustomComponent
 implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver
 {
 	//private final Messages messages;
-	public static final String UPLOAD_FOLDER = "C:/tmp/uploads/";
+	public static final String base = System.getProperty("user.home")+"/";
+	public static final String store = "SAIM/EPStore";
 	private final Panel root;
 	private File file;
 	private final ConfigReader cR = new ConfigReader();
@@ -80,7 +81,7 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver
 	@Override
 	public OutputStream receiveUpload(String filename, String mimeType) {
 		FileOutputStream fos = null; // Output stream to write to
-		file = new File(UPLOAD_FOLDER + filename);
+		file = new File(base+store + filename);
 		try {
 			// Open the file for writing.
 			fos = new FileOutputStream(file);
@@ -110,6 +111,37 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver
 		{
 			executeFileButton.setEnabled(true);
 		}
+		
+		Configuration config = ((SAIMApplication) getApplication()).getConfig();//Configuration.getInstance();
+
+		ConfigReader cR = new ConfigReader();
+	
+		cR.validateAndRead(base+store+event.getFilename());
+		System.out.println(cR);
+		// setting location of limes.dtd
+		// set paths to source and target
+		if(cR.sourceInfo.type!=null && cR.targetInfo.type != null)
+		try {
+			URL url;String path;
+			if(cR.sourceInfo.type.equalsIgnoreCase("CSV")) {
+				logger.info("Trying to get resource..."+"examples/"+cR.sourceInfo.endpoint);
+				url = getClass().getClassLoader().getResource("examples/"+cR.sourceInfo.endpoint);//dbpedia-linkedmdb.xml");
+				path = new File(url.toURI()).getAbsolutePath();
+				cR.sourceInfo.endpoint = path;
+			}
+			if(cR.targetInfo.type.equalsIgnoreCase("CSV")) {
+				logger.info("Trying to get resource..."+"examples/"+cR.targetInfo.endpoint);
+				url = getClass().getClassLoader().getResource("examples/"+cR.targetInfo.endpoint);//dbpedia-linkedmdb.xml");
+				path = new File(url.toURI()).getAbsolutePath();
+				cR.targetInfo.endpoint = path;
+			}
+		}catch(URISyntaxException e) {
+			e.printStackTrace();
+		}
+		config.setFromConfigReader(cR);
+		SAIMApplication appl = (SAIMApplication) getApplication();
+		appl.refresh();
+		appl.getMainWindow().removeWindow(getWindow());	
 	}
 
 	private boolean isValidFile(File f) {
