@@ -72,7 +72,7 @@ public class BatchLearningPanel extends MetricLearnPanel {
 		if (map.size()>0)
 		{
 			learnLayout.removeAllComponents();
-			learnLayout.addComponent(iMapTable.getTable(learnLayout));
+			learnLayout.addComponent(iMapTable.getTable());
 		}
 	}
 
@@ -101,7 +101,7 @@ public class BatchLearningPanel extends MetricLearnPanel {
 			//iMapTable = new DetailedInstanceMappingTable(map,learner.getFitnessFunction().getSourceCache(),learner.getFitnessFunction().getTargetCache());
 			iMapTable = new InstanceMappingTable(getApplication(), config, map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache(), true,messages);
 			l.removeAllComponents();
-			l.addComponent(iMapTable.getTable(l));
+			l.addComponent(iMapTable.getTable());
 			if (map.size()==0)
 			{
 				getApplication().getMainWindow().showNotification("Learning without additional training data");

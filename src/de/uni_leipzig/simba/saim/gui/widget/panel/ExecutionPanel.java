@@ -76,6 +76,7 @@ public class ExecutionPanel extends PerformPanel implements PropertyChangeListen
 				progress.setValue(1f);
 				progressLabel.setValue(messages.getString("ExecutionPanel.mappingperformed")); //$NON-NLS-1$
 				InstanceMappingTable iT = new InstanceMappingTable(getApplication(), config, m, lR.getSourceCache(), lR.getTargetCache(), false,messages);
+				mainLayout.removeAllComponents();
 				ResultPanel results = new ResultPanel(iT,messages);
 				mainLayout.addComponent(results);
 //				mainLayout.removeComponent(start);

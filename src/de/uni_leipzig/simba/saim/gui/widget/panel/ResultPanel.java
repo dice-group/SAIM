@@ -47,7 +47,7 @@ public class ResultPanel extends Panel
 		this.setContent(layout);
 		downloadResults = new Button(messages.getString("save"));
 		downloadResults.addListener(new DownLoadButtonClickListener());
-		layout.addComponent(data.getTable(layout));
+		layout.addComponent(data.getTable());
 		HorizontalLayout buttonLayout = new HorizontalLayout();
 		buttonLayout.addComponent(downloadResults);
 		// if admin show validation component
@@ -62,13 +62,9 @@ public class ResultPanel extends Panel
 	/**ClickListener for the Button to download results**/
 	class DownLoadButtonClickListener implements Button.ClickListener
 	{
-		/**
-		 */
 		private static final long serialVersionUID = -2521504101562533617L;
-
 		@Override
 		public void buttonClick(ClickEvent event) {
-
 			Window download = new SerializationWindow(data.getMapping(),messages);
 			getApplication().getMainWindow().addWindow(download);
 		}

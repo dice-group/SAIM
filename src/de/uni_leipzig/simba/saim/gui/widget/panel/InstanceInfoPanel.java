@@ -26,6 +26,7 @@ public class InstanceInfoPanel extends Panel {
 	public InstanceInfoPanel(Instance i1, Instance i2) {
 		super();
 		this.setWidth("80%");
+		this.setWidth("100%");
 		this.i1=i1;
 		this.i2=i2;
 	}
@@ -74,7 +75,7 @@ public class InstanceInfoPanel extends Panel {
 		Object [] properties={"Property"};
 		boolean [] ordering={true};
 		t.sort(properties, ordering);
-		t.setHeight("10em");
+		t.setHeight("100%");
 		return t;
 	}
 }

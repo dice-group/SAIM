@@ -93,7 +93,7 @@ public class ActiveLearningPanel extends MetricLearnPanel
 		if (map.size()>0)
 		{
 			learnLayout.removeAllComponents();
-			learnLayout.addComponent(iMapTable.getTable(learnLayout));
+			learnLayout.addComponent(iMapTable.getTable());
 		}
 	}
 
@@ -125,7 +125,7 @@ public class ActiveLearningPanel extends MetricLearnPanel
 			iMapTable = new InstanceMappingTable(getApplication(), config, map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache(), true,messages);
 
 			l.removeAllComponents();
-			l.addComponent(iMapTable.getTable(l));
+			l.addComponent(iMapTable.getTable());
 			if (map.size()>0)
 			{
 				terminate.setEnabled(true);
