@@ -69,16 +69,18 @@ public class SortedMapping {
 		m.add("a", "c", 4);
 		m.add("a", "d", 22);
 
+		m.add("b", "a", 6);
 		m.add("aa", "bb", 5);
 		m.add("ac", "bc", 5);
-		m.add("aaa", "bbb", 3);
-		m.add("aaaa", "bbbb", 1);
+		m.add("aaa", "bbb", 0);
+		m.add("aaaa", "bbbb", 0);
 
 		SortedMapping sortMap = new SortedMapping(m);
 		sortMap.sort();
 		System.out.println("Mapping:\n"+m);
-		System.out.println("Sorted:\n"+sortMap);
-
+		System.out.println("Sorted:\n"+sortMap.sort().descendingMap());
+		
+//		matchesFound
 
 	}
 }

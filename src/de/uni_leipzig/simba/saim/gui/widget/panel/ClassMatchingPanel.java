@@ -194,27 +194,36 @@ public class ClassMatchingPanel extends Panel
 	 * @param classMapping
 	 */
 	public void display(Mapping classMapping) {
-
-		suggestionLabel.setCaption(classMapping.map.size() + messages.getString("ClassMatchingPanel.5")); //$NON-NLS-1$
+		int matchesFound = 0;
 		logger.info("Show Match" + classMapping); //$NON-NLS-1$
 		suggestionComboBox.removeListener(comboListener);
 		suggestionComboBox.removeAllItems();
 		if(classMapping!=null && classMapping.map.size()>0) {
+			for(Entry<String, HashMap<String, Double>> e : classMapping.map.entrySet()) {
+				for(Entry<String, Double> sE : e.getValue().entrySet()) {
+					if(sE.getValue()>=0) {
+						matchesFound++;
+					}
+				}
+			}
 			if(suggestionComboBox != null)
 				suggestionComboBox.removeAllItems();
 			else
 				suggestionComboBox = new ComboBox();
 			SortedMapping sorter = new SortedMapping(classMapping);
-			for(Entry<Double, List<Pair<String>>> e: sorter.sort().descendingMap().entrySet()) {
+			
+			for(Entry<Double, List<Pair<String>>> e: sorter.sort().entrySet()) {
 				for(Pair<String> pair : e.getValue()) {
 					if(e.getKey()>0) {
 						Object itemId = suggestionComboBox.addItem(pair);
 						suggestionComboBox.setItemCaption(itemId, e.getValue()+"= "+pair);
 						suggestionComboBox.select(itemId);
+					} else {
+						matchesFound--;
 					}
 				}				
 			}
-
+			suggestionLabel.setCaption(matchesFound + messages.getString("ClassMatchingPanel.5")); //$NON-NLS-1$
 			suggestionComboBox.setVisible(true);
 			suggestionComboBox.setEnabled(true);
 			suggestionComboBox.setNullSelectionAllowed(false);
