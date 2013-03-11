@@ -47,7 +47,6 @@ public class SAIMCytoprocess extends Cytoprocess {
 	private Window mainWindow;
 
 	private SAIMCytoprocessModalWindows modal;
-	private SAIMCytoprocessProperties properties;
 
 	public SAIMCytoprocess(int width, int height, SAIMApplication saimApp) {
 		super(width, height);
@@ -57,8 +56,6 @@ public class SAIMCytoprocess extends Cytoprocess {
 		mainWindow = saimApp.getMainWindow();
 
 		modal = new SAIMCytoprocessModalWindows(messages,config,mainWindow);
-
-		properties = new SAIMCytoprocessProperties();
 	}
 
 	public void loadMetricExpression(){
@@ -93,8 +90,8 @@ public class SAIMCytoprocess extends Cytoprocess {
 
 		}else{
 			Node n = new Output();
-			n.param1 = 1.0d;
-			n.param2 = 0.8d;
+			n.param1 = Double.parseDouble(SAIMCytoprocessProperties.getProperty(SAIMCytoprocessProperties.OUTPUT_DEFAULT_THRESHOLD_1));
+			n.param2 = Double.parseDouble(SAIMCytoprocessProperties.getProperty(SAIMCytoprocessProperties.OUTPUT_DEFAULT_THRESHOLD_2));
 			addNode(n.id, NODE_TYPE.OUTPUT, n.param1, n.param2);
 			repaintGraph();
 		}
@@ -216,34 +213,32 @@ public class SAIMCytoprocess extends Cytoprocess {
 		switch(shape){
 		case OUTPUT :{
 			n = new Output();
-			n.param1 = 1.0d;
-			n.param2 = 0.8d;
 			nodeView = NodeView.ELLIPSE;
-			rgb = PaintController.getRGB(Color.decode(properties.getProperty(SAIMCytoprocessProperties.OUTPUT_COLOR)));
+			rgb = PaintController.getRGB(Color.decode(SAIMCytoprocessProperties.getProperty(SAIMCytoprocessProperties.OUTPUT_COLOR)));
 			break;
 		}
 		case SOURCE:{
 			n = new Property(name, Origin.SOURCE);
 			nodeView = NodeView.RECTANGLE;
-			rgb = PaintController.getRGB(Color.decode(properties.getProperty(SAIMCytoprocessProperties.SOURCE_COLOR)));
+			rgb = PaintController.getRGB(Color.decode(SAIMCytoprocessProperties.getProperty(SAIMCytoprocessProperties.SOURCE_COLOR)));
 			break;
 		}
 		case TARGET:{
 			n = new Property(name, Origin.TARGET);
 			nodeView = NodeView.RECTANGLE;
-			rgb = PaintController.getRGB(Color.decode(properties.getProperty(SAIMCytoprocessProperties.TARGET_COLOR)));
+			rgb = PaintController.getRGB(Color.decode(SAIMCytoprocessProperties.getProperty(SAIMCytoprocessProperties.TARGET_COLOR)));
 			break;
 		}
 		case MEASURE:{
 			n = new Measure(name);
 			nodeView = NodeView.DIAMOND;
-			rgb = PaintController.getRGB(Color.decode(properties.getProperty(SAIMCytoprocessProperties.MEASURE_COLOR)));
+			rgb = PaintController.getRGB(Color.decode(SAIMCytoprocessProperties.getProperty(SAIMCytoprocessProperties.MEASURE_COLOR)));
 			break;
 		}
 		case OPERATOR:{
 			n = new Operator(name);
 			nodeView = NodeView.HEXAGON;
-			rgb = PaintController.getRGB(Color.decode(properties.getProperty(SAIMCytoprocessProperties.OPERATOR_COLOR)));
+			rgb = PaintController.getRGB(Color.decode(SAIMCytoprocessProperties.getProperty(SAIMCytoprocessProperties.OPERATOR_COLOR)));
 			break;
 		}
 		}
@@ -327,8 +322,6 @@ public class SAIMCytoprocess extends Cytoprocess {
 		}
 		return null;
 	}
-
-
 
 	// private
 	private void makeMetric(Output n, int parentId) {

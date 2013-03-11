@@ -19,6 +19,7 @@ import de.konrad.commons.sparql.PrefixHelper;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.SAIMCytoprocess;
+import de.uni_leipzig.simba.saim.SAIMCytoprocessProperties;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.metric.Measure;
 import de.uni_leipzig.simba.saim.core.metric.Node;
@@ -292,7 +293,9 @@ public class MetricPanel extends Panel{
 						break;
 					}
 					case OPERATOR:
-						saimcytoprocess.addNode(labelValue, SAIMCytoprocess.NODE_TYPE.OPERATOR, 0.3d, 0.3d);
+						double t1 = Double.parseDouble(SAIMCytoprocessProperties.getProperty(SAIMCytoprocessProperties.OPERATOR_DEFAULT_THRESHOLD_1));
+						double t2 = Double.parseDouble(SAIMCytoprocessProperties.getProperty(SAIMCytoprocessProperties.OPERATOR_DEFAULT_THRESHOLD_2));
+						saimcytoprocess.addNode(labelValue, SAIMCytoprocess.NODE_TYPE.OPERATOR, t1, t2);
 						break;
 
 					case MEASURE:

@@ -15,10 +15,15 @@ public class SAIMCytoprocessProperties {
 	public final static String TARGET_COLOR = "targetColor";
 	public final static String OUTPUT_COLOR = "outputColor";
 
-	public static final String resource = "de/uni_leipzig/simba/saim/SAIMCytoprocessProperties.properties";
-	private Properties properties =null;
+	public final static String OUTPUT_DEFAULT_THRESHOLD_1 = "outputT1";
+	public final static String OUTPUT_DEFAULT_THRESHOLD_2 = "outputT2";
 
-	public SAIMCytoprocessProperties(){
+	public final static String OPERATOR_DEFAULT_THRESHOLD_1 = "operatorT1";
+	public final static String OPERATOR_DEFAULT_THRESHOLD_2 = "operatorT2";
+
+	public static final String resource = "de/uni_leipzig/simba/saim/SAIMCytoprocessProperties.properties";
+	private static Properties properties = null;
+	static{
 		InputStream in=CytoprocessProperties.class.getClassLoader().getResourceAsStream(resource);
 		if(in != null){
 			properties = new Properties();
@@ -33,9 +38,9 @@ public class SAIMCytoprocessProperties {
 				e.printStackTrace();
 			}
 		}
-	}
+	  }
 
-	public String getProperty(String key){
+	public static String getProperty(String key){
 		return properties.getProperty(key).trim();
 	}
 }
