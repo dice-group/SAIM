@@ -26,6 +26,7 @@ import de.uni_leipzig.simba.io.ConfigReader;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.query.ModelRegistry;
 import de.uni_leipzig.simba.query.QueryModuleFactory;
+import de.uni_leipzig.simba.saim.core.metric.MetricFormatException;
 import de.uni_leipzig.simba.saim.core.metric.MetricParser;
 import de.uni_leipzig.simba.saim.core.metric.Output;
 /**Class holds all configuration settings for a linking process. */
@@ -184,10 +185,14 @@ public class Configuration
 		source = cR.sourceInfo;
 		target = cR.targetInfo;
 		this.propertyMapping = new PropertyMapping();
-		metric = MetricParser.parse(cR.metricExpression,cR.sourceInfo.var.replace("?",""));
-		setAcceptanceThreshold(cR.acceptanceThreshold);
-		metric.param2 = cR.verificationThreshold;
-
+		try {
+			metric = MetricParser.parse(cR.metricExpression,cR.sourceInfo.var.replace("?",""));
+			setAcceptanceThreshold(cR.acceptanceThreshold);
+			metric.param2 = cR.verificationThreshold;
+		} catch (MetricFormatException e){
+			logger.error("Not able to parse metric: "+e);
+		}
+		
 		logger.info("Successfully parsed metric from config reader: "+metric);
 		granularity = cR.granularity;
 		if(source.type.equalsIgnoreCase("CSV") || target.type.equalsIgnoreCase("CSV"))
