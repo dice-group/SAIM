@@ -5,7 +5,6 @@ import org.vaadin.teemu.wizards.WizardStep;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Panel;
 import de.konrad.commons.sparql.PrefixHelper;
-import de.konrad.commons.sparql.SPARQLHelper;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;

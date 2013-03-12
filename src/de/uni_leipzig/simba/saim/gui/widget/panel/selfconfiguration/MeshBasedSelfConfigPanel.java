@@ -13,7 +13,6 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
 import de.uni_leipzig.simba.cache.Cache;
-import de.uni_leipzig.simba.cache.HybridCache;
 import de.uni_leipzig.simba.genetics.util.PropertyMapping;
 import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.saim.Messages;
