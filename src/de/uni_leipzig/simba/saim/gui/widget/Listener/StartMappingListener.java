@@ -11,9 +11,11 @@ public  class StartMappingListener extends MetricPanelListeners implements Butto
 {
 	private static final long serialVersionUID = -688724646561873984L;
 	private MetricPanel mp = null;
-
+	private SAIMApplication application;
+	
 	public StartMappingListener(SAIMApplication application, final Messages messages, MetricPanel mp){
 		super(application, messages);
+		this.application=application;
 		this.mp = mp;
 	}
 

@@ -19,7 +19,9 @@ public class GenericSelfConfigurationPanel extends PerformPanel{
 	private String MESH;
 	private String GENETICSELFCONFIG;
 	SAIMApplication application;
-	public GenericSelfConfigurationPanel(SAIMApplication application, final Messages messages) {
+	public GenericSelfConfigurationPanel(SAIMApplication application, final Messages messages)
+	{
+		super(messages.getString("GenericSelfConfigurationPanel.GeneticSelfConfig"));
 		this.application = application;
 		this.messages = messages;
 		MESH = messages.getString("GenericSelfConfigurationPanel.meshbased"); //$NON-NLS-1$

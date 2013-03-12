@@ -37,6 +37,7 @@ public class MetricLearnPanel extends  PerformPanel{
 	protected HashMap<String, Object> params;
 
 	public MetricLearnPanel(SAIMApplication application) {
+		super(application.messages.getString("MetricLearnPanel.caption"));
 		this.application = application;
 		logger.setLevel(Level.WARN);
 		layout = new VerticalLayout();

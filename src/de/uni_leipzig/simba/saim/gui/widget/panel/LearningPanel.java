@@ -34,7 +34,9 @@ public class LearningPanel extends PerformPanel {
 	private LearnerConfigurationBean learnerConfigBean = new LearnerConfigurationBean();
 	SAIMApplication application;
 
-	public LearningPanel(SAIMApplication application, final Messages messages) {
+	public LearningPanel(SAIMApplication application, final Messages messages)
+	{
+		super(messages.getString("LearningPanel.caption")); //$NON-NLS-1$
 		this.application = application;
 		this.messages=messages;
 	}

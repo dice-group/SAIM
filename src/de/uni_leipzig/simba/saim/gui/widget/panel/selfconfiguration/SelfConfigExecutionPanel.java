@@ -43,6 +43,7 @@ public abstract class SelfConfigExecutionPanel extends PerformPanel{
 	Mapping learnedMapping = new Mapping();
 
 	public SelfConfigExecutionPanel(SAIMApplication application, final Messages messages) {
+		super(messages.getString("SelfConfigExecutionPanel.caption"));
 		this.application = application;
 		this.messages = messages;
 	}

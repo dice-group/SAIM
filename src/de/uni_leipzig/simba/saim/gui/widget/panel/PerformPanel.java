@@ -11,9 +11,9 @@ public abstract class PerformPanel extends Panel{
 		super(string);
 	}
 
-	public PerformPanel() {
-		super();
-	}
+//	public PerformPanel() {
+//		super();
+//	}
 
 	/**
 	 * Action to be performed if Window holding Panel is closed.
