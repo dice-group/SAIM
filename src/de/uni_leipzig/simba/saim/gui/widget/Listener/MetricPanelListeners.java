@@ -44,13 +44,14 @@ public class MetricPanelListeners
 				content.onClose();
 			}
 		});
-		sub.setWidth("80%");
-		sub.setHeight("80%");
+		sub.setWidth("100%");
+		sub.setHeight("100%");
 		sub.setCaption(content.getCaption());
 		sub.setContent(content);
 		sub.setImmediate(true);
 		sub.setVisible(true);
 		sub.setModal(true);
+		sub.setSizeFull();
 		showWindow(sub);
 		content.start();
 	}
