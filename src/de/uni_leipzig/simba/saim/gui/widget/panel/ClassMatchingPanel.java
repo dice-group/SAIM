@@ -23,6 +23,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
 import de.uni_leipzig.simba.data.Mapping;
+import de.uni_leipzig.simba.io.KBInfo;
 import de.uni_leipzig.simba.learning.query.DefaultClassMapper;
 import de.uni_leipzig.simba.learning.query.LabelBasedClassMapper;
 import de.uni_leipzig.simba.saim.Messages;
@@ -310,7 +311,7 @@ public class ClassMatchingPanel extends Panel
 					DefaultClassMapper classMapper = new DefaultClassMapper(10);
 					classMapper.setSourceModel(config.sourceModel);
 					classMapper.setTargetModel(config.targetModel);
-					classMapping = classMapper.getEntityMapping(config.getSource().endpoint, config.getTarget().endpoint, config.getSource().id, config.getTarget().id).reverseSourceTarget();
+					classMapping = classMapper.getEntityMapping(config.getSource().endpoint, config.getTarget().endpoint, getNameSpace(config.getSource()), getNameSpace(config.getTarget())).reverseSourceTarget();
 				}
 				if(CACHING)	{
 					cache = CacheManager.getInstance().getCache("classmatching"); //$NON-NLS-1$
@@ -323,6 +324,17 @@ public class ClassMatchingPanel extends Panel
 			}
 			display(classMapping);
 			progress.setEnabled(false);
+		}
+		
+		private String getNameSpace(KBInfo info) {
+
+			String ns = info.id.replaceAll("\\(.*\\)", "").trim();
+			if(ns.length()>0)
+				return ns;
+			else
+				return info.id;
+					
+			
 		}
 	}
 }

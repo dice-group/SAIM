@@ -69,11 +69,14 @@ public class BatchLearningPanel extends MetricLearnPanel {
 		}
 		Mapping map = learner.learn(new Mapping());
 		iMapTable = new InstanceMappingTable(getApplication(), config, map, learner.getFitnessFunction().getSourceCache(), learner.getFitnessFunction().getTargetCache(), true,messages);
-		if (map.size()>0)
-		{
+		if (map.size()>0) {
+			System.out.println(map);
 			learnLayout.removeAllComponents();
 			learnLayout.addComponent(iMapTable.getTable());
+		} else {
+			System.out.println("Batchlearning... lerned map was empty!!!!!!");
 		}
+
 	}
 
 	/** Listener for learn buttton @author Lyko */
