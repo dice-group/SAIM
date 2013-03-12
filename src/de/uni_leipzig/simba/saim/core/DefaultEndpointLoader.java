@@ -52,7 +52,10 @@ public class DefaultEndpointLoader
 		HashMap<String, KBInfo> defaults = new HashMap<String, KBInfo>();
 		defaults.put("DBpedia - default graph", createKBInfo("http://dbpedia.org/sparql","http://dbpedia.org",10000,"dbpedia"));
 		defaults.put("DBpedia live - default graph", createKBInfo("http://live.dbpedia.org/sparql","http://dbpedia.org",1000,"dbpedia"));
-	
+		defaults.put("Persons11 (OAEI 2010 Benchmark, local)", createLocalEndpointKBInfo("examples/oaei2010/person11.nt","",-1,"Persons11 (OAEI 2010 Benchmark)"));		
+		defaults.put("Persons12 (OAEI 2010 Benchmark, local)", createLocalEndpointKBInfo("examples/oaei2010/person12.nt","",-1,"Persons12 (OAEI 2010 Benchmark)"));
+		defaults.put("Persons21 (OAEI 2010 Benchmark, local)", createLocalEndpointKBInfo("examples/oaei2010/person21.nt","",-1,"Persons21 (OAEI 2010 Benchmark)"));		
+		defaults.put("Persons22 (OAEI 2010 Benchmark, local)", createLocalEndpointKBInfo("examples/oaei2010/person22.nt","",-1,"Persons22 (OAEI 2010 Benchmark)"));
 		defaults.put("LinkedGeoData", createKBInfo("http://linkedgeodata.org/sparql", "http://linkedgeodata.org", 1000, "linkedgeodata"));
 		defaults.put("lgd.aksw - Diseasome", createKBInfo("http://lgd.aksw.org:5678/sparql", "http://www.instancematching.org/oaei/di/diseasome/", 1000, "diseasome"));
 		defaults.put("lgd.aksw - Sider", createKBInfo("http://lgd.aksw.org:5678/sparql", "http://www.instancematching.org/oaei/di/sider/", 1000, "sider"));

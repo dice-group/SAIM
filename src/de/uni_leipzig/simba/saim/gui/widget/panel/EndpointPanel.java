@@ -50,7 +50,7 @@ public class EndpointPanel extends Panel implements PropertyChangeListener
 	public void propertyChange(PropertyChangeEvent evt) {
 		if(evt.getPropertyName().equals(Configuration.SETTING_CONFIG)) {
 			kbSource.setValuesFromKBInfo(config.getSource());
-			kbTarget.setValuesFromKBInfo(config.getTarget());
+			kbTarget.setValuesFromKBInfo(config.getTarget());			
 		}
 	}
 }

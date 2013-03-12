@@ -127,9 +127,7 @@ public class KBInfoForm extends Form
 					{
 						url.addItem(kb.endpoint);
 						url.select(kb.endpoint);
-						if(kb.endpoint.startsWith("C:\\")) {
-							url.setEnabled(false);
-						}
+						url.setEnabled(!(kb.endpoint.startsWith("C:\\")||(presetComboBox.getValue().toString().contains("local")&&!kb.endpoint.startsWith("http"))));
 								
 					}
 					if (kb.id != null)
