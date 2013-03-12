@@ -55,6 +55,8 @@ public class MetricPanel extends Panel{
 			config = ((SAIMApplication)getApplication()).getConfig();
 
 		VerticalLayout mainLayout = new VerticalLayout();
+		mainLayout.setSizeFull();
+		
 		mainLayout.setSpacing(false);
 		mainLayout.setMargin(false);
 

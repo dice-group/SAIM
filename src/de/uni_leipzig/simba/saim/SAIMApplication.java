@@ -104,8 +104,10 @@ public class SAIMApplication extends Application implements TransactionListener
 		mainLayout = buildMainLayout();
 		mainWindow.setContent(mainLayout);
 		mainWindow.addComponent(menuBar=buildMenuBar());
-		content = new MetricPanel(messages);
+		content = new MetricPanel(messages);		
 		mainLayout.addComponent(content);
+//		mainLayout.setSizeFull();
+		content.setSizeFull();
 		setTheme("saim"); //$NON-NLS-1$
 		setMainWindow(mainWindow);
 	}
