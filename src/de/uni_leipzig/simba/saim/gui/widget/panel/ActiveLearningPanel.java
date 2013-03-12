@@ -110,12 +110,24 @@ public class ActiveLearningPanel extends MetricLearnPanel
 			if(iMapTable == null) // on start
 			{
 				logger.info("Starting Active Learning"); //$NON-NLS-1$
-				map = learner.learn(new Mapping());
+				try {
+					map = learner.learn(new Mapping());
+				} catch(Exception e) {
+					application.getMainWindow().showNotification("Error getting intial training data. Please adjust your metric.");//$NON-NLS-1$
+					showWarning(messages.getString("MetricLearnPanel.errorMessageIntialTrainingData"));//$NON-NLS-1$
+					map = new Mapping();
+				}
 			}
 			else
 			{
-				logger.info("Starting round"); //$NON-NLS-1$
-				map = iMapTable.tabletoMapping();
+				try {
+					logger.info("Starting round"); //$NON-NLS-1$
+					map = iMapTable.tabletoMapping();
+				} catch(Exception e) {
+					application.getMainWindow().showNotification("Error geting intial training data. Please adjust your metric.");//$NON-NLS-1$
+					showWarning(messages.getString("MetricLearnPanel.errorMessageIntialTrainingData"));//$NON-NLS-1$
+					map = new Mapping();
+				}
 				if(map.size()==0)
 					getApplication().getMainWindow().showNotification(messages.getString("ActiveLearningPanel.learningwithoutnotification")); //$NON-NLS-1$
 				map = learner.learn(map);
