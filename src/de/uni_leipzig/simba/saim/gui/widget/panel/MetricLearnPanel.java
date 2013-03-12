@@ -89,17 +89,15 @@ public class MetricLearnPanel extends  PerformPanel{
 				if(iter.next().equals(label))
 					alreadyDisplayed = true;
 			}
-			if(alreadyDisplayed)
-				l.removeComponent(label);
-			else {
-				// get expression and set it
-				Metric metric = learner.terminate();
-				label.setCaption("Best solution:");
+			// get expression and set it
+			Metric metric = learner.terminate();
+			label.setCaption("Best solution:");
 
-				label.setValue(metric.getExpression()+" with threshold "+ metric.getThreshold());
-				config.setMetricExpression(metric.getExpression());
-				config.setAcceptanceThreshold(metric.getThreshold());
-				((SAIMApplication) getApplication()).refresh();
+			label.setValue(metric.getExpression()+" with threshold "+ metric.getThreshold());
+			config.setMetricExpression(metric.getExpression());
+			config.setAcceptanceThreshold(metric.getThreshold());
+			((SAIMApplication) getApplication()).refresh();
+			if(!alreadyDisplayed) {
 				l.addComponent(label);
 			}
 		}
