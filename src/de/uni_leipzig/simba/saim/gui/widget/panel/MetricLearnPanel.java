@@ -42,7 +42,6 @@ public class MetricLearnPanel extends  PerformPanel{
 		layout.setWidth("100%");
 		setContent(layout);
 
-
 		// add Button
 		learn = new Button("learn");
 		learn.setEnabled(true);
@@ -66,6 +65,11 @@ public class MetricLearnPanel extends  PerformPanel{
 		config = ((SAIMApplication)getApplication()).getConfig();
 	}
 
+	/**
+	 * Constructor with bean holding the parameters for the learner.
+	 * @param application
+	 * @param learnerConfigBean
+	 */
 	public MetricLearnPanel(SAIMApplication application, LearnerConfigurationBean learnerConfigBean) {
 		this(application);
 		params = learnerConfigBean.createParams();
@@ -106,14 +110,12 @@ public class MetricLearnPanel extends  PerformPanel{
 	@Override
 	public void onClose() {
 		learner.getFitnessFunction().destroy();
-
 		learner = null;
 		application.refresh();
 	}
 
 	@Override
 	public void start() {
-		// TODO Auto-generated method stub
-
+		// Nothing to do here
 	}
 }
