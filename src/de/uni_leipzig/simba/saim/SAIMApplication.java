@@ -71,7 +71,14 @@ public class SAIMApplication extends Application implements TransactionListener
 		getContext().addTransactionListener ( this );
 		SAIMApplication.logger.debug("SAIMApplication()"); //$NON-NLS-1$
 		messages = new Messages(Locale.ENGLISH);
-		mainWindow = new Window(messages.getString("SAIMApplication.1")); //$NON-NLS-1$
+		mainWindow = new Window(messages.getString("SAIMApplication.1")); 
+		mainWindow.setContent(new LandingPage(this));
+		setTheme("saim"); //$NON-NLS-1$
+		setMainWindow(mainWindow);
+	}
+	
+	public void startSAIM() {
+		//$NON-NLS-1$
 		ParameterHandler parameterHandler = new ParameterHandler()
 		{
 			@Override
@@ -105,8 +112,7 @@ public class SAIMApplication extends Application implements TransactionListener
 		mainLayout.addComponent(content);
 //		mainLayout.setSizeFull();
 		content.setSizeFull();
-		setTheme("saim"); //$NON-NLS-1$
-		setMainWindow(mainWindow);
+		
 	}
 
 	private void setLanguage(String language)
