@@ -95,7 +95,7 @@ public class InstanceMappingTable implements Serializable
 				Instance i2 = targetCache.getInstance(row.getOriginalUri2());
 				InstanceInfoPanel infoPanel = new InstanceInfoPanel(i1, i2);
 				info.removeAllComponents();
-				info.setHeight("100px");
+//				info.setHeight("100px");
 				info.addComponent(infoPanel);
 		    }
 		});
