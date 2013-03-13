@@ -1,5 +1,8 @@
 @import "../reindeer/styles.css";
 
+input.v-textfield{
+	width:95%;
+}
 .v-label-labelhover:hover{
     background-color: #2483c4;
     color: #fff;

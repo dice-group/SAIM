@@ -65,10 +65,10 @@ public class KBInfoForm extends Form
 		id				= new TextField(messages.getString("idnamespace")); //$NON-NLS-1$
 		graph			= new TextField(messages.getString("graph"));		//$NON-NLS-1$
 		pageSize		= new TextField("Page size", "-1");				//$NON-NLS-1$ //$NON-NLS-2$
-		textFields	= new TextField[] { graph, id, pageSize };
+		textFields		= new TextField[] { graph, id, pageSize };
 		next			= new Button(messages.getString("ok"));			//$NON-NLS-1$
-		components	= new Component[] { url, graph,pageSize, next};
-		validator = new EndpointURLValidator(url,messages);
+		components		= new Component[] { url, graph,pageSize, next};
+		validator 		= new EndpointURLValidator(url,messages);
 		this.setImmediate(true);
 		this.setCaption(title);
 		this.setWidth(WIDTH);
@@ -81,14 +81,7 @@ public class KBInfoForm extends Form
 		buttonBar.addComponent(new Button(messages.getString("reset"), this, "reset")); //$NON-NLS-1$ //$NON-NLS-2$
 		getLayout().setMargin(true);
 
-		for (TextField field : textFields)
-		{
-			field.setWidth("100%"); //$NON-NLS-1$
-		}
-
 		setupContextHelp();
-
-
 		if (defaultValues != null)
 		{
 			kbInfo = defaultValues;
@@ -100,7 +93,6 @@ public class KBInfoForm extends Form
 		}
 		presets();	setupContextHelp();
 		addFormFields();
-
 	}
 
 	protected void presets()
@@ -150,7 +142,6 @@ public class KBInfoForm extends Form
 		setDefaultEndpoints();
 		presets();
 		addField(messages.getString("presets"), presetComboBox); //$NON-NLS-1$
-
 		addField(messages.getString("endpointurl"), url); //$NON-NLS-1$
 
 		url.addValidator(validator);
