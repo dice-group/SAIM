@@ -1,10 +1,9 @@
 @import "../reindeer/styles.css";
 
-.v-label:hover {
-    background-color: #FFFFFF;
-    color: #000000;
+.v-label-labelhover:hover{
+    background-color: #2483c4;
+    color: #fff;
 }
-
 .v-table-cell-content {
     vertical-align: middle;
 }
@@ -75,8 +74,8 @@ background-color:#00ff00;
 	margin: 2px;
 }
 
-.gwt-MenuItem-selected, .v-label:hover {
-	background-color: #000;
+.gwt-MenuItem-selected{
+	background-color: #2483c4;
 	color: #fff;
 }
 /**/

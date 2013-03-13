@@ -101,11 +101,13 @@ public class MetricPanel extends Panel{
 		getAllProps();
 		for(String s : sourceProps) {
 			final Label check = new Label(s);
+			check.setStyleName("labelhover");
 			sourceLayout.addComponent(check);
 		}
 
 		for(String t : targetProps) {
 			final Label check = new Label(t);
+			check.setStyleName("labelhover");
 			targetLayout.addComponent(check);
 		}
 		accordionLayout.removeComponent(progress);
@@ -115,13 +117,19 @@ public class MetricPanel extends Panel{
 //		operatorsLayout.addComponent( new Label(messages.getString("MetricPanel.8")));
 		Set<String> sorted = new TreeSet<String>();
 		sorted.addAll( Measure.identifiers);
-		for(String label : sorted)
-			metricsLayout.addComponent( new Label(label));
+		for(String label : sorted){
+			Label labelObj = new Label(label);
+			labelObj.setStyleName("labelhover");
+			metricsLayout.addComponent(labelObj);
+		}
 
 		sorted.clear();
 		sorted.addAll(Operator.identifiers);
-		for(String label : sorted)
-			operatorsLayout.addComponent( new Label(label));
+		for(String label : sorted){
+			Label labelObj = new Label(label);
+			labelObj.setStyleName("labelhover");
+			operatorsLayout.addComponent(labelObj);
+		}
 
 		sourceLayout.addListener(   new AccordionLayoutClickListener(saimcytopro, SAIMCytoprocess.NODE_TYPE.SOURCE,   config));
 		targetLayout.addListener(   new AccordionLayoutClickListener(saimcytopro, SAIMCytoprocess.NODE_TYPE.TARGET,   config));
