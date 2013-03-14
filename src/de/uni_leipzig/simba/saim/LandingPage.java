@@ -81,14 +81,15 @@ public class LandingPage extends CustomComponent {
 	private String getText() {
 		String s = "<h1>SAIM Instance Matching Application</h1>" +
 				"SAIM is an web interface for the <a href='http://aksw.org/Projects/LIMES.html'>LIMES</a> linking framework.</br>" +
-				"There will be a manual available soon. Until then please check our screencast instead." +
-				"<h1>Team</h1>" +
-				"<ul>" +
-				" <li><a href='http://aksw.org/AxelNgonga.html'>Dr. Axel-C. Ngonga Ngomo</a></li>" +
-				" <li><a href='http://aksw.org/KonradHoeffner.html'>Konrad Höffner</a></li>" +
-				" <li>René Speck</li>" +
-				" <li>Klaus Lyko</li>" +
-				"</ul>" +
+				"There will be a manual available soon. Until then please check our screencast instead.<br>" +
+				"SAIM is a prototype developed by the <a href='http://aksw.org/'>AKSW Research group at the University of Leipzig</a>." +
+//				"<h1>Team</h1>" +
+//				"<ul>" +
+//				" <li><a href='http://aksw.org/AxelNgonga.html'>Dr. Axel-C. Ngonga Ngomo</a></li>" +
+//				" <li><a href='http://aksw.org/KonradHoeffner.html'>Konrad Höffner</a></li>" +
+//				" <li>René Speck</li>" +
+//				" <li>Klaus Lyko</li>" +
+//				"</ul>" +
 				"<h1>Start SAIM</h1>" +
 				"To go ahead and start SAIM click the button:";		
 		return s;
