@@ -40,10 +40,17 @@
 }
 /**********************************************/
 /* ClassMatchingPanel*/
+.classMatchingPanel{
+	/*height:400px;*/
+}
+.classMatchingPanel .v-tree{
+	overflow: scroll;
+	height:245px;
+}
+
 .classMatchingPanel .classMatchingForm{	
 	margin-top: 1em;
 	padding-bottom: 1em;
-
 }
 .v-label {
 	width: 100%;
@@ -60,6 +67,9 @@
 }
 /**********************************************/
 /* PropertyMatchingPanel*/
+.propertyMatchingPanel{
+	/*height:400px;*/
+}
 .propertyMatchingPanel .mainLayout {
 	margin-left: 1em;
 	margin-top: 1em;	
