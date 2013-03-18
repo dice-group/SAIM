@@ -1,0 +1,82 @@
+/**********************************************/
+/* KBInfoForm */
+.kbInfoForm {
+	padding-left: 1em;
+	padding-top: 1em;
+	padding-bottom: 1em;
+}
+
+.kbInfoForm legend {
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+.kbInfoForm input.v-textfield {
+	width: 95%;
+}
+*/
+/**********************************************/
+/* MetricPanel */
+.v-label {
+	width: 100%;
+}
+.accordionPanel .v-label {
+	padding-left: 1em;
+	width: 20em;
+}
+
+.accordionPanel .v-accordion-item-open .v-captiontext {
+	font-weight: bold;
+}
+
+.accordionPanel .v-captiontext {
+	width: 20em;
+}
+
+.accordionPanel .v-label:hover {
+	width: 20em;
+	background-color: #2483c4;
+	color: #fff;
+}
+/**********************************************/
+/* ClassMatchingPanel*/
+.classMatchingPanel .classMatchingForm{	
+	margin-top: 1em;
+	padding-bottom: 1em;
+
+}
+.v-label {
+	width: 100%;
+}
+.classMatchingPanel .v-horizontallayout {
+	margin-top: 1em;
+	margin-left: 1em;
+}
+.classMatchingPanel .v-form fieldset{
+	border: none;
+}
+.classMatchingPanel .v-button{
+
+}
+/**********************************************/
+/* PropertyMatchingPanel*/
+.propertyMatchingPanel .mainLayout {
+	margin-left: 1em;
+	margin-top: 1em;	
+}
+.propertyMatchingPanel .mainLayout .v-horizontallayout{
+	margin-bottom: 1em;	
+}
+.propertyMatchingPanel .v-select-select{
+	width: 100%;
+}
+/**********************************************/
+/* ConfigUploader */
+.configUploader .v-horizontallayout .v-button{
+	margin-top:1em;
+	margin-left:1em;
+}
+.configUploader .v-horizontallayout {
+	margin-top:3em;
+}
+

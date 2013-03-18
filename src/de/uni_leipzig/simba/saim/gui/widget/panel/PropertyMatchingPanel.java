@@ -67,7 +67,8 @@ public class PropertyMatchingPanel extends Panel
 	Button computeStringBasedMapping;
 	Button computeDefaultPropertyMapping;
 	// to display computed ones
-	HorizontalLayout selectionLayout = new HorizontalLayout();
+	Layout selectionLayout = new VerticalLayout();
+	Layout resultLayout = new VerticalLayout();
 	ListSelect select;
 	Button useAll;
 
@@ -76,15 +77,14 @@ public class PropertyMatchingPanel extends Panel
 		this.messages=messages;
 		progressLabel = new Label(messages.getString("generatingpropertymatching"));	 //$NON-NLS-1$
 		mainLayout = new VerticalLayout();
-
-	
+		mainLayout.setStyleName("mainLayout");
+		this.setStyleName("propertyMatchingPanel");
 		select = new ListSelect(messages.getString("PropertyMatchingPanel.computed")); //$NON-NLS-1$
 		useAll  = new Button(messages.getString("PropertyMatchingPanel.useButton")); //$NON-NLS-1$
 		selectionLayout.addComponent(select);
-		selectionLayout.addComponent(useAll);
 		useAll.setEnabled(false);
 		mainLayout.addComponent(selectionLayout);
-		
+		mainLayout.addComponent(resultLayout);
 		// Buttons to control property mapping
 		computeStringBasedMapping = new Button("Compute String Based PropertyMapping");
 		computeDefaultPropertyMapping = new Button("Compute Default PropertyMapping");
@@ -93,7 +93,8 @@ public class PropertyMatchingPanel extends Panel
 		HorizontalLayout buttonLayout = new HorizontalLayout();
 		buttonLayout.addComponent(computeStringBasedMapping);
 		buttonLayout.addComponent(computeDefaultPropertyMapping);
-		mainLayout.addComponent(buttonLayout);
+		buttonLayout.addComponent(useAll);
+		selectionLayout.addComponent(buttonLayout);
 
 		setContent(mainLayout);
 		getContent().setWidth("100%"); //$NON-NLS-1$
@@ -101,7 +102,8 @@ public class PropertyMatchingPanel extends Panel
 
 		//	setupContextHelp();
 		Layout progressLayout = new HorizontalLayout();
-		mainLayout.addComponent(progressLayout);
+		resultLayout.addComponent(progressLayout);
+
 		progress.setIndeterminate(true);
 		progressLayout.addComponent(progressLabel);
 		progressLayout.addComponent(progress);
@@ -286,7 +288,7 @@ public class PropertyMatchingPanel extends Panel
 				//			String s_abr=PrefixHelper.abbreviate(prop);
 				//			targetProperties.add(s_abr);
 				//		}
-				table.setWidth("100%"); //$NON-NLS-1$
+				table.setWidth("97%"); //$NON-NLS-1$
 				mainLayout.addComponent(table);
 				closeImageResource = new ClassResource("img/no_crystal_clear_16.png",getApplication());		 //$NON-NLS-1$
 				/* Define the names and data types of columns.

@@ -55,17 +55,10 @@ public class MetricPanel extends Panel{
 			config = ((SAIMApplication)getApplication()).getConfig();
 
 		VerticalLayout mainLayout = new VerticalLayout();
-		mainLayout.setSizeFull();
-		
-		mainLayout.setSpacing(false);
-		mainLayout.setMargin(false);
-
 		final VerticalLayout accordionLayout = new VerticalLayout();
 		HorizontalLayout layout = new HorizontalLayout();
 
 		layout.addComponent(accordionLayout);
-		layout.setSpacing(false);
-		layout.setMargin(false);
 
 		setContent(mainLayout);
 		mainLayout.addComponent(layout);
@@ -76,13 +69,11 @@ public class MetricPanel extends Panel{
 		mainLayout.addComponent(getButtonLayout());
 		// accordion panel
 		Panel accordionPanel = new Panel();
-		accordionPanel.setHeight("100%"); //$NON-NLS-1$
 		accordionLayout.addComponent(accordionPanel);
-		accordionPanel.setWidth("25em"); //$NON-NLS-1$
-		final Accordion accordion = new Accordion();
-		accordion.setHeight("100%"); //$NON-NLS-1$
 
+		final Accordion accordion = new Accordion();
 		accordionPanel.addComponent(accordion);
+		accordionPanel.setStyleName("accordionPanel");
 
 		VerticalLayout metricsLayout, operatorsLayout;
 		sourceLayout =  new VerticalLayout();
@@ -100,15 +91,11 @@ public class MetricPanel extends Panel{
 
 		getAllProps();
 		for(String s : sourceProps) {
-			final Label check = new Label(s);
-			check.setStyleName("labelhover");
-			sourceLayout.addComponent(check);
+			sourceLayout.addComponent(new Label(s));
 		}
 
 		for(String t : targetProps) {
-			final Label check = new Label(t);
-			check.setStyleName("labelhover");
-			targetLayout.addComponent(check);
+			targetLayout.addComponent(new Label(t));
 		}
 		accordionLayout.removeComponent(progress);
 		progress.setEnabled(false);
@@ -118,17 +105,13 @@ public class MetricPanel extends Panel{
 		Set<String> sorted = new TreeSet<String>();
 		sorted.addAll( Measure.identifiers);
 		for(String label : sorted){
-			Label labelObj = new Label(label);
-			labelObj.setStyleName("labelhover");
-			metricsLayout.addComponent(labelObj);
+			metricsLayout.addComponent(new Label(label));
 		}
 
 		sorted.clear();
 		sorted.addAll(Operator.identifiers);
 		for(String label : sorted){
-			Label labelObj = new Label(label);
-			labelObj.setStyleName("labelhover");
-			operatorsLayout.addComponent(labelObj);
+			operatorsLayout.addComponent(new Label(label));
 		}
 
 		sourceLayout.addListener(   new AccordionLayoutClickListener(saimcytopro, SAIMCytoprocess.NODE_TYPE.SOURCE,   config));

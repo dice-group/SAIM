@@ -72,6 +72,7 @@ public class ClassMatchingPanel extends Panel
 	protected void setupContextHelp()
 	{
 		ContextHelp contextHelp = new ContextHelp();
+
 		getContent().addComponent(contextHelp);
 		contextHelp.addHelpForComponent(suggestionComboBox, messages.getString("classpairsfromlimes")); //$NON-NLS-1$
 	}
@@ -82,7 +83,7 @@ public class ClassMatchingPanel extends Panel
 	public void attach() {
 		setContent(new VerticalLayout());
 		this.config=((SAIMApplication)getApplication()).getConfig();
-
+		this.setStyleName("classMatchingPanel");
 		// Buttons to call a new computation of suggestions
 		computeStringBased = new Button(messages.getString("ClassMatchingPanel.0")); //$NON-NLS-1$
 		computeLinkBased = new Button(messages.getString("ClassMatchingPanel.1")); //$NON-NLS-1$
@@ -103,7 +104,7 @@ public class ClassMatchingPanel extends Panel
 		layout.addComponent(suggestionLabel);
 		layout.addComponent(progress);
 		progress.setIndeterminate(true);
-		suggestionComboBox.setWidth("100%");		 //$NON-NLS-1$
+		suggestionComboBox.setWidth("95%");		 //$NON-NLS-1$
 		suggestionComboBox.setImmediate(true);
 		layout.addComponent(suggestionComboBox);
 		layout.setExpandRatio(suggestionComboBox, 1f);

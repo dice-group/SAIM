@@ -27,7 +27,7 @@ public class ClassMatchingForm extends Form
 	public ClassMatchingForm(String caption, final KBInfo info, Model model) {
 		this.info = info;
 		Layout layout = new VerticalLayout();
-		layout.setWidth("100%"); //$NON-NLS-1$
+		layout.setWidth("90%"); //$NON-NLS-1$
 		setLayout(layout);
 		field = new ComboBox(caption);
 		field.setWidth("100%"); //$NON-NLS-1$

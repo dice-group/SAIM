@@ -48,9 +48,6 @@ public class KBInfoForm extends Form
 	{
 		validator.close();
 	}
-
-
-
 	/**
 	 * Constructor to set default values of the fields.
 	 * @param title
@@ -72,6 +69,7 @@ public class KBInfoForm extends Form
 		this.setImmediate(true);
 		this.setCaption(title);
 		this.setWidth(WIDTH);
+		this.setStyleName("kbInfoForm");
 		// Have a button bar in the footer.
 		HorizontalLayout buttonBar = new HorizontalLayout();
 		// buttonBar.setHeight("25px");

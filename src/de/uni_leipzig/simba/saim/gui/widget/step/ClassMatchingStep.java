@@ -30,7 +30,6 @@ public class ClassMatchingStep implements WizardStep
 	{
 		if(!app.getConfig().isLocal) {
 			panel = new ClassMatchingPanel(app.messages);
-			panel.setHeight("400px");
 			return  panel;
 		} else {
 			return new Panel("No class Matching required.");

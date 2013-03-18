@@ -29,7 +29,6 @@ public class PropertyMatchingStep implements WizardStep
 	public Component getContent()
 	{
 		panel=new PropertyMatchingPanel(messages);
-		panel.setHeight("400px");
 		return (panel);
 	}
 

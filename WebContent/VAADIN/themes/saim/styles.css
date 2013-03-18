@@ -1,12 +1,7 @@
 @import "../reindeer/styles.css";
+@import "../Cytoprocess/styles.css";
+@import "../Gui/styles.css";
 
-input.v-textfield{
-	width:95%;
-}
-.v-label-labelhover:hover{
-    background-color: #2483c4;
-    color: #fff;
-}
 .v-table-cell-content {
     vertical-align: middle;
 }
@@ -66,22 +61,6 @@ background-color:#00ff00;
 {
 	background-color:#ffff00;
 }
-/*Cytoprocess*/
-.contextmenu {
-	background-color: #fff;
-	border: 1px solid #000;
-	color: #000;
-	font-family : Arial, Helvetica, Tahoma, Verdana, sans-serif;
-	font-size: 11px;
-	line-height: normal;
-	margin: 2px;
-}
-
-.gwt-MenuItem-selected{
-	background-color: #2483c4;
-	color: #fff;
-}
-/**/
 
 .v-tree-node {
 	font-weight:bold;

@@ -6,6 +6,9 @@ import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.apache.log4j.Logger;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -37,11 +40,12 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver
 	private final NativeSelect localExamplesSelect;
 	private final Button runExampleButton;
 	static final String DEFAULT_LIMES_XML = "examples/dbpedia-linkedmdb.xml";
-	Button add;
+	//Button add;
 	ExampleLoader loader;
 	Logger logger = Logger.getLogger("ConfigUploader.class");
 	public ConfigUploader(Messages messages)
 	{
+		this.setStyleName("configUploader");
 		//this.messages=messages;
 		executeFileButton = new Button(messages.getString("executefile"));
 		localExamplesSelect = new NativeSelect(messages.getString("localexamples"));
@@ -161,12 +165,20 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver
 		HorizontalLayout subLayout = new HorizontalLayout();
 		subLayout.addComponent(localExamplesSelect);
 		subLayout.addComponent(runExampleButton);
+
 		//@TODO generic way to load config.xmls.
 		List<ExampleConfig> list = loader.getExamples();
-		for(ExampleConfig ex : list) {
-			localExamplesSelect.addItem(ex.getFilePath());
+
+		Set<String> setFilePath = new TreeSet<String>();
+		for(ExampleConfig ex : list)
+			setFilePath.add(ex.getFilePath());
+
+		for(String filePath : setFilePath){
+			localExamplesSelect.addItem(filePath);
+			if(filePath.equals(((TreeSet<String>)setFilePath).first()))
+				localExamplesSelect.select(filePath);
 		}
-		localExamplesSelect.select(list.get(1).getFilePath());
+
 //		localExamplesSelect.addItem("examples/PublicationData.xml");
 //		localExamplesSelect.addItem("examples/DBLP-Scholar.xml");
 //		localExamplesSelect.addItem("examples/dailymed-drugbank.xml");
