@@ -19,7 +19,7 @@
 \title{SAIM - Manual}
 \author{Klaus Lyko}                                                  
 \maketitle
-
+\tableofcontents*
 \chapter{Introduction}
 Links between instance are of central importance for the Semantic Web and for a large number of tasks, such as data integration, federated querying and knowledge retrieval. Finding those links is the subject of Link Deiscovery (LD).
 Two main problems arise when trying to discover links between datasets.
@@ -34,15 +34,30 @@ This manual will cover the complete workflow of SAIM. Starting in chapter \ref{k
 %%%%%%%%%%%%%%%%%                                  ENDPOINTS 													%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Source and Target Endpoint definition}
 \label{kbdefinition}
-	Upon start SAIM 
+	Figure \ref{fig:MainWindow} shows SAIM upon start.
 	\begin{figure}
 		\centering
-		\includegraphics[width=\textwidth]{images/main.png}
-		\caption{Main Window}
+		\includegraphics[width=0.8\textwidth]{images/main.png}
+		\caption{The main window of SAIM is divided into three parts: A \emph{menu bar} at the top, an \emph{accordion} panel to the left and the \emph{metric panel} at the center.}
 		\label{fig:MainWindow}
 	\end{figure}
+	As all no link specification is defined yet the 3 buttons at the bottom are deactivated and the accordion panel is empty. To start a Link Specification we go to the menu \texttt{Link Specification}. Figure \ref{fig:menu_start} shows the availlable menu entries:
+	
+	\begin{enumerate}
+		\item \texttt{Start new configuration} Start a new Link Specification from scratch.
+		\item \texttt{Import Link Specification} To Import Link Specifications. It is covered in section \ref{ImportExport}.
+		\item \texttt{Export Linl Specification} Let you save Link Specifications on you local machine. It is covered in section \ref{ImportExport}.
+		\item \texttt{Info} Will open a window with basic informations about us.
+	\end{enumerate}
 	
 
+	\begin{figure}
+		\centering
+		\includegraphics{images/menu_start.png}
+		\caption{The \texttt{Link specifiaction} menu.}
+		\label{fig:menu_start}
+	\end{figure}
+	
 	\todo{Write something}
 	\section{Endpoints}
 	\label{endpoint}
@@ -66,8 +81,15 @@ This manual will cover the complete workflow of SAIM. Starting in chapter \ref{k
 %%%%%%%%%%%%%%%%%                                  FEATURES 													%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Additional features}
 \label{features}
+\section{Import and save Link Specifications}
+\label{ImportExport}
+
 
 \bibliographystyle{plain}
 \bibliography{saim}
+
+
+\appendix
+\section{The menu bar}
 
 \end{document}
