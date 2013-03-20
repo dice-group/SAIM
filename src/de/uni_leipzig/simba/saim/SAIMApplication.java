@@ -108,11 +108,12 @@ public class SAIMApplication extends Application implements TransactionListener
 		mainLayout = buildMainLayout();
 		mainWindow.setContent(mainLayout);
 		mainWindow.addComponent(menuBar=buildMenuBar());
-		content = new MetricPanel(messages);		
+		content = new MetricPanel(messages);
+		
 		mainLayout.addComponent(content);
 //		mainLayout.setSizeFull();
 		content.setSizeFull();
-		
+//		content.attach();
 	}
 
 	private void setLanguage(String language)
@@ -218,7 +219,7 @@ public class SAIMApplication extends Application implements TransactionListener
     	} else {
     		menuBar.addItem(messages.getString("SAIMApplication.19")+session.getAttribute("user"), null); //$NON-NLS-1$ //$NON-NLS-2$
     	}
-		
+		menuBar.setAutoOpen(true);
 		return menuBar;
 	}
 
