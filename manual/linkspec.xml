@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE LIMES PUBLIC "LIMES" 
+"http://konradhoeffner.de/files/limes.dtd">
+<LIMES>
+  <PREFIX>
+    <NAMESPACE>
+	 http://www.okkam.org/ontology_person2.owl#
+	</NAMESPACE>
+    <LABEL>prefix0</LABEL>
+  </PREFIX>
+  <PREFIX>
+    <NAMESPACE>
+	 http://www.okkam.org/ontology_person1.owl#
+	</NAMESPACE>
+    <LABEL>www</LABEL>
+  </PREFIX>
+  <PREFIX>
+    <NAMESPACE>
+	 http://www.w3.org/1999/02/22-rdf-syntax-ns#
+	</NAMESPACE>
+    <LABEL>rdf</LABEL>
+  </PREFIX>
+  <SOURCE>
+    <ID>Person 11 (OAEI 2010 Benchmark))</ID>
+    <ENDPOINT>SAIM\EPStore\person11.nt</ENDPOINT>
+    <GRAPH>http://dbpedia.org</GRAPH>
+    <VAR>?src</VAR>
+    <PAGESIZE>-1</PAGESIZE>
+    <RESTRICTION>
+	 ?src rdf:type www:Person
+	</RESTRICTION>
+    <PROPERTY>www:surname</PROPERTY>
+    <PROPERTY>www:phone_numer</PROPERTY>
+    <PROPERTY>www:soc_sec_id</PROPERTY>
+    <PROPERTY>www:has_address</PROPERTY>
+    <PROPERTY>www:date_of_birth</PROPERTY>
+    <PROPERTY>www:given_name</PROPERTY>
+    <PROPERTY>www:age</PROPERTY>
+    <TYPE>N3</TYPE>
+  </SOURCE>
+  <TARGET>
+    <ID>Person 12 (OAEI 2010 Benchmark))</ID>
+    <ENDPOINT>
+	SAIM\EPStore\person12.nt
+	</ENDPOINT>
+    <GRAPH/>
+    <VAR>?dest</VAR>
+    <PAGESIZE>-1</PAGESIZE>
+    <RESTRICTION>
+	 ?dest rdf:type prefix0:Person
+	</RESTRICTION>
+    <PROPERTY>prefix0:surname</PROPERTY>
+    <PROPERTY>prefix0:phone_numer</PROPERTY>
+    <PROPERTY>prefix0:soc_sec_id</PROPERTY>
+    <PROPERTY>prefix0:has_address</PROPERTY>
+    <PROPERTY>prefix0:date_of_birth</PROPERTY>
+    <PROPERTY>prefix0:given_name</PROPERTY>
+    <PROPERTY>prefix0:age</PROPERTY>
+    <TYPE>N3</TYPE>
+  </TARGET>
+  <METRIC>levenshtein(src.www:soc_sec_id,
+  dest.prefix0:soc_sec_id)</METRIC>
+  <ACCEPTANCE>
+    <THRESHOLD>0.1927</THRESHOLD>
+    <FILE>person11-person12-accept.nt</FILE>
+    <RELATION>owl:sameAs</RELATION>
+  </ACCEPTANCE>
+  <REVIEW>
+    <THRESHOLD>0.0927</THRESHOLD>
+    <FILE>C:\Users\Lyko\SAIM\EPStore\person11.nt-C:\Users\Lyko\SAIM\EPStore\person12.nt-review</FILE>
+    <RELATION>owl:sameAs</RELATION>
+  </REVIEW>
+  <EXECUTION>SIMPLE</EXECUTION>
+  <OUTPUT>N3</OUTPUT>
+</LIMES>
