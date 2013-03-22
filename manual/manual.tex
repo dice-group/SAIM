@@ -179,7 +179,17 @@ Note that several nodes in the Link Specification tree have parameters to be set
 	\item Output Node: global acceptance(verification) threshold.
 \end{itemize}
 
+\subsection{Executing a Link Specification}
+To run a Link Specification click the button \texttt{Start Mapping process}. First the specified metric is checked if it is complete and valid. If everything is ok, the mapping process is started and a new window shows the progress. The results will be presented in the Mapping Window as depicted in figure \ref{fig:execution}.\\
+ The \textbf{table} at the bottom shows instance pairs of the specified source and target endpoint which fulfill the Link Specification. Clicking on a row will present the fetched data of botch matched instances above the table. Clicking on a link will try to dereferentiate the corresponding instance by its URI in a separat browser tab. The \texttt{value} column holds the similarity value of the matches.\\To \textbf{download} the complete mapping click the \texttt{Save} button beneath the table. This will open a sub window, to choose different serialization format. As of now, we support Turte, N-Triple and Tab-seperated files.
  
+ \begin{figure}[!h]
+		\centering
+		\includegraphics[width=0.95\textwidth]{images/execution_window.png}
+		\caption{Mapping window presents results (Mapping) of a Link Specification. This are the results of executing the Link Specification of \ref{complex}.}
+		\label{fig:execution}
+	\end{figure}
+
 %%%%%%%%%%%%%%%%%                             SELFCONFIGURATION 											%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Selfconfiguration}
 \label{selfconfig}
