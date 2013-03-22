@@ -195,11 +195,11 @@ public class MetricPanel extends Panel{
 		selfConfigButton.addListener(new SelfConfigClickListener((SAIMApplication) getApplication(), messages));
 
 		learnButton = new Button(messages.getString("MetricPanel.learnmetricbutton")); //$NON-NLS-1$
-		learnButton.setEnabled(false);
+		learnButton.setEnabled(true);
 		learnButton.addListener(new LearnClickListener((SAIMApplication) getApplication(), messages,this));
 
 		startMapping = new Button(messages.getString("MetricPanel.startmappingbutton")); //$NON-NLS-1$
-		startMapping.setEnabled(false);
+		startMapping.setEnabled(true);
 		startMapping.addListener(new StartMappingListener((SAIMApplication) getApplication(), messages,this));
 
 		buttonLayout = new HorizontalLayout();
