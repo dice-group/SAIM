@@ -193,7 +193,25 @@ To run a Link Specification click the button \texttt{Start Mapping process}. Fir
 %%%%%%%%%%%%%%%%%                             SELFCONFIGURATION 											%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Selfconfiguration}
 \label{selfconfig}
-SAIM also supports unsupervised machine learning method of Link Specifications. Once all endpoints are specified as described in chapter \ref{kbdefinition} this option is available. These machine learning methods rely on so-called Psuedo F-Measures. \todo{cite EUCLID paper}.\\
+SAIM also supports unsupervised machine learning method of Link Specifications, called \emph{Selfconfiguration}. Once all endpoints are specified as described in chapter \ref{kbdefinition} this option is available. These machine learning methods rely on so-called Psuedo F-Measures. \todo{cite EUCLID paper}.\\
+To start click the \texttt{Start Selfconfiguration} on the main window of SAIM.
+\subsection{Mesh based Selfconfiguration}
+There are several deterministic selfconfiguration algorithms available trying to discover high quality Link Specifications baes upon different classifier. Other parameters to adjust are:
+
+\begin{itemize}
+	\item Beta $\beta \in [0,1]$ value of the Pseudo F-measure.
+	\item Number of iterations to learn.
+	\item Minimal coverage over all instances for a property.
+\end{itemize}
+
+\subsection{Selfconfiguration based on Genetic programming}
+Besides the parameters described above the user can set additional parameters for the Genetic Programming approach. These are:
+\begin{itemize}
+	\item Number of generations to evolve
+	\item Number of individuals in a population
+	\item Corssover and mutation probality
+\end{itemize}
+Whereas, the first two influence the runtime of the algorithm.
 
 %%%%%%%%%%%%%%%%%                                  LEARNING 													%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Improving results through learning}
