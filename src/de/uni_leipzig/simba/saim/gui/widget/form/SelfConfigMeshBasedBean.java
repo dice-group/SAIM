@@ -3,7 +3,10 @@ package de.uni_leipzig.simba.saim.gui.widget.form;
 import de.uni_leipzig.simba.cache.Cache;
 import de.uni_leipzig.simba.selfconfig.DisjunctiveMeshSelfConfigurator;
 import de.uni_leipzig.simba.selfconfig.LinearMeshSelfConfigurator;
+import de.uni_leipzig.simba.selfconfig.Measure;
 import de.uni_leipzig.simba.selfconfig.MeshBasedSelfConfigurator;
+import de.uni_leipzig.simba.selfconfig.PseudoMeasures;
+import de.uni_leipzig.simba.selfconfig.ReferencePseudoMeasures;
 /**
  * Bean used by the form to configure the MeshBased SelfConfigurator;
  * @author Lyko
@@ -14,7 +17,7 @@ public class SelfConfigMeshBasedBean {
 	private int iterations;
 	private double beta;
 	private double minCoverage;
-
+	private int measure;
 
 	public SelfConfigMeshBasedBean() {
 		setDefaultValues();
@@ -74,21 +77,22 @@ public class SelfConfigMeshBasedBean {
 		switch(id) {
 			case 0:
 				bsc = new MeshBasedSelfConfigurator(sourceCache, targetCache, minCoverage, beta);
-				bsc.ITERATIONS_MAX = iterations;
 				break;
 			case 1:
 				bsc = new LinearMeshSelfConfigurator(sourceCache, targetCache, minCoverage, beta);
-				bsc.ITERATIONS_MAX = iterations;
 				break;
 			case 2:
 				bsc = new DisjunctiveMeshSelfConfigurator(sourceCache, targetCache, minCoverage, beta);
-				bsc.ITERATIONS_MAX = iterations;
 				break;
 			default:
 				bsc = new MeshBasedSelfConfigurator(sourceCache, targetCache, minCoverage, beta);
-				bsc.ITERATIONS_MAX = iterations;
 				break;
 		}
+		bsc.ITERATIONS_MAX = iterations;
+		Measure measureS = new PseudoMeasures();
+		if(measure != 0)
+			measureS = new ReferencePseudoMeasures();
+		bsc.setMeasure(measureS);
 		return bsc;
 	}
 
@@ -99,6 +103,14 @@ public class SelfConfigMeshBasedBean {
 	public void setClassifierName(int classifierName) {
 		System.out.println("Setting classifier name to:"+classifierName);
 		this.classifierName = classifierName;
+	}
+	
+	public int getMeasure() {
+		return measure;
+	}
+
+	public void setMeasure(int measure) {
+		this.measure = measure;
 	}
 
 }

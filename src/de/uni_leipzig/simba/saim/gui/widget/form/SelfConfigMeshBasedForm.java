@@ -1,5 +1,7 @@
 package de.uni_leipzig.simba.saim.gui.widget.form;
 
+import java.util.HashMap;
+
 import org.vaadin.risto.stepper.IntStepper;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
@@ -19,12 +21,19 @@ public class SelfConfigMeshBasedForm extends Form {
 	private static final long serialVersionUID = 3184156595397084333L;
 	private final Messages messages;
 	public static final String elementsWidth = "100px"; //$NON-NLS-1$
+	public static final String pseudoMeasureName="Pseudo F-Measure NGLY12";
+	public static final String referenceMeasureName="Pseudo F-Measure NIK+12";
+	// Map of measures and indices
+	public static HashMap<Integer, String> measures = new HashMap<Integer,String>();
+
 	/**
 	 * Constructor
 	 * @param bean Bean used to hold configure data.
 	 * @param messages Messages instance to externalize Strings.
 	 */
 	public SelfConfigMeshBasedForm(SelfConfigMeshBasedBean bean, final Messages messages) {
+		measures.put(0, pseudoMeasureName);
+		measures.put(1, referenceMeasureName);
 		this.messages = messages;
 		setFormFieldFactory(new SelfConfigMeshBasedFormFieldFactory());
 		BeanItem<SelfConfigMeshBasedBean> item = new BeanItem<SelfConfigMeshBasedBean>(bean);
@@ -89,6 +98,19 @@ public class SelfConfigMeshBasedForm extends Form {
 				s.select(id);
 				return s;
 			}
+			else if("measure".equals(pid)) {//$NON-NLS-1$
+	    		measures.put(0, pseudoMeasureName);
+	    		measures.put(1, referenceMeasureName);
+
+				Select s = new Select("Choose a classifier");
+				Object id = s.addItem(0);
+				s.addItem(1);
+				s.setItemCaption(0, measures.get(0));
+				s.setItemCaption(1, measures.get(1));
+				s.setNullSelectionAllowed(false);
+				s.select(id);
+				return s;
+			}			
 			return null;//unknown field.
 		}
 
