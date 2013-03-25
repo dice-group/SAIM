@@ -218,10 +218,13 @@ Whereas, the first two influence the runtime of the algorithm.
 \label{learning}
 SAIM also implements supervised learning algorithms presented in \cite{NGLY12}. If all endpoints are specified as described in chapter \ref{kbdefinition} and an intial Lnk Specification has been set either manually or through self configuartion as decribed in chapter \ref{manual} and \ref{selfconfig} respectively. The initial Link Specification is required to retrieve initial training data to be annoted by the user.\\
 All learning algorithms are based on Genetic Programming. Beside the typical parameters like Population size and number of generations to evolve and mutation propability the user can set the \texttt{number of inquiries} presented each iteration. To start the learning process the user can choose between active and batch learning approaches. In order to get good results we recommend a higher number of inquiries. There are 3 active learning approaches implemented. The basic EAGLE active learning approach \cite{NGLY12} and two enhancements using correlation features to better estimate the quality of examples to be classified. One is based on clustering the other uses a graph based features of spreading activation \cite{NGO+13}.\\
-Either way, the user evaluates the examples through checkboxes added to a equivalent table representation of the possible links as depicted in figure \ref{fig:execution}. Again, the number of generations to evolve and the population size have the most influence at runtimes.
+Either way, the user evaluates the examples through checkboxes added to a equivalent table representation of the possible links as depicted in figure \ref{fig:execution}. Again, the number of generations to evolve and the population size have the most influence at runtimes.\\
+To inspect the best Link Specification learned the user can click on the \texttt{Get best solution} button.
+
 %%%%%%%%%%%%%%%%%                                  FEATURES 													%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Additional features}
 \label{features}
+
 
 \section{Caching}
 \label{caching}
