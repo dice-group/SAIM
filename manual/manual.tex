@@ -69,7 +69,7 @@ This manual will cover the complete workflow of SAIM. Starting in chapter \ref{k
 		\item \texttt{Page Size} (optional) for pagination of SPARQL queries.
 	\end{enumerate}
 	It is possible to use predefined Presets from a list, such as DBPedia as depicted in the top layer of figure \ref{fig:endpoint}. SAIM also supports RDF local dumps on the Server. We have loaded the OAEI2010\footnote{Ontology Alignment Evaluation Initiative: \url{http://oaei.ontologymatching.org/2010/}} Benchmark datasets Person1, Persons2 and Restaurants. These datasets are accessible via the \texttt{Preset} list. SAIM supports the upload of RDF dumps in diffferent formats. Please refer to section \ref{upload} for details.\\
-	\begin{figure}[!h]
+	\begin{figure}[!ht]
 		\centering
 		\includegraphics[width=0.95\textwidth]{images/endpoint.png}
 		\caption{The Panel to specify the SPARQL endpoints. The front layer shows an example configuration to use DBPedia as an endpoint.}
@@ -83,7 +83,7 @@ If both source and target knowledge bases are specified we confirm it by clickin
 	\section{Class restriction}
 	\label{classes}
 	Goal here is to specify the \texttt{rdf:type} of the instances we want to match. Figure \ref{fig:class} shows the Class Matching Step. 
-	\begin{figure}[!h]
+	\begin{figure}[!ht]
 		\centering
 		\includegraphics[width=0.95\textwidth]{images/class.png}
 		\caption{Class Matching step. Goal is to specify the \texttt{rdf:type} restrictions both source and target instances have to fulfill. The user can manually navigate through the available classes via the class trees or use calculated class matches via	the list at the top. The two buttons \texttt{String based} and \texttt{Link based} at the top will start a new automatic matching process.}
@@ -99,7 +99,7 @@ If both source and target knowledge bases are specified we confirm it by clickin
 	
 	Once again this step is assisted by automatic computed property matches. On default a string based comparison of the property names is computed. But the user can also start a more sophisticated yet complex matching algorithm at the top of the property matching panel. Once all property pairs were defined, we submit the settings by clicking the \texttt{Finish} button. We will return to the main page of SAIM. As
 	
- \begin{figure}[!h]
+ \begin{figure}[!ht]
 		\centering
 		\includegraphics[width=0.95\textwidth]{images/metric_empty.png}
 		\caption{The main window of SAIM after specifying the endpoints. The accordion lists of source and target properties on the left hand are filled according to the propties the user selected in the Property Matching step described in section \ref{properties}. This sceenshot is based on the running example Person1 dataset of OAEI2010, depicted in appendix \ref{person1Spec}}
@@ -161,7 +161,7 @@ Figure \ref{fig:metrics} shows an example of an atomic and a complex Link Specif
 \label{fig:metrics}
 \end{figure}
 
-In order to build a atomic Link Specification as depicted in \ref{fig:simple} the user has to do:
+In order to build a atomic Link Specification as depicted in \ref{fig:atomic} the user has to do:
 
 \begin{enumerate}
 	\item Choose a source property from the accordion panel (e.g. \texttt{www:soc\_sec\_id} as in \ref{fig:atomic})
@@ -183,10 +183,10 @@ Note that several nodes in the Link Specification tree have parameters to be set
 To run a Link Specification click the button \texttt{Start Mapping process}. First the specified metric is checked if it is complete and valid. If everything is ok, the mapping process is started and a new window shows the progress. The results will be presented in the Mapping Window as depicted in figure \ref{fig:execution}.\\
  The \textbf{table} at the bottom shows instance pairs of the specified source and target endpoint which fulfill the Link Specification. Clicking on a row will present the fetched data of botch matched instances above the table. Clicking on a link will try to dereferentiate the corresponding instance by its URI in a separat browser tab. The \texttt{value} column holds the similarity value of the matches.\\To \textbf{download} the complete mapping click the \texttt{Save} button beneath the table. This will open a sub window, to choose different serialization format. As of now, we support Turte, N-Triple and Tab-seperated files.
  
- \begin{figure}[!h]
+ \begin{figure}[!ht]
 		\centering
 		\includegraphics[width=0.95\textwidth]{images/execution_window.png}
-		\caption{Mapping window presents results (Mapping) of a Link Specification. This are the results of executing the Link Specification of \ref{complex}.}
+		\caption{Mapping window presents results (Mapping) of a Link Specification. This are the results of executing the Link Specification of \ref{fig:complex}.}
 		\label{fig:execution}
 	\end{figure}
 
