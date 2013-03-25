@@ -244,11 +244,11 @@ public class MetricPanel extends Panel{
 			if( config.getSource() != null && config.getSource().properties != null && config.getSource().properties.size()>0 &&
 					config.getTarget() != null && config.getTarget().properties != null && config.getTarget().properties.size()>0) {
 				selfConfigButton.setEnabled(true);
-				if(config.getMetricExpression() != null && config.getMetricExpression().length()>0) {
+//				if(config.getMetricExpression() != null && config.getMetricExpression().length()>0) {
 					learnButton.setEnabled(true);
 					startMapping.setEnabled(true);
 					return true;
-				}
+//				}
 			}
 		}
 		return false;
