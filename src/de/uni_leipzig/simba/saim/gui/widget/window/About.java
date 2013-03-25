@@ -109,8 +109,8 @@ public class About extends CustomComponent {
 				"<h1>Team</h1>" +
 				"<ul>" +
 				" <li><a href='http://aksw.org/AxelNgonga.html'>Dr. Axel-C. Ngonga Ngomo</a></li>" +
-				" <li><a href='http://aksw.org/KonradHoeffner.html'>Konrad H�ffner</a></li>" +
-				" <li>Ren� Speck</li>" +
+				" <li><a href='http://aksw.org/KonradHoeffner.html'>Konrad Höffner</a></li>" +
+				" <li>René Speck</li>" +
 				" <li>Klaus Lyko</li>" +
 				"</ul>";		
 		return s;
