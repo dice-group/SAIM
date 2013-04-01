@@ -225,16 +225,20 @@ To inspect the best Link Specification learned the user can click on the \texttt
 \chapter{Additional features}
 \label{features}
 
-
 \section{Caching}
 \label{caching}
-
+All class and proptery matches computed by same are chached so minimizing the effort for later computations.
 
 \section{Import and save Link Specifications}
 \label{ImportExport}
+We offer a serialization of SAIM Link Specifications using the same LIMES XML Link Spec format\footnote{See appendix \ref{person1Spec} for an example.}.
+
+It is possible to serialize Link spezifications buildt with SAIM for later work. To do so go to the menu bar \texttt{Link Specifikation} $\Rightarrow$ \texttt{Export Link Spec}. Exporting a Link Specification everytime the main window is visible. So it is possible to save unfinished Link Spec for later completion. \\
+Importing these Link Specification dumps is possible by calling menu bar \texttt{Link Specification} $\Rightarrow$ \texttt{Import Link Spec}. These will load all properties defined within the XML to SAIM.
 
 \section{Uploading RDF dumps}
 \label{upload}
+To further enhance the usabillity of SAIM we offer a interface to load and store local RDF datasets to SAIM. For this purpose we created a administer area. If you are logged in as an admin there will be a menu entry \texttt{Upload endpoint} accessible in the \texttt{Link Specification} menu. As of now, we support both Turtle, N-triple and RDF/XML serializations of RDF data. The basic workflow is a follows. You select a file on your local machine, select the according serialization format and press \texttt{Upload}. SAIM then receives the file and tries to register a Jena RDF Model for this dataset. If this is succesful the data will be usable via the Presets list in the endpoint definmition window as described in section \ref{endpoint}.
 
 \bibliographystyle{plain}
 \bibliography{saim}
