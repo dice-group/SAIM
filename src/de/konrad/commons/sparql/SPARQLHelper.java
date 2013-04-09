@@ -1,6 +1,8 @@
 package de.konrad.commons.sparql;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -527,7 +529,12 @@ public class SPARQLHelper
 		while(rs.hasNext())
 		{
 			QuerySolution qs = rs.nextSolution();
-			list.add(qs.get(qs.varNames().next()).toString());
+			try {
+				list.add(URLDecoder.decode(qs.get(qs.varNames().next()).toString(), "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				list.add(qs.get(qs.varNames().next()).toString());
+				e.printStackTrace();
+			}
 		}
 		return list;
 	}

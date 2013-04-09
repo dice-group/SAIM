@@ -84,5 +84,11 @@ public class EndpointURLValidator implements Validator
 		try{validate(value);} catch (InvalidValueException e) {return false;}
 		return true;
 	}
+	
+	public static void main(String args[]) {
+		String ep = "http://www4.wiwiss.fu-berlin.de/dailymed/sparql";
+		EndpointURLValidator valid = new EndpointURLValidator();
+		valid.isValid(ep);
+	}
 
 }

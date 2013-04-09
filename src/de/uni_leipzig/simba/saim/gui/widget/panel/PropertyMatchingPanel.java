@@ -1,5 +1,7 @@
 package de.uni_leipzig.simba.saim.gui.widget.panel;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -389,11 +391,19 @@ public class PropertyMatchingPanel extends Panel
 
 		for(String prop : propListSource) {
 			String s_abr=PrefixHelper.abbreviate(prop);
-			sourceProperties.add(s_abr);
+			try {
+				sourceProperties.add(URLDecoder.decode(s_abr, "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				sourceProperties.add(s_abr);
+			}
 		}
 		for(String prop : propListTarget) {
 			String s_abr=PrefixHelper.abbreviate(prop);
-			targetProperties.add(s_abr);
+			try {
+				targetProperties.add(URLDecoder.decode(s_abr, "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				targetProperties.add(s_abr);
+			}
 		}
 	}
 
@@ -633,16 +643,25 @@ public class PropertyMatchingPanel extends Panel
 			this.similarity=similarity;
 		}
 		public ClassMatchItem(String sourceClass, String targetClass) {
-
+			this.sourceClass=sourceClass;
+			this.targetClass=targetClass;
 		}
 		public String getSourceClass() {
-			return sourceClass;
+			try {
+				return URLDecoder.decode(sourceClass, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				return sourceClass;
+			}
 		}
 		public void setSourceClass(String sourceClass) {
 			this.sourceClass = sourceClass;
 		}
 		public String getTargetClass() {
-			return targetClass;
+			try {
+				return URLDecoder.decode(targetClass, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				return targetClass;
+			}
 		}
 		public void setTargetClass(String targetClass) {
 			this.targetClass = targetClass;
@@ -655,7 +674,7 @@ public class PropertyMatchingPanel extends Panel
 		}
 		@Override
 		public String toString() {
-			String ret = sourceClass + " - " +targetClass; //$NON-NLS-1$
+			String ret = getSourceClass() + " - " +getTargetClass(); //$NON-NLS-1$
 			if(!Double.isNaN(similarity))
 				ret+= " (" + similarity + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			return ret;

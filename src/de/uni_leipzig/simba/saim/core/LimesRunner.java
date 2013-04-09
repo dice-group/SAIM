@@ -103,7 +103,7 @@ public class LimesRunner implements Serializable {
 		  }
 		  
 		  public String toString() {
-			  return "Exception caching data of "+info.endpoint+" using parameters "+info;
+			  return "Exception caching data of "+info.endpoint+" Rootcause:"+root;
 		  }
 	  }
 }
