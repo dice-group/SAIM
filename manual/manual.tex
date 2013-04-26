@@ -11,9 +11,9 @@
 \usepackage{booktabs}
 \usepackage{float}
 \usepackage{colortbl}
-\usepackage{comment}
+%\usepackage{comment}
 \usepackage{ulem}
-\usepackage{todonotes}
+%\usepackage{todonotes}
 \usepackage{listings}
 
 \begin{document}
@@ -93,7 +93,7 @@ If both source and target knowledge bases are specified we confirm it by clickin
 		\label{fig:class}
 	\end{figure}
 	
-	Per default a simple string based comparison off all available classes is computed. Upon finish the user can choose a match in the list at the top of the class matching window. The more sophisticated but time consuming link based comparison could be started manually. This method tries to link \texttt{rdf:type}s via availlable \texttt{owl:sameAs} statements.\todo{More details}. If large knowledge bases such as DBPedia are used to query all availlable classes may take some time, so please stay patient. Once this is done, the user can also navigate through the class and subclass hierachy of an endpoint via the tree at the bottom.
+	Per default a simple string based comparison off all available classes is computed. Upon finish the user can choose a match in the list at the top of the class matching window. The more sophisticated but time consuming link based comparison could be started manually. This method tries to link \texttt{rdf:type}s via availlable \texttt{owl:sameAs} statements. If large knowledge bases such as DBPedia are used to query all availlable classes may take some time, so please stay patient. Once this is done, the user can also navigate through the class and subclass hierachy of an endpoint via the tree at the bottom.
 	
 	Once two instance types are selected the next and final step of the endpoint specification is to choose the properties the Link Specifications can rely on.
 	\section{Property Matching}
@@ -196,7 +196,7 @@ To run a Link Specification click the button \texttt{Start Mapping process}. Fir
 %%%%%%%%%%%%%%%%%                             SELFCONFIGURATION 											%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Selfconfiguration}
 \label{selfconfig}
-SAIM also supports unsupervised machine learning method of Link Specifications, called \emph{Selfconfiguration}. Once all endpoints are specified as described in chapter \ref{kbdefinition} this option is available. These machine learning methods rely on so-called Psuedo F-Measures. \todo{cite EUCLID paper}.\\
+SAIM also supports unsupervised machine learning method of Link Specifications, called \emph{Selfconfiguration}. Once all endpoints are specified as described in chapter \ref{kbdefinition} this option is available. These machine learning methods rely on so-called Psuedo F-Measures.\\
 To start click the \texttt{Start Selfconfiguration} on the main window of SAIM.
 \subsection{Mesh based Selfconfiguration}
 There are several deterministic selfconfiguration algorithms available trying to discover high quality Link Specifications baes upon different classifier. Other parameters to adjust are:
