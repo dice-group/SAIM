@@ -14,7 +14,7 @@
    height="2979.9211"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.3.1 r9886"
+   inkscape:version="0.48.4 r9939"
    sodipodi:docname="SAIM-poster.svg">
   <title
      id="title2996">SAIM Poster</title>
@@ -1590,14 +1590,14 @@
      inkscape:pageshadow="2"
      inkscape:zoom="0.35355339"
      inkscape:cx="1059.8929"
-     inkscape:cy="1840.6817"
+     inkscape:cy="1614.4075"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1600"
-     inkscape:window-height="845"
-     inkscape:window-x="0"
-     inkscape:window-y="27"
+     inkscape:window-width="1366"
+     inkscape:window-height="716"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
@@ -2479,8 +2479,9 @@
            y="51.349712"
            style="text-align:center;text-anchor:middle" /></flowRegion><flowPara
          id="flowPara4382"
-         style="font-weight:bold;letter-spacing:20.62000465px;-inkscape-font-specification:Sans Bold">SAIM</flowPara><flowPara
-         id="flowPara4384">One Step Closer to Zero-Configuration Link Discovery</flowPara><flowPara
+         style="font-weight:bold;letter-spacing:20.62000464999999800px;-inkscape-font-specification:Arial Bold;font-family:Arial;font-style:normal;font-stretch:normal;font-variant:normal">SAIM</flowPara><flowPara
+         id="flowPara4384"
+         style="-inkscape-font-specification:Arial Bold;font-family:Arial;font-weight:bold;font-style:normal;font-stretch:normal;font-variant:normal">One Step Closer to Zero-Configuration Link Discovery</flowPara><flowPara
          id="flowPara4582" /><flowPara
          id="flowPara4584" /></flowRoot>    <flowRoot
        xml:space="preserve"
@@ -2524,7 +2525,7 @@
          x="173.48183"
          y="509.77625"
          id="tspan4432"
-         style="font-weight:bold;-inkscape-font-specification:Sans Bold">References</tspan></text>
+         style="font-weight:bold;-inkscape-font-specification:Arial Bold;font-family:Arial;font-style:normal;font-stretch:normal;font-variant:normal">References</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
@@ -2566,7 +2567,7 @@
          x="95.446411"
          y="-752.2486"
          id="tspan4680"
-         style="font-size:32px">Fig. 1: Main window of SAIM. Showing a complex Link Specification </tspan></text>
+         style="font-size:32px;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal">Fig. 1: Main window of SAIM. Showing a complex Link Specification </tspan></text>
     <flowRoot
        xml:space="preserve"
        id="flowRoot4563"
@@ -2609,11 +2610,11 @@
          id="tspan4646"
          x="1050.3745"
          y="-1558.4781"
-         style="font-size:36px;text-align:center;text-anchor:middle">Klaus Lyko, Konrad Höffner, René Speck, Axel-Cyrille Ngonga-Ngomo and Jens Lehmann</tspan><tspan
+         style="font-size:36px;text-align:center;text-anchor:middle;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal">Klaus Lyko, Konrad Höffner, René Speck, Axel-Cyrille Ngonga-Ngomo and Jens Lehmann</tspan><tspan
          sodipodi:role="line"
          x="1050.3745"
          y="-1513.4781"
-         style="font-size:36px;text-align:center;text-anchor:middle"
+         style="font-size:36px;text-align:center;text-anchor:middle;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
          id="tspan4654">Univerisity of Leipzig, Postfach 100920, 04009 Leipzig, Germany</tspan><tspan
          sodipodi:role="line"
          x="1050.3745"
@@ -2652,26 +2653,28 @@
            x="1275.0439"
            y="601.71417" /></flowRegion><flowPara
          id="flowPara4678"
-         style="text-align:start;text-anchor:start">- tool for creating high-quality  </flowPara><flowPara
-         style="text-align:start;text-anchor:start"
+         style="text-align:start;text-anchor:start">-<flowSpan
+   style="-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+   id="flowSpan3577"> tool for creating high-quality  </flowSpan></flowPara><flowPara
+         style="text-align:start;text-anchor:start;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
          id="flowPara3554">  link specifications</flowPara><flowPara
-         style="text-align:start;text-anchor:start"
+         style="text-align:start;text-anchor:start;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
          id="flowPara3550">- implements powerful workflow</flowPara><flowPara
-         style="text-align:start;text-anchor:start"
+         style="text-align:start;text-anchor:start;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
          id="flowPara3552">- includes state-of-the-art </flowPara><flowPara
-         style="text-align:start;text-anchor:start"
+         style="text-align:start;text-anchor:start;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
          id="flowPara3556">  unsupervised, semi-supervised </flowPara><flowPara
-         style="text-align:start;text-anchor:start"
+         style="text-align:start;text-anchor:start;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
          id="flowPara3558">  and supervised machine </flowPara><flowPara
-         style="text-align:start;text-anchor:start"
+         style="text-align:start;text-anchor:start;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
          id="flowPara3560">  learning algorithms</flowPara></flowRoot>    <image
-       sodipodi:absref="/home/jl/workspace/saim/poster/saim_screenshot.png"
+       sodipodi:absref="C:\Users\Lyko\workspace\SAIM\poster\saim_screenshot.png"
        xlink:href="saim_screenshot.png"
-       width="1048.745"
-       height="509.7598"
-       id="image3359"
+       y="-1321.165"
        x="102.22368"
-       y="-1321.165" />
+       id="image3359"
+       height="509.7598"
+       width="1048.745" />
     <text
        xml:space="preserve"
        style="font-size:43.13892746px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
@@ -2684,70 +2687,70 @@
          x="160.61028"
          y="613.62152"
          id="tspan4451"
-         style="font-size:32px">1.  A.-C. Ngonga Ngomo.<tspan
-   style="font-size:32px;font-style:oblique;-inkscape-font-specification:Sans Oblique"
-   id="tspan4469"> On link discovery using a hybrid approach</tspan>.</tspan><tspan
+         style="font-size:32px;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal">1.  A.-C. Ngonga Ngomo.<tspan
+   style="font-style:oblique;-inkscape-font-specification:Arial Oblique"
+   id="tspan3585"> On link discovery using a hybrid approach</tspan>.</tspan><tspan
          sodipodi:role="line"
          x="160.61028"
          y="653.64136"
-         style="font-size:32px"
+         style="font-size:32px;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
          id="tspan4503">     Journal on Data Semantics, 1:203 – 217, December 2012.</tspan><tspan
          sodipodi:role="line"
          x="160.61028"
          y="693.73755"
          id="tspan4455"
-         style="font-size:32px">2. A.-C. Ngonga Ngomo and S. Auer. <tspan
-   style="font-size:32px;font-style:oblique;-inkscape-font-specification:Sans Oblique"
-   id="tspan4471">LIMES - A Time-Effcient Approach for Large-</tspan></tspan><tspan
+         style="font-size:32px;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal">2. A.-C. Ngonga Ngomo and S. Auer. L<tspan
+   style="font-style:oblique;-inkscape-font-specification:Arial Oblique"
+   id="tspan3591">IMES - A Time-Effcient Approach for Large-</tspan></tspan><tspan
          sodipodi:role="line"
          x="160.61028"
          y="733.85358"
-         style="font-size:32px"
+         style="font-size:32px;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
          id="tspan4505"><tspan
-   style="font-size:32px;font-style:oblique;-inkscape-font-specification:Sans Oblique"
-   id="tspan4507">     Scale Link Discovery on the Web of Data</tspan>. In Proceedings of IJCAI, 2011.</tspan><tspan
+   style="font-style:oblique;-inkscape-font-specification:Arial Oblique"
+   id="tspan3593">     Scale Link Discovery on the Web of Data</tspan>. In Proceedings of IJCAI, 2011.</tspan><tspan
          sodipodi:role="line"
          x="160.61028"
          y="773.9696"
          id="tspan4459"
-         style="font-size:32px">3. A.-C. Ngonga Ngomo, J. Lehmann, S. Auer, and K. Höffner. <tspan
-   style="font-size:32px;font-style:oblique;-inkscape-font-specification:Sans Oblique"
-   id="tspan4475">RAVEN – </tspan></tspan><tspan
+         style="font-size:32px;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal">3. A.-C. Ngonga Ngomo, J. Lehmann, S. Auer, and K. Höffner. <tspan
+   style="font-style:oblique;-inkscape-font-specification:Arial Oblique"
+   id="tspan3595">RAVEN – </tspan></tspan><tspan
          sodipodi:role="line"
          x="160.61028"
          y="814.08569"
-         style="font-size:32px"
+         style="font-size:32px;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
          id="tspan4509"><tspan
-   style="font-size:32px;font-style:oblique;-inkscape-font-specification:Sans Oblique"
-   id="tspan4511">     Active Learning of Link Speciﬁcations</tspan>. In Proceedings of OM@ISWC, volume 814, 2011.</tspan><tspan
+   style="font-style:oblique;-inkscape-font-specification:Arial Oblique"
+   id="tspan3597">     Active Learning of Link Speciﬁcations</tspan>. In Proceedings of OM@ISWC, volume 814, 2011.</tspan><tspan
          sodipodi:role="line"
          x="160.61028"
          y="854.20172"
          id="tspan4463"
-         style="font-size:32px">4. A.-C. Ngonga Ngomo and K. Lyko. <tspan
-   style="font-size:32px;font-style:oblique;-inkscape-font-specification:Sans Oblique"
-   id="tspan4479">Eagle: Effcient active learning of link speciﬁcations</tspan></tspan><tspan
+         style="font-size:32px;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal">4. A.-C. Ngonga Ngomo and K. Lyko. <tspan
+   style="font-style:oblique;-inkscape-font-specification:Arial Oblique"
+   id="tspan3603">Eagle: Effcient active learning of link speciﬁcations</tspan></tspan><tspan
          sodipodi:role="line"
          x="160.61028"
          y="894.31775"
-         style="font-size:32px"
+         style="font-size:32px;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
          id="tspan4517"><tspan
-   style="font-size:32px;font-style:oblique;-inkscape-font-specification:Sans Oblique"
-   id="tspan4519">    using genetic programming</tspan>. In Proceedings of ESWC, 2012.</tspan><tspan
+   style="font-style:oblique;-inkscape-font-specification:Arial Oblique"
+   id="tspan3605">    using genetic programming</tspan>. In Proceedings of ESWC, 2012.</tspan><tspan
          sodipodi:role="line"
          x="160.61028"
          y="934.43378"
          id="tspan4465"
-         style="font-size:32px">5. A.-C. Ngonga Ngomo, K. Lyko, and V. Christen. <tspan
-   style="font-size:32px;font-style:oblique;-inkscape-font-specification:Sans Oblique"
-   id="tspan4483">Coala – correlation-aware active</tspan></tspan><tspan
+         style="font-size:32px;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal">5. A.-C. Ngonga Ngomo, K. Lyko, and V. Christen.<tspan
+   style="font-style:oblique;-inkscape-font-specification:Arial Oblique"
+   id="tspan3607"> Coala – correlation-aware active</tspan></tspan><tspan
          sodipodi:role="line"
          x="160.61028"
          y="974.5498"
          id="tspan4467"
-         style="font-size:32px"><tspan
-   style="font-size:32px;font-style:oblique;-inkscape-font-specification:Sans Oblique"
-   id="tspan4485">     learning of link speciﬁcations</tspan>. In Proceedings of ESWC, 2013.</tspan></text>
+         style="font-size:32px;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"><tspan
+   style="font-style:oblique;-inkscape-font-specification:Arial Oblique"
+   id="tspan3609">     learning of link speciﬁcations</tspan>. In Proceedings of ESWC, 2013.</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
@@ -2759,27 +2762,26 @@
          x="257.02411"
          y="307.07281"
          id="tspan4680-8"
-         style="font-size:32px">Fig. 2: Workflow of SAIM</tspan></text>
+         style="font-size:32px;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal">Fig. 2: Workflow of SAIM</tspan></text>
     <image
-       sodipodi:absref="/home/jl/workspace/saim/poster/LIMES_Logo_zw_rgb.png"
+       sodipodi:absref="C:\Users\Lyko\workspace\SAIM\poster\LIMES_Logo_zw_rgb.png"
        xlink:href="LIMES_Logo_zw_rgb.png"
-       width="189"
-       height="92"
-       id="image3691"
+       y="-1860.1729"
        x="99.004608"
-       y="-1860.1729" />
+       id="image3691"
+       height="92"
+       width="189" />
     <g
        id="g3783"
        transform="matrix(1.5558433,0,0,1.5558433,1398.2422,-2230.3693)">
       <g
          id="g3749">
-	<path
-   id="path3751"
-   d="m 382.819,248.095 c -0.271,-1.35 -1.623,-2.441 -2.982,-2.441 -2.926,0 -5.852,0 -8.779,0 0.393,0.584 0.686,1.232 0.826,1.929 2.998,14.971 2.998,30.148 -0.001,45.115 -0.141,0.695 -0.433,1.342 -0.823,1.926 2.926,0 5.852,0 8.777,0 1.359,0 2.711,-1.09 2.982,-2.441 2.915,-14.552 2.915,-29.537 0,-44.088 z"
-   inkscape:connector-curvature="0"
-   style="fill:#89ba17" />
-
-</g>
+        <path
+           id="path3751"
+           d="m 382.819,248.095 c -0.271,-1.35 -1.623,-2.441 -2.982,-2.441 -2.926,0 -5.852,0 -8.779,0 0.393,0.584 0.686,1.232 0.826,1.929 2.998,14.971 2.998,30.148 -0.001,45.115 -0.141,0.695 -0.433,1.342 -0.823,1.926 2.926,0 5.852,0 8.777,0 1.359,0 2.711,-1.09 2.982,-2.441 2.915,-14.552 2.915,-29.537 0,-44.088 z"
+           inkscape:connector-curvature="0"
+           style="fill:#89ba17" />
+      </g>
       <path
          id="path3753"
          d="m 368.89,248.095 c -0.271,-1.35 -1.625,-2.441 -2.984,-2.441 -2.926,0 -5.852,0 -8.777,0 0.392,0.584 0.686,1.232 0.826,1.929 2.998,14.968 2.998,30.146 -0.002,45.117 -0.14,0.695 -0.433,1.342 -0.824,1.924 2.926,0 5.852,0 8.777,0 1.36,0 2.713,-1.09 2.983,-2.441 2.916,-14.552 2.915,-29.537 10e-4,-44.088 z"
@@ -2787,13 +2789,12 @@
          style="fill:#ec7404" />
       <g
          id="g3755">
-	<path
-   id="path3757"
-   d="m 354.962,248.095 c -0.271,-1.35 -1.624,-2.441 -2.985,-2.441 -2.928,0 -5.854,0 -8.78,0 0.392,0.584 0.686,1.232 0.827,1.929 2.998,14.968 2.998,30.146 -0.002,45.119 -0.14,0.693 -0.434,1.34 -0.824,1.922 2.926,0 5.854,0 8.779,0 1.36,0 2.713,-1.09 2.985,-2.441 2.915,-14.552 2.915,-29.537 0,-44.088 z"
-   inkscape:connector-curvature="0"
-   style="fill:#c5007b" />
-
-</g>
+        <path
+           id="path3757"
+           d="m 354.962,248.095 c -0.271,-1.35 -1.624,-2.441 -2.985,-2.441 -2.928,0 -5.854,0 -8.78,0 0.392,0.584 0.686,1.232 0.827,1.929 2.998,14.968 2.998,30.146 -0.002,45.119 -0.14,0.693 -0.434,1.34 -0.824,1.922 2.926,0 5.854,0 8.779,0 1.36,0 2.713,-1.09 2.985,-2.441 2.915,-14.552 2.915,-29.537 0,-44.088 z"
+           inkscape:connector-curvature="0"
+           style="fill:#c5007b" />
+      </g>
       <path
          id="path3759"
          d="m 354.509,321.982 -26.796,-27.359 c 3.448,0 6.898,0 10.334,0 1.358,0 2.71,-1.09 2.983,-2.441 2.914,-14.55 2.914,-29.536 0,-44.086 -0.273,-1.35 -1.625,-2.441 -2.983,-2.441 -40.208,0 -81.359,0 -121.567,0 -1.358,0 -2.71,1.092 -2.982,2.441 -2.915,14.551 -2.914,29.536 0,44.086 0.271,1.354 1.625,2.441 2.982,2.441 28.738,0 57.955,0 86.968,0 l 51.061,27.359 z"
@@ -2801,43 +2802,36 @@
          style="fill:#87888a" />
       <g
          id="g3761">
-	<g
-   id="g3763">
-		<g
-   id="g3765">
-			<path
-   id="path3767"
-   d="m 244.367,282.435 -1.704,-5.93 h -8.589 l -1.721,5.93 h -5.334 l 8.095,-25.016 h 6.458 l 8.129,25.016 h -5.334 z m -2.93,-10.362 -2.571,-9.082 c 0,0 -0.246,-1.132 -0.47,-2.062 -0.173,0.931 -0.454,2.062 -0.454,2.062 l -2.589,9.082 h 6.084 z"
-   inkscape:connector-curvature="0"
-   style="fill:#ffffff" />
-
-			<path
-   id="path3769"
-   d="m 272.206,282.435 h -5.998 l -5.738,-10.054 -0.389,0.753 v 9.301 h -5.282 v -24.914 h 5.282 v 10.516 l 0.912,-1.503 5.283,-9.013 h 5.861 l -7.751,11.533 7.82,13.381 z"
-   inkscape:connector-curvature="0"
-   style="fill:#ffffff" />
-
-			<path
-   id="path3771"
-   d="m 321.896,282.435 h -5.999 c 0,0 -3.834,-16.081 -3.902,-16.479 -0.068,-0.398 -0.128,-0.764 -0.179,-1.1 -0.051,-0.334 -0.088,-0.604 -0.11,-0.809 -0.023,0.204 -0.06,0.475 -0.111,0.809 -0.051,0.336 -0.11,0.699 -0.179,1.091 -0.069,0.392 -3.852,16.487 -3.852,16.487 h -6.016 L 295.55,257.52 h 5.197 c 0,0 3.602,17.865 3.681,18.319 0.08,0.454 0.153,0.878 0.222,1.27 0.069,0.392 0.119,0.713 0.153,0.963 0.034,-0.25 0.083,-0.568 0.146,-0.954 0.062,-0.387 0.128,-0.799 0.195,-1.236 0.068,-0.437 4.261,-18.361 4.261,-18.361 h 4.635 c 0,0 4.195,17.925 4.269,18.361 0.074,0.438 0.143,0.85 0.205,1.236 0.062,0.386 0.11,0.704 0.145,0.954 0.034,-0.25 0.082,-0.571 0.146,-0.963 0.062,-0.392 0.133,-0.815 0.213,-1.27 0.079,-0.454 3.681,-18.319 3.681,-18.319 h 5.197 l -6,24.915 z"
-   inkscape:connector-curvature="0"
-   style="fill:#ffffff" />
-
-		</g>
-
-	</g>
-
-	<g
-   id="g3773">
-		<path
-   id="path3775"
-   d="m 283.314,282.731 c -4.285,-0.015 -6.83,-1.524 -6.83,-1.524 v -4.712 c 0,0 2.632,1.974 6.085,2.017 2.124,0.026 3.806,-0.659 3.976,-2.42 0.212,-2.195 -1.293,-3.136 -3.081,-4.097 l -2.348,-1.244 c -2.198,-1.174 -4.211,-3.207 -4.211,-6.729 0,-5.441 4.695,-6.9 8.123,-6.9 3.652,0 6.538,1.737 6.538,1.737 l -1.655,3.823 c 0,0 -2.156,-1.398 -4.652,-1.398 -1.863,0 -3.354,0.64 -3.354,2.632 0,1.743 1.335,2.587 2.862,3.405 l 2.236,1.174 c 2.385,1.244 4.733,3.062 4.733,6.945 0.001,5.43 -4.695,7.304 -8.422,7.291 z"
-   inkscape:connector-curvature="0"
-   style="fill:#ffffff" />
-
-	</g>
-
-</g>
+        <g
+           id="g3763">
+          <g
+             id="g3765">
+            <path
+               id="path3767"
+               d="m 244.367,282.435 -1.704,-5.93 h -8.589 l -1.721,5.93 h -5.334 l 8.095,-25.016 h 6.458 l 8.129,25.016 h -5.334 z m -2.93,-10.362 -2.571,-9.082 c 0,0 -0.246,-1.132 -0.47,-2.062 -0.173,0.931 -0.454,2.062 -0.454,2.062 l -2.589,9.082 h 6.084 z"
+               inkscape:connector-curvature="0"
+               style="fill:#ffffff" />
+            <path
+               id="path3769"
+               d="m 272.206,282.435 h -5.998 l -5.738,-10.054 -0.389,0.753 v 9.301 h -5.282 v -24.914 h 5.282 v 10.516 l 0.912,-1.503 5.283,-9.013 h 5.861 l -7.751,11.533 7.82,13.381 z"
+               inkscape:connector-curvature="0"
+               style="fill:#ffffff" />
+            <path
+               id="path3771"
+               d="m 321.896,282.435 h -5.999 c 0,0 -3.834,-16.081 -3.902,-16.479 -0.068,-0.398 -0.128,-0.764 -0.179,-1.1 -0.051,-0.334 -0.088,-0.604 -0.11,-0.809 -0.023,0.204 -0.06,0.475 -0.111,0.809 -0.051,0.336 -0.11,0.699 -0.179,1.091 -0.069,0.392 -3.852,16.487 -3.852,16.487 h -6.016 L 295.55,257.52 h 5.197 c 0,0 3.602,17.865 3.681,18.319 0.08,0.454 0.153,0.878 0.222,1.27 0.069,0.392 0.119,0.713 0.153,0.963 0.034,-0.25 0.083,-0.568 0.146,-0.954 0.062,-0.387 0.128,-0.799 0.195,-1.236 0.068,-0.437 4.261,-18.361 4.261,-18.361 h 4.635 c 0,0 4.195,17.925 4.269,18.361 0.074,0.438 0.143,0.85 0.205,1.236 0.062,0.386 0.11,0.704 0.145,0.954 0.034,-0.25 0.082,-0.571 0.146,-0.963 0.062,-0.392 0.133,-0.815 0.213,-1.27 0.079,-0.454 3.681,-18.319 3.681,-18.319 h 5.197 l -6,24.915 z"
+               inkscape:connector-curvature="0"
+               style="fill:#ffffff" />
+          </g>
+        </g>
+        <g
+           id="g3773">
+          <path
+             id="path3775"
+             d="m 283.314,282.731 c -4.285,-0.015 -6.83,-1.524 -6.83,-1.524 v -4.712 c 0,0 2.632,1.974 6.085,2.017 2.124,0.026 3.806,-0.659 3.976,-2.42 0.212,-2.195 -1.293,-3.136 -3.081,-4.097 l -2.348,-1.244 c -2.198,-1.174 -4.211,-3.207 -4.211,-6.729 0,-5.441 4.695,-6.9 8.123,-6.9 3.652,0 6.538,1.737 6.538,1.737 l -1.655,3.823 c 0,0 -2.156,-1.398 -4.652,-1.398 -1.863,0 -3.354,0.64 -3.354,2.632 0,1.743 1.335,2.587 2.862,3.405 l 2.236,1.174 c 2.385,1.244 4.733,3.062 4.733,6.945 0.001,5.43 -4.695,7.304 -8.422,7.291 z"
+             inkscape:connector-curvature="0"
+             style="fill:#ffffff" />
+        </g>
+      </g>
     </g>
     <text
        xml:space="preserve"
@@ -2850,5 +2844,15 @@
          id="tspan3801"
          x="1513.2085"
          y="1012.764">Printed by Universitätsrechenzentrum Leipzig</tspan></text>
-  </g>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3569"
+       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Sans;font-style:normal;font-weight:normal;font-size:40px;line-height:125%;letter-spacing:0px;word-spacing:0px"><flowRegion
+         id="flowRegion3571"><rect
+           id="rect3573"
+           width="828.72913"
+           height="141.42136"
+           x="922.06726"
+           y="193.92043" /></flowRegion><flowPara
+         id="flowPara3575"></flowPara></flowRoot>  </g>
 </svg>
