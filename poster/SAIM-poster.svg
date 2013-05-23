@@ -15,7 +15,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="SAIM-poster.pdf">
+   sodipodi:docname="SAIM-poster.svg">
   <title
      id="title2996">SAIM Poster</title>
   <defs
@@ -2368,9 +2368,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.26"
-     inkscape:cx="925.73387"
-     inkscape:cy="1775.7748"
+     inkscape:zoom="0.44"
+     inkscape:cx="794.68728"
+     inkscape:cy="2284.6429"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -2402,7 +2402,7 @@
      id="layer1"
      transform="translate(0,1927.5591)">
     <g
-       transform="matrix(2.6880547,0,0,-2.6880547,107.20014,286.64302)"
+       transform="matrix(2.6880547,0,0,-2.6880547,103.20014,326.64302)"
        inkscape:label="SAIM_workflow"
        id="g3682">
       <g
@@ -3305,7 +3305,7 @@
          x="187.48183"
          y="513.77625"
          id="tspan4432"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial Bold">References</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial Bold">Literature</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
@@ -3339,12 +3339,12 @@
          id="flowPara4546" /></flowRoot>    <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       x="153.44641"
+       x="155.44641"
        y="-752.2486"
        id="text4548"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
-         x="153.44641"
+         x="155.44641"
          y="-752.2486"
          id="tspan4680"
          style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial">Fig. 1: Main window of SAIM. Showing a complex Link Specification </tspan></text>
@@ -3435,13 +3435,13 @@
          id="flowPara4678"
          style="text-align:start;text-anchor:start">-<flowSpan
    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial"
-   id="flowSpan3577"> tool for creating high-quality  </flowSpan></flowPara><flowPara
+   id="flowSpan3577"> Tool for creating high-quality  </flowSpan></flowPara><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;text-anchor:start;font-family:Arial;-inkscape-font-specification:Arial"
          id="flowPara3554">  link specifications</flowPara><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;text-anchor:start;font-family:Arial;-inkscape-font-specification:Arial"
-         id="flowPara3550">- implements powerful workflow</flowPara><flowPara
+         id="flowPara3550">- Implements powerful workflow</flowPara><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;text-anchor:start;font-family:Arial;-inkscape-font-specification:Arial"
-         id="flowPara3552">- includes state-of-the-art </flowPara><flowPara
+         id="flowPara3552">- Includes state-of-the-art </flowPara><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;text-anchor:start;font-family:Arial;-inkscape-font-specification:Arial"
          id="flowPara3556">  unsupervised, semi-supervised </flowPara><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;text-anchor:start;font-family:Arial;-inkscape-font-specification:Arial"
@@ -3450,11 +3450,11 @@
          id="flowPara3560">  learning algorithms</flowPara></flowRoot>    <image
        sodipodi:absref="C:\Users\Lyko\workspace\SAIM\poster\saim_screenshot.png"
        xlink:href="saim_screenshot.png"
-       y="-1321.165"
-       x="156.22368"
+       y="-1330.8777"
+       x="156.69987"
        id="image3359"
-       height="509.7598"
-       width="1048.745" />
+       height="524.10168"
+       width="1078.251" />
     <text
        xml:space="preserve"
        style="font-size:43.13892746px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
@@ -3534,13 +3534,13 @@
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       x="187.02411"
-       y="297.07281"
+       x="171.02411"
+       y="343.07281"
        id="text4548-5"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
-         x="187.02411"
-         y="297.07281"
+         x="171.02411"
+         y="343.07281"
          id="tspan4680-8"
          style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial">Fig. 2: Workflow of SAIM</tspan></text>
     <image
