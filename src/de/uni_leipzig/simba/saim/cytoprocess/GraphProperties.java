@@ -2,7 +2,7 @@ package de.uni_leipzig.simba.saim.cytoprocess;
 
 import giny.model.Edge;
 import giny.model.Node;
-import java.util.ArrayList;
+import java.util.Vector;
 import java.util.List;
 import java.util.Random;
 import org.apache.log4j.Logger;
@@ -30,7 +30,7 @@ public class GraphProperties {
 
 	private Random rand = new Random();
 
-	public List<Integer> idsToUpdate = new ArrayList<Integer>();
+	public List<Integer> idsToUpdate = new Vector<Integer>();
 
 	public GraphProperties(final CyNetwork network, final CyNetworkView finalView, final String p_title) {
 

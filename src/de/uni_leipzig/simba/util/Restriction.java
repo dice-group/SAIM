@@ -1,7 +1,7 @@
 package de.uni_leipzig.simba.util;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Vector;
 import java.util.Collection;
 import java.util.List;
 import de.konrad.commons.sparql.SPARQLHelper;
@@ -63,12 +63,12 @@ public class Restriction implements Serializable
 
 	public static List<Restriction> fromString(List<String> restrictionStrings)
 	{
-		ArrayList<Restriction> restrictions = new ArrayList<Restriction>();
+		Vector<Restriction> restrictions = new Vector<Restriction>();
 		for(String restrictionString: restrictionStrings) {restrictions.add(Restriction.fromString(restrictionString));}
 		return restrictions;
 	}
 
-	public static String restrictionUnion(ArrayList<String> restrictionStrings,String var)
+	public static String restrictionUnion(Vector<String> restrictionStrings,String var)
 	{
 		return restrictionUnion(fromString(restrictionStrings), var);
 	}

@@ -4,7 +4,7 @@ import giny.model.Edge;
 import giny.model.Node;
 import java.awt.Color;
 import java.awt.Font;
-import java.util.ArrayList;
+import java.util.Vector;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -167,7 +167,7 @@ public class PaintController {
 			int[] edges = graphProperties.getCyNetwork().getAdjacentEdgeIndicesArray(id, true, true, true);
 			boolean removed = graphProperties.getCyNetwork().removeNode(id, true);
 
-			List<String> sEdges = new ArrayList<String>();
+			List<String> sEdges = new Vector<String>();
 			for(int i = 0; i < edges.length; sEdges.add(String.valueOf(edges[i++])));
 			for(int i = 0; i < edges.length && removed; graphProperties.getCyNetwork().removeEdge(edges[i++], true));
 
