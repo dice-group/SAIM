@@ -58,8 +58,8 @@ public class PropertyMatchingPanel extends Panel
 	private List<Object[]> rows = new Vector<Object[]>();
 	private ClassResource closeImageResource;
 	private Table table = new Table();
-	private List<String> sourceProperties;
-	private List<String> targetProperties;
+	private Vector<String> sourceProperties;
+	private Vector<String> targetProperties;
 	private final ProgressIndicator progress = new ProgressIndicator();
 	private Label progressLabel;
 	private boolean listenerActive = true;
@@ -356,8 +356,8 @@ public class PropertyMatchingPanel extends Panel
 
 	private void getAllProperties() {
 		logger.info("Started getAllProperties()");
-		sourceProperties = new LinkedList<String>();
-		targetProperties = new LinkedList<String>();
+		sourceProperties = new Vector<String>();
+		targetProperties = new Vector<String>();
 		Configuration config = ((SAIMApplication)getApplication()).getConfig();//Configuration.getInstance();
 		if(config.isLocal) {
 			logger.info("Local data - using specified properties"); //$NON-NLS-1$
