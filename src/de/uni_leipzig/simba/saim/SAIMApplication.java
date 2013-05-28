@@ -284,7 +284,7 @@ public class SAIMApplication extends Application implements TransactionListener
 	 * @TODO Heavy testing
 	 * @return SAIMApplication instance
 	 */
-	public static SAIMApplication getInstance()
+	public static synchronized SAIMApplication getInstance()
 	{
 		return currentApplication.get ();
 	}

@@ -3,6 +3,7 @@ package de.uni_leipzig.simba.saim.gui.widget.panel;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Arrays;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -309,7 +310,7 @@ public class PropertyMatchingPanel extends Panel
 				Object[] row = createTableRow();
 				table.addItem(row,row);
 				//addComponent(new PropertyComboBox(mockAllPropertiesFromKBInfo(null)));
-
+				
 			}
 		}.start();
 
@@ -424,27 +425,35 @@ public class PropertyMatchingPanel extends Panel
 	 */
 	private synchronized void displayPropertyMapping(Map<String, HashMap<String, Double>> map)
 	{
-
-		TreeMap<Double, List<Pair<String>>> sort = new SortedMapping(map).sort();
-		logger.info("Displaying property Mapping"); //$NON-NLS-1$
-		synchronized(select) {
-			select.removeListener(selectListener);
-			useAll.removeListener(useComputedListener);
-			select.removeAllItems();
-			useComputedListener = new UseComputedClickListener(map);
-			useAll.addListener(useComputedListener);
-			if(map.size()>0)
-				useAll.setEnabled(true);
-			for(Entry<Double, List<Pair<String>>> e: sort.descendingMap().entrySet()) {
-				for(Pair<String> pair : e.getValue()) {
-					if(e.getKey()>0)
-						select.addItem(new ClassMatchItem(pair.getA(), pair.getB(), e.getKey()));
+		try {
+			TreeMap<Double, List<Pair<String>>> sort = new SortedMapping(map).sort();
+			logger.info("Displaying property Mapping"); //$NON-NLS-1$
+				synchronized(select) {
+					select.removeListener(selectListener);
+					useAll.removeListener(useComputedListener);
+					select.removeAllItems();
+					useComputedListener = new UseComputedClickListener(map);
+					useAll.addListener(useComputedListener);
+					if(map.size()>0)
+						useAll.setEnabled(true);select.detach();
+					for(Entry<Double, List<Pair<String>>> e: sort.descendingMap().entrySet()) {
+						for(Pair<String> pair : e.getValue()) {
+							if(e.getKey()>0) {
+								select.addItem(new ClassMatchItem(pair.getA(), pair.getB(), e.getKey()));
+								
+							}
+						}
+					}
+					select.attach();
+					select.setImmediate(true);
+					select.setNullSelectionAllowed(false);
+					select.addListener(selectListener);
 				}
-			}
-			select.setImmediate(true);
-			select.setNullSelectionAllowed(false);
-			select.addListener(selectListener);
-		}		
+		} catch(ConcurrentModificationException e) {
+			e.printStackTrace();
+			
+		}
+				
 	}
 
 	/**
