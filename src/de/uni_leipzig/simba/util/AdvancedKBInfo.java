@@ -1,7 +1,7 @@
 package de.uni_leipzig.simba.util;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Vector;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -99,13 +99,13 @@ public class AdvancedKBInfo extends KBInfo implements Serializable
 	// TODO: move somewhere else?
 	public void expandPrefixes(Map<String,String> prefixes)
 	{
-		List<String> newProperties = new ArrayList<String>();
+		List<String> newProperties = new Vector<String>();
 		for(String property: properties)
 		{
 			newProperties.add(expandPrefix(property,prefixes));
 		}
 		this.properties = newProperties;
-		List<Restriction> newRestrictions = new ArrayList<Restriction>();
+		List<Restriction> newRestrictions = new Vector<Restriction>();
 		for(String restrictionStr: restrictions)
 		{
 			Restriction restriction = Restriction.fromString(restrictionStr);

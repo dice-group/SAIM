@@ -3,7 +3,7 @@ package de.uni_leipzig.simba.saim.gui.widget.form;
 import static de.konrad.commons.sparql.SPARQLHelper.lastPartOfURL;
 import static de.konrad.commons.sparql.SPARQLHelper.rootClasses;
 import static de.konrad.commons.sparql.SPARQLHelper.subclassesOf;
-import java.util.ArrayList;
+import java.util.Vector;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -108,7 +108,7 @@ public class ClassChooser extends Panel
 			List<String> subClasses;
 			try
 			{
-				subClasses  = new ArrayList<String>(subclassesOf(endpoint, graph,node.url, model));
+				subClasses  = new Vector<String>(subclassesOf(endpoint, graph,node.url, model));
 				log.trace(subClasses);
 				Collections.sort(subClasses); // sorting in java and not in the SPARQL query because the sort order may be different for the short short
 				tree.expandItem(node);

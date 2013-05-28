@@ -1,6 +1,6 @@
 //package de.uni_leipzig.simba.saim.core;
 //
-//import java.util.ArrayList;
+//import java.util.Vector;
 //import java.util.List;
 //
 //public class TrieNode
@@ -76,7 +76,7 @@
 //   protected List<String> getWords()
 //   {
 //      //Create a list to return
-//      List list = new ArrayList();
+//      List list = new Vector();
 //
 //      //If this node represents a word, add it
 //      if (isWord)

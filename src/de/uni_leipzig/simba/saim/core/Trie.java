@@ -1,6 +1,6 @@
 //package de.uni_leipzig.simba.saim.core;
 //
-//import java.util.ArrayList;
+//import java.util.Vector;
 //import java.util.List;
 //
 //public class Trie
@@ -40,7 +40,7 @@
 //	 lastNode = lastNode.getNode(prefix.charAt(i));
 //
 //	 //If no node matches, then no words exist, return empty list
-//	 if (lastNode == null) return new ArrayList();
+//	 if (lastNode == null) return new Vector();
 //      }
 //
 //      //Return the words which eminate from the last node

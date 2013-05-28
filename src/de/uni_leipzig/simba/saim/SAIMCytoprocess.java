@@ -2,7 +2,7 @@ package de.uni_leipzig.simba.saim;
 
 import giny.view.NodeView;
 import java.awt.Color;
-import java.util.ArrayList;
+import java.util.Vector;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -330,7 +330,7 @@ public class SAIMCytoprocess extends Cytoprocess {
 		makeMetricRecursive((Node)n, parentId);
 
 		// find all operator ids
-		List<Integer> operatorIDs = new ArrayList<Integer>();
+		List<Integer> operatorIDs = new Vector<Integer>();
 		for(Entry<Integer, Node> e : nodeMap.entrySet())
 			if(e.getValue() instanceof Operator)
 				if(e.getValue().getChilds().size() > 0)
