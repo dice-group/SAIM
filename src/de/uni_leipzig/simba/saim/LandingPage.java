@@ -104,15 +104,15 @@ public class LandingPage extends CustomComponent {
 //		URL url;
 //		url = getClass().getClassLoader().getResource(videoFile1);	
 //		url = getClass().getClassLoader().getResource(videoFile2);
-		
-		ExternalResource resc1 = new ExternalResource("http://139.18.2.164:8080/saim_screencast.mp4");
+		String baseURL = "http://139.18.2.136:8080/saim-screencast/";//saim_screencast.mp4
+		ExternalResource resc1 = new ExternalResource(baseURL+"saim_screencast.mp4");
 		resc1.setMIMEType("video/mp4; codecs=avc1.42E01E,mp4a.40.2");
 
 		
-		ExternalResource resc2 = new ExternalResource("http://139.18.2.164:8080/saim_screencast.ogg");
+		ExternalResource resc2 = new ExternalResource(baseURL+"saim_screencast.ogg");
 		resc2.setMIMEType("video/ogg; codecs=theora,vorbis");
 		
-		ExternalResource resc3 = new ExternalResource("http://139.18.2.164:8080/saim_screencast.webm");
+		ExternalResource resc3 = new ExternalResource(baseURL+"saim_screencast.webm");
 		resc3.setMIMEType("video/webm; codecs=vp8, vorbis");
 		
 		final Video v = new Video(  );
