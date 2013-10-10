@@ -31,7 +31,7 @@ public class SelfConfigGeneticBasedBean {
 	public void setDefaultValues() {
 		setBeta(1.0);
 		setPopulation(10);
-		setGenerations(20);
+		setGenerations(10);
 		setMutationRate(0.4f);
 		setCrossoverRate(0.4f);
 	}
