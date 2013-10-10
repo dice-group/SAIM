@@ -17,7 +17,11 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-
+/**
+ * A landing page for SAIM. Displaying inital informations such as Link to the manual and screencasts.
+ * @author Klaus Lyko
+ *
+ */
 public class LandingPage extends CustomComponent {
 	private static final long serialVersionUID = -7169913237786487620L;
 	public static final String manual = "manual.pdf";
