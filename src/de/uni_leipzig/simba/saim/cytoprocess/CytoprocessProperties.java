@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import cytoscape.Cytoscape;
+import cytoscape.CytoscapeInit;
 import cytoscape.visual.VisualPropertyType;
 /**
  * @author rspeck
@@ -49,7 +50,7 @@ public class CytoprocessProperties {
 			final int NODE_FONT_SIZE = Integer.parseInt(properties.getProperty("node_font_size"));
 			final String NODE_FONT = (properties.getProperty("node_font"));
 			final String EDGE_FONT = (properties.getProperty("edge_font"));
-
+		
 			Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().setDefaultBackgroundColor(BACKGROUND_COLOR);
 			Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_LINE_WIDTH,EDGE_LINE_WIDTH);
 			Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.NODE_LINE_WIDTH, NODE_LINE_WIDTH);

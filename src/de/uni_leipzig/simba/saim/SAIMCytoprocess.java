@@ -50,7 +50,7 @@ public class SAIMCytoprocess extends Cytoprocess {
 
 	public SAIMCytoprocess(int width, int height, SAIMApplication saimApp) {
 		super(width, height);
-
+		
 		config = saimApp.getConfig();
 		messages = saimApp.messages;
 		mainWindow = saimApp.getMainWindow();

@@ -51,6 +51,10 @@ import de.uni_leipzig.simba.saim.gui.widget.window.EndpointWindow;
 @SuppressWarnings("serial")
 public class SAIMApplication extends Application implements TransactionListener
 {
+	static { //workaround for headless environments ?
+	      System.setProperty("java.awt.headless", "false");
+	      System.out.println("java.awt.GraphicsEnvironment.isHeadless()? "+java.awt.GraphicsEnvironment.isHeadless());
+	}
 	public Messages messages;
 	private static final long serialVersionUID = -7665596682464881860L;
 	@Getter private  Window mainWindow;

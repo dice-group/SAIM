@@ -4,6 +4,7 @@ package de.uni_leipzig.simba.saim.cytoprocess;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import org.apache.log4j.Logger;
 import org.vaadin.contrib.component.svg.processing.Processing;
@@ -13,6 +14,7 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.ui.ClientWidget;
 import cytoscape.CyNetwork;
 import cytoscape.Cytoscape;
+import cytoscape.CytoscapeInit;
 import cytoscape.layout.CyLayoutAlgorithm;
 import cytoscape.view.CyNetworkView;
 /**
@@ -47,8 +49,10 @@ public class Cytoprocess extends Processing {
 	 */
 	public Cytoprocess(int width, int height){
 		String name = "Cytoprocess";
-
+//		CytoscapeInit.loadStaticProperties("mode", CytoscapeInit.getCyInitParams().TEXT);
+		
 		Cytoscape.createNewSession();
+//		System.out.println("CytoInits:\n"+CytoscapeInit.getCyInitParams());
 		CyNetwork network = Cytoscape.createNetwork(name, false);
 		CyNetworkView finalView = Cytoscape.createNetworkView(network);
 

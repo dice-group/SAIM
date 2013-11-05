@@ -50,7 +50,7 @@ public class MetricPanel extends Panel{
 
 	@Override
 	public void attach() {
-
+		
 		if((SAIMApplication)getApplication()!= null)
 			config = ((SAIMApplication)getApplication()).getConfig();
 
@@ -86,7 +86,9 @@ public class MetricPanel extends Panel{
 		accordion.addTab(metricsLayout,messages.getString("MetricPanel.metrics"));  //$NON-NLS-1$
 		accordion.addTab(operatorsLayout,messages.getString("MetricPanel.operators"));	 //$NON-NLS-1$
 		// add Cytographer
+	
 		saimcytopro = makeCytographer();
+	
 		layout.addComponent(saimcytopro);
 
 		getAllProps();
@@ -122,7 +124,7 @@ public class MetricPanel extends Panel{
 		checkButtons();
 	}
 
-	private SAIMCytoprocess makeCytographer(){
+	private SAIMCytoprocess makeCytographer() {
 
 		int hadjust = 100;
 		int wadjust = 350;
