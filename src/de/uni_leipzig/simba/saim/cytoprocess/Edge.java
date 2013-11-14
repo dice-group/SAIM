@@ -1,11 +1,13 @@
 package de.uni_leipzig.simba.saim.cytoprocess;
 
 public class Edge {
-	Node nodeA;
-	Node nodeB;
+	public ViewNode nodeA;
+	public ViewNode nodeB;
+	public int id;
 	public String name;
 	public String label;
-	public Edge(Node nodeA, Node nodeB) {
+	public Edge(int id, ViewNode nodeA, ViewNode nodeB) {
+		this.id = id;
 		this.nodeA=nodeA;
 		this.nodeB=nodeB;
 	}
@@ -18,6 +20,7 @@ public class Edge {
 			return true;
 		else {
 			Edge that = (Edge) o;
+			if(that.id ==this.id) return true;
 			if(that.nodeA.equals(nodeA) && that.nodeB.equals(nodeB))
 				return true;						
 		}
@@ -27,5 +30,9 @@ public class Edge {
 	@Override
 	public int hashCode() {
 		return nodeA.hashCode() + nodeB.hashCode();
+	}
+	@Override
+	public String toString() {
+		return "Edge(id="+id+"):"+nodeA+" - "+nodeB;
 	}
 }

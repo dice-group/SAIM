@@ -1,7 +1,7 @@
 package de.uni_leipzig.simba.saim.cytoprocess;
 
 //import giny.view.NodeView;
-import giny.view.NodeView;
+//import giny.view.NodeView;
 
 import com.vaadin.Application;
 import com.vaadin.ui.Panel;
@@ -27,7 +27,7 @@ public class TestApplication extends Application{
 		int k = 5;
 		Integer nodes[] = new Integer[n*k];
 		for(int i = 0; i < n*k; i++)
-			nodes[i] = 	cp.addNode("Node", 100, 100, NodeView.DIAMOND, "rgb(255,0,0)", false);
+			nodes[i] = 	cp.addNode("Node", 100, 100, ViewNode.DIAMOND, "rgb(255,0,0)", false);
 
 
 		for(int m = 0 ; m < k ; m++)
@@ -41,7 +41,7 @@ public class TestApplication extends Application{
 				for(int v = 0; v < n; v++)
 					cp.addEdge(nodes[oc * n + v], nodes[ic * n + v + n],"");
 
-		cp.applyLayoutAlgorithm(new ForceDirectedLayout());
+//		cp.applyLayoutAlgorithm(new ForceDirectedLayout());
 		cp.repaintGraph();
 	}
 }

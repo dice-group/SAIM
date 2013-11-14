@@ -48,7 +48,7 @@ public class PaintController {
 		
 //		int[] ids = graphProperties.getCyNetwork().getNodeIndicesArray();
 //		for(int id : ids){
-		for(Node n : graphProperties.getModel().nodes) {
+		for(ViewNode n : graphProperties.getModel().nodes) {
 			target.startTag("node");
 			target.addAttribute("nodeID", n.id);
 			target.addAttribute("nodeX", Double.valueOf(n.x));
@@ -67,7 +67,7 @@ public class PaintController {
 //		graphProperties
 		if(edge != null){
 			target.startTag("addEdge");
-			target.addAttribute("edgeLabel", edge.label);
+			target.addAttribute("edgeLabel", edge.name);
 			target.addAttribute("edgeID",id);
 			target.addAttribute("edgeShape", "todo: with label or not etc");
 			target.addAttribute("edgeSourceID", edge.nodeA.id);
@@ -85,19 +85,21 @@ public class PaintController {
 		final Color NODE_BORDER_COLOR = Color.black;
 		final Color NODE_FILL_COLOR   = Color.CYAN;
 		final Color NODE_LABEL_COLOR  = Color.black;
-		final int NODE_SIZE           = 20;//Math.round(Float.valueOf(String.valueOf(getNodeAppearance(VisualPropertyType.NODE_SIZE))));
+		final int NODE_SIZE           = 120;//Math.round(Float.valueOf(String.valueOf(getNodeAppearance(VisualPropertyType.NODE_SIZE))));
 		final Color EDGE_LABEL_COLOR  = Color.black;
-		final Number NODE_LINE_WIDTH  = (Number)new Integer(12);
+		final Number NODE_LINE_WIDTH  = 1;
 
 
-		final Font NODE_FONT_FACE = Font.getFont(Font.DIALOG);
-		final Font EDGE_FONT_FACE = Font.getFont(Font.DIALOG);
+//		final Font NODE_FONT_FACE = Font.getFont(Font.DIALOG);
+//		final Font EDGE_FONT_FACE = Font.getFont(Font.DIALOG);
+		final Font NODE_FONT_FACE = Font.decode(Font.DIALOG);
+		final Font EDGE_FONT_FACE = Font.decode(Font.DIALOG);
 
 		final Color DefaultBackgroundColor    = Color.white;
 		final Color DefaultNodeSelectionColor = Color.GRAY;
 		final Color DefaultEdgeSelectionColor = Color.gray;
 		final float EDGE_LABEL_OPACITY        = 0.1f;
-		final int   EDGE_LINE_WIDTH           = 12;
+		final int   EDGE_LINE_WIDTH           = 1;
 
 		// settings
 		target.startTag("settings");
@@ -131,39 +133,39 @@ public class PaintController {
 
 		Set<Integer> paintedNodes = new HashSet<Integer>();
 		// paint edge and there nodes
-		for(Edge edge: graphProperties.getModel().edges) {
+		HashSet<Edge> edges = graphProperties.getModel().edges;
+		for(Edge e:edges) {
 //		for (final int edgeid : graphProperties.getCyNetwork().getEdgeIndicesArray()) {
-
 //			final Edge edge = graphProperties.getCyNetwork().getEdge(edgeid);
-			final Node edgeSource = edge.nodeA;
-			final Node edgeTarget = edge.nodeB;
+			final ViewNode edgeSource = e.nodeA;
+			final ViewNode edgeTarget = e.nodeB;
 
-			paintedNodes.add(edgeSource.getRootGraphIndex());
-			paintedNodes.add(edgeTarget.getRootGraphIndex());
+			paintedNodes.add(e.nodeA.id);
+			paintedNodes.add(e.nodeB.id);
 
 			target.startTag("edge");
 			//
-				target.addAttribute("edgeLabel", Cytoscape.getEdgeAttributes().getStringAttribute(String.valueOf(edge.getIdentifier()), "label"));
-				target.addAttribute("edgeID", edge.getIdentifier());
+				target.addAttribute("edgeLabel", e.name);
+				target.addAttribute("edgeID", e.id);
 				target.addAttribute("edgeType", "todo: with label or not etc");
 
 				target.startTag("sourceNode");
-				addNode(target, graphProperties,Integer.parseInt(edgeSource.getIdentifier()));
+				addNode(target, graphProperties, e.nodeA.id);
 				target.endTag("sourceNode");
 
 				target.startTag("targetNode");
-				addNode(target, graphProperties,Integer.parseInt(edgeTarget.getIdentifier()));
+				addNode(target, graphProperties,e.nodeB.id);
 				target.endTag("targetNode");
 			//
 			target.endTag("edge");
 		}
 
 		// paint single nodes
-		for (final int nodeid : graphProperties.getCyNetwork().getNodeIndicesArray()) {
-			if(!paintedNodes.contains(nodeid)){
+		for (ViewNode n : graphProperties.getModel().nodes) {
+			if(!paintedNodes.contains(n.id)){
 
 				target.startTag("node");
-				addNode(target, graphProperties,nodeid);
+				addNode(target, graphProperties,n.id);
 				target.endTag("node");
 			}
 		}
@@ -171,17 +173,17 @@ public class PaintController {
 		// delete Node
 		Set<Integer> deleteNodes = operationMap.get("deleteNodes");
 		for(int id : deleteNodes){
-			int[] edges = graphProperties.getCyNetwork().getAdjacentEdgeIndicesArray(id, true, true, true);
-			boolean removed = graphProperties.getCyNetwork().removeNode(id, true);
+			List<Integer> delEdges = graphProperties.getModel().getAdjacentEdges(id);
+			boolean removed = graphProperties.removeNode(id);
 
 			List<String> sEdges = new Vector<String>();
-			for(int i = 0; i < edges.length; sEdges.add(String.valueOf(edges[i++])));
-			for(int i = 0; i < edges.length && removed; graphProperties.getCyNetwork().removeEdge(edges[i++], true));
+			for(int i = 0; i < delEdges.size(); sEdges.add(String.valueOf(delEdges.get(i++))));
+			for(int i = 0; i < delEdges.size() && removed; graphProperties.removeEdge(delEdges.get(i++)));
 
 			target.startTag("deleteNode");
 			target.addAttribute("nodeID", id);
 			target.addAttribute("removed", removed);
-			if(removed && edges.length > 0)
+			if(removed && delEdges.size() > 0)
 				target.addAttribute("edges", sEdges.toString());
 			target.endTag("deleteNode");
 			}
@@ -192,7 +194,7 @@ public class PaintController {
 		for(int id : deleteEdges){
 
 			target.startTag("deleteEdge");
-			boolean removed = graphProperties.getCyNetwork().removeEdge(id, true);
+			boolean removed = graphProperties.removeEdge(id);
 
 			target.addAttribute("edgeID", id);
 			target.addAttribute("edgeRemoved", removed);
@@ -210,26 +212,26 @@ public class PaintController {
 	//
 	private void updateNode(final PaintTarget target, GraphProperties graphProperties,int id) throws PaintException{
 
-		if(Cytoscape.getNodeAttributes().hasAttribute(id+"", "label1")){
-			target.addAttribute("label1",Cytoscape.getNodeAttributes().getStringAttribute(id+"", "label1"));
-			target.addAttribute("value1",Cytoscape.getNodeAttributes().getDoubleAttribute(id+"", "value1"));
+		if(graphProperties.getNode(id).labeling.containsKey("label1")){
+			target.addAttribute("label1",(String)graphProperties.getNode(id).labeling.get("label1"));
+			target.addAttribute("value1",(Double)graphProperties.getNode(id).labeling.get("value1"));
 		}
 
-		if(Cytoscape.getNodeAttributes().hasAttribute(id+"", "label2")){
-			target.addAttribute("label2",Cytoscape.getNodeAttributes().getStringAttribute(id+"", "label2"));
-			target.addAttribute("value2",Cytoscape.getNodeAttributes().getDoubleAttribute(id+"", "value2"));
+		if(graphProperties.getNode(id).labeling.containsKey("label2")){
+			target.addAttribute("label2",(String)graphProperties.getNode(id).labeling.get("label2"));
+			target.addAttribute("value2",(Double)graphProperties.getNode(id).labeling.get("value2"));
 		}
 	}
 
 	private void addNode(final PaintTarget target,GraphProperties graphProperties, int nodeid) throws PaintException{
 
-		final Node node = graphProperties.getCyNetwork().getNode(nodeid);
+		final ViewNode node = graphProperties.getNode(nodeid);
 		target.addAttribute("nodeID", nodeid);
-		target.addAttribute("nodeLabel",Cytoscape.getNodeAttributes().getStringAttribute (String.valueOf(nodeid), "label"));
-		target.addAttribute("nodeColor",Cytoscape.getNodeAttributes().getStringAttribute (String.valueOf(nodeid), "color"));
-		target.addAttribute("nodeX", Double.valueOf(graphProperties.getCyNetworkView().getNodeView(node).getXPosition()).intValue());
-		target.addAttribute("nodeY", Double.valueOf(graphProperties.getCyNetworkView().getNodeView(node).getYPosition()).intValue());
-		target.addAttribute("nodeShape",Cytoscape.getNodeAttributes().getIntegerAttribute (String.valueOf(nodeid), "shape"));
+		target.addAttribute("nodeLabel",node.name);
+		target.addAttribute("nodeColor",node.rgb);
+		target.addAttribute("nodeX", new Double(node.x));
+		target.addAttribute("nodeY", new Double(node.y));
+		target.addAttribute("nodeShape",node.nodeViewShape);
 
 		//if(LOGGER.isDebugEnabled()) LOGGER.debug("shape: "+ graphProperties.getCyNetworkView().getNodeView(nodeid).getShape());
 

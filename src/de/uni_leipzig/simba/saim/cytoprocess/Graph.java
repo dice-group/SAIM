@@ -1,25 +1,36 @@
 package de.uni_leipzig.simba.saim.cytoprocess;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 public class Graph {
-	HashSet<Node> nodes = new HashSet<Node>();
-	List<Edge> edges = new LinkedList<Edge>();
+	HashSet<ViewNode> nodes = new HashSet<ViewNode>();
+	public HashSet<Edge> edges = new HashSet<Edge>();
 	
-	public boolean addNode(Node n) {
+	public List<Integer> getAdjacentEdges(int nodeId) {
+		 ArrayList<Integer> ar = new ArrayList<Integer>();
+		 for(Edge e: edges) {
+			 if(e.nodeA.id == nodeId || e.nodeB.id == nodeId)
+				 ar.add(e.id);
+		 }
+		return ar;
+	}
+	
+	public boolean addNode(ViewNode n) {
 		return nodes.add(n);
 	}
-	public Node getNode(int id) {
-		for(Node n : nodes) {
+	public ViewNode getNode(int id) {
+		for(ViewNode n : nodes) {
 			if(n.id == id)
 				return n;
 		}
 		return null;
 	}
 	public boolean hasNode(int id) {
-		for(Node n : nodes) {
+		for(ViewNode n : nodes) {
 			if(n.id == id)
 				return true;
 		}
@@ -33,12 +44,14 @@ public class Graph {
 	 * @return Edge iff Nodes exists and no Edge between them already.
 	 */
 	public Edge createEdge(int nodeA, int nodeB) {
-		if(!hasNode(nodeA) || !hasNode(nodeB)) return null;
-		Integer i=getEdgeId(nodeA, nodeB);
-		if(i!=null)
-			return edges.get(i);
-		Edge e = new Edge(getNode(nodeA), getNode(nodeB));
+//		if(!hasNode(nodeA) || !hasNode(nodeB)) return null;
+		Random r = new Random();
+		int id = r.nextInt(999999);
+		while(hasEdge(id))
+			id=r.nextInt(999999);
+		Edge e = new Edge(id, getNode(nodeA), getNode(nodeB));
 		edges.add(e);
+		System.out.println("Created edge "+e);
 		return e;
 	}
 	
@@ -46,24 +59,31 @@ public class Graph {
 		return getEdgeId(e.nodeA,e.nodeB);
 	}
 	
-	public Integer getEdgeId(Node nodeA, Node nodeB) {
+	public Integer getEdgeId(ViewNode nodeA, ViewNode nodeB) {
 		return getEdgeId(nodeA.id, nodeB.id);
 	}
 	public Integer getEdgeId(int nodeA, int nodeB) {
-		if(!hasNode(nodeA) || !hasNode(nodeB)) return null;
-		for(int i = 0; i<edges.size(); i++) {
-			Edge e = edges.get(i);
+//		if(!hasNode(nodeA) || !hasNode(nodeB)) return null;
+		for(Edge e: edges)
 			if(e.nodeA.id == nodeA && e.nodeA.id == nodeB) {
-				return i;
+				return e.id;
 			}
-		}
 		return null;
 	}
-	public Edge getEdge(int i) {
-		if(edges.size()>i)
-			return edges.get(i);
-		else
+	public Edge getEdge(int id) {
+		for(Edge e: edges) {
+			if(e.id == id)
+				return e;
+		}
 			return null;
+	}
+	
+	public boolean hasEdge(int id) {
+		for(Edge e: edges) {
+			if(e.id == id)
+				return true;
+		}
+		return false;
 	}
 }
 

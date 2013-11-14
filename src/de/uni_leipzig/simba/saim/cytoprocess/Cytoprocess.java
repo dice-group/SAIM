@@ -67,9 +67,9 @@ public class Cytoprocess extends Processing {
 //		System.out.println("CytoInits:\n"+CytoscapeInit.getCyInitParams());
 //		CyNetwork network = Cytoscape.createNetwork(name, false);^
 		mxGraph graph = new mxGraph();
+		Graph gModel = new Graph();
 
-
-		graphProperties = new GraphProperties(graph, name);
+		graphProperties = new GraphProperties(gModel, graph, name);
 		graphProperties.setWidth(width);
 		graphProperties.setHeight(height);
 
@@ -218,16 +218,16 @@ public class Cytoprocess extends Processing {
 //	public void cleanGraph(){
 //		// TODO
 //	}
-	public void applyLayoutAlgorithm(final CyLayoutAlgorithm loAlgorithm) {
-		applyLayoutAlgorithm(loAlgorithm,false);
-	}
+//	public void applyLayoutAlgorithm(final CyLayoutAlgorithm loAlgorithm) {
+//		applyLayoutAlgorithm(loAlgorithm,false);
+//	}
 
-	public void applyLayoutAlgorithm(final CyLayoutAlgorithm loAlgorithm,boolean update) {
-		graphProperties.applyLayoutAlgorithm(loAlgorithm);
-		if(update){
-			currentGraphOperation = GraphOperation.REFRESH_NODE_POSTIONS;
-			requestRepaint();
-		}
+	public void applyLayoutAlgorithm(boolean update) {
+//		graphProperties.applyLayoutAlgorithm(loAlgorithm);
+//		if(update){
+//			currentGraphOperation = GraphOperation.REFRESH_NODE_POSTIONS;
+//			requestRepaint();
+//		}
 	}
 
 	/** Override this to handle node double clicks */

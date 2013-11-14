@@ -5,9 +5,9 @@ import java.awt.Font;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import cytoscape.Cytoscape;
-import cytoscape.CytoscapeInit;
-import cytoscape.visual.VisualPropertyType;
+//import cytoscape.Cytoscape;
+//import cytoscape.CytoscapeInit;
+//import cytoscape.visual.VisualPropertyType;
 /**
  * @author rspeck
  */
@@ -51,24 +51,24 @@ public class CytoprocessProperties {
 			final String NODE_FONT = (properties.getProperty("node_font"));
 			final String EDGE_FONT = (properties.getProperty("edge_font"));
 		
-			Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().setDefaultBackgroundColor(BACKGROUND_COLOR);
-			Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_LINE_WIDTH,EDGE_LINE_WIDTH);
-			Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.NODE_LINE_WIDTH, NODE_LINE_WIDTH);
-			Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.NODE_BORDER_COLOR, NODE_LINE_COLOR);
-			Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_COLOR,EDGE_COLOR);
-			Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_LABEL_OPACITY,EDGE_LABEL_OPACITY);
-			Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_LABEL_COLOR,EDGE_LABEL_COLOR);
-			Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.NODE_SIZE, NODESIZE);
-			Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().setDefaultEdgeSelectionColor(EDGE_SELECTION_COLOR);
-			Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_FONT_SIZE,EDGE_FONT_SIZE);
-			Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(
-					VisualPropertyType.EDGE_FONT_FACE,
-					new Font(EDGE_FONT, Font.PLAIN, EDGE_FONT_SIZE));
-
-			Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.NODE_FONT_SIZE,NODE_FONT_SIZE);
-			Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().set(
-					VisualPropertyType.NODE_FONT_FACE,
-					new Font(NODE_FONT, Font.PLAIN, NODE_FONT_SIZE));
+//			Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().setDefaultBackgroundColor(BACKGROUND_COLOR);
+//			Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_LINE_WIDTH,EDGE_LINE_WIDTH);
+//			Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.NODE_LINE_WIDTH, NODE_LINE_WIDTH);
+//			Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.NODE_BORDER_COLOR, NODE_LINE_COLOR);
+//			Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_COLOR,EDGE_COLOR);
+//			Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_LABEL_OPACITY,EDGE_LABEL_OPACITY);
+//			Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_LABEL_COLOR,EDGE_LABEL_COLOR);
+//			Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.NODE_SIZE, NODESIZE);
+//			Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().setDefaultEdgeSelectionColor(EDGE_SELECTION_COLOR);
+//			Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.EDGE_FONT_SIZE,EDGE_FONT_SIZE);
+//			Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().set(
+//					VisualPropertyType.EDGE_FONT_FACE,
+//					new Font(EDGE_FONT, Font.PLAIN, EDGE_FONT_SIZE));
+//
+//			Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().set(VisualPropertyType.NODE_FONT_SIZE,NODE_FONT_SIZE);
+//			Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().set(
+//					VisualPropertyType.NODE_FONT_FACE,
+//					new Font(NODE_FONT, Font.PLAIN, NODE_FONT_SIZE));
 
 
 		}

@@ -2,6 +2,7 @@ package de.uni_leipzig.simba.saim;
 
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -20,9 +21,12 @@ import de.uni_leipzig.simba.saim.core.metric.Output;
 import de.uni_leipzig.simba.saim.core.metric.Property;
 import de.uni_leipzig.simba.saim.core.metric.Property.Origin;
 import de.uni_leipzig.simba.saim.cytoprocess.Cytoprocess;
+import de.uni_leipzig.simba.saim.cytoprocess.Edge;
 import de.uni_leipzig.simba.saim.cytoprocess.PaintController;
+import de.uni_leipzig.simba.saim.cytoprocess.ViewNode;
 /**
  * @author rspeck
+ * @author Klaus Lyko
  */
 public class SAIMCytoprocess extends Cytoprocess {
 
@@ -62,7 +66,7 @@ public class SAIMCytoprocess extends Cytoprocess {
 	}
 
 	public void loadMetricExpression(String metricExpression){
-
+		System.out.println("LOADING EXpression="+metricExpression);
 		if( metricExpression != null){
 			Output o = MetricParser.parse(metricExpression, config.getSource().var.replaceAll("\\?", ""));
 			o.param1 = config.getAcceptanceThreshold();
@@ -84,7 +88,7 @@ public class SAIMCytoprocess extends Cytoprocess {
 				LOGGER.debug(("metricExpression from current Metric: \t" + getMetric().toString()));
 			}
 
-			applyLayoutAlgorithm(new ForceDirectedLayout(),false);
+//			applyLayoutAlgorithm(new ForceDirectedLayout(),false);
 			repaintGraph();
 
 		}else{
@@ -100,10 +104,10 @@ public class SAIMCytoprocess extends Cytoprocess {
 	public void deleteEdge(int id){
 		if(LOGGER.isDebugEnabled())LOGGER.debug("deleteEdge ...");
 
-		giny.model.Edge edge = graphProperties.getEdge(id);
+		Edge edge = graphProperties.getEdge(id);
 		if(edge != null){
-			Node nodeA = nodeMap.get(Integer.valueOf(edge.getSource().getRootGraphIndex()));
-			Node nodeB = nodeMap.get(Integer.valueOf(edge.getTarget().getRootGraphIndex()));
+			Node nodeA = nodeMap.get(edge.nodeA.id);
+			Node nodeB = nodeMap.get(edge.nodeB.id);
 
 			if(nodeA != null && nodeB != null){
 				if(nodeA.getChilds().contains(nodeB))
@@ -116,7 +120,7 @@ public class SAIMCytoprocess extends Cytoprocess {
 			super.deleteEdge(id);
 
 			if(nodeA instanceof Operator)
-				setOperatorEdgeLabels(Integer.valueOf(edge.getSource().getRootGraphIndex()));
+				setOperatorEdgeLabels(edge.nodeA.id);
 
 			repaintGraph();
 		}
@@ -181,7 +185,7 @@ public class SAIMCytoprocess extends Cytoprocess {
 		}else if(n instanceof Property){
 			Property p = (Property)n;
 
-			String nodeLabel = 	Cytoscape.getNodeAttributes().getStringAttribute(nodeid+"", "label");
+			String nodeLabel = 	graphProperties.getModel().getNode(nodeid).name;//.Cytoscape.getNodeAttributes().getStringAttribute(nodeid+"", "label");
 
 			if(p.getOrigin() == Origin.SOURCE){
 				if(LOGGER.isDebugEnabled())LOGGER.debug("SOURCE nodeDoubleClick ... ...");
@@ -204,7 +208,7 @@ public class SAIMCytoprocess extends Cytoprocess {
 //	}
 
 	public Integer addNode(String name, SAIMCytoprocess.NODE_TYPE shape, Double para1, Double para2){
-
+		System.out.println("SAIMCytoprocess.addNode():name="+name+" , SAIMCytoprocess.NODE_TYPE="+ shape+"para1, para2="+para1+", "+para2);
 		int nodeView = 0;
 		String rgb = "";
 		Node n = null;
@@ -212,31 +216,31 @@ public class SAIMCytoprocess extends Cytoprocess {
 		switch(shape){
 		case OUTPUT :{
 			n = new Output();
-			nodeView = NodeView.ELLIPSE;
+			nodeView = ViewNode.ELLIPSE;
 			rgb = PaintController.getRGB(Color.decode(SAIMCytoprocessProperties.getProperty(SAIMCytoprocessProperties.OUTPUT_COLOR)));
 			break;
 		}
 		case SOURCE:{
 			n = new Property(name, Origin.SOURCE);
-			nodeView = NodeView.RECTANGLE;
+			nodeView = ViewNode.RECTANGLE;
 			rgb = PaintController.getRGB(Color.decode(SAIMCytoprocessProperties.getProperty(SAIMCytoprocessProperties.SOURCE_COLOR)));
 			break;
 		}
 		case TARGET:{
 			n = new Property(name, Origin.TARGET);
-			nodeView = NodeView.RECTANGLE;
+			nodeView = ViewNode.RECTANGLE;
 			rgb = PaintController.getRGB(Color.decode(SAIMCytoprocessProperties.getProperty(SAIMCytoprocessProperties.TARGET_COLOR)));
 			break;
 		}
 		case MEASURE:{
 			n = new Measure(name);
-			nodeView = NodeView.DIAMOND;
+			nodeView = ViewNode.DIAMOND;
 			rgb = PaintController.getRGB(Color.decode(SAIMCytoprocessProperties.getProperty(SAIMCytoprocessProperties.MEASURE_COLOR)));
 			break;
 		}
 		case OPERATOR:{
 			n = new Operator(name);
-			nodeView = NodeView.HEXAGON;
+			nodeView = ViewNode.HEXAGON;
 			rgb = PaintController.getRGB(Color.decode(SAIMCytoprocessProperties.getProperty(SAIMCytoprocessProperties.OPERATOR_COLOR)));
 			break;
 		}
@@ -273,7 +277,8 @@ public class SAIMCytoprocess extends Cytoprocess {
 //		if(!nodeA.isValidParentOf(nodeB) && nodeB.isValidParentOf(nodeA)){
 //			if(LOGGER.isDebugEnabled())LOGGER.debug(" implicit direction is clearly meant the other way around, reverse it");
 //
-//			addEdge(nodeBid, nodeAid,"");
+//			
+//			return addEdge(nodeBid, nodeAid, attribute);
 //		}
 		if(!nodeA.isValidParentOf(nodeB) && !nodeB.isValidParentOf(nodeA)){
 
@@ -408,21 +413,27 @@ public class SAIMCytoprocess extends Cytoprocess {
 			Integer childID    = getIDtoNode(child);
 
 
-			giny.model.Node ginyOperator = graphProperties.getNode(operatorID);
-			giny.model.Node ginyChild    = graphProperties.getNode(childID);
+			ViewNode ginyOperator = graphProperties.getNode(operatorID);
+			ViewNode ginyChild    = graphProperties.getNode(childID);
 
 			@SuppressWarnings("unchecked")
-			List<giny.model.Edge> edgeListOut = graphProperties.getCyNetwork().edgesList(ginyOperator, ginyChild);
+			List<Edge> edgeListOut = new ArrayList<Edge>(); 
+			int idEdgeOut = graphProperties.getModel().getEdgeId(ginyOperator, ginyChild);
+			edgeListOut.add(graphProperties.getEdge(idEdgeOut));
+//			List<Edge> edgeListOut = graphProperties.getModel().getE(id)(ginyOperator, ginyChild);
 			@SuppressWarnings("unchecked")
-			List<giny.model.Edge> edgeListIn  = graphProperties.getCyNetwork().edgesList(ginyChild,    ginyOperator);
+			List<Edge> edgeListIn = new ArrayList<Edge>();
+			int idEdgeIn =graphProperties.getModel().getEdgeId(ginyOperator, ginyChild);
+			edgeListIn.add(graphProperties.getEdge(idEdgeIn));
+//			List<Edge> edgeListIn  = graphProperties.getCyNetwork().edgesList(ginyChild,    ginyOperator);
 
 
 			if(edgeListOut.size() == 0 &&  edgeListIn.size() == 0){
-					if(LOGGER.isDebugEnabled())LOGGER.debug("No edge found, edge count: " + graphProperties.getCyNetwork().getEdgeCount());
+					if(LOGGER.isDebugEnabled())LOGGER.debug("No edge found, edge count: " + graphProperties.getModel().edges.size());
 			}
 			else {
 
-				String usedlabel = Cytoscape.getEdgeAttributes().getStringAttribute(String.valueOf(edgeListOut.get(0).getRootGraphIndex()), "label").trim();
+				String usedlabel = edgeListOut.get(0).nodeA.name;//Cytoscape.getEdgeAttributes().getStringAttribute(String.valueOf(edgeListOut.get(0).getRootGraphIndex()), "label").trim();
 
 				String opPara1 = (operator.param1 != null) ? operator.param1.toString() : " ";
 				String opPara2 = (operator.param2 != null) ? operator.param2.toString() : " ";
@@ -446,27 +457,29 @@ public class SAIMCytoprocess extends Cytoprocess {
 		if(n != null && n instanceof Operator){
 
 			Operator operator = (Operator)n;
-			giny.model.Node ginyOperator = graphProperties.getNode(operatorID);
+			ViewNode ginyOperator = graphProperties.getNode(operatorID);
 			if(operator.getChilds().size() > 0){
 
 				Node childA = operator.getChilds().get(0);
 				Integer childAID = getIDtoNode(childA);
-				giny.model.Node ginyChildA = graphProperties.getNode(childAID);
+				ViewNode ginyChildA = graphProperties.getNode(childAID);
 				//int[] edgeids = graphProperties.getCyNetwork().getAdjacentEdgeIndicesArray(operatorID, false, false, true);
 				@SuppressWarnings("unchecked")
-				List<giny.model.Edge> edgeListA = graphProperties.getCyNetwork().edgesList(ginyOperator, ginyChildA);
-				Cytoscape.getEdgeAttributes().setAttribute(String.valueOf(edgeListA.get(0).getRootGraphIndex()), "label", String.valueOf(operator.param1));
+				Edge edgeA = graphProperties.getEdge(ginyOperator, ginyChildA);
+				edgeA.label = String.valueOf(operator.param1);
+//				Cytoscape.getEdgeAttributes().setAttribute(String.valueOf(edgeListA.get(0).getRootGraphIndex()), "label", String.valueOf(operator.param1));
 			}
 
 			if(operator.getChilds().size() == 2){
 
 				Node childB = operator.getChilds().get(1);
 				Integer childBID = getIDtoNode(childB);
-				giny.model.Node ginyChildB = graphProperties.getNode(childBID);
+				ViewNode ginyChildB = graphProperties.getNode(childBID);
 				//int[] edgeids = graphProperties.getCyNetwork().getAdjacentEdgeIndicesArray(operatorID, false, false, true);
 				@SuppressWarnings("unchecked")
-				List<giny.model.Edge> edgeListB = graphProperties.getCyNetwork().edgesList(ginyOperator, ginyChildB);
-				Cytoscape.getEdgeAttributes().setAttribute(String.valueOf(edgeListB.get(0).getRootGraphIndex()), "label", String.valueOf(operator.param2));
+				Edge edgeB = graphProperties.getEdge(ginyOperator, ginyChildB);
+				edgeB.label = String.valueOf(operator.param2);
+//				Cytoscape.getEdgeAttributes().setAttribute(String.valueOf(edgeListB.get(0).getRootGraphIndex()), "label", String.valueOf(operator.param2));
 			}
 		}
 	}
@@ -507,12 +520,17 @@ public class SAIMCytoprocess extends Cytoprocess {
 	}
 
 	private void setNodeValue1(int nodeid, String label1, Double value1){
-		Cytoscape.getNodeAttributes().setAttribute(String.valueOf(nodeid), "label1", label1);
-		Cytoscape.getNodeAttributes().setAttribute(String.valueOf(nodeid), "value1", value1);
+		System.out.println("Looging for node:"+nodeid+" label="+label1+ "value1="+value1);
+		graphProperties.getNode(nodeid).labeling.put("label1", label1);
+		graphProperties.getNode(nodeid).labeling.put("value1", value1);
+//		Cytoscape.getNodeAttributes().setAttribute(String.valueOf(nodeid), "label1", label1);
+//		Cytoscape.getNodeAttributes().setAttribute(String.valueOf(nodeid), "value1", value1);
 	}
 
 	private void setNodeValue2(int nodeid, String label2, Double value2){
-		Cytoscape.getNodeAttributes().setAttribute(String.valueOf(nodeid), "label2", label2);
-		Cytoscape.getNodeAttributes().setAttribute(String.valueOf(nodeid), "value2", value2);
+		graphProperties.getNode(nodeid).labeling.put("label2", label2);
+		graphProperties.getNode(nodeid).labeling.put("value2", value2);
+//		Cytoscape.getNodeAttributes().setAttribute(String.valueOf(nodeid), "label2", label2);
+//		Cytoscape.getNodeAttributes().setAttribute(String.valueOf(nodeid), "value2", value2);
 	}
 }

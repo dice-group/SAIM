@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import com.mxgraph.view.mxGraph;
 /**
  * @author rspeck
+ * @author Klaus Lyko
  */
 public class GraphProperties {
 	private static transient final Logger LOGGER = Logger.getLogger(GraphProperties.class);
@@ -79,27 +80,35 @@ public class GraphProperties {
 	 */
 	public Integer addEdge(int nodeAid, int nodeBid, String name) {
 		if(LOGGER.isDebugEnabled()) LOGGER.debug("addEdge to cytoscape...");
-
+		System.out.println("Add edge("+nodeAid+" - "+nodeBid+")name="+name);
 		if(nodeAid != nodeBid){
-			Object parent = graph.getDefaultParent();
-			graph.getModel().beginUpdate();
+//			Object parent = graph.getDefaultParent();
+//			graph.getModel().beginUpdate();
+			if(!gModel.hasNode(nodeAid)) {
+				System.out.println("1stNode for edge doesn't exist yet");
+				gModel.addNode(new ViewNode(nodeAid));
+			}
+			if(!gModel.hasNode(nodeBid)) {
+				System.out.println("1ndNode for edge doesn't exist yet");
+				gModel.addNode(new ViewNode(nodeBid));
+			}
 			Edge e = gModel.createEdge(nodeAid, nodeBid);
 			e.name = name;
-			try {
-				Object e1 = graph
-						.insertEdge(
-								parent,
-								""+gModel.getEdgeId(e),
-								e,
-								nodeAid,
-								nodeBid,
-								"edgeStyle=elbowEdgeStyle;elbow=horizontal;"
-										+ "exitX=0.5;exitY=1;exitPerimeter=1;entryX=0;entryY=0;entryPerimeter=1;");
-			
-				return gModel.getEdgeId(e);
-			} finally {
-				graph.getModel().endUpdate();
-			}
+//			try {
+//				Object e1 = graph
+//						.insertEdge(
+//								parent,
+//								""+gModel.getEdgeId(e),
+//								e,
+//								nodeAid,
+//								nodeBid,
+//								"edgeStyle=elbowEdgeStyle;elbow=horizontal;"
+//										+ "exitX=0.5;exitY=1;exitPerimeter=1;entryX=0;entryY=0;entryPerimeter=1;");
+			System.out.println("Graphproperties.createEdge(): Created edge:"+e);
+				return e.id;//gModel.getEdgeId(e);
+//			} finally {
+//				graph.getModel().endUpdate();
+//			}
 			
 //			final CyNode node1 = Cytoscape.getCyNode(String.valueOf(nodeAid), false);
 //			final CyNode node2 = Cytoscape.getCyNode(String.valueOf(nodeBid), false);
@@ -146,8 +155,8 @@ public class GraphProperties {
 	 * @return node id
 	 */
 	public Integer addNode(final String name, final int x, final int y, int nodeViewShape,String rgb) {
-		if(LOGGER.isDebugEnabled()) LOGGER.debug("addNode to cytoscape...");
-
+		LOGGER.debug("addNode to cytoscape...name"+name);
+		System.out.println("Graphproperties.addNode:"+name+", x="+x+", y="+y+" nodeviewShape="+nodeViewShape+", rgb="+rgb);
 		// search for a free node
 		Object parent = graph.getDefaultParent();
 		graph.getModel().beginUpdate();
@@ -156,10 +165,12 @@ public class GraphProperties {
 			Integer id = rand.nextInt(999999999);
 			while(gModel.hasNode(id))
 				id = rand.nextInt(999999999);
-			Node n = new Node(name, x, y, nodeViewShape, rgb);
+			ViewNode n = new ViewNode(name, x, y, nodeViewShape, rgb);
 			n.id = id;
+			gModel.addNode(n);
 			Object v1 = graph.insertVertex(parent, id.toString(), n, x, y, 20,
 					20, "label="+name+";color="+rgb+";color="+rgb+";shape="+nodeViewShape);
+			System.out.println("Graphproperties.addNode:id="+id);
 			return id;
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -168,21 +179,38 @@ public class GraphProperties {
 			graph.getModel().endUpdate();
 		}
 	}
+	
+	public boolean removeNode(int id) {
+		return gModel.nodes.remove(getNode(id));
+	}
+	
+	public boolean removeEdge(int id) {
+		gModel.edges.remove(id);
+		return true;
+//		graph.
+	}
 
-	public Node getNode(int id){
+	public ViewNode getNode(int id){
 		return gModel.getNode(id);
 	}
 	public Edge getEdge(int id) {
 		return gModel.getEdge(id);
 	}
+	
+	public Edge getEdge(ViewNode n1, ViewNode n2) {
+		Integer i = gModel.getEdgeId(n1, n2);
+		if(i!=null)
+			return getEdge(i);
+		else return null;
+	}
+	
 //	public Node getCyNode(int id){
 //		return (CyNode) getCyNetwork().getNode(id);
 //	}
 //	public Edge getCyEdge(String id){
 //		return (CyEdge) getCyNetwork().getEdge(id);
 //	}
-
-
+	
 
 //	// getter setter
 	public mxGraph getNetwork() {
@@ -191,10 +219,6 @@ public class GraphProperties {
 	public Graph getModel(){
 		return gModel;
 	}
-//
-//	public CyNetworkView getCyNetworkView() {
-//		return cyNetworkView;
-//	}
 
 	public void setCyNetwork(mxGraph network) {
 		this.graph = network;
