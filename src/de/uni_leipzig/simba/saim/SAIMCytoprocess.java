@@ -418,13 +418,15 @@ public class SAIMCytoprocess extends Cytoprocess {
 
 			@SuppressWarnings("unchecked")
 			List<Edge> edgeListOut = new ArrayList<Edge>(); 
-			int idEdgeOut = graphProperties.getModel().getEdgeId(ginyOperator, ginyChild);
-			edgeListOut.add(graphProperties.getEdge(idEdgeOut));
+			Edge out = graphProperties.getEdge(ginyOperator, ginyChild);
+			if(out!=null)
+				edgeListOut.add(out);
 //			List<Edge> edgeListOut = graphProperties.getModel().getE(id)(ginyOperator, ginyChild);
 			@SuppressWarnings("unchecked")
 			List<Edge> edgeListIn = new ArrayList<Edge>();
-			int idEdgeIn =graphProperties.getModel().getEdgeId(ginyOperator, ginyChild);
-			edgeListIn.add(graphProperties.getEdge(idEdgeIn));
+			Edge in = graphProperties.getEdge(ginyOperator, ginyChild);
+			if(in != null)
+				edgeListIn.add(in);
 //			List<Edge> edgeListIn  = graphProperties.getCyNetwork().edgesList(ginyChild,    ginyOperator);
 
 
@@ -466,7 +468,8 @@ public class SAIMCytoprocess extends Cytoprocess {
 				//int[] edgeids = graphProperties.getCyNetwork().getAdjacentEdgeIndicesArray(operatorID, false, false, true);
 				@SuppressWarnings("unchecked")
 				Edge edgeA = graphProperties.getEdge(ginyOperator, ginyChildA);
-				edgeA.label = String.valueOf(operator.param1);
+				if(operator.param1!=null)
+					edgeA.label = String.valueOf(operator.param1);
 //				Cytoscape.getEdgeAttributes().setAttribute(String.valueOf(edgeListA.get(0).getRootGraphIndex()), "label", String.valueOf(operator.param1));
 			}
 

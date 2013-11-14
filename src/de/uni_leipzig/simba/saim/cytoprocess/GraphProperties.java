@@ -79,70 +79,24 @@ public class GraphProperties {
 	 * @return
 	 */
 	public Integer addEdge(int nodeAid, int nodeBid, String name) {
-		if(LOGGER.isDebugEnabled()) LOGGER.debug("addEdge to cytoscape...");
-		System.out.println("Add edge("+nodeAid+" - "+nodeBid+")name="+name);
 		if(nodeAid != nodeBid){
-//			Object parent = graph.getDefaultParent();
-//			graph.getModel().beginUpdate();
 			if(!gModel.hasNode(nodeAid)) {
 				System.out.println("1stNode for edge doesn't exist yet");
 				gModel.addNode(new ViewNode(nodeAid));
 			}
 			if(!gModel.hasNode(nodeBid)) {
-				System.out.println("1ndNode for edge doesn't exist yet");
+				System.out.println("2ndNode for edge doesn't exist yet");
 				gModel.addNode(new ViewNode(nodeBid));
 			}
 			Edge e = gModel.createEdge(nodeAid, nodeBid);
 			e.name = name;
-//			try {
-//				Object e1 = graph
-//						.insertEdge(
-//								parent,
-//								""+gModel.getEdgeId(e),
-//								e,
-//								nodeAid,
-//								nodeBid,
-//								"edgeStyle=elbowEdgeStyle;elbow=horizontal;"
-//										+ "exitX=0.5;exitY=1;exitPerimeter=1;entryX=0;entryY=0;entryPerimeter=1;");
 			System.out.println("Graphproperties.createEdge(): Created edge:"+e);
 				return e.id;//gModel.getEdgeId(e);
-//			} finally {
-//				graph.getModel().endUpdate();
-//			}
-			
-//			final CyNode node1 = Cytoscape.getCyNode(String.valueOf(nodeAid), false);
-//			final CyNode node2 = Cytoscape.getCyNode(String.valueOf(nodeBid), false);
-//
-//			if (node1 != null && node2 != null) {
-//				// check if edge exists
-//				if(cyNetwork.getEdgeCount(nodeAid, nodeBid, true) == 0 && cyNetwork.getEdgeCount(nodeBid, nodeAid, true) == 0){
-//
-//					CyEdge edge  = null;
-//					String tmpname = "";
-//					do{
-//						tmpname = "#" + rand.nextInt(999999999) + "_edge";
-//						edge =  Cytoscape.getCyEdge(node1, node2, Semantics.INTERACTION, tmpname,false) ;
-//					}while(edge != null);
-//					edge = Cytoscape.getCyEdge(node1, node2, Semantics.INTERACTION, tmpname, true);
-//					// edge.isDirected()  => true
-//					int id = edge.getRootGraphIndex();
-//
-//					edge.setIdentifier(String.valueOf(id));
-//					cyNetwork.addEdge(edge);
-//					cyNetworkView.addEdgeView(id);
-//					Cytoscape.getEdgeAttributes().setAttribute(String.valueOf(id), "label", name);
-//
-//					if(LOGGER.isDebugEnabled()) LOGGER.debug("addEdge created with id: " + id + " nodes are: " + nodeAid + "," + nodeBid);
-//
-//
-//					return edge.getRootGraphIndex();
-//				}else
-//					if(LOGGER.isDebugEnabled()) LOGGER.debug("addEdge failed: there is an edge from nodeAid to nodeBid");
-//			}else
-//				if(LOGGER.isDebugEnabled()) LOGGER.debug("addEdge failed: nodeAid or nodeBid are N/A");
-		}else
-			if(LOGGER.isDebugEnabled()) LOGGER.debug("addEdge failed: nodeAid == nodeBid");
 
+		}else {
+			if(LOGGER.isDebugEnabled()) LOGGER.debug("addEdge failed: nodeAid == nodeBid");
+			System.out.println("addEdge failed: nodeAid == nodeBid");
+		}
 		return null;
 	}
 
@@ -162,9 +116,9 @@ public class GraphProperties {
 		graph.getModel().beginUpdate();
 		
 		try {
-			Integer id = rand.nextInt(999999999);
+			Integer id = rand.nextInt(100);
 			while(gModel.hasNode(id))
-				id = rand.nextInt(999999999);
+				id = rand.nextInt(100);
 			ViewNode n = new ViewNode(name, x, y, nodeViewShape, rgb);
 			n.id = id;
 			gModel.addNode(n);
@@ -198,19 +152,12 @@ public class GraphProperties {
 	}
 	
 	public Edge getEdge(ViewNode n1, ViewNode n2) {
-		Integer i = gModel.getEdgeId(n1, n2);
-		if(i!=null)
-			return getEdge(i);
-		else return null;
+		for(Edge e : gModel.edges) {
+			if(e.nodeA.id == n1.id && e.nodeB.id ==n2.id)
+				return e;
+		}
+		return null;
 	}
-	
-//	public Node getCyNode(int id){
-//		return (CyNode) getCyNetwork().getNode(id);
-//	}
-//	public Edge getCyEdge(String id){
-//		return (CyEdge) getCyNetwork().getEdge(id);
-//	}
-	
 
 //	// getter setter
 	public mxGraph getNetwork() {

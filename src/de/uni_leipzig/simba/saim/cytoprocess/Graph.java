@@ -46,30 +46,15 @@ public class Graph {
 	public Edge createEdge(int nodeA, int nodeB) {
 //		if(!hasNode(nodeA) || !hasNode(nodeB)) return null;
 		Random r = new Random();
-		int id = r.nextInt(999999);
+		int id = r.nextInt(100);
 		while(hasEdge(id))
-			id=r.nextInt(999999);
+			id=r.nextInt(100);
 		Edge e = new Edge(id, getNode(nodeA), getNode(nodeB));
 		edges.add(e);
 		System.out.println("Created edge "+e);
 		return e;
 	}
 	
-	public Integer getEdgeId(Edge e) {
-		return getEdgeId(e.nodeA,e.nodeB);
-	}
-	
-	public Integer getEdgeId(ViewNode nodeA, ViewNode nodeB) {
-		return getEdgeId(nodeA.id, nodeB.id);
-	}
-	public Integer getEdgeId(int nodeA, int nodeB) {
-//		if(!hasNode(nodeA) || !hasNode(nodeB)) return null;
-		for(Edge e: edges)
-			if(e.nodeA.id == nodeA && e.nodeA.id == nodeB) {
-				return e.id;
-			}
-		return null;
-	}
 	public Edge getEdge(int id) {
 		for(Edge e: edges) {
 			if(e.id == id)
