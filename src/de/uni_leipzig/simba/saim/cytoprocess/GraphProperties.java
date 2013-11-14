@@ -112,26 +112,14 @@ public class GraphProperties {
 		LOGGER.debug("addNode to cytoscape...name"+name);
 		System.out.println("Graphproperties.addNode:"+name+", x="+x+", y="+y+" nodeviewShape="+nodeViewShape+", rgb="+rgb);
 		// search for a free node
-		Object parent = graph.getDefaultParent();
 		graph.getModel().beginUpdate();
-		
-		try {
-			Integer id = rand.nextInt(100);
-			while(gModel.hasNode(id))
-				id = rand.nextInt(100);
-			ViewNode n = new ViewNode(name, x, y, nodeViewShape, rgb);
-			n.id = id;
-			gModel.addNode(n);
-			Object v1 = graph.insertVertex(parent, id.toString(), n, x, y, 20,
-					20, "label="+name+";color="+rgb+";color="+rgb+";shape="+nodeViewShape);
-			System.out.println("Graphproperties.addNode:id="+id);
-			return id;
-		}catch(Exception e) {
-			e.printStackTrace();
-			return null;
-		}finally {
-			graph.getModel().endUpdate();
-		}
+		Integer id = rand.nextInt(100);
+		while(gModel.hasNode(id))
+			id = rand.nextInt(100);
+		ViewNode n = new ViewNode(name, x, y, nodeViewShape, rgb);
+		n.id = id;
+		gModel.addNode(n);
+		return id;
 	}
 	
 	public boolean removeNode(int id) {
@@ -141,7 +129,6 @@ public class GraphProperties {
 	public boolean removeEdge(int id) {
 		gModel.edges.remove(id);
 		return true;
-//		graph.
 	}
 
 	public ViewNode getNode(int id){

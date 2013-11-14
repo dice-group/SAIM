@@ -2,7 +2,6 @@ package de.uni_leipzig.simba.saim.cytoprocess;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 

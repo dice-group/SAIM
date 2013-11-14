@@ -31,9 +31,9 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
-import csplugins.layout.algorithms.circularLayout.CircularLayoutAlgorithm;
-import csplugins.layout.algorithms.force.ForceDirectedLayout;
-import csplugins.layout.algorithms.hierarchicalLayout.HierarchicalLayoutAlgorithm;
+//import csplugins.layout.algorithms.circularLayout.CircularLayoutAlgorithm;
+//import csplugins.layout.algorithms.force.ForceDirectedLayout;
+//import csplugins.layout.algorithms.hierarchicalLayout.HierarchicalLayoutAlgorithm;
 import de.uni_leipzig.simba.saim.backend.User;
 import de.uni_leipzig.simba.saim.backend.UserAuthenticator;
 import de.uni_leipzig.simba.saim.core.Configuration;
@@ -182,7 +182,7 @@ public class SAIMApplication extends Application implements TransactionListener
 		});
 
 		// layout algo.
-		MenuItem layoutalgo = menuBar.addItem(messages.getString("menubar_layout_algorithm"), null, null); //$NON-NLS-1$
+//		MenuItem layoutalgo = menuBar.addItem(messages.getString("menubar_layout_algorithm"), null, null); //$NON-NLS-1$
 //
 //		layoutalgo.addItem(messages.getString("menubar_layout_algorithm_force_directed"), null, new MenuBar.Command()	{//$NON-NLS-1$
 //			public void menuSelected(MenuItem selectedItem) {

@@ -1,7 +1,5 @@
 package de.uni_leipzig.simba.saim.cytoprocess;
 
-//import giny.model.Edge;
-//import giny.model.Node;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.Vector;
@@ -11,11 +9,9 @@ import java.util.Map;
 import java.util.Set;
 import org.apache.log4j.Logger;
 
-import com.mxgraph.view.mxGraph;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-//import cytoscape.Cytoscape;
-//import cytoscape.visual.VisualPropertyType;
+
 /**
  * @author rspeck
  */
@@ -44,10 +40,8 @@ public class PaintController {
 	 */
 	public void refreshNodePositions(final PaintTarget target, GraphProperties graphProperties) throws PaintException{
 		target.startTag("refreshNodePositions");
-		mxGraph graph= graphProperties.getNetwork();
+//		mxGraph graph= graphProperties.getNetwork();
 		
-//		int[] ids = graphProperties.getCyNetwork().getNodeIndicesArray();
-//		for(int id : ids){
 		for(ViewNode n : graphProperties.getModel().nodes) {
 			target.startTag("node");
 			target.addAttribute("nodeID", n.id);
@@ -89,9 +83,6 @@ public class PaintController {
 		final Color EDGE_LABEL_COLOR  = Color.black;
 		final Number NODE_LINE_WIDTH  = 1;
 
-
-//		final Font NODE_FONT_FACE = Font.getFont(Font.DIALOG);
-//		final Font EDGE_FONT_FACE = Font.getFont(Font.DIALOG);
 		final Font NODE_FONT_FACE = Font.decode(Font.DIALOG);
 		final Font EDGE_FONT_FACE = Font.decode(Font.DIALOG);
 
@@ -135,10 +126,6 @@ public class PaintController {
 		// paint edge and there nodes
 		HashSet<Edge> edges = graphProperties.getModel().edges;
 		for(Edge e:edges) {
-//		for (final int edgeid : graphProperties.getCyNetwork().getEdgeIndicesArray()) {
-//			final Edge edge = graphProperties.getCyNetwork().getEdge(edgeid);
-			final ViewNode edgeSource = e.nodeA;
-			final ViewNode edgeTarget = e.nodeB;
 
 			paintedNodes.add(e.nodeA.id);
 			paintedNodes.add(e.nodeB.id);

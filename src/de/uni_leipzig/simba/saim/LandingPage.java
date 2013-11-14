@@ -104,7 +104,7 @@ public class LandingPage extends CustomComponent {
 
 	private Video getVideo() {
 		/**Screencasts now on SAIM deployment server**/
-		String baseURL = "http://139.18.2.136:8080/saim-screencast/";//saim_screencast.mp4
+		String baseURL = "http://139.18.2.164:8080/saim-screencast/";//saim_screencast.mp4
 		ExternalResource resc1 = new ExternalResource(baseURL+"saim_screencast.mp4");
 		resc1.setMIMEType("video/mp4; codecs=avc1.42E01E,mp4a.40.2");
 
