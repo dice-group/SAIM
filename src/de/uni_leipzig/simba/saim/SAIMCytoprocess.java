@@ -1,6 +1,6 @@
 package de.uni_leipzig.simba.saim;
 
-import giny.view.NodeView;
+
 import java.awt.Color;
 import java.util.Vector;
 import java.util.HashMap;
@@ -10,8 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
-import csplugins.layout.algorithms.force.ForceDirectedLayout;
-import cytoscape.Cytoscape;
+//import csplugins.layout.algorithms.force.ForceDirectedLayout;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.core.metric.Measure;
 import de.uni_leipzig.simba.saim.core.metric.MetricParser;

@@ -9,15 +9,11 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.vaadin.contrib.component.svg.processing.Processing;
 import de.uni_leipzig.simba.saim.cytoprocess.widgetset.client.ui.VCytoprocess;
+
+import com.mxgraph.view.mxGraph;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.ui.ClientWidget;
-
-import cytoscape.CyNetwork;
-import cytoscape.Cytoscape;
-import cytoscape.layout.CyLayoutAlgorithm;
-import cytoscape.view.CyNetworkView;
-
 //import cytoscape.CyMain;
 //import cytoscape.CyNetwork;
 //import cytoscape.Cytoscape;
@@ -70,12 +66,10 @@ public class Cytoprocess extends Processing {
 //		Cytoscape.createNewSession();
 //		System.out.println("CytoInits:\n"+CytoscapeInit.getCyInitParams());
 //		CyNetwork network = Cytoscape.createNetwork(name, false);^
+		mxGraph graph = new mxGraph();
 
-		CyNetwork network = Cytoscape.getRootGraph().createNetwork(new int[]{}, new int[]{});
-		network.setIdentifier(name);
-		CyNetworkView finalView = Cytoscape.createNetworkView(network);
 
-		graphProperties = new GraphProperties(network, finalView, name);
+		graphProperties = new GraphProperties(graph, name);
 		graphProperties.setWidth(width);
 		graphProperties.setHeight(height);
 

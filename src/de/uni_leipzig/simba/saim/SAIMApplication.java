@@ -34,7 +34,6 @@ import com.vaadin.ui.Window.Notification;
 import csplugins.layout.algorithms.circularLayout.CircularLayoutAlgorithm;
 import csplugins.layout.algorithms.force.ForceDirectedLayout;
 import csplugins.layout.algorithms.hierarchicalLayout.HierarchicalLayoutAlgorithm;
-import cytoscape.layout.algorithms.GridNodeLayout;
 import de.uni_leipzig.simba.saim.backend.User;
 import de.uni_leipzig.simba.saim.backend.UserAuthenticator;
 import de.uni_leipzig.simba.saim.core.Configuration;
@@ -184,35 +183,35 @@ public class SAIMApplication extends Application implements TransactionListener
 
 		// layout algo.
 		MenuItem layoutalgo = menuBar.addItem(messages.getString("menubar_layout_algorithm"), null, null); //$NON-NLS-1$
-
-		layoutalgo.addItem(messages.getString("menubar_layout_algorithm_force_directed"), null, new MenuBar.Command()	{//$NON-NLS-1$
-			public void menuSelected(MenuItem selectedItem) {
-				if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_force_directed"))){//$NON-NLS-1$
-					((MetricPanel)content).getSaimcytopro().applyLayoutAlgorithm(new ForceDirectedLayout(),true);
-				}
-			}
-		});
-		layoutalgo.addItem(messages.getString("menubar_layout_algorithm_hierarchical"), null, new MenuBar.Command()	{//$NON-NLS-1$
-			public void menuSelected(MenuItem selectedItem) {
-				if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_hierarchical"))){//$NON-NLS-1$
-					((MetricPanel)content).getSaimcytopro().applyLayoutAlgorithm(new HierarchicalLayoutAlgorithm(),true);
-				}
-			}
-		});
-		layoutalgo.addItem(messages.getString("menubar_layout_algorithm_grid"), null, new MenuBar.Command()	{//$NON-NLS-1$
-			public void menuSelected(MenuItem selectedItem) {
-				if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_grid"))){//$NON-NLS-1$
-					((MetricPanel)content).getSaimcytopro().applyLayoutAlgorithm(new GridNodeLayout(),true);
-				}
-			}
-		});
-		layoutalgo.addItem(messages.getString("menubar_layout_algorithm_circular"), null, new MenuBar.Command()	{//$NON-NLS-1$
-			public void menuSelected(MenuItem selectedItem) {
-				if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_circular"))){//$NON-NLS-1$
-					((MetricPanel)content).getSaimcytopro().applyLayoutAlgorithm(new CircularLayoutAlgorithm(),true);
-				}
-			}
-		});
+//
+//		layoutalgo.addItem(messages.getString("menubar_layout_algorithm_force_directed"), null, new MenuBar.Command()	{//$NON-NLS-1$
+//			public void menuSelected(MenuItem selectedItem) {
+//				if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_force_directed"))){//$NON-NLS-1$
+//					((MetricPanel)content).getSaimcytopro().applyLayoutAlgorithm(new ForceDirectedLayout(),true);
+//				}
+//			}
+//		});
+//		layoutalgo.addItem(messages.getString("menubar_layout_algorithm_hierarchical"), null, new MenuBar.Command()	{//$NON-NLS-1$
+//			public void menuSelected(MenuItem selectedItem) {
+//				if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_hierarchical"))){//$NON-NLS-1$
+//					((MetricPanel)content).getSaimcytopro().applyLayoutAlgorithm(new HierarchicalLayoutAlgorithm(),true);
+//				}
+//			}
+//		});
+//		layoutalgo.addItem(messages.getString("menubar_layout_algorithm_grid"), null, new MenuBar.Command()	{//$NON-NLS-1$
+//			public void menuSelected(MenuItem selectedItem) {
+//				if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_grid"))){//$NON-NLS-1$
+//					((MetricPanel)content).getSaimcytopro().applyLayoutAlgorithm(new GridNodeLayout(),true);
+//				}
+//			}
+//		});
+//		layoutalgo.addItem(messages.getString("menubar_layout_algorithm_circular"), null, new MenuBar.Command()	{//$NON-NLS-1$
+//			public void menuSelected(MenuItem selectedItem) {
+//				if(selectedItem.getText().equals(messages.getString("menubar_layout_algorithm_circular"))){//$NON-NLS-1$
+//					((MetricPanel)content).getSaimcytopro().applyLayoutAlgorithm(new CircularLayoutAlgorithm(),true);
+//				}
+//			}
+//		});
 
 		
     	if(session.getAttribute("loggedIn")== null || //$NON-NLS-1$

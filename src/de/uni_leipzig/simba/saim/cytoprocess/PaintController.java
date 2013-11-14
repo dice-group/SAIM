@@ -1,7 +1,7 @@
 package de.uni_leipzig.simba.saim.cytoprocess;
 
-import giny.model.Edge;
-import giny.model.Node;
+//import giny.model.Edge;
+//import giny.model.Node;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.Vector;
@@ -10,10 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.apache.log4j.Logger;
+
+import com.mxgraph.view.mxGraph;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import cytoscape.Cytoscape;
-import cytoscape.visual.VisualPropertyType;
+//import cytoscape.Cytoscape;
+//import cytoscape.visual.VisualPropertyType;
 /**
  * @author rspeck
  */
@@ -42,12 +44,15 @@ public class PaintController {
 	 */
 	public void refreshNodePositions(final PaintTarget target, GraphProperties graphProperties) throws PaintException{
 		target.startTag("refreshNodePositions");
-		int[] ids = graphProperties.getCyNetwork().getNodeIndicesArray();
-		for(int id : ids){
+		mxGraph graph= graphProperties.getNetwork();
+		
+//		int[] ids = graphProperties.getCyNetwork().getNodeIndicesArray();
+//		for(int id : ids){
+		for(Node n : graphProperties.getModel().nodes) {
 			target.startTag("node");
-			target.addAttribute("nodeID", id);
-			target.addAttribute("nodeX", Double.valueOf(graphProperties.getCyNetworkView().getNodeView(id).getXPosition()).intValue());
-			target.addAttribute("nodeY", Double.valueOf(graphProperties.getCyNetworkView().getNodeView(id).getYPosition()).intValue());
+			target.addAttribute("nodeID", n.id);
+			target.addAttribute("nodeX", Double.valueOf(n.x));
+			target.addAttribute("nodeY", Double.valueOf(n.y));
 			target.endTag("node");
 		}
 		target.endTag("refreshNodePositions");
@@ -57,15 +62,16 @@ public class PaintController {
 		if(LOGGER.isDebugEnabled()) LOGGER.debug("addEdge...");
 		int id = graphProperties.idsToUpdate.get(0);
 		graphProperties.idsToUpdate.remove(0);
-
-		final Edge edge = graphProperties.getCyNetwork().getEdge(id);
+		
+		final Edge edge = graphProperties.getModel().getEdge(id);
+//		graphProperties
 		if(edge != null){
 			target.startTag("addEdge");
-			target.addAttribute("edgeLabel", Cytoscape.getEdgeAttributes().getStringAttribute(String.valueOf(id), "label"));
+			target.addAttribute("edgeLabel", edge.label);
 			target.addAttribute("edgeID",id);
 			target.addAttribute("edgeShape", "todo: with label or not etc");
-			target.addAttribute("edgeSourceID", edge.getSource().getIdentifier());
-			target.addAttribute("edgeTargetID", edge.getTarget().getIdentifier());
+			target.addAttribute("edgeSourceID", edge.nodeA.id);
+			target.addAttribute("edgeTargetID", edge.nodeB.id);
 			target.endTag("addEdge");
 		}else
 			if(LOGGER.isDebugEnabled()) LOGGER.debug("addEdge failed! Edge not found!");
@@ -75,23 +81,23 @@ public class PaintController {
 	public void repaint(final PaintTarget target, GraphProperties graphProperties,Map<String,Set<Integer>> operationMap) throws PaintException{
 		if(LOGGER.isDebugEnabled()) LOGGER.debug("repaintGraph...");
 
-		final Color EDGE_COLOR        = (Color) getEdgeAppearance(VisualPropertyType.EDGE_COLOR);
-		final Color NODE_BORDER_COLOR = (Color) getNodeAppearance(VisualPropertyType.NODE_BORDER_COLOR);
-		final Color NODE_FILL_COLOR   = (Color) getNodeAppearance(VisualPropertyType.NODE_FILL_COLOR);
-		final Color NODE_LABEL_COLOR  = (Color) getNodeAppearance(VisualPropertyType.NODE_LABEL_COLOR);
-		final int NODE_SIZE           =  Math.round(Float.valueOf(String.valueOf(getNodeAppearance(VisualPropertyType.NODE_SIZE))));
-		final Color EDGE_LABEL_COLOR  = (Color) getEdgeAppearance(VisualPropertyType.EDGE_LABEL_COLOR);
-		final Number NODE_LINE_WIDTH  = (Number) getNodeAppearance(VisualPropertyType.NODE_LINE_WIDTH);
+		final Color EDGE_COLOR        = Color.black;
+		final Color NODE_BORDER_COLOR = Color.black;
+		final Color NODE_FILL_COLOR   = Color.CYAN;
+		final Color NODE_LABEL_COLOR  = Color.black;
+		final int NODE_SIZE           = 20;//Math.round(Float.valueOf(String.valueOf(getNodeAppearance(VisualPropertyType.NODE_SIZE))));
+		final Color EDGE_LABEL_COLOR  = Color.black;
+		final Number NODE_LINE_WIDTH  = (Number)new Integer(12);
 
 
-		final Font NODE_FONT_FACE = (Font)getNodeAppearance(VisualPropertyType.NODE_FONT_FACE);
-		final Font EDGE_FONT_FACE = (Font)getEdgeAppearance(VisualPropertyType.EDGE_FONT_FACE);
+		final Font NODE_FONT_FACE = Font.getFont(Font.DIALOG);
+		final Font EDGE_FONT_FACE = Font.getFont(Font.DIALOG);
 
-		final Color DefaultBackgroundColor    = Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().getDefaultBackgroundColor();
-		final Color DefaultNodeSelectionColor = Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().getDefaultNodeSelectionColor();
-		final Color DefaultEdgeSelectionColor = Cytoscape.getVisualMappingManager().getVisualStyle().getGlobalAppearanceCalculator().getDefaultEdgeSelectionColor();
-		final float EDGE_LABEL_OPACITY        = Float.valueOf(String.valueOf(getEdgeAppearance(VisualPropertyType.EDGE_LABEL_OPACITY)));
-		final int   EDGE_LINE_WIDTH           = Double.valueOf(String.valueOf(getEdgeAppearance(VisualPropertyType.EDGE_LINE_WIDTH))).intValue();
+		final Color DefaultBackgroundColor    = Color.white;
+		final Color DefaultNodeSelectionColor = Color.GRAY;
+		final Color DefaultEdgeSelectionColor = Color.gray;
+		final float EDGE_LABEL_OPACITY        = 0.1f;
+		final int   EDGE_LINE_WIDTH           = 12;
 
 		// settings
 		target.startTag("settings");
@@ -125,11 +131,12 @@ public class PaintController {
 
 		Set<Integer> paintedNodes = new HashSet<Integer>();
 		// paint edge and there nodes
-		for (final int edgeid : graphProperties.getCyNetwork().getEdgeIndicesArray()) {
+		for(Edge edge: graphProperties.getModel().edges) {
+//		for (final int edgeid : graphProperties.getCyNetwork().getEdgeIndicesArray()) {
 
-			final Edge edge = graphProperties.getCyNetwork().getEdge(edgeid);
-			final Node edgeSource = edge.getSource();
-			final Node edgeTarget = edge.getTarget();
+//			final Edge edge = graphProperties.getCyNetwork().getEdge(edgeid);
+			final Node edgeSource = edge.nodeA;
+			final Node edgeTarget = edge.nodeB;
 
 			paintedNodes.add(edgeSource.getRootGraphIndex());
 			paintedNodes.add(edgeTarget.getRootGraphIndex());
@@ -229,13 +236,13 @@ public class PaintController {
 		updateNode(target,graphProperties,nodeid);
 	}
 
-	private Object getNodeAppearance (VisualPropertyType vpt){
-		return Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().get(vpt);
-	}
-
-	private Object getEdgeAppearance (VisualPropertyType vpt){
-		return Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().get(vpt);
-	}
+//	private Object getNodeAppearance (VisualPropertyType vpt){
+//		return Cytoscape.getVisualMappingManager().getVisualStyle().getNodeAppearanceCalculator().getDefaultAppearance().get(vpt);
+//	}
+//
+//	private Object getEdgeAppearance (VisualPropertyType vpt){
+//		return Cytoscape.getVisualMappingManager().getVisualStyle().getEdgeAppearanceCalculator().getDefaultAppearance().get(vpt);
+//	}
 
 	//
 	//
