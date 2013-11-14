@@ -1,8 +1,8 @@
 package de.uni_leipzig.simba.saim.gui.widget.form;
 
-import java.util.HashMap;
+
 import de.uni_leipzig.simba.cache.Cache;
-import de.uni_leipzig.simba.genetics.selfconfig.GeneticSelfConfigurator;
+import de.uni_leipzig.simba.genetics.learner.UnSupervisedLearnerParameters;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.selfconfig.PseudoMeasures;
 import de.uni_leipzig.simba.selfconfig.ReferencePseudoMeasures;
@@ -91,28 +91,23 @@ public class SelfConfigGeneticBasedBean {
 	 * @param tC separated to update GUI.
 	 * @return HashMap<String,Object> params: the parameter based on the current values of the bean to learn with the Genetic Based Selfconfigurator.
 	 */
-	public HashMap<String,Object> getConfiguartorParams(Configuration config, Cache sC, Cache tC) {
-		HashMap<String,Object> params = new HashMap<String, Object>();
-
-		params.put(GeneticSelfConfigurator.pSInfo, config.getSource());
-		params.put(GeneticSelfConfigurator.pTInfo, config.getTarget());
-		params.put(GeneticSelfConfigurator.pSCache, sC);
-		params.put(GeneticSelfConfigurator.pTCache, tC);
-
-		params.put(GeneticSelfConfigurator.pPropMapping, config.propertyMapping);
-		System.out.println("Setting property mapping to: \n"+config.propertyMapping);
-
-		params.put(GeneticSelfConfigurator.pBeta, beta);
-		params.put(GeneticSelfConfigurator.pGen, generations);
-		params.put(GeneticSelfConfigurator.pPop, population);
-		params.put(GeneticSelfConfigurator.pCrossover, (float)crossoverRate);
-		params.put(GeneticSelfConfigurator.pMutation, (float)mutationRate);
+	public UnSupervisedLearnerParameters getConfiguartorParams(Configuration config, Cache sC, Cache tC) {
+		UnSupervisedLearnerParameters params = new UnSupervisedLearnerParameters(config.getLimesConfiReader(), config.propertyMapping);
+//		params.put(GeneticSelfConfigurator.pSInfo, config.getSource());
+//		params.put(GeneticSelfConfigurator.pTInfo, config.getTarget());
+//		params.put(GeneticSelfConfigurator.pSCache, sC);
+//		params.put(GeneticSelfConfigurator.pTCache, tC);
+		params.setGenerations(generations);
+		params.setPopulationSize(population);
+		params.setCrossoverRate((float)crossoverRate);
+		params.setMutationRate((float)mutationRate);
 		PseudoMeasures pseudoMeasure = new PseudoMeasures();
 		if(this.measure == 1) {
 			pseudoMeasure = new ReferencePseudoMeasures();
 		}
-		params.put(GeneticSelfConfigurator.pMeasure, pseudoMeasure);
-
+		params.setPseudoFMeasure(pseudoMeasure);
+		params.setPFMBetaValue(beta);
+	
 		return params;
 	}
 }

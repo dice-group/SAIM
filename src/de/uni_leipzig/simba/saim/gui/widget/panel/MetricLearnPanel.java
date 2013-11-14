@@ -1,6 +1,5 @@
 package de.uni_leipzig.simba.saim.gui.widget.panel;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -13,7 +12,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import de.uni_leipzig.simba.genetics.core.Metric;
 import de.uni_leipzig.simba.genetics.learner.LinkSpecificationLearner;
-import de.uni_leipzig.simba.saim.Messages;
+import de.uni_leipzig.simba.genetics.learner.SupervisedLearnerParameters;
 import de.uni_leipzig.simba.saim.SAIMApplication;
 import de.uni_leipzig.simba.saim.core.Configuration;
 import de.uni_leipzig.simba.saim.gui.widget.InstanceMappingTable;
@@ -34,7 +33,7 @@ public class MetricLearnPanel extends  PerformPanel{
 	Label warn;
 	public InstanceMappingTable iMapTable = null;
 	protected Layout learnLayout;
-	protected HashMap<String, Object> params;
+	protected SupervisedLearnerParameters params;
 
 	public MetricLearnPanel(SAIMApplication application) {
 		super(application.messages.getString("MetricLearnPanel.caption"));

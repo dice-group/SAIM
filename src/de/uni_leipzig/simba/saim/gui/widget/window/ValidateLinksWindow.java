@@ -62,7 +62,10 @@ public class ValidateLinksWindow extends CustomComponent {
 			compare.addListener(new CompareClickListener(app));
 			mainLayout.addComponent(refSelect);
 			mainLayout.addComponent(compare);
-		} catch (IOException | URISyntaxException e) {
+		} catch (URISyntaxException e) {
+			app.getMainWindow().showNotification("Error loading reference files");//$NON-NLS-1$
+			e.printStackTrace();
+		} catch (IOException e) {
 			app.getMainWindow().showNotification("Error loading reference files");//$NON-NLS-1$
 			e.printStackTrace();
 		}

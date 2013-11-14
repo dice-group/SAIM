@@ -1,6 +1,6 @@
 package de.uni_leipzig.simba.saim.gui.widget.form;
 
-import java.util.HashMap;
+import de.uni_leipzig.simba.genetics.learner.SupervisedLearnerParameters;
 /**
  * Bean to automatically build form for genetic learner configuration.
  * @author Lyko
@@ -69,13 +69,13 @@ public class LearnerConfigurationBean {
 	 * Generate params HashMap used by leraner.
 	 * @return
 	 */
-	public HashMap<String, Object> createParams() {
-		HashMap<String, Object> params = new HashMap<String, Object>();
-	    params.put("populationSize", getPopulation());
-		params.put("generations", getGenerations());
-		params.put("mutationRate", (float)getMutationRate());
-		params.put("crossoverRate", (float)getCrossoverRate());
-		params.put("trainingDataSize", getNumberOfInqueriesPerRun());
+	public SupervisedLearnerParameters createParams() {
+		SupervisedLearnerParameters params = new SupervisedLearnerParameters(null, null);
+		params.setPopulationSize(getPopulation());
+		params.setGenerations(getGenerations());
+		params.setCrossoverRate((float)getCrossoverRate());
+	    params.setMutationRate((float)getMutationRate());
+		params.setTrainingDataSize(getNumberOfInqueriesPerRun());
 		return params;
 	}
 

@@ -1,6 +1,5 @@
 package de.uni_leipzig.simba.saim.gui.widget.panel;
 
-import java.util.HashMap;
 import org.jgap.InvalidConfigurationException;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Button;
@@ -8,6 +7,7 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.Button.ClickEvent;
 import de.uni_leipzig.simba.data.Mapping;
 import de.uni_leipzig.simba.genetics.learner.GeneticBatchLearner;
+import de.uni_leipzig.simba.genetics.learner.SupervisedLearnerParameters;
 import de.uni_leipzig.simba.genetics.util.PropertyMapping;
 import de.uni_leipzig.simba.saim.Messages;
 import de.uni_leipzig.simba.saim.SAIMApplication;
@@ -43,23 +43,19 @@ public class BatchLearningPanel extends MetricLearnPanel {
 			learner.getFitnessFunction().destroy();
 		}
 		if(params == null) {
-			 HashMap<String, Object> params = new HashMap<String, Object>();
-			 params = new HashMap<String, Object>();
-			 params.put("populationSize", 10);
-			 params.put("generations", 50);
-			 params.put("mutationRate", 0.5f);
-			 params.put("trainingDataSize", 10);
+			if(config.propertyMapping != null)
+				params = new SupervisedLearnerParameters(config.getLimesConfiReader(), config.propertyMapping);
+			else
+				params = new SupervisedLearnerParameters(config.getLimesConfiReader(), new PropertyMapping());
+			params.setGenerations(50);
+			params.setPopulationSize(10);
+			params.setMutationRate(0.5f);
+			params.setTrainingDataSize(10);
 		}
-		// configure
 
-		params.put("preserveFittest",true);
-		if(config.propertyMapping!=null)
-			params.put("propertyMapping", config.propertyMapping);
-		else {
-			params.put("propertyMapping", new PropertyMapping());
-		}
-		params.put("granularity", 2);
-		params.put("config", config.getLimesConfiReader());
+		params.setPreserveFittestIndividual(true);
+	
+		params.setGranularity(2);
 		learner = new GeneticBatchLearner();
 		try {
 			learner.init(config.getSource(), config.getTarget(), params);

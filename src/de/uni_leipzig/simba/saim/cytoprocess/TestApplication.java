@@ -1,6 +1,8 @@
 package de.uni_leipzig.simba.saim.cytoprocess;
 
+//import giny.view.NodeView;
 import giny.view.NodeView;
+
 import com.vaadin.Application;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Window;

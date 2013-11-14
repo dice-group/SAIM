@@ -12,11 +12,19 @@ import de.uni_leipzig.simba.saim.cytoprocess.widgetset.client.ui.VCytoprocess;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.ui.ClientWidget;
+
 import cytoscape.CyNetwork;
 import cytoscape.Cytoscape;
-import cytoscape.CytoscapeInit;
 import cytoscape.layout.CyLayoutAlgorithm;
 import cytoscape.view.CyNetworkView;
+
+//import cytoscape.CyMain;
+//import cytoscape.CyNetwork;
+//import cytoscape.Cytoscape;
+//import cytoscape.CytoscapeInit;
+//import cytoscape.init.CyInitParams;
+//import cytoscape.layout.CyLayoutAlgorithm;
+//import cytoscape.view.CyNetworkView;
 /**
  * @author rspeck
  */
@@ -49,11 +57,22 @@ public class Cytoprocess extends Processing {
 	 */
 	public Cytoprocess(int width, int height){
 		String name = "Cytoprocess";
-//		CytoscapeInit.loadStaticProperties("mode", CytoscapeInit.getCyInitParams().TEXT);
-		
-		Cytoscape.createNewSession();
+//		CytoscapeInit.loadStaticProperties("mode", CytoscapeInit.getyInitParams().TEXT);
+		String[] args = new String[1];
+		args[0]= "-H";
+//		try {
+//			CyMain cyMain = new CyMain(args);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		cyMain.
+//		Cytoscape.createNewSession();
 //		System.out.println("CytoInits:\n"+CytoscapeInit.getCyInitParams());
-		CyNetwork network = Cytoscape.createNetwork(name, false);
+//		CyNetwork network = Cytoscape.createNetwork(name, false);^
+
+		CyNetwork network = Cytoscape.getRootGraph().createNetwork(new int[]{}, new int[]{});
+		network.setIdentifier(name);
 		CyNetworkView finalView = Cytoscape.createNetworkView(network);
 
 		graphProperties = new GraphProperties(network, finalView, name);

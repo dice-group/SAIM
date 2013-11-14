@@ -1,6 +1,5 @@
 package de.uni_leipzig.simba.saim.gui.widget.panel.selfconfiguration;
 
-import java.util.HashMap;
 import org.jgap.InvalidConfigurationException;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
@@ -9,6 +8,7 @@ import com.vaadin.ui.VerticalLayout;
 import de.uni_leipzig.simba.cache.Cache;
 import de.uni_leipzig.simba.cache.HybridCache;
 import de.uni_leipzig.simba.genetics.core.Metric;
+import de.uni_leipzig.simba.genetics.learner.UnSupervisedLearnerParameters;
 import de.uni_leipzig.simba.genetics.selfconfig.BasicGeneticSelfConfigurator;
 import de.uni_leipzig.simba.genetics.selfconfig.GeneticSelfConfigurator;
 import de.uni_leipzig.simba.saim.Messages;
@@ -56,7 +56,7 @@ public class GeneticBasedSelfConfigPanel extends SelfConfigExecutionPanel {
 				indicator.setValue(new Float(3f/steps));
 				stepPanel.setCaption("Initializing Learning algorithm...");
 				indicator.requestRepaint();
-				HashMap<String, Object> params = bean.getConfiguartorParams(config, sourceCache, targetCache);
+				UnSupervisedLearnerParameters params = bean.getConfiguartorParams(config, sourceCache, targetCache);
 				indicator.setValue(new Float(4f/steps));
 				stepPanel.setCaption("Learning...");
 				indicator.requestRepaint();
