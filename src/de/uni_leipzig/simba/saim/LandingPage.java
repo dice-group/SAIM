@@ -77,9 +77,9 @@ public class LandingPage extends CustomComponent {
 		verticalLayout_1.addComponent(startButton);
 		verticalLayout_1.addComponent(getManualLabel());
 		verticalLayout_1.addComponent(getManualLink());
-		verticalLayout_1.addComponent(getVideoLabel());
-		
-		verticalLayout_1.addComponent(getVideo());
+//		verticalLayout_1.addComponent(getVideoLabel());
+//		
+//		verticalLayout_1.addComponent(getVideo());
 		
 		return verticalLayout_1;
 	}
