@@ -1,26 +1,19 @@
 package de.uni_leipzig.simba.saim.cytoprocess;
 
 
+import java.awt.Graphics;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import org.apache.log4j.Logger;
 import org.vaadin.contrib.component.svg.processing.Processing;
 import de.uni_leipzig.simba.saim.cytoprocess.widgetset.client.ui.VCytoprocess;
 
-import com.mxgraph.view.mxGraph;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.ui.ClientWidget;
-//import cytoscape.CyMain;
-//import cytoscape.CyNetwork;
-//import cytoscape.Cytoscape;
-//import cytoscape.CytoscapeInit;
-//import cytoscape.init.CyInitParams;
-//import cytoscape.layout.CyLayoutAlgorithm;
-//import cytoscape.view.CyNetworkView;
+
 /**
  * @author rspeck
  */
@@ -66,10 +59,10 @@ public class Cytoprocess extends Processing {
 //		Cytoscape.createNewSession();
 //		System.out.println("CytoInits:\n"+CytoscapeInit.getCyInitParams());
 //		CyNetwork network = Cytoscape.createNetwork(name, false);^
-		mxGraph graph = new mxGraph();
+//		mxGraph graph = new mxGraph();
 		Graph gModel = new Graph();
 
-		graphProperties = new GraphProperties(gModel, graph, name);
+		graphProperties = new GraphProperties(gModel, name);
 		graphProperties.setWidth(width);
 		graphProperties.setHeight(height);
 
@@ -86,7 +79,6 @@ public class Cytoprocess extends Processing {
 		target.startTag("cytoprocess");
 		target.addAttribute("operation", currentGraphOperation.toString());
 		switch (currentGraphOperation) {
-
 		case REPAINT:
 			if(LOGGER.isDebugEnabled())LOGGER.debug("REPAINT ...");
 
@@ -113,6 +105,7 @@ public class Cytoprocess extends Processing {
 		}
 
 		target.endTag("cytoprocess");
+//		fitToView();
 	}
 
 	// Handles client requests
@@ -213,6 +206,7 @@ public class Cytoprocess extends Processing {
 	public void repaintGraph() {
 		currentGraphOperation = GraphOperation.REPAINT;
 		requestRepaint();
+//		fitToView();
 	}
 
 //	public void cleanGraph(){

@@ -3,6 +3,8 @@ package de.uni_leipzig.simba.saim.cytoprocess;
 //import giny.view.NodeView;
 //import giny.view.NodeView;
 
+import java.awt.image.BufferedImage;
+
 import com.vaadin.Application;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Window;
@@ -19,6 +21,8 @@ public class TestApplication extends Application{
 		mainWindow = new Window("Test Application");
 		setMainWindow(mainWindow);
 		Panel  panel = new Panel();
+		  BufferedImage bi = new BufferedImage(
+        900, 600, BufferedImage.TYPE_INT_ARGB);
 		final Cytoprocess cp = new Cytoprocess(900, 600);
 		panel.addComponent(cp);
 		mainWindow.addComponent(cp);

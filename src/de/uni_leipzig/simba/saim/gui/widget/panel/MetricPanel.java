@@ -1,5 +1,7 @@
 package de.uni_leipzig.simba.saim.gui.widget.panel;
 
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.util.Set;
 import java.util.TreeSet;
 import lombok.Getter;

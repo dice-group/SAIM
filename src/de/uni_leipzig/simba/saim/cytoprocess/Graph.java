@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Graph {
-	HashSet<ViewNode> nodes = new HashSet<ViewNode>();
+	public HashSet<ViewNode> nodes = new HashSet<ViewNode>();
 	public HashSet<Edge> edges = new HashSet<Edge>();
 	
 	public List<Integer> getAdjacentEdges(int nodeId) {
@@ -50,7 +50,7 @@ public class Graph {
 			id=r.nextInt(100);
 		Edge e = new Edge(id, getNode(nodeA), getNode(nodeB));
 		edges.add(e);
-		System.out.println("Created edge "+e);
+//		System.out.println("Created edge "+e);
 		return e;
 	}
 	

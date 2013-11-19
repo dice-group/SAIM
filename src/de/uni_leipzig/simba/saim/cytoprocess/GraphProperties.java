@@ -1,32 +1,42 @@
 package de.uni_leipzig.simba.saim.cytoprocess;
 
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
+import java.awt.image.BufferedImage;
+import java.util.Iterator;
 import java.util.Vector;
 import java.util.List;
-import java.util.Random;
+
+import javax.swing.JPanel;
+
 import org.apache.log4j.Logger;
 
-import com.mxgraph.view.mxGraph;
+import prefuse.data.Table;
+import prefuse.data.Tree;
+import prefuse.data.tuple.TupleSet;
+import prefuse.visual.VisualItem;
+
 /**
  * @author rspeck
  * @author Klaus Lyko
  */
+
 public class GraphProperties {
 	private static transient final Logger LOGGER = Logger.getLogger(GraphProperties.class);
 
-	private mxGraph graph;
 	private Graph gModel;
 	private final String title;
-
-	private int width, height;
-
-	private Random rand = new Random();
+	private int rootNode = 0;
+	private int width=600;
+	private int height=600;
+	
 
 	public List<Integer> idsToUpdate = new Vector<Integer>();
 
-	public GraphProperties(Graph gModel, mxGraph graph, final String p_title) {
+	public GraphProperties(Graph gModel, final String p_title) {
 		if(LOGGER.isDebugEnabled()) LOGGER.debug("GraphProperties...");
 		this.gModel = new Graph();
-		this.graph = graph;
 		title = p_title;
 	}
 //	public void applyLayoutAlgorithm(final CyLayoutAlgorithm loAlgorithm) {
@@ -90,7 +100,7 @@ public class GraphProperties {
 			}
 			Edge e = gModel.createEdge(nodeAid, nodeBid);
 			e.name = name;
-			System.out.println("Graphproperties.createEdge(): Created edge:"+e);
+//			System.out.println("Graphproperties.createEdge(): Created edge:"+e);
 				return e.id;//gModel.getEdgeId(e);
 
 		}else {
@@ -109,13 +119,13 @@ public class GraphProperties {
 	 * @return node id
 	 */
 	public Integer addNode(final String name, final int x, final int y, int nodeViewShape,String rgb) {
-		LOGGER.debug("addNode to cytoscape...name"+name);
-		System.out.println("Graphproperties.addNode:"+name+", x="+x+", y="+y+" nodeviewShape="+nodeViewShape+", rgb="+rgb);
+		LOGGER.debug("addNode...name="+name);
+//		System.out.println("Graphproperties.addNode:"+name+", x="+x+", y="+y+" nodeviewShape="+nodeViewShape+", rgb="+rgb);
 		// search for a free node
-		graph.getModel().beginUpdate();
-		Integer id = rand.nextInt(100);
+//		graph.getModel().beginUpdate();
+		Integer id = 0;//rand.nextInt(100);
 		while(gModel.hasNode(id))
-			id = rand.nextInt(100);
+			id++;
 		ViewNode n = new ViewNode(name, x, y, nodeViewShape, rgb);
 		n.id = id;
 		gModel.addNode(n);
@@ -147,16 +157,16 @@ public class GraphProperties {
 	}
 
 //	// getter setter
-	public mxGraph getNetwork() {
-		return graph;
-	}
+//	public mxGraph getNetwork() {
+//		return graph;
+//	}
 	public Graph getModel(){
 		return gModel;
 	}
 
-	public void setCyNetwork(mxGraph network) {
-		this.graph = network;
-	}
+//	public void setCyNetwork(mxGraph network) {
+//		this.graph = network;
+//	}
 
 
 	public int getHeight() {
@@ -179,4 +189,66 @@ public class GraphProperties {
 	public void setWidth(int width) {
 		this.width = width;
 	}
+	
+	public prefuse.data.Tree getPrefuseData(int root) {
+		Table nodes = new Table();
+		nodes.addColumn("nodeId", int.class);
+		nodes.addColumn("name", String.class);
+		for(ViewNode n : this.getModel().nodes) {
+			int row = nodes.addRow();
+			nodes.set(row, "nodeId", n.id);
+			nodes.set(row, "name", n.name);
+//			System.out.println("added None "+n.id+", name="+n.name);
+		}
+		Table edges = new Table();
+		edges.addColumn("nodeAid", int.class);
+		edges.addColumn("nodeBid", int.class);
+		for(Edge e : this.getModel().edges) {
+			int row = edges.addRow();
+			edges.set(row, "nodeAid", e.nodeA.id);
+			edges.set(row, "nodeBid", e.nodeB.id);
+		}
+		Tree tree = new Tree(nodes, edges, "nodeId", "nodeAid", "nodeBid"); 
+//		System.out.println(tree.getRoot());
+		return tree;
+	}
+	
+	public void updateTreeLayout() {
+//		if(gModel.nodes.size()<=1)
+//			return;
+	
+		Tree tree = getPrefuseData(this.rootNode);
+		Dimension inner = new Dimension(width, height);
+		Dimension outer = new Dimension(width, height);
+		DefaultTreeView treeview = new DefaultTreeView(tree, "name", inner);
+		
+//		JPanel jf = new JPanel();
+//		jf.setSize(outer);
+//		jf.setMinimumSize(outer);
+//		jf.setMaximumSize(outer);
+//		jf.setPreferredSize(outer);
+//		jf.add(treeview);
+//		jf.paintImmediately(0, 0, jf.getWidth(),  jf.getHeight());
+//		jf.addNotify();
+//		System.out.println("JPANEL isDisplayable()?"+jf.isDisplayable());
+//		System.out.println("Treeview isDisplayable()?"+treeview.isDisplayable());
+//		BufferedImage bi = new BufferedImage(600,600,BufferedImage.TYPE_INT_RGB);
+		try {
+//			jf.paint(bi.getGraphics());
+	    	TupleSet set = treeview.getVisualization().getGroup("tree.nodes");
+	    	Iterator it = set.tuples();
+	    	while(it.hasNext()) {
+	    		VisualItem item = (VisualItem) it.next();
+	    		Integer nodeID = (Integer) item.get("nodeId");
+	    		if(nodeID != null) {
+	    			ViewNode vn = gModel.getNode(nodeID);
+	    			vn.x = (int) item.getEndX();
+	    			vn.y = (int) item.getEndY();
+	    		}	    		
+	    	}
+		} catch(NullPointerException e) {
+			System.out.println("NullPoniter by creating BufferedImage bi...");
+			System.out.println("GraphicsEnvironment.isHeadless() "+GraphicsEnvironment.isHeadless() );
+		}
+    }
 }

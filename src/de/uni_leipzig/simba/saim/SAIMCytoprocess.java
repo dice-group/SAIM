@@ -2,6 +2,7 @@ package de.uni_leipzig.simba.saim;
 
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.util.HashMap;
@@ -58,15 +59,17 @@ public class SAIMCytoprocess extends Cytoprocess {
 		messages = saimApp.messages;
 		mainWindow = saimApp.getMainWindow();
 
-		modal = new SAIMCytoprocessModalWindows(messages,config,mainWindow);
+		modal = new SAIMCytoprocessModalWindows(messages, config, mainWindow);
 	}
+	
 
+	
 	public void loadMetricExpression(){
 		loadMetricExpression(config.getMetricExpression());
 	}
 
 	public void loadMetricExpression(String metricExpression){
-		System.out.println("LOADING EXpression="+metricExpression);
+//		System.out.println("LOADING EXpression="+metricExpression);
 		if( metricExpression != null){
 			Output o = MetricParser.parse(metricExpression, config.getSource().var.replaceAll("\\?", ""));
 			o.param1 = config.getAcceptanceThreshold();
@@ -208,7 +211,7 @@ public class SAIMCytoprocess extends Cytoprocess {
 //	}
 
 	public Integer addNode(String name, SAIMCytoprocess.NODE_TYPE shape, Double para1, Double para2){
-		System.out.println("SAIMCytoprocess.addNode():name="+name+" , SAIMCytoprocess.NODE_TYPE="+ shape+"para1, para2="+para1+", "+para2);
+//		System.out.println("SAIMCytoprocess.addNode():name="+name+" , SAIMCytoprocess.NODE_TYPE="+ shape+"para1, para2="+para1+", "+para2);
 		int nodeView = 0;
 		String rgb = "";
 		Node n = null;
@@ -523,7 +526,7 @@ public class SAIMCytoprocess extends Cytoprocess {
 	}
 
 	private void setNodeValue1(int nodeid, String label1, Double value1){
-		System.out.println("Looging for node:"+nodeid+" label="+label1+ "value1="+value1);
+//		System.out.println("Looging for node:"+nodeid+" label="+label1+ "value1="+value1);
 		graphProperties.getNode(nodeid).labeling.put("label1", label1);
 		graphProperties.getNode(nodeid).labeling.put("value1", value1);
 //		Cytoscape.getNodeAttributes().setAttribute(String.valueOf(nodeid), "label1", label1);

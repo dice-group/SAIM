@@ -79,7 +79,7 @@ public class PaintController {
 		final Color NODE_BORDER_COLOR = Color.black;
 		final Color NODE_FILL_COLOR   = Color.CYAN;
 		final Color NODE_LABEL_COLOR  = Color.black;
-		final int NODE_SIZE           = 120;//Math.round(Float.valueOf(String.valueOf(getNodeAppearance(VisualPropertyType.NODE_SIZE))));
+		final int NODE_SIZE           = 60;//Math.round(Float.valueOf(String.valueOf(getNodeAppearance(VisualPropertyType.NODE_SIZE))));
 		final Color EDGE_LABEL_COLOR  = Color.black;
 		final Number NODE_LINE_WIDTH  = 1;
 
@@ -112,7 +112,7 @@ public class PaintController {
 		target.addAttribute("NODE_FONT_SIZE", NODE_FONT_FACE.getSize());
 		target.addAttribute("NODE_FONT_NAME", NODE_FONT_FACE.getFontName());
 
-		target.addAttribute("EDGE_FONT_SIZE", EDGE_FONT_FACE.getSize());
+		target.addAttribute("EDGE_FONT_SIZE", 6);
 		target.addAttribute("EDGE_FONT_NAME", EDGE_FONT_FACE.getFontName());
 
 		target.addAttribute("DefaultBackgroundColor",PaintController.getRGB(DefaultBackgroundColor));
@@ -124,6 +124,7 @@ public class PaintController {
 
 		Set<Integer> paintedNodes = new HashSet<Integer>();
 		// paint edge and there nodes
+		graphProperties.updateTreeLayout();
 		HashSet<Edge> edges = graphProperties.getModel().edges;
 		for(Edge e:edges) {
 

@@ -78,6 +78,7 @@ public class SAIMApplication extends Application implements TransactionListener
 		mainWindow.setContent(new LandingPage(this));
 		setTheme("saim"); //$NON-NLS-1$
 		setMainWindow(mainWindow);
+//		mainWindow.getContent().
 	}
 	
 	public void startSAIM() {
