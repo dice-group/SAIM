@@ -1,6 +1,6 @@
 <ehcache maxBytesLocalOnHeap="200m" maxBytesLocalDisk="1g" >
 <!--  maxBytesLocalOffHeap="400m" -->
-<diskStore path="cache"/>
+<diskStore path="user.dir/SAIM/cache/"/>
 <cache name="test"
  diskPersistent="false"
 		eternal="false"
