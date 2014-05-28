@@ -14,7 +14,7 @@ import de.uni_leipzig.simba.io.KBInfo;
  */
 public class FileStore {
 
-	public static final String base = System.getProperty("user.home");
+	public static final String base = "/tmp/";
 	public static final String store = "SAIM/EPStore";
 	public static final String infosDump = "kbinfos.dump";
 	/**

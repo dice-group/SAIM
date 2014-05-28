@@ -31,6 +31,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
+import de.uni_leipzig.simba.saim.backend.FileStore;
 //import csplugins.layout.algorithms.circularLayout.CircularLayoutAlgorithm;
 //import csplugins.layout.algorithms.force.ForceDirectedLayout;
 //import csplugins.layout.algorithms.hierarchicalLayout.HierarchicalLayoutAlgorithm;
@@ -78,6 +79,10 @@ public class SAIMApplication extends Application implements TransactionListener
 		mainWindow.setContent(new LandingPage(this));
 		setTheme("saim"); //$NON-NLS-1$
 		setMainWindow(mainWindow);
+		boolean fileStore = FileStore.setUp();
+		if(!fileStore) {
+			 mainWindow.showNotification("Unable to setup file structure. SAIM is not running properly.");
+		}
 //		mainWindow.getContent().
 	}
 	
