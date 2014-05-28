@@ -81,7 +81,7 @@ public class SAIMApplication extends Application implements TransactionListener
 		setMainWindow(mainWindow);
 		boolean fileStore = FileStore.setUp();
 		if(!fileStore) {
-			 mainWindow.showNotification("Unable to setup file structure. SAIM is not running properly.");
+			 mainWindow.showNotification("Unable to setup file structure. SAIM is not running properly.", Notification.TYPE_ERROR_MESSAGE);
 		}
 //		mainWindow.getContent().
 	}
