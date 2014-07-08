@@ -83,11 +83,9 @@ public class SAIMApplication extends Application implements TransactionListener
 		if(!fileStore) {
 			 mainWindow.showNotification("Unable to setup file structure. SAIM is not running properly.", Notification.TYPE_ERROR_MESSAGE);
 		}
-//		mainWindow.getContent().
 	}
 	
 	public void startSAIM() {
-		//$NON-NLS-1$
 		ParameterHandler parameterHandler = new ParameterHandler()
 		{
 			@Override
@@ -120,9 +118,7 @@ public class SAIMApplication extends Application implements TransactionListener
 		content = new MetricPanel(messages);
 		
 		mainLayout.addComponent(content);
-//		mainLayout.setSizeFull();
 		content.setSizeFull();
-//		content.attach();
 	}
 
 	private void setLanguage(String language)
@@ -187,7 +183,7 @@ public class SAIMApplication extends Application implements TransactionListener
 			}
 		});
 
-		// layout algo.
+		// layout algo. Doesn't supported in headless environments
 //		MenuItem layoutalgo = menuBar.addItem(messages.getString("menubar_layout_algorithm"), null, null); //$NON-NLS-1$
 //
 //		layoutalgo.addItem(messages.getString("menubar_layout_algorithm_force_directed"), null, new MenuBar.Command()	{//$NON-NLS-1$

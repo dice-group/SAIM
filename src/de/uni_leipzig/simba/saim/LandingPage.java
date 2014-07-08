@@ -77,9 +77,9 @@ public class LandingPage extends CustomComponent {
 		verticalLayout_1.addComponent(startButton);
 		verticalLayout_1.addComponent(getManualLabel());
 		verticalLayout_1.addComponent(getManualLink());
-//		verticalLayout_1.addComponent(getVideoLabel());
-//		
-//		verticalLayout_1.addComponent(getVideo());
+		verticalLayout_1.addComponent(getVideoLabel());
+		
+		verticalLayout_1.addComponent(getVideo());
 		
 		return verticalLayout_1;
 	}
@@ -89,7 +89,7 @@ public class LandingPage extends CustomComponent {
 				"SAIM is an web interface for the <a href='http://aksw.org/Projects/LIMES.html'>LIMES</a> linking framework. " +
 				"SAIM is a prototype developed by the <a href='http://aksw.org/'>AKSW Research group at the University of Leipzig</a>." +
 //				"and still under heavy development"+
-				"<h3>We're proud to annouce that we will present SAIM at the <a href='http://2013.eswc-conferences.org/program/demos'>ESWC 2013 demo session</a>.</h3>"+
+				"<h3>We presented SAIM at the <a href='http://2013.eswc-conferences.org/program/demos'>ESWC 2013 demo session</a>.</h3>"+
 //				"<h1>Team</h1>" +
 //				"<ul>" +
 //				" <li><a href='http://aksw.org/AxelNgonga.html'>Dr. Axel-C. Ngonga Ngomo</a></li>" +
@@ -104,7 +104,7 @@ public class LandingPage extends CustomComponent {
 
 	private Video getVideo() {
 		/**Screencasts now on SAIM deployment server**/
-		String baseURL = "http://139.18.2.164:8080/saim-screencast/";//saim_screencast.mp4
+		String baseURL = "http://139.18.2.164:8080/saim_screencast/";//saim_screencast.mp4
 		ExternalResource resc1 = new ExternalResource(baseURL+"saim_screencast.mp4");
 		resc1.setMIMEType("video/mp4; codecs=avc1.42E01E,mp4a.40.2");
 

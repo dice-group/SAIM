@@ -2,6 +2,8 @@ package de.uni_leipzig.simba.saim.cytoprocess.widgetset.client.ui.graph;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import org.vaadin.contrib.processing.svg.gwt.client.ProcessingJs;
 import com.google.gwt.dom.client.NativeEvent;
@@ -33,7 +35,7 @@ public class VGraph {
 	/* id to node */
 	public Map<Integer, VNode> nodes = new HashMap<Integer, VNode>();
 	public boolean LOG = false;
-
+//	public static List<VContextMenu> menues = new LinkedList<VContextMenu>();
 	/**
 	 * @param VCytoprocess
 	 */
@@ -429,6 +431,11 @@ class EdgeHandler implements ContextListener, MouseDownHandler,
 		if (event.getNativeButton() == NativeEvent.BUTTON_RIGHT) {
 			final VContextMenu menu = new VContextMenu(this);
 			menu.showMenu(event.getClientX(), event.getClientY());
+//			for(VContextMenu m : VGraph.menues) {
+//				m.hide();
+//			}
+//			VGraph.menues.clear();
+//			VGraph.menues.add(menu);
 		}
 	}
 
@@ -532,6 +539,11 @@ class NodeHandler implements ContextListener, MouseDownHandler, MouseUpHandler,
 		if (event.getNativeButton() == NativeEvent.BUTTON_RIGHT) {
 			final VContextMenu menu = new VContextMenu(this);
 			menu.showMenu(event.getClientX(), event.getClientY());
+//			for(VContextMenu m : VGraph.menues) {
+//				m.hide();
+//			}
+//			VGraph.menues.clear();
+//			VGraph.menues.add(menu);
 		}
 		if (event.getNativeButton() == NativeEvent.BUTTON_LEFT) {
 			moveX = event.getClientX();

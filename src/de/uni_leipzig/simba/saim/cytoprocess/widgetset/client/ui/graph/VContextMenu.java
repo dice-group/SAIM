@@ -32,7 +32,11 @@ public class VContextMenu extends PopupPanel {
 		setPopupPosition(x, y);
 		show();
 	}
-
+	
+	public void hideMenu() {
+		hide();
+	}
+	
 	public class ContextMenuCommand implements Command {
 		@Override
 		public void execute() {

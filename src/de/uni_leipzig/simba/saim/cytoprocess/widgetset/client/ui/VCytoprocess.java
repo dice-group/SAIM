@@ -178,6 +178,7 @@ public class VCytoprocess extends VProcessingSVGextended {
 	@Override
 	public void mouseClicked(){
 		if(LOG)VConsole.log("mouseClicked ...");
+		vgraph.updatePositions();
 
 	}
 	@Override
