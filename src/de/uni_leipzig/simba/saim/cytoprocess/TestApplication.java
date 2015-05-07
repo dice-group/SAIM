@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 import com.vaadin.Application;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Window;
-import csplugins.layout.algorithms.force.ForceDirectedLayout;
+//import csplugins.layout.algorithms.force.ForceDirectedLayout;
 
 public class TestApplication extends Application{
 	private static final long serialVersionUID = -7506990364469416142L;

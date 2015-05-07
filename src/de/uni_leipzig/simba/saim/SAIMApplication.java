@@ -91,8 +91,8 @@ public class SAIMApplication extends Application implements TransactionListener
 			@Override
 			public void handleParameters(Map<String, String[]> parameters)
 			{
-				logger.setLevel(Level.DEBUG);
-				if(logger.getEffectiveLevel().isGreaterOrEqual(Level.INFO))
+//				logger.setLevel(Level.DEBUG);
+//				if(logger.getEffectiveLevel().isGreaterOrEqual(Level.INFO))
 				{logger.info("SAIMApplication was called with url parameters "+parametersToString(parameters));} //$NON-NLS-1$
 
 				String[] languages=parameters.get("language"); //$NON-NLS-1$
